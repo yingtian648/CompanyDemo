@@ -25,39 +25,72 @@ public class FilesDao {
     /**
      * 插入数据列表
      */
-    public boolean insertFiles(@NonNull ArrayList<Files> files) {
-        Log.d(TAG, "insertFiles files.size=" + files.size());
+    public boolean insertFiles2(@NonNull ArrayList<Files> filesList) {
+        Log.d(TAG, "insertFiles files.size=" + filesList.size());
+        long time = System.currentTimeMillis();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        try {
+            String sqlD = "INSERT INTO files (add_time,modify_time,size,duration,width,height," +
+                    "file_type,name,path,root_dir,mime_type,artist," +
+                    "album,display_name,tags) " +
+                    "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            db.beginTransaction();
+            SQLiteStatement stat = db.compileStatement(sqlD);
+            long id = 0;
+            for (Files files : filesList) {
+                stat.bindLong(1, files.add_time);
+                stat.bindLong(2, files.modify_time);
+                stat.bindLong(3, files.size);
+                stat.bindLong(4, files.duration);
+                stat.bindLong(5, files.width);
+                stat.bindLong(6, files.height);
+                stat.bindLong(7, files.file_type);
+                stat.bindString(8, files.name);
+                stat.bindString(9, files.path);
+                stat.bindString(10, files.root_dir);
+                stat.bindString(11, files.mime_type);
+//                stat.bindString(12, files.artist);//没有值，可以不传
+                stat.bindString(13, files.album);
+                stat.bindString(14, files.display_name);
+                stat.bindString(15, "");//不能传空值
+                id = stat.executeInsert();
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            time = (System.currentTimeMillis() - time);
+            Log.d(TAG, "insertFiles complete:" + id + " useTime=" + time);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, "insertFiles: SQLException:" + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 批量插入数据列表
+     */
+    public boolean insertFiles(@NonNull ArrayList<Files> filesList) {
+        Log.d(TAG, "insertFiles files.size=" + filesList.size());
+        long time = System.currentTimeMillis();
         SQLiteDatabase db = helper.getWritableDatabase();
         String sqlD = "INSERT INTO files (add_time,modify_time,size,duration,width,height," +
                 "file_type,name,path,root_dir,mime_type,artist," +
                 "album,display_name,tags) " +
                 "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        SQLiteStatement stat = null;
         try {
-            stat = db.compileStatement(sqlD);
             db.beginTransaction();
-            for (Files item : files) {
-                stat.bindLong(1, item.add_time);
-                stat.bindLong(2, item.modify_time);
-                stat.bindLong(3, item.size);
-                stat.bindLong(4, item.duration);
-                stat.bindLong(5, item.width);
-                stat.bindLong(6, item.height);
-                stat.bindLong(7, item.file_type);
-                stat.bindString(8, item.name);
-                stat.bindString(9, item.path);
-                stat.bindString(10, item.root_dir);
-                stat.bindString(11, item.mime_type);
-                stat.bindString(12, item.artist);
-                stat.bindString(13, item.album);
-                stat.bindString(14, item.display_name);
-                stat.bindString(15, item.tags);
-                long id = stat.executeInsert();
-                Log.d(TAG, "insertFiles success:" + id);
+            for (Files files : filesList) {
+                db.execSQL(sqlD, new Object[]{
+                        files.add_time, files.modify_time, files.size, files.duration, files.width, files.height,
+                        files.file_type, files.name, files.path, files.root_dir, files.mime_type, files.artist,
+                        files.album, files.display_name, files.tags
+
+                });
             }
             db.setTransactionSuccessful();
             db.endTransaction();
-            Log.d(TAG, "insertFiles complete");
+            Log.d(TAG, "insertFiles complete useTime=" + time);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,7 +104,7 @@ public class FilesDao {
     /**
      * 插入数据
      */
-    public boolean insertFile(@NonNull Files files) {
+    public boolean insertFiles(@NonNull Files files) {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.beginTransaction();
         String sql = "INSERT INTO files VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
