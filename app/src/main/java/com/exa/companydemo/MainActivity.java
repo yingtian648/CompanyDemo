@@ -11,6 +11,7 @@ import com.exa.companydemo.utils.L;
 import com.exa.companydemo.utils.PermissionUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import androidx.annotation.NonNull;
@@ -18,8 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = getClass().getSimpleName();
-    private ExecutorService pool;
-    private ArrayList<Files> files;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,21 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void test() {
-
+//        final long startTime = System.currentTimeMillis();
+//        List<Runnable> runnables = new ArrayList<>();
+//        for (int i = 0; i < 10000; i++) {
+//            int finalI = i;
+//            runnables.add(() -> {
+//                int total = 0;
+//                for (int j = 0; j < 100000; j++) {
+//                    total += j;
+//                }
+//                L.d(finalI + "当前线程ID: " + Thread.currentThread().getId() + " " + (System.currentTimeMillis() - startTime));
+//            });
+//        }
+//        for (int i = 0; i < 10000; i++) {
+//            Constants.getScheduledPool().execute(runnables.get(i));
+//        }
     }
 
     public void clickBtn(View view) {

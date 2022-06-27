@@ -21,12 +21,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding> {
     private ArrayList<MediaInfo> dataList;
-    private ExecutorService pool;
     private final BitmapFactory.Options mBitmapOptions = new BitmapFactory.Options();
 
     @Override
     protected int setContentViewLayoutId() {
-        pool = Executors.newSingleThreadExecutor();
         return R.layout.activity_music_load;
     }
 
@@ -48,7 +46,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
         File file = new File(mroot);
         File[] files = file.listFiles();
         if (files != null)
-            pool.execute(() -> {
+            Constants.getFixPool().execute(() -> {
                 long startTime = System.currentTimeMillis();
                 loadFileAttrs(files);
                 L.d("loadFileAttrs complete " + files.length + "  " + (System.currentTimeMillis() - startTime));
@@ -58,7 +56,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
         File filei = new File(iroot);
         File[] fileis = filei.listFiles();
         if (fileis != null)
-            pool.execute(() -> {
+            Constants.getFixPool().execute(() -> {
                 long startTime = System.currentTimeMillis();
                 processImageFileInDir(fileis);
                 L.d("processImageFileInDir complete " + fileis.length + "  " + (System.currentTimeMillis() - startTime));
@@ -66,12 +64,12 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
     }
 
     private void loadFileAttrs(File[] files) {
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         for (File file : files) {
             MediaInfo entry = new MediaInfo();
             entry.size = file.length();
             entry.path = file.getAbsolutePath();
             try {
+                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
                 mmr.setDataSource(file.getAbsolutePath());
                 String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
                 entry.album = album;
