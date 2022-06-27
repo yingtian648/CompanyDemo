@@ -47,23 +47,21 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
         String mroot = Constants.FILE_DIR_MUSIC;
         File file = new File(mroot);
         File[] files = file.listFiles();
-        L.d(mroot + ":" + (files == null ? "null" : files.length));
         if (files != null)
             pool.execute(() -> {
                 long startTime = System.currentTimeMillis();
                 loadFileAttrs(files);
-                L.d("loadFileAttrs complete " + (System.currentTimeMillis() - startTime));
+                L.d("loadFileAttrs complete " + files.length + "  " + (System.currentTimeMillis() - startTime));
             });
 
         String iroot = Constants.FILE_DIR_IMAGE;
         File filei = new File(iroot);
         File[] fileis = filei.listFiles();
-        L.d(iroot + ":" + (fileis == null ? "null" : fileis.length));
         if (fileis != null)
             pool.execute(() -> {
                 long startTime = System.currentTimeMillis();
                 processImageFileInDir(fileis);
-                L.d("processImageFileInDir complete " + fileis.length + (System.currentTimeMillis() - startTime));
+                L.d("processImageFileInDir complete " + fileis.length + "  " + (System.currentTimeMillis() - startTime));
             });
     }
 
