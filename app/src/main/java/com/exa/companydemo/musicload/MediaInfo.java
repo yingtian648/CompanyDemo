@@ -1,37 +1,24 @@
 package com.exa.companydemo.musicload;
 
 public class MediaInfo {
+    public String name;
     public String path;
     public String title;
     public String artList;
-    public String album;
+    public String album;//专辑
     public String albumArtist;
     public int duration;
     public long size;
-    public long displayName;
+    public String displayName;
     public int width;
     public int height;
     public String composer;//创作者
 
-    public MediaInfo() {
-    }
-
-    public MediaInfo(String path, String title, String artList, String album, String albumArtist, int duration, long size, long displayName, String composer) {
-        this.path = path;
-        this.title = title;
-        this.artList = artList;
-        this.album = album;
-        this.albumArtist = albumArtist;
-        this.duration = duration;
-        this.size = size;
-        this.displayName = displayName;
-        this.composer = composer;
-    }
-
     @Override
     public String toString() {
         return "MediaInfo{" +
-                "path='" + path + '\'' +
+                "name='" + name + '\'' +
+                ", path='" + path + '\'' +
                 ", title='" + title + '\'' +
                 ", artList='" + artList + '\'' +
                 ", album='" + album + '\'' +

@@ -1,8 +1,11 @@
 package com.exa.companydemo.musicload;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.exa.companydemo.Constants;
 import com.exa.companydemo.R;
@@ -10,17 +13,21 @@ import com.exa.companydemo.base.BaseBindActivity;
 import com.exa.companydemo.base.adapter.BaseRecyclerAdapter;
 import com.exa.companydemo.databinding.ActivityMusicLoadBinding;
 import com.exa.companydemo.utils.L;
+import com.exa.companydemo.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding> {
-    private ArrayList<MediaInfo> dataList;
+    private ArrayList<MediaInfo> musicList;
+    private ArrayList<MediaInfo> imageList;
     private final BitmapFactory.Options mBitmapOptions = new BitmapFactory.Options();
 
     @Override
@@ -30,12 +37,21 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
 
     @Override
     protected void initView() {
-        dataList = new ArrayList<>();
+        musicList = new ArrayList<>();
+        imageList = new ArrayList<>();
         bind.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        bind.recyclerView.setAdapter(new BaseRecyclerAdapter<MediaInfo>(this, R.layout.item_music_load, dataList) {
+        bind.recyclerView.setAdapter(new BaseRecyclerAdapter<MediaInfo>(this, R.layout.item_music_load, musicList) {
             @Override
             protected void onViewHolder(@NonNull View view, @NonNull MediaInfo data, int position) {
-
+                TextView titleT = view.findViewById(R.id.title);
+                ImageView image = view.findViewById(R.id.image);
+                TextView artListT = view.findViewById(R.id.artList);
+                TextView pathT = view.findViewById(R.id.path);
+                image.setImageBitmap(Utils.getCover(data.path));
+                titleT.setText(data.title == null ? data.name : data.title);
+                int r = data.duration / 1000;
+                artListT.setText(r / 60 + "\'" + r % 60 + "\" " + (data.album == null ? "" : data.album) + " " + (data.size / 1024 + "KB"));
+                pathT.setText(data.path);
             }
         });
     }
@@ -50,6 +66,10 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 long startTime = System.currentTimeMillis();
                 loadFileAttrs(files);
                 L.d("loadFileAttrs complete " + files.length + "  " + (System.currentTimeMillis() - startTime));
+                Constants.getHandler().post(() -> {
+                    Collections.reverse(musicList);
+                    bind.recyclerView.getAdapter().notifyDataSetChanged();
+                });
             });
 
         String iroot = Constants.FILE_DIR_IMAGE;
@@ -60,16 +80,19 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 long startTime = System.currentTimeMillis();
                 processImageFileInDir(fileis);
                 L.d("processImageFileInDir complete " + fileis.length + "  " + (System.currentTimeMillis() - startTime));
+                Collections.reverse(imageList);
             });
     }
 
     private void loadFileAttrs(File[] files) {
+        musicList.clear();
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         for (File file : files) {
             MediaInfo entry = new MediaInfo();
             entry.size = file.length();
+            entry.name = file.getName();
             entry.path = file.getAbsolutePath();
             try {
-                MediaMetadataRetriever mmr = new MediaMetadataRetriever();
                 mmr.setDataSource(file.getAbsolutePath());
                 String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
                 entry.album = album;
@@ -95,7 +118,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 entry.width = width == null ? 0 : Integer.parseInt(width);
                 String height = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
                 entry.height = height == null ? 0 : Integer.parseInt(height);
-                dataList.add(entry);
+                musicList.add(entry);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 L.e("mmr.setDataSource err");
@@ -103,7 +126,9 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
         }
     }
 
+
     private void processImageFileInDir(File[] files) {
+        imageList.clear();
         for (File file : files) {
             MediaInfo entry = new MediaInfo();
             entry.size = file.length();
@@ -115,7 +140,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 BitmapFactory.decodeFile(file.getAbsolutePath(), mBitmapOptions);
                 entry.width = mBitmapOptions.outWidth;
                 entry.height = mBitmapOptions.outHeight;
-                dataList.add(entry);
+                imageList.add(entry);
             } catch (Throwable th) {
                 th.printStackTrace();
                 L.e("processImageFileInDir err");

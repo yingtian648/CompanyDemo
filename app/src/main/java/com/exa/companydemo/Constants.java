@@ -1,13 +1,27 @@
 package com.exa.companydemo;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Constants {
-    private static ExecutorService singlePool, fixPool, scheduledPool;
-    private static final int MAX_FIX_POOL_SIZE = 5;//最大核心线程数
     public static String FILE_DIR_MUSIC = "/storage/emulated/0/Music/Music";
     public static String FILE_DIR_IMAGE = "/storage/emulated/0/Music/Image";
+
+    private static ExecutorService singlePool, fixPool, scheduledPool;
+    private static final int MAX_FIX_POOL_SIZE = 5;//最大核心线程数
+
+    private static Handler handler;
+
+    public static void init() {
+        handler = new Handler(Looper.getMainLooper());
+    }
+
+    public static Handler getHandler() {
+        return handler;
+    }
 
     /**
      * 单线程
