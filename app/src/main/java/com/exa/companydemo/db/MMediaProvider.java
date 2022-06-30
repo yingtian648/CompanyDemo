@@ -5,30 +5,46 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
+
+import com.exa.companydemo.base.App;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class MMediaProvider extends ContentProvider {
+    private final String TAG = MMediaProvider.class.getSimpleName();
+    private static final String AUTHORITY = "media";
     private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+    private FilesDao dao;
 
     @Override
     public boolean onCreate() {
+        dao = new FilesDao(App.getContext());
         return false;
     }
 
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+        Log.d(TAG, "query: " + uri + "\u3000\u3000selection:" + selection + "\u3000\u3000sortOrder:" + sortOrder
+                + "\u3000\u3000selectionArgs:" + (selectionArgs == null ? "null" : selectionArgs.toString()));
+//        int code = matcher.match(uri);//这里可以根据code来查询对应的表格
+        SQLiteDatabase db = dao.getHelper().getReadableDatabase();
+        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+        String limit = uri.getQueryParameter("limit");
+        queryBuilder.setTables("files");
+        return queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder, limit);
     }
 
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        switch (matcher.match(uri)){
+        switch (matcher.match(uri)) {
             case MediaCodes.IMAGES_MEDIA:
                 return MediaStore.Images.Media.CONTENT_TYPE;
             case MediaCodes.AUDIO_MEDIA:
@@ -55,7 +71,7 @@ public class MMediaProvider extends ContentProvider {
         return 0;
     }
 
-    private static class  MediaCodes{
+    private static class MediaCodes {
         private static final int IMAGES_MEDIA = 1;
         private static final int IMAGES_MEDIA_ID = 2;
         private static final int IMAGES_THUMBNAILS = 3;
@@ -111,75 +127,75 @@ public class MMediaProvider extends ContentProvider {
     }
 
     static {
-        matcher.addURI("media", "*/images/media", MediaCodes.IMAGES_MEDIA);
-        matcher.addURI("media", "*/images/media/#", MediaCodes.IMAGES_MEDIA_ID);
-        matcher.addURI("media", "*/images/thumbnails", MediaCodes.IMAGES_THUMBNAILS);
-        matcher.addURI("media", "*/images/thumbnails/#", MediaCodes.IMAGES_THUMBNAILS_ID);
+        matcher.addURI(AUTHORITY, "*/images/media", MediaCodes.IMAGES_MEDIA);
+        matcher.addURI(AUTHORITY, "*/images/media/#", MediaCodes.IMAGES_MEDIA_ID);
+        matcher.addURI(AUTHORITY, "*/images/thumbnails", MediaCodes.IMAGES_THUMBNAILS);
+        matcher.addURI(AUTHORITY, "*/images/thumbnails/#", MediaCodes.IMAGES_THUMBNAILS_ID);
 
-        matcher.addURI("media", "*/audio/media",MediaCodes. AUDIO_MEDIA);
-        matcher.addURI("media", "*/audio/media/#", MediaCodes.AUDIO_MEDIA_ID);
-        matcher.addURI("media", "*/audio/media/#/genres", MediaCodes.AUDIO_MEDIA_ID_GENRES);
-        matcher.addURI("media", "*/audio/media/#/genres/#", MediaCodes.AUDIO_MEDIA_ID_GENRES_ID);
-        matcher.addURI("media", "*/audio/media/#/playlists", MediaCodes.AUDIO_MEDIA_ID_PLAYLISTS);
-        matcher.addURI("media", "*/audio/media/#/playlists/#", MediaCodes.AUDIO_MEDIA_ID_PLAYLISTS_ID);
-        matcher.addURI("media", "*/audio/genres", MediaCodes.AUDIO_GENRES);
-        matcher.addURI("media", "*/audio/genres/#", MediaCodes.AUDIO_GENRES_ID);
-        matcher.addURI("media", "*/audio/genres/#/members", MediaCodes.AUDIO_GENRES_ID_MEMBERS);
-        matcher.addURI("media", "*/audio/genres/all/members", MediaCodes.AUDIO_GENRES_ALL_MEMBERS);
-        matcher.addURI("media", "*/audio/playlists", MediaCodes.AUDIO_PLAYLISTS);
-        matcher.addURI("media", "*/audio/playlists/#", MediaCodes.AUDIO_PLAYLISTS_ID);
-        matcher.addURI("media", "*/audio/playlists/#/members", MediaCodes.AUDIO_PLAYLISTS_ID_MEMBERS);
-        matcher.addURI("media", "*/audio/playlists/#/members/#", MediaCodes.AUDIO_PLAYLISTS_ID_MEMBERS_ID);
-        matcher.addURI("media", "*/audio/artists", MediaCodes.AUDIO_ARTISTS);
-        matcher.addURI("media", "*/audio/artists/#", MediaCodes.AUDIO_ARTISTS_ID);
-        matcher.addURI("media", "*/audio/artists/#/albums", MediaCodes.AUDIO_ARTISTS_ID_ALBUMS);
-        matcher.addURI("media", "*/audio/albums", MediaCodes.AUDIO_ALBUMS);
-        matcher.addURI("media", "*/audio/albums/#", MediaCodes.AUDIO_ALBUMS_ID);
-        matcher.addURI("media", "*/audio/albumart", MediaCodes.AUDIO_ALBUMART);
-        matcher.addURI("media", "*/audio/albumart/#", MediaCodes.AUDIO_ALBUMART_ID);
-        matcher.addURI("media", "*/audio/media/#/albumart", MediaCodes.AUDIO_ALBUMART_FILE_ID);
+        matcher.addURI(AUTHORITY, "*/audio/media", MediaCodes.AUDIO_MEDIA);
+        matcher.addURI(AUTHORITY, "*/audio/media/#", MediaCodes.AUDIO_MEDIA_ID);
+        matcher.addURI(AUTHORITY, "*/audio/media/#/genres", MediaCodes.AUDIO_MEDIA_ID_GENRES);
+        matcher.addURI(AUTHORITY, "*/audio/media/#/genres/#", MediaCodes.AUDIO_MEDIA_ID_GENRES_ID);
+        matcher.addURI(AUTHORITY, "*/audio/media/#/playlists", MediaCodes.AUDIO_MEDIA_ID_PLAYLISTS);
+        matcher.addURI(AUTHORITY, "*/audio/media/#/playlists/#", MediaCodes.AUDIO_MEDIA_ID_PLAYLISTS_ID);
+        matcher.addURI(AUTHORITY, "*/audio/genres", MediaCodes.AUDIO_GENRES);
+        matcher.addURI(AUTHORITY, "*/audio/genres/#", MediaCodes.AUDIO_GENRES_ID);
+        matcher.addURI(AUTHORITY, "*/audio/genres/#/members", MediaCodes.AUDIO_GENRES_ID_MEMBERS);
+        matcher.addURI(AUTHORITY, "*/audio/genres/all/members", MediaCodes.AUDIO_GENRES_ALL_MEMBERS);
+        matcher.addURI(AUTHORITY, "*/audio/playlists", MediaCodes.AUDIO_PLAYLISTS);
+        matcher.addURI(AUTHORITY, "*/audio/playlists/#", MediaCodes.AUDIO_PLAYLISTS_ID);
+        matcher.addURI(AUTHORITY, "*/audio/playlists/#/members", MediaCodes.AUDIO_PLAYLISTS_ID_MEMBERS);
+        matcher.addURI(AUTHORITY, "*/audio/playlists/#/members/#", MediaCodes.AUDIO_PLAYLISTS_ID_MEMBERS_ID);
+        matcher.addURI(AUTHORITY, "*/audio/artists", MediaCodes.AUDIO_ARTISTS);
+        matcher.addURI(AUTHORITY, "*/audio/artists/#", MediaCodes.AUDIO_ARTISTS_ID);
+        matcher.addURI(AUTHORITY, "*/audio/artists/#/albums", MediaCodes.AUDIO_ARTISTS_ID_ALBUMS);
+        matcher.addURI(AUTHORITY, "*/audio/albums", MediaCodes.AUDIO_ALBUMS);
+        matcher.addURI(AUTHORITY, "*/audio/albums/#", MediaCodes.AUDIO_ALBUMS_ID);
+        matcher.addURI(AUTHORITY, "*/audio/albumart", MediaCodes.AUDIO_ALBUMART);
+        matcher.addURI(AUTHORITY, "*/audio/albumart/#", MediaCodes.AUDIO_ALBUMART_ID);
+        matcher.addURI(AUTHORITY, "*/audio/media/#/albumart", MediaCodes.AUDIO_ALBUMART_FILE_ID);
 
-        matcher.addURI("media", "*/video/media", MediaCodes.VIDEO_MEDIA);
-        matcher.addURI("media", "*/video/media/#", MediaCodes.VIDEO_MEDIA_ID);
-        matcher.addURI("media", "*/video/thumbnails", MediaCodes.VIDEO_THUMBNAILS);
-        matcher.addURI("media", "*/video/thumbnails/#", MediaCodes.VIDEO_THUMBNAILS_ID);
+        matcher.addURI(AUTHORITY, "*/video/media", MediaCodes.VIDEO_MEDIA);
+        matcher.addURI(AUTHORITY, "*/video/media/#", MediaCodes.VIDEO_MEDIA_ID);
+        matcher.addURI(AUTHORITY, "*/video/thumbnails", MediaCodes.VIDEO_THUMBNAILS);
+        matcher.addURI(AUTHORITY, "*/video/thumbnails/#", MediaCodes.VIDEO_THUMBNAILS_ID);
 
-        matcher.addURI("media", "*/media_scanner", MediaCodes.MEDIA_SCANNER);
+        matcher.addURI(AUTHORITY, "*/media_scanner", MediaCodes.MEDIA_SCANNER);
 
-        matcher.addURI("media", "*/fs_id", MediaCodes.FS_ID);
-        matcher.addURI("media", "*/version", MediaCodes.VERSION);
+        matcher.addURI(AUTHORITY, "*/fs_id", MediaCodes.FS_ID);
+        matcher.addURI(AUTHORITY, "*/version", MediaCodes.VERSION);
 
-        matcher.addURI("media", "*/mtp_connected", MediaCodes.MTP_CONNECTED);
+        matcher.addURI(AUTHORITY, "*/mtp_connected", MediaCodes.MTP_CONNECTED);
 
-        matcher.addURI("media", "*", MediaCodes.VOLUMES_ID);
-        matcher.addURI("media", null, MediaCodes.VOLUMES);
+        matcher.addURI(AUTHORITY, "*", MediaCodes.VOLUMES_ID);
+        matcher.addURI(AUTHORITY, null, MediaCodes.VOLUMES);
 
         // Used by MTP implementation
-        matcher.addURI("media", "*/file", MediaCodes.FILES);
-        matcher.addURI("media", "*/file/#", MediaCodes.FILES_ID);
-        matcher.addURI("media", "*/object", MediaCodes.MTP_OBJECTS);
-        matcher.addURI("media", "*/object/#", MediaCodes.MTP_OBJECTS_ID);
-        matcher.addURI("media", "*/object/#/references", MediaCodes.MTP_OBJECT_REFERENCES);
+        matcher.addURI(AUTHORITY, "*/file", MediaCodes.FILES);
+        matcher.addURI(AUTHORITY, "*/file/#", MediaCodes.FILES_ID);
+        matcher.addURI(AUTHORITY, "*/object", MediaCodes.MTP_OBJECTS);
+        matcher.addURI(AUTHORITY, "*/object/#", MediaCodes.MTP_OBJECTS_ID);
+        matcher.addURI(AUTHORITY, "*/object/#/references", MediaCodes.MTP_OBJECT_REFERENCES);
 
         // Used only to trigger special logic for directories
-        matcher.addURI("media", "*/dir", MediaCodes.FILES_DIRECTORY);
+        matcher.addURI(AUTHORITY, "*/dir", MediaCodes.FILES_DIRECTORY);
 
         /**
          * @deprecated use the 'basic' or 'fancy' search Uris instead
          */
-        matcher.addURI("media", "*/audio/" + SearchManager.SUGGEST_URI_PATH_QUERY,
+        matcher.addURI(AUTHORITY, "*/audio/" + SearchManager.SUGGEST_URI_PATH_QUERY,
                 MediaCodes.AUDIO_SEARCH_LEGACY);
-        matcher.addURI("media", "*/audio/" + SearchManager.SUGGEST_URI_PATH_QUERY + "/*",
+        matcher.addURI(AUTHORITY, "*/audio/" + SearchManager.SUGGEST_URI_PATH_QUERY + "/*",
                 MediaCodes.AUDIO_SEARCH_LEGACY);
 
         // used for search suggestions
-        matcher.addURI("media", "*/audio/search/" + SearchManager.SUGGEST_URI_PATH_QUERY,
+        matcher.addURI(AUTHORITY, "*/audio/search/" + SearchManager.SUGGEST_URI_PATH_QUERY,
                 MediaCodes.AUDIO_SEARCH_BASIC);
-        matcher.addURI("media", "*/audio/search/" + SearchManager.SUGGEST_URI_PATH_QUERY +
+        matcher.addURI(AUTHORITY, "*/audio/search/" + SearchManager.SUGGEST_URI_PATH_QUERY +
                 "/*", MediaCodes.AUDIO_SEARCH_BASIC);
 
         // used by the music app's search activity
-        matcher.addURI("media", "*/audio/search/fancy", MediaCodes.AUDIO_SEARCH_FANCY);
-        matcher.addURI("media", "*/audio/search/fancy/*", MediaCodes.AUDIO_SEARCH_FANCY);
+        matcher.addURI(AUTHORITY, "*/audio/search/fancy", MediaCodes.AUDIO_SEARCH_FANCY);
+        matcher.addURI(AUTHORITY, "*/audio/search/fancy/*", MediaCodes.AUDIO_SEARCH_FANCY);
     }
 }

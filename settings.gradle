@@ -37,3 +37,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "CompanyDemo"
 include ':app'
+include ':companyclient'

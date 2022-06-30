@@ -22,6 +22,10 @@ public class FilesDao {
         helper = new MyDbOpenHelper(context);
     }
 
+    public MyDbOpenHelper getHelper() {
+        return helper;
+    }
+
     /**
      * 插入数据列表
      */
