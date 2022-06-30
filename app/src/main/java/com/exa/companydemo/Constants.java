@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 public class Constants {
     public static String FILE_DIR_MUSIC = "/storage/emulated/0/Music/Music";
     public static String FILE_DIR_IMAGE = "/storage/emulated/0/Music/Image";
+    public static String FILE_DIR_VIDEO = "/storage/emulated/0/Music/Video";
 
     private static ExecutorService singlePool, fixPool, scheduledPool;
     private static final int MAX_FIX_POOL_SIZE = 5;//最大核心线程数

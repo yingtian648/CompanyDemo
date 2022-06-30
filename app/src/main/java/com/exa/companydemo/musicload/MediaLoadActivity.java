@@ -1,8 +1,15 @@
 package com.exa.companydemo.musicload;
 
+import android.content.ContentProvider;
+import android.content.ContentResolver;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,6 +23,7 @@ import com.exa.companydemo.utils.L;
 import com.exa.companydemo.utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
@@ -47,7 +55,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 ImageView image = view.findViewById(R.id.image);
                 TextView artListT = view.findViewById(R.id.artList);
                 TextView pathT = view.findViewById(R.id.path);
-                image.setImageBitmap(Utils.getCover(data.path));
+//                image.setImageBitmap(Utils.getCover(data.path));
                 titleT.setText(data.title == null ? data.name : data.title);
                 int r = data.duration / 1000;
                 artListT.setText(r / 60 + "\'" + r % 60 + "\" " + (data.album == null ? "" : data.album) + " " + (data.size / 1024 + "KB"));
@@ -65,7 +73,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
             Constants.getFixPool().execute(() -> {
                 long startTime = System.currentTimeMillis();
                 loadFileAttrs(files);
-                L.d("loadFileAttrs complete " + files.length + "  " + (System.currentTimeMillis() - startTime));
+                L.d("loadFileAttrs complete " + files.length + "\u3000\u3000" + (System.currentTimeMillis() - startTime));
                 Constants.getHandler().post(() -> {
                     Collections.reverse(musicList);
                     bind.recyclerView.getAdapter().notifyDataSetChanged();
@@ -82,18 +90,48 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 L.d("processImageFileInDir complete " + fileis.length + "  " + (System.currentTimeMillis() - startTime));
                 Collections.reverse(imageList);
             });
+        String vroot = Constants.FILE_DIR_VIDEO;
+        File fileVideo = new File(vroot);
+        if (fileVideo.exists() && fileVideo.isDirectory()) {
+            File[] vs = fileVideo.listFiles();
+            if (vs != null) {
+                Constants.getFixPool().execute(() -> {
+                    for (File filev : vs) {
+                        boolean success = loadVideoThumbnail(filev.getAbsolutePath());
+                        if (success) break;
+                    }
+                });
+            }
+        }
+    }
+
+    private boolean loadVideoThumbnail(String path) {
+        long start = System.currentTimeMillis();
+
+        MediaStore.Video.Thumbnails.getThumbnail(getContentResolver(), 1, MediaStore.Video.Thumbnails.MICRO_KIND, null);
+        final Bitmap[] bitmap = {ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND)};
+        if (bitmap[0] == null || bitmap[0].getByteCount() == 0) return false;
+        L.d("解析缩略图：" + (System.currentTimeMillis() - start) + " " + bitmap[0].getByteCount());
+        runOnUiThread(() -> {
+            bind.image.setImageBitmap(bitmap[0]);
+            bitmap[0] = null;
+        });
+        return true;
     }
 
     private void loadFileAttrs(File[] files) {
         musicList.clear();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         for (File file : files) {
+            long start = System.currentTimeMillis();
             MediaInfo entry = new MediaInfo();
             entry.size = file.length();
             entry.name = file.getName();
             entry.path = file.getAbsolutePath();
             try {
                 mmr.setDataSource(file.getAbsolutePath());
+                String author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_AUTHOR);
+                entry.author = author;
                 String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
                 entry.album = album;
                 String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
@@ -110,6 +148,8 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
 //                entry.handleStringTag("year", year);
                 String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
                 entry.duration = duration == null ? 0 : Integer.parseInt(duration);
+                String mimeType = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
+                entry.mimeType = mimeType;
 //                String writer = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
 //                entry.handleStringTag("writer", writer);
 //                String compilation = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_COMPILATION);
@@ -118,6 +158,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 entry.width = width == null ? 0 : Integer.parseInt(width);
                 String height = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
                 entry.height = height == null ? 0 : Integer.parseInt(height);
+//                L.d("paytime:" + (System.currentTimeMillis() - start) + "\u3000\u3000" + file.getAbsolutePath());
                 musicList.add(entry);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
@@ -134,6 +175,17 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
             entry.size = file.length();
             entry.title = file.getName();
             entry.path = file.getAbsolutePath();
+            if (entry.path.endsWith("jpeg") || entry.path.endsWith("JPEG") || entry.path.endsWith("raw") || entry.path.endsWith("RAW"))
+                try {
+                    ExifInterface exif = new ExifInterface(entry.path);//获取经纬度
+                    float[] location = new float[2];
+                    if (exif.getLatLong(location)) {
+                        entry.lat = location[0];
+                        entry.lon = location[1];
+                    }
+                } catch (IOException ex) {
+                    L.e("EprocessImageFileInDir xifInterface err");
+                }
             try {
                 mBitmapOptions.outWidth = 0;
                 mBitmapOptions.outHeight = 0;

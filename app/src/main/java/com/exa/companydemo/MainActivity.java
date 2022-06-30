@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.exa.companydemo.base.BaseActivity;
 import com.exa.companydemo.db.entity.Files;
 import com.exa.companydemo.musicload.MediaLoadActivity;
 import com.exa.companydemo.utils.L;
@@ -17,15 +18,21 @@ import java.util.concurrent.ExecutorService;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
-    private String TAG = getClass().getSimpleName();
+public class MainActivity extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        checkPermission();
+    protected void initData() {
         test();
+    }
+
+    @Override
+    protected void initView() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
 

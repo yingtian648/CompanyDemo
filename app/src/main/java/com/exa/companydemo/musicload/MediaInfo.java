@@ -3,15 +3,20 @@ package com.exa.companydemo.musicload;
 public class MediaInfo {
     public String name;
     public String path;
-    public String title;
-    public String artList;
-    public String album;//专辑
+    public String author;
+    public String title;//MediaMetadataRetriever.METADATA_KEY_TITLE
+    public String artList;//MediaMetadataRetriever.METADATA_KEY_ARTIST
+    public String album;//专辑名
     public String albumArtist;
+    public String mimeType;//媒体类型
+    public String suffix;//后缀名（小写）mp3 jpeg mp4 rm wma等
     public int duration;
     public long size;
     public String displayName;
-    public int width;
-    public int height;
+    public int width;//图片宽度
+    public int height;//图片高度
+    public double lat;//纬度
+    public double lon;//经度
     public String composer;//创作者
 
     @Override
@@ -19,8 +24,11 @@ public class MediaInfo {
         return "MediaInfo{" +
                 "name='" + name + '\'' +
                 ", path='" + path + '\'' +
+                ", author='" + author + '\'' +
                 ", title='" + title + '\'' +
                 ", artList='" + artList + '\'' +
+                ", mimeType='" + mimeType + '\'' +
+                ", suffix='" + suffix + '\'' +
                 ", album='" + album + '\'' +
                 ", albumArtist='" + albumArtist + '\'' +
                 ", duration=" + duration +
@@ -28,6 +36,8 @@ public class MediaInfo {
                 ", displayName=" + displayName +
                 ", width=" + width +
                 ", height=" + height +
+                ", lat=" + lat +
+                ", lon=" + lon +
                 ", composer='" + composer + '\'' +
                 '}' + "\n";
     }
