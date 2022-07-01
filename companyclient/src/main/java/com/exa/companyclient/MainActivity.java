@@ -32,12 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        List<Files> files = ProviderUtil.getProviderData(this);
-        if (!files.isEmpty()) {
-            ProviderUtil.deleteById(this, String.valueOf(files.get(1).id));
-            ProviderUtil.updateData(this, files.get(0));
-            ProviderUtil.insert(this, files.get(0));
-        }
+
     }
 
     @Override

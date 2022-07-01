@@ -13,6 +13,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProviderUtil {
+
+    //测试provider功能
+    public static void testProvider(Context context) {
+        List<Files> files = ProviderUtil.getProviderData(context);
+        if (!files.isEmpty()) {
+            ProviderUtil.deleteById(context, String.valueOf(files.get(1).id));
+            ProviderUtil.updateData(context, files.get(0));
+            ProviderUtil.insert(context, files.get(0));
+        }
+    }
+
     public static List<Files> getProviderData(Context context) {
         ContentResolver resolver = context.getContentResolver();
         String[] projection = new String[]{"id", "name", "path", "add_time", "size", "duration"};
@@ -51,7 +62,7 @@ public class ProviderUtil {
     public static void insert(Context context, Files files) {
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
-        values.put("name","客户端插入name");
+        values.put("name", "客户端插入name");
         Uri uri = resolver.insert(Constants.CUSTOMER_URI, values);
         L.d("insert uri:" + uri + "  files:" + files);
     }
