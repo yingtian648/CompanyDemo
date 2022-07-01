@@ -17,6 +17,10 @@ import com.exa.companydemo.utils.L;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * 基本数据在MediaLoadActivity中插入
+ * 客户端获取，更新，删除，插入
+ */
 public class MMediaProvider extends ContentProvider {
     private final String TAG = MMediaProvider.class.getSimpleName();
     private static final String AUTHORITY = "com.media.mine";
