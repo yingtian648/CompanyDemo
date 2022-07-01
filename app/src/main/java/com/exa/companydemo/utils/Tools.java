@@ -9,10 +9,10 @@ import java.util.ArrayList;
 
 public class Tools {
 
-    public Runnable testDb(Context context) {
+    public static Runnable insertRunnable(Context context) {
         return () -> {
             ArrayList<Files> files = new ArrayList<>();
-            for (int i = 3000; i < 4000; i++) {
+            for (int i = 1; i < 1000; i++) {
                 files.add(makeFiles(i + 1));
             }
             FilesDao dao = new FilesDao(context);

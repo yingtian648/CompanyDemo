@@ -37,12 +37,13 @@
         句点加星号（“.*”）匹配任何字符的0次或多次出现 -->
         <provider
             android:name=".db.MMediaProvider"
-            android:authorities="media"
+            android:authorities="com.media.mine"
             android:exported="true"
             android:multiprocess="false">
-            <grant-uri-permission android:pathPrefix="/external/" />
+            <grant-uri-permission android:pathPrefix="/customer/" />
+            <!--   指定需要访问路径需要读写权限 pathPrefix属性指定路径的起始部分 -->
             <path-permission
-                android:pathPrefix="/external/"
+                android:pathPrefix="/customer/"
                 android:readPermission="android.permission.READ_EXTERNAL_STORAGE"
                 android:writePermission="android.permission.WRITE_EXTERNAL_STORAGE" />
         </provider>

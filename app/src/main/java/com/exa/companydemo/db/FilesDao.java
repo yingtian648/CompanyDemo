@@ -45,17 +45,27 @@ public class FilesDao {
                 stat.bindLong(1, files.add_time);
                 stat.bindLong(2, files.modify_time);
                 stat.bindLong(3, files.size);
-                stat.bindLong(4, files.duration);
-                stat.bindLong(5, files.width);
-                stat.bindLong(6, files.height);
-                stat.bindLong(7, files.file_type);
-                stat.bindString(8, files.name);
+                if (files.duration != null)
+                    stat.bindLong(4, files.duration);
+                if (files.width != null)
+                    stat.bindLong(5, files.width);
+                if (files.height != null)
+                    stat.bindLong(6, files.height);
+                if (files.file_type != null)
+                    stat.bindLong(7, files.file_type);
+                if (files.name != null)
+                    stat.bindString(8, files.name);
                 stat.bindString(9, files.path);
-                stat.bindString(10, files.root_dir);
-                stat.bindString(11, files.mime_type);
-//                stat.bindString(12, files.artist);//没有值，可以不传
-                stat.bindString(13, files.album);
-                stat.bindString(14, files.display_name);
+                if (files.root_dir != null)
+                    stat.bindString(10, files.root_dir);
+                if (files.mime_type != null)
+                    stat.bindString(11, files.mime_type);
+                if (files.artist != null)
+                    stat.bindString(12, files.artist);//没有值，可以不传
+                if (files.album != null)
+                    stat.bindString(13, files.album);
+                if (files.display_name != null)
+                    stat.bindString(14, files.display_name);
                 stat.bindString(15, "");//不能传空值
                 id = stat.executeInsert();
             }
@@ -68,6 +78,8 @@ public class FilesDao {
             e.printStackTrace();
             Log.e(TAG, "insertFiles: SQLException:" + e.getMessage());
             return false;
+        } finally {
+            db.close();
         }
     }
 
@@ -166,6 +178,38 @@ public class FilesDao {
         return files;
     }
 
+
+    public ArrayList<Files> searchAll() {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "SELECT * FROM files";
+        @SuppressLint("Recycle")
+        Cursor cursor = db.rawQuery(sql, null);
+        ArrayList<Files> files = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Files filesEntity = new Files();
+            filesEntity.id = cursor.getInt(cursor.getColumnIndex("id"));
+            filesEntity.add_time = cursor.getLong(cursor.getColumnIndex("add_time"));
+            filesEntity.modify_time = cursor.getLong(cursor.getColumnIndex("modify_time"));
+            filesEntity.size = cursor.getLong(cursor.getColumnIndex("size"));
+            filesEntity.duration = cursor.getInt(cursor.getColumnIndex("duration"));
+            filesEntity.width = cursor.getInt(cursor.getColumnIndex("width"));
+            filesEntity.height = cursor.getInt(cursor.getColumnIndex("height"));
+            filesEntity.file_type = cursor.getInt(cursor.getColumnIndex("file_type"));
+            filesEntity.name = cursor.getString(cursor.getColumnIndex("name"));
+            filesEntity.path = cursor.getString(cursor.getColumnIndex("path"));
+            filesEntity.root_dir = cursor.getString(cursor.getColumnIndex("root_dir"));
+            filesEntity.mime_type = cursor.getString(cursor.getColumnIndex("mime_type"));
+            filesEntity.artist = cursor.getString(cursor.getColumnIndex("artist"));
+            filesEntity.album = cursor.getString(cursor.getColumnIndex("album"));
+            filesEntity.display_name = cursor.getString(cursor.getColumnIndex("display_name"));
+            filesEntity.tags = cursor.getString(cursor.getColumnIndex("tags"));
+            files.add(filesEntity);
+        }
+        cursor.close();
+        db.close();
+        return files;
+    }
+
     /**
      * 通过id删除记录
      *
@@ -174,7 +218,6 @@ public class FilesDao {
      */
     public boolean deleteById(Long... ids) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.beginTransaction();
         String sql = "DELETE FROM files WHERE id=?";
         try {
             db.execSQL(sql, ids);
@@ -183,9 +226,29 @@ public class FilesDao {
             Log.e(TAG, "deleteById SQLException:" + e.getMessage());
             return false;
         } finally {
-            db.endTransaction();
+            db.close();
         }
-        db.close();
+        return true;
+    }
+
+    /**
+     * 通过id删除记录
+     *
+     * @return
+     */
+    public boolean deleteAll() {
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String sql = "DELETE FROM files";
+        try {
+            db.delete("files", null, null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.e(TAG, "deleteAll SQLException:" + e.getMessage());
+            return false;
+        } finally {
+            db.close();
+        }
+        Log.d(TAG, "deleteAll files table complete");
         return true;
     }
 

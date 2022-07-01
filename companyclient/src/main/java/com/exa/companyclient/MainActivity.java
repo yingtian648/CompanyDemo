@@ -1,8 +1,20 @@
 package com.exa.companyclient;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.os.Bundle;
+
+import com.exa.companyclient.provider.Files;
+import com.exa.companyclient.provider.ProviderUtil;
+import com.exa.companyclient.utils.L;
+import com.exa.companyclient.utils.PermissionUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -10,5 +22,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkPermissions();
+    }
+
+    private void checkPermissions() {
+        PermissionUtil.requestPermission(this, this::loadData,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE});
+    }
+
+    private void loadData() {
+        List<Files> files = ProviderUtil.getProviderData(this);
+        if (!files.isEmpty()) {
+            ProviderUtil.deleteById(this, String.valueOf(files.get(1).id));
+            ProviderUtil.updateData(this, files.get(0));
+            ProviderUtil.insert(this, files.get(0));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        checkPermissions();
     }
 }

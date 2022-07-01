@@ -12,27 +12,29 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.exa.companydemo.base.App;
+import com.exa.companydemo.utils.L;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class MMediaProvider extends ContentProvider {
     private final String TAG = MMediaProvider.class.getSimpleName();
-    private static final String AUTHORITY = "media";
+    private static final String AUTHORITY = "com.media.mine";
     private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/customer");
     private FilesDao dao;
 
     @Override
     public boolean onCreate() {
-        dao = new FilesDao(App.getContext());
+        dao = new FilesDao(getContext());
         return false;
     }
 
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        Log.d(TAG, "query: " + uri + "\u3000\u3000selection:" + selection + "\u3000\u3000sortOrder:" + sortOrder
-                + "\u3000\u3000selectionArgs:" + (selectionArgs == null ? "null" : selectionArgs.toString()));
+        L.d(TAG, "query: " + uri + "\u3000\u3000projection:" + (projection == null ? "null" : projection[0]) + "\u3000\u3000selection:" + selection
+                + "\u3000\u3000sortOrder:" + sortOrder + "\u3000\u3000selectionArgs:" + (selectionArgs == null ? "null" : selectionArgs[0]));
 //        int code = matcher.match(uri);//这里可以根据code来查询对应的表格
         SQLiteDatabase db = dao.getHelper().getReadableDatabase();
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
@@ -58,17 +60,32 @@ public class MMediaProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        return null;
+        L.d(TAG, "update: " + uri + "\u3000\u3000values:" + values);
+        SQLiteDatabase db = dao.getHelper().getWritableDatabase();
+        db.insert("files", null, values);
+        db.close();
+        return uri;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        L.d(TAG, "delete: " + uri + "\u3000\u3000selection:" + selection +
+                "\u3000\u3000selectionArgs:" + (selectionArgs == null ? "null" : selectionArgs[0]));
+        SQLiteDatabase db = dao.getHelper().getWritableDatabase();
+        int result = db.delete("files", selection, selectionArgs);
+        db.close();
+//        getContext().getContentResolver().notifyChange(uri, null);
+        return result;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        L.d(TAG, "update: " + uri + "\u3000\u3000values:" + values + "\u3000\u3000selection:" + selection +
+                "\u3000\u3000selectionArgs:" + (selectionArgs == null ? "null" : selectionArgs[0]));
+        SQLiteDatabase db = dao.getHelper().getWritableDatabase();
+        int result = db.update("files", values, selection, selectionArgs);
+        db.close();
+        return result;
     }
 
     private static class MediaCodes {

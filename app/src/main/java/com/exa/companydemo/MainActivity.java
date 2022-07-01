@@ -10,6 +10,7 @@ import com.exa.companydemo.db.entity.Files;
 import com.exa.companydemo.musicload.MediaLoadActivity;
 import com.exa.companydemo.utils.L;
 import com.exa.companydemo.utils.PermissionUtil;
+import com.exa.companydemo.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,21 +38,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void test() {
-//        final long startTime = System.currentTimeMillis();
-//        List<Runnable> runnables = new ArrayList<>();
-//        for (int i = 0; i < 10000; i++) {
-//            int finalI = i;
-//            runnables.add(() -> {
-//                int total = 0;
-//                for (int j = 0; j < 100000; j++) {
-//                    total += j;
-//                }
-//                L.d(finalI + "当前线程ID: " + Thread.currentThread().getId() + " " + (System.currentTimeMillis() - startTime));
-//            });
-//        }
-//        for (int i = 0; i < 10000; i++) {
-//            Constants.getScheduledPool().execute(runnables.get(i));
-//        }
+//        new Thread(Tools.insertRunnable(this)).start();
     }
 
     public void clickBtn(View view) {

@@ -19,6 +19,8 @@ import com.exa.companydemo.R;
 import com.exa.companydemo.base.BaseBindActivity;
 import com.exa.companydemo.base.adapter.BaseRecyclerAdapter;
 import com.exa.companydemo.databinding.ActivityMusicLoadBinding;
+import com.exa.companydemo.db.FilesDao;
+import com.exa.companydemo.db.entity.Files;
 import com.exa.companydemo.utils.L;
 import com.exa.companydemo.utils.Utils;
 
@@ -26,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Handler;
@@ -36,7 +39,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding> {
     private ArrayList<MediaInfo> musicList;
     private ArrayList<MediaInfo> imageList;
+    private ArrayList<Files> filesList;
     private final BitmapFactory.Options mBitmapOptions = new BitmapFactory.Options();
+    private FilesDao dao;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -47,6 +52,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
     protected void initView() {
         musicList = new ArrayList<>();
         imageList = new ArrayList<>();
+        filesList = new ArrayList<>();
         bind.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         bind.recyclerView.setAdapter(new BaseRecyclerAdapter<MediaInfo>(this, R.layout.item_music_load, musicList) {
             @Override
@@ -66,18 +72,32 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
 
     @Override
     protected void initData() {
+        dao = new FilesDao(this);
         String mroot = Constants.FILE_DIR_MUSIC;
         File file = new File(mroot);
         File[] files = file.listFiles();
         if (files != null)
             Constants.getFixPool().execute(() -> {
+                dao.deleteAll();//清除数据库中所有记录
                 long startTime = System.currentTimeMillis();
                 loadFileAttrs(files);
                 L.d("loadFileAttrs complete " + files.length + "\u3000\u3000" + (System.currentTimeMillis() - startTime));
-                Constants.getHandler().post(() -> {
-                    Collections.reverse(musicList);
-                    bind.recyclerView.getAdapter().notifyDataSetChanged();
-                });
+                if (!musicList.isEmpty()) {
+                    for (int i = 0; i < musicList.size(); i++) {
+                        Files mf = new Files();
+                        mf.name = musicList.get(i).name;
+                        mf.path = musicList.get(i).path;
+                        mf.size = musicList.get(i).size;
+                        mf.display_name = musicList.get(i).displayName;
+                        mf.width = musicList.get(i).width;
+                        mf.height = musicList.get(i).height;
+                        mf.mime_type = musicList.get(i).mimeType;
+                        mf.album = musicList.get(i).album;
+                        mf.duration = musicList.get(i).duration;
+                        filesList.add(mf);
+                    }
+                    dao.insertFiles2(filesList);//插入Provider数据库
+                }
             });
 
         String iroot = Constants.FILE_DIR_IMAGE;
