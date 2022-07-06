@@ -14,10 +14,11 @@
         android:theme="@style/Theme.CompanyDemo"
         tools:targetApi="31">
         <activity
+            android:name=".SecondActivity"
+            android:exported="false" />
+        <activity
             android:name=".musicload.MediaLoadActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -27,34 +28,38 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!--    这里主要的字段为 authorities ，他是ContentProvider的唯一标识。
+        <!--
+        这里主要的字段为 authorities ，他是ContentProvider的唯一标识。
         permission，它分为 读权限，和写权限 对应为 android:readpermission 和
         android:writepermission 。 multiprocess如果设置为true标识每个调用进程都拥有一个示例，负责只有所有进程只有一个示例。process字段使得它运行在一个名为com.blueberry.process1的进程中
 
         grant-uri-permission标明可被授权的一个或多个数据子集的路径部分。 path 属性指定完整路径，只能对该路径指定部分的数据子集进行授权。 pathPrefix属性指定路径的起始部分，只能对那些以此为路径前缀的数据进行授权。 pathPattern属性也指定完整路径，只是可包含以下通配符：
         星号（'*'）匹配紧随其前字符的0次或多次出现。
-        句点加星号（“.*”）匹配任何字符的0次或多次出现 -->
+        句点加星号（“.*”）匹配任何字符的0次或多次出现
+        -->
         <provider
             android:name=".db.MMediaProvider"
             android:authorities="com.media.mine"
             android:exported="true"
             android:multiprocess="false">
             <grant-uri-permission android:pathPrefix="/customer/" />
-            <!--   指定需要访问路径需要读写权限 pathPrefix属性指定路径的起始部分 -->
+            <!-- 指定需要访问路径需要读写权限 pathPrefix属性指定路径的起始部分 -->
             <path-permission
                 android:pathPrefix="/customer/"
                 android:readPermission="android.permission.READ_EXTERNAL_STORAGE"
                 android:writePermission="android.permission.WRITE_EXTERNAL_STORAGE" />
         </provider>
 
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

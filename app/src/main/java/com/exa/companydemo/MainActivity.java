@@ -1,9 +1,14 @@
 package com.exa.companydemo;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
+import android.widget.Toast;
 
 import com.exa.companydemo.base.BaseActivity;
 import com.exa.companydemo.db.entity.Files;
@@ -28,7 +33,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-
+        findViewById(R.id.btn).setOnClickListener(view -> {
+            L.d("点击Toast测试1");
+            Toast.makeText(this, "原生Toast测试", Toast.LENGTH_SHORT).show();
+        });
+        findViewById(R.id.btn2).setOnClickListener(view -> {
+            L.d("点击跳转到第二个页面");
+            startActivity(new Intent(this,SecondActivity.class));
+        });
     }
 
     @Override
@@ -38,11 +50,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void test() {
-//        new Thread(Tools.insertRunnable(this)).start();
-    }
 
-    public void clickBtn(View view) {
-        startActivity(new Intent(this, MediaLoadActivity.class));
     }
 
     private void checkPermission() {

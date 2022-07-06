@@ -17,11 +17,16 @@
 
     <Button
         android:id="@+id/btn"
-        android:onClick="clickBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="按钮"
+        android:text="弹出toast"
+        app:layout_constraintBottom_toTopOf="@id/btn2"
+        />
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="跳转到第二个页面"
         app:layout_constraintBottom_toBottomOf="parent"
         />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
