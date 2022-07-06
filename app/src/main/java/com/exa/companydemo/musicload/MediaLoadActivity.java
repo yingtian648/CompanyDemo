@@ -1,18 +1,17 @@
 package com.exa.companydemo.musicload;
 
-import android.content.ContentProvider;
-import android.content.ContentResolver;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
-import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.exa.companydemo.Constants;
 import com.exa.companydemo.R;
@@ -22,19 +21,11 @@ import com.exa.companydemo.databinding.ActivityMusicLoadBinding;
 import com.exa.companydemo.db.FilesDao;
 import com.exa.companydemo.db.entity.Files;
 import com.exa.companydemo.utils.L;
-import com.exa.companydemo.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Handler;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding> {
     private ArrayList<MediaInfo> musicList;

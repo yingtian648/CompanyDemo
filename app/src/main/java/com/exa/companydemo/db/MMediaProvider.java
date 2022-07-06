@@ -9,13 +9,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
-
-import com.exa.companydemo.base.App;
-import com.exa.companydemo.utils.L;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.exa.companydemo.utils.L;
 
 /**
  * 基本数据在MediaLoadActivity中插入

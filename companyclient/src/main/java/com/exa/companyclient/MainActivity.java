@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-
+        ProviderUtil.getSystemMediaProviderData(this);
     }
 
     @Override

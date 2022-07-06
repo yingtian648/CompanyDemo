@@ -53,7 +53,7 @@ public class MyService extends Service {
     public static class MyBinder extends Binder {
         private Callback callback;
         public void setCallback(Callback callback) {
-            L.d("MyBinder.doSomeThing");
+            L.d("MyBinder.setCallback");
             this.callback = callback;
             if(callback!=null){
                 callback.onResult("我又回来了");

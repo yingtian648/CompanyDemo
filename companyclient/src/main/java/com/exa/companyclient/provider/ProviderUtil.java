@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 
 import com.exa.companyclient.Constants;
 import com.exa.companyclient.utils.L;
@@ -22,6 +23,45 @@ public class ProviderUtil {
             ProviderUtil.updateData(context, files.get(0));
             ProviderUtil.insert(context, files.get(0));
         }
+    }
+
+    public static List<Files> getSystemMediaProviderData(Context context) {
+        ContentResolver resolver = context.getContentResolver();
+        String[] projection = new String[]{
+                MediaStore.Video.Media._ID,
+                MediaStore.Video.Media.TITLE,
+                MediaStore.Video.Media.ALBUM,
+                MediaStore.Video.Media.SIZE,
+                MediaStore.Video.Media.DURATION,
+                MediaStore.Video.Media.MIME_TYPE,
+                MediaStore.Video.Media.DISPLAY_NAME,
+//                MediaStore.Video.Media.AUTHOR,//API 30
+//                MediaStore.Video.Media.ALBUM_ARTIST,//API 30
+                MediaStore.Video.Media.DATA,
+                MediaStore.Video.Media.DATE_ADDED,
+                MediaStore.Video.Media.DATE_MODIFIED,
+                MediaStore.Video.Media.HEIGHT,
+                MediaStore.Video.Media.WIDTH,
+        };
+        Cursor cursor = resolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,//外部存储
+                projection, null, null, null);
+        List<Files> dataList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Files info = new Files();
+            info.name = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
+            info.size = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.SIZE));
+            info.path = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+            info.id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+            info.add_time = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED));
+            info.modify_time = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
+            info.duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+            info.mime_type = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE));
+            dataList.add(info);
+            L.d("query result:" + info);
+        }
+        cursor.close();
+        L.d("getSystemMediaProviderData : " + dataList.size());
+        return dataList;
     }
 
     public static List<Files> getProviderData(Context context) {
