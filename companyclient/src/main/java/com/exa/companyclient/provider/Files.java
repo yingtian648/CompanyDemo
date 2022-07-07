@@ -31,20 +31,20 @@ public class Files {
     public String toString() {
         return "Files{" +
                 "id=" + id +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", size=" + size +
+                ", mime_type='" + mime_type + '\'' +
+                ", duration=" + duration +
                 ", add_time=" + add_time +
                 ", modify_time=" + modify_time +
-                ", size=" + size +
-                ", duration=" + duration +
+                ", display_name='" + display_name + '\'' +
                 ", width=" + width +
                 ", height=" + height +
                 ", file_type=" + file_type +
-                ", name='" + name + '\'' +
-                ", path='" + path + '\'' +
                 ", root_dir='" + root_dir + '\'' +
-                ", mime_type='" + mime_type + '\'' +
                 ", artist='" + artist + '\'' +
                 ", album='" + album + '\'' +
-                ", display_name='" + display_name + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
     }

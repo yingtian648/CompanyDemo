@@ -4,17 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
-import android.content.ContentResolver;
-import android.database.Cursor;
 import android.os.Bundle;
 
-import com.exa.companyclient.provider.Files;
-import com.exa.companyclient.provider.ProviderUtil;
-import com.exa.companyclient.utils.L;
+import com.exa.companyclient.provider.MyProviderUtil;
 import com.exa.companyclient.utils.PermissionUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        ProviderUtil.getSystemMediaProviderData(this);
+        MyProviderUtil.getSystemMediaProviderData(this,Constants.SystemMediaType.Audio);
     }
 
     @Override
