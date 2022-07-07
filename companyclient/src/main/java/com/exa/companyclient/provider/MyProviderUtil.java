@@ -24,8 +24,6 @@ public class MyProviderUtil {
         }
     }
 
-
-
     public static List<Files> getProviderData(Context context) {
         ContentResolver resolver = context.getContentResolver();
         String[] projection = new String[]{"id", "name", "path", "add_time", "size", "duration"};

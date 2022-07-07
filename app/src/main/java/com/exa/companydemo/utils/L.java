@@ -3,7 +3,7 @@ package com.exa.companydemo.utils;
 import android.util.Log;
 
 public class L {
-    private static final String TAG = "m---->";
+    private static final String TAG = "main--->";
     private static final boolean isDebug = true;
 
     public static void d(String msg) {

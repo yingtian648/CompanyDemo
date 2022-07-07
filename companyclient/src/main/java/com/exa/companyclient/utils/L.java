@@ -3,7 +3,7 @@ package com.exa.companyclient.utils;
 import android.util.Log;
 
 public class L {
-    private static final String TAG = "c---->";
+    private static final String TAG = "client--->";
     private static final boolean isDebug = true;
 
     public static void d(String msg) {
