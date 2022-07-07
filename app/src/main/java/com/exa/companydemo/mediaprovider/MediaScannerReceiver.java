@@ -1,11 +1,12 @@
-package com.exa.companyclient.provider;
+package com.exa.companydemo.mediaprovider;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
-import com.exa.baselib.utils.L;
 import com.exa.baselib.BaseConstants;
+import com.exa.baselib.utils.L;
 
 /**
  * adb模拟执行
@@ -21,18 +22,26 @@ public class MediaScannerReceiver extends BroadcastReceiver {
         L.d("MediaScannerReceiver onReceive:" + action);
         switch (action) {
             case BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH://自定义媒体扫描完成
-                ExeHelper.getInstance().exeGetMyMediaProviderData();
                 break;
             case Intent.ACTION_MEDIA_MOUNTED://挂载
+                startMediaScannerService(context);
                 break;
             case Intent.ACTION_MEDIA_UNMOUNTED://卸载
                 break;
             case Intent.ACTION_MEDIA_SCANNER_STARTED://扫描开始
                 break;
             case Intent.ACTION_MEDIA_SCANNER_FINISHED://扫描结束
-                ExeHelper.getInstance().exeGetSystemMediaProviderData();
+
                 break;
         }
+    }
+
+    private void startMediaScannerService(Context context) {
+        Intent intent = new Intent(context, MediaScannerService.class);
+        Bundle b = new Bundle();
+        b.putString("path", BaseConstants.FILE_DIR_MUSIC);
+        intent.putExtras(b);
+        context.startService(intent);
     }
 }
 

@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.exa.companyclient.Constants;
-import com.exa.companyclient.utils.L;
+import com.exa.baselib.utils.L;
+import com.exa.baselib.BaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class SystemMediaProviderUtil {
      *
      * @param context
      * @param type    1音频 2视频 3图片
-     * @return
+     * @return data
      */
     public static List<Files> getSystemMediaProviderData(Context context, int type) {
         L.d("getSystemMediaProviderData start:" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
@@ -26,7 +26,7 @@ public class SystemMediaProviderUtil {
         String[] projection;
         Uri uri;
         switch (type) {
-            case Constants.SystemMediaType.Image:
+            case BaseConstants.SystemMediaType.Image:
                 uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
                 projection = new String[]{
                         MediaStore.Video.Media._ID,
@@ -43,7 +43,7 @@ public class SystemMediaProviderUtil {
                         MediaStore.Video.Media.WIDTH,
                 };
                 break;
-            case Constants.SystemMediaType.Video:
+            case BaseConstants.SystemMediaType.Video:
                 uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 projection = new String[]{
                         MediaStore.Video.Media._ID,
@@ -91,11 +91,11 @@ public class SystemMediaProviderUtil {
             info.id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
             info.add_time = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_ADDED));
             info.modify_time = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED));
-            if (type != Constants.SystemMediaType.Image) {
+            if (type != BaseConstants.SystemMediaType.Image) {
                 info.duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
             }
             info.mime_type = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE));
-            if (type != Constants.SystemMediaType.Audio) {
+            if (type != BaseConstants.SystemMediaType.Audio) {
                 info.width = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.WIDTH));
                 info.height = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.HEIGHT));
             }

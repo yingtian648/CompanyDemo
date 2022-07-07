@@ -4,7 +4,7 @@
     package="com.exa.companyclient">
 
     <application
-        android:name=".base.App"
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -26,6 +26,7 @@
                 <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <action android:name="com.media.mine.finish" />
             </intent-filter>
         </receiver>
     </application>

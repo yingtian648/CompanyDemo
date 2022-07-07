@@ -1,8 +1,8 @@
 package com.exa.companyclient.provider;
 
-import com.exa.companyclient.Constants;
-import com.exa.companyclient.base.App;
-import com.exa.companyclient.utils.L;
+import com.exa.baselib.utils.L;
+import com.exa.companyclient.App;
+import com.exa.baselib.BaseConstants;
 
 public class ExeHelper {
 
@@ -18,16 +18,22 @@ public class ExeHelper {
     }
 
     public void exeGetSystemMediaProviderData() {
-        Constants.getFixPool().execute(() -> {
-            SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), Constants.SystemMediaType.Audio);
+        BaseConstants.getFixPool().execute(() -> {
+            SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Audio);
             L.d("\n");
             L.d("\n");
             L.d("\n");
-            SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), Constants.SystemMediaType.Video);
+            SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Video);
             L.d("\n");
             L.d("\n");
             L.d("\n");
-            SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), Constants.SystemMediaType.Image);
+            SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Image);
+        });
+    }
+
+    public void exeGetMyMediaProviderData() {
+        BaseConstants.getFixPool().execute(() -> {
+            MyProviderUtil.testMyProvider(App.getContext());
         });
     }
 }

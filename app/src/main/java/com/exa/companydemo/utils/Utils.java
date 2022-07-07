@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 
+import com.exa.baselib.utils.L;
+
 public class Utils {
     /**
      * 获取封面

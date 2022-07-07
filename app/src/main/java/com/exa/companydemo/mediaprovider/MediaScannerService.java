@@ -1,79 +1,65 @@
-package com.exa.companydemo.musicload;
+package com.exa.companydemo.mediaprovider;
 
-import android.graphics.Bitmap;
+import android.app.Service;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.os.IBinder;
+import android.util.SparseArray;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import com.exa.companydemo.Constants;
-import com.exa.companydemo.R;
-import com.exa.baselib.base.BaseBindActivity;
-import com.exa.baselib.base.adapter.BaseRecyclerAdapter;
-import com.exa.companydemo.databinding.ActivityMusicLoadBinding;
-import com.exa.companydemo.mediaprovider.FilesDao;
-import com.exa.companydemo.mediaprovider.entity.Files;
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
+import com.exa.companydemo.Constants;
+import com.exa.companydemo.mediaprovider.entity.Files;
+import com.exa.companydemo.musicload.MediaInfo;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding> {
-    private ArrayList<MediaInfo> musicList;
-    private ArrayList<MediaInfo> imageList;
-    private ArrayList<Files> filesList;
-    private final BitmapFactory.Options mBitmapOptions = new BitmapFactory.Options();
+import androidx.annotation.Nullable;
+
+public class MediaScannerService extends Service {
     private FilesDao dao;
+    private final BitmapFactory.Options mBitmapOptions = new BitmapFactory.Options();
 
     @Override
-    protected int setContentViewLayoutId() {
-        return R.layout.activity_music_load;
-    }
-
-    @Override
-    protected void initView() {
-        musicList = new ArrayList<>();
-        imageList = new ArrayList<>();
-        filesList = new ArrayList<>();
-        bind.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        bind.recyclerView.setAdapter(new BaseRecyclerAdapter<MediaInfo>(this, R.layout.item_music_load, musicList) {
-            @Override
-            protected void onViewHolder(@NonNull View view, @NonNull MediaInfo data, int position) {
-                TextView titleT = view.findViewById(R.id.title);
-                ImageView image = view.findViewById(R.id.image);
-                TextView artListT = view.findViewById(R.id.artList);
-                TextView pathT = view.findViewById(R.id.path);
-//                image.setImageBitmap(Utils.getCover(data.path));
-                titleT.setText(data.title == null ? data.name : data.title);
-                int r = data.duration / 1000;
-                artListT.setText(r / 60 + "\'" + r % 60 + "\" " + (data.album == null ? "" : data.album) + " " + (data.size / 1024 + "KB"));
-                pathT.setText(data.path);
-            }
-        });
-    }
-
-    @Override
-    protected void initData() {
+    public void onCreate() {
+        super.onCreate();
         dao = new FilesDao(this);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        doScan(intent);
+        return Service.START_REDELIVER_INTENT;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    private void doScan(Intent intent) {
         String mroot = Constants.FILE_DIR_MUSIC;
+        if (intent != null && intent.getExtras() != null) {
+            mroot = intent.getExtras().getString("path");
+        }
+        L.d("start doScan:" + mroot);
+        long startTime = System.currentTimeMillis();
         File file = new File(mroot);
-        File[] files = file.listFiles();
+        final File[] files = file.listFiles();
+        AtomicInteger total = new AtomicInteger();
         if (files != null)
             Constants.getFixPool().execute(() -> {
                 dao.deleteAll();//清除数据库中所有记录
-                long startTime = System.currentTimeMillis();
-                loadFileAttrs(files);
+                SparseArray<MediaInfo> musicList = loadFileAttrs(files);
                 L.d("loadFileAttrs complete " + files.length + "\u3000\u3000" + (System.currentTimeMillis() - startTime));
-                if (!musicList.isEmpty()) {
+                if (musicList.size() > 0) {
+                    ArrayList<Files> filesList = new ArrayList<>();
                     for (int i = 0; i < musicList.size(); i++) {
                         Files mf = new Files();
                         mf.name = musicList.get(i).name;
@@ -88,51 +74,26 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                         filesList.add(mf);
                     }
                     dao.insertFiles2(filesList);//插入Provider数据库
+                    total.set(filesList.size());
                 }
             });
-
-        String iroot = Constants.FILE_DIR_IMAGE;
-        File filei = new File(iroot);
-        File[] fileis = filei.listFiles();
-        if (fileis != null)
-            Constants.getFixPool().execute(() -> {
-                long startTime = System.currentTimeMillis();
-                processImageFileInDir(fileis);
-                L.d("processImageFileInDir complete " + fileis.length + "  " + (System.currentTimeMillis() - startTime));
-                Collections.reverse(imageList);
-            });
-        String vroot = Constants.FILE_DIR_VIDEO;
-        File fileVideo = new File(vroot);
-        if (fileVideo.exists() && fileVideo.isDirectory()) {
-            File[] vs = fileVideo.listFiles();
-            if (vs != null) {
-                Constants.getFixPool().execute(() -> {
-                    for (File filev : vs) {
-                        boolean success = loadVideoThumbnail(filev.getAbsolutePath());
-                        if (success) break;
-                    }
-                });
-            }
-        }
+        sendFinishBroadCast();
+        L.d("end doScan:" + total.get() + "  payTime:" + (System.currentTimeMillis() - startTime));
     }
 
-    private boolean loadVideoThumbnail(String path) {
-        long start = System.currentTimeMillis();
-
-        MediaStore.Video.Thumbnails.getThumbnail(getContentResolver(), 1, MediaStore.Video.Thumbnails.MICRO_KIND, null);
-        final Bitmap[] bitmap = {ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND)};
-        if (bitmap[0] == null || bitmap[0].getByteCount() == 0) return false;
-        L.d("解析缩略图：" + (System.currentTimeMillis() - start) + " " + bitmap[0].getByteCount());
-        runOnUiThread(() -> {
-            bind.image.setImageBitmap(bitmap[0]);
-            bitmap[0] = null;
-        });
-        return true;
+    /**
+     * 扫描完成广播
+     */
+    private void sendFinishBroadCast() {
+        L.dd(BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH);
+        Intent intent = new Intent(BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH);
+        sendBroadcast(intent);
     }
 
-    private void loadFileAttrs(File[] files) {
-        musicList.clear();
+    private SparseArray<MediaInfo> loadFileAttrs(File[] files) {
+        SparseArray<MediaInfo> datas = new SparseArray<>();
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        int index = 0;
         for (File file : files) {
             long start = System.currentTimeMillis();
             MediaInfo entry = new MediaInfo();
@@ -170,17 +131,20 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 String height = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
                 entry.height = height == null ? 0 : Integer.parseInt(height);
 //                L.d("paytime:" + (System.currentTimeMillis() - start) + "\u3000\u3000" + file.getAbsolutePath());
-                musicList.add(entry);
+                datas.append(index, entry);
+                index++;
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 L.e("mmr.setDataSource err");
             }
         }
+        return datas;
     }
 
 
-    private void processImageFileInDir(File[] files) {
-        imageList.clear();
+    private SparseArray<MediaInfo> processImageFileInDir(File[] files) {
+        SparseArray<MediaInfo> datas = new SparseArray<>();
+        int index = 0;
         for (File file : files) {
             MediaInfo entry = new MediaInfo();
             entry.size = file.length();
@@ -203,11 +167,13 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 BitmapFactory.decodeFile(file.getAbsolutePath(), mBitmapOptions);
                 entry.width = mBitmapOptions.outWidth;
                 entry.height = mBitmapOptions.outHeight;
-                imageList.add(entry);
+                datas.append(index, entry);
+                index++;
             } catch (Throwable th) {
                 th.printStackTrace();
                 L.e("processImageFileInDir err");
             }
         }
+        return datas;
     }
 }

@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import com.exa.companydemo.base.BaseActivity;
-import com.exa.companydemo.utils.L;
+import com.exa.baselib.base.BaseActivity;
+import com.exa.baselib.utils.L;
 
 public class SecondActivity extends BaseActivity {
 

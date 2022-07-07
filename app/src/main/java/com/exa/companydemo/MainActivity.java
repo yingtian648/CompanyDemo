@@ -1,28 +1,14 @@
 package com.exa.companydemo;
 
 import android.Manifest;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.view.View;
 import android.widget.Toast;
 
-import com.exa.companydemo.base.BaseActivity;
-import com.exa.companydemo.db.entity.Files;
-import com.exa.companydemo.musicload.MediaLoadActivity;
-import com.exa.companydemo.utils.L;
+import com.exa.baselib.base.BaseActivity;
+import com.exa.baselib.utils.L;
 import com.exa.companydemo.utils.PermissionUtil;
-import com.exa.companydemo.utils.Tools;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends BaseActivity {
 

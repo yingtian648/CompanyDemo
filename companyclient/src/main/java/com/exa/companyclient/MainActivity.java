@@ -1,14 +1,12 @@
 package com.exa.companyclient;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.os.Bundle;
 
-import com.exa.companyclient.provider.MyProviderUtil;
-import com.exa.companyclient.provider.SystemMediaProviderUtil;
-import com.exa.companyclient.utils.PermissionUtil;
+import com.exa.baselib.utils.PermissionUtil;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
-        SystemMediaProviderUtil.getSystemMediaProviderData(this,Constants.SystemMediaType.Audio);
+//        SystemMediaProviderUtil.getSystemMediaProviderData(this,Constants.SystemMediaType.Audio);
+//        MyProviderUtil.testMyProvider(this);
     }
 
     @Override

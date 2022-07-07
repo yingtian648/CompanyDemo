@@ -2,8 +2,8 @@ package com.exa.companydemo.utils;
 
 import android.content.Context;
 
-import com.exa.companydemo.db.FilesDao;
-import com.exa.companydemo.db.entity.Files;
+import com.exa.companydemo.mediaprovider.FilesDao;
+import com.exa.companydemo.mediaprovider.entity.Files;
 
 import java.util.ArrayList;
 
