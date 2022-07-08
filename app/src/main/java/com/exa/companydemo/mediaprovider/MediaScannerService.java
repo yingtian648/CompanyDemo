@@ -53,7 +53,7 @@ public class MediaScannerService extends Service {
         File file = new File(mroot);
         final File[] files = file.listFiles();
         AtomicInteger total = new AtomicInteger();
-        if (files != null)
+        if (files != null) {
             Constants.getFixPool().execute(() -> {
                 dao.deleteAll();//清除数据库中所有记录
                 SparseArray<MediaInfo> musicList = loadFileAttrs(files);
@@ -73,13 +73,17 @@ public class MediaScannerService extends Service {
                         mf.duration = musicList.get(i).duration;
                         filesList.add(mf);
                     }
-                    dao.insertFiles2(filesList);//插入Provider数据库
+                    dao.insertByContentValues(filesList);//插入Provider数据库
                     total.set(filesList.size());
+                    L.d("end doScan:" + total.get() + "  payTime:" + (System.currentTimeMillis() - startTime));
                 }
-                getContentResolver().notifyChange(BaseConstants.CUSTOMER_URI, null);
                 sendFinishBroadCast();
+                getContentResolver().notifyChange(BaseConstants.CUSTOMER_URI, null);
             });
-        L.d("end doScan:" + total.get() + "  payTime:" + (System.currentTimeMillis() - startTime));
+        } else {
+            sendFinishBroadCast();
+            L.d("end doScan:0" + "  payTime:" + (System.currentTimeMillis() - startTime));
+        }
     }
 
     /**
@@ -134,7 +138,7 @@ public class MediaScannerService extends Service {
 //                L.d("paytime:" + (System.currentTimeMillis() - start) + "\u3000\u3000" + file.getAbsolutePath());
                 datas.append(index, entry);
                 index++;
-                L.v("scanfile:" + entry);
+//                L.v("scanfile:" + entry);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 L.e("mmr.setDataSource err");

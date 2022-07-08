@@ -1,6 +1,7 @@
 package com.exa.companydemo.mediaprovider;
 
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -29,7 +30,7 @@ public class FilesDao {
     /**
      * 插入数据列表
      */
-    public boolean insertFiles2(@NonNull ArrayList<Files> filesList) {
+    public boolean insertBySQLiteStatement(@NonNull ArrayList<Files> filesList) {
         Log.d(TAG, "insertFiles files.size=" + filesList.size());
         long time = System.currentTimeMillis();
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -81,6 +82,42 @@ public class FilesDao {
         } finally {
             db.close();
         }
+    }
+
+    /**
+     * 批量插入
+     *
+     * @param filesList
+     */
+    public void insertByContentValues(@NonNull ArrayList<Files> filesList) {
+        Log.d(TAG, "insertFiles files.size=" + filesList.size());
+        long time = System.currentTimeMillis();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        for (Files files : filesList) {
+            ContentValues values = new ContentValues();
+            values.put("add_time", files.add_time);
+            values.put("modify_time", files.modify_time);
+            values.put("size", files.size);
+            values.put("duration", files.duration);
+            values.put("width", files.width);
+            values.put("height", files.height);
+            values.put("file_type", files.file_type);
+            values.put("name", files.name);
+            values.put("path", files.path);
+            values.put("root_dir", files.root_dir);
+            values.put("mime_type", files.mime_type);
+            values.put("artist", files.artist);
+            values.put("album", files.album);
+            values.put("display_name", files.display_name);
+            values.put("tags", files.tags);
+
+            SQLiteDatabase db1 = helper.getWritableDatabase();
+            db.insert("files", null, values);
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+        db.close();
     }
 
     /**

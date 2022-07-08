@@ -86,7 +86,7 @@ public class MyProviderUtil {
             dataList.add(info);
         }
         cursor.close();
-        L.d("query result:" + dataList.size());
+        L.e("query result:" + dataList.size());
         return dataList;
     }
 

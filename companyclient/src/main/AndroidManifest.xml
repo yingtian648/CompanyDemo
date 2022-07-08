@@ -24,8 +24,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
                 <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+<!--                <action android:name="android.intent.action.MEDIA_MOUNTED" />-->
+<!--                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />-->
                 <action android:name="com.media.mine.finish" />
             </intent-filter>
         </receiver>

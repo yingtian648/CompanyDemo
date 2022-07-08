@@ -87,7 +87,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                         mf.duration = musicList.get(i).duration;
                         filesList.add(mf);
                     }
-                    dao.insertFiles2(filesList);//插入Provider数据库
+                    dao.insertBySQLiteStatement(filesList);//插入Provider数据库
                 }
             });
 

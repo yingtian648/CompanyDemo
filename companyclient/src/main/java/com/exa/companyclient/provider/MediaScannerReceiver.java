@@ -18,7 +18,7 @@ public class MediaScannerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        L.d("MediaScannerReceiver onReceive:" + action);
+        L.e("MediaScannerReceiver onReceive:" + action);
         switch (action) {
             case BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH://自定义媒体扫描完成
                 ExeHelper.getInstance().exeGetMyMediaProviderData();

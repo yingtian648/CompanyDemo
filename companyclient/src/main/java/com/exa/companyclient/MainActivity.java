@@ -6,11 +6,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.PermissionUtil;
 import com.exa.companyclient.databinding.ActivityMainBinding;
 import com.exa.companyclient.provider.MyProviderUtil;
+import com.exa.companyclient.provider.SystemMediaProviderUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,8 +48,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
     private void loadData() {
 
-
-//        SystemMediaProviderUtil.getSystemMediaProviderData(this,Constants.SystemMediaType.Audio);
+//        SystemMediaProviderUtil.getSystemMediaProviderData(this, BaseConstants.SystemMediaType.Audio);
 //        MyProviderUtil.testMyProvider(this);
     }
 

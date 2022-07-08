@@ -22,6 +22,8 @@ public class SystemMediaProviderUtil {
      */
     public static List<Files> getSystemMediaProviderData(Context context, int type) {
         L.d("getSystemMediaProviderData start:" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        Uri urip = Uri.parse("content://media").buildUpon().appendPath("external").appendPath("audio").appendPath("media").build();
+        L.d("urip:"+urip.toString());
         ContentResolver resolver = context.getContentResolver();
         String[] projection;
         Uri uri;

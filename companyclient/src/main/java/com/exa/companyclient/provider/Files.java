@@ -1,6 +1,8 @@
 package com.exa.companyclient.provider;
 
 
+import java.util.Objects;
+
 /*
             "create table "
             + "files"
@@ -26,6 +28,19 @@ public class Files {
     public String album;
     public String display_name;
     public String tags;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Files)) return false;
+        Files files = (Files) o;
+        return id == files.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     @Override
     public String toString() {

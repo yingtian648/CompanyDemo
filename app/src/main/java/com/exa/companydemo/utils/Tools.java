@@ -16,7 +16,7 @@ public class Tools {
                 files.add(makeFiles(i + 1));
             }
             FilesDao dao = new FilesDao(context);
-            dao.insertFiles2(files);
+            dao.insertBySQLiteStatement(files);
         };
     }
 
