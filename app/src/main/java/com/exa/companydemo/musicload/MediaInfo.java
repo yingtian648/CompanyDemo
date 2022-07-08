@@ -1,7 +1,6 @@
 package com.exa.companydemo.musicload;
 
 public class MediaInfo {
-    public String name;
     public String path;
     public String author;
     public String title;//MediaMetadataRetriever.METADATA_KEY_TITLE
@@ -22,10 +21,10 @@ public class MediaInfo {
     @Override
     public String toString() {
         return "MediaInfo{" +
-                "name='" + name + '\'' +
+                "title='" + title + '\'' +
+                ", displayName=" + displayName +
                 ", path='" + path + '\'' +
                 ", author='" + author + '\'' +
-                ", title='" + title + '\'' +
                 ", artList='" + artList + '\'' +
                 ", mimeType='" + mimeType + '\'' +
                 ", suffix='" + suffix + '\'' +
@@ -33,7 +32,6 @@ public class MediaInfo {
                 ", albumArtist='" + albumArtist + '\'' +
                 ", duration=" + duration +
                 ", size=" + size +
-                ", displayName=" + displayName +
                 ", width=" + width +
                 ", height=" + height +
                 ", lat=" + lat +

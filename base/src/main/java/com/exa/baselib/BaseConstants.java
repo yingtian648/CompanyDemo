@@ -13,9 +13,10 @@ public class BaseConstants {
 
     public static final Uri CUSTOMER_URI = Uri.parse("content://" + AUTHORITY + "/customer");
 
-    public static String FILE_DIR_MUSIC = "/storage/emulated/0/Music/Music";
-    public static String FILE_DIR_IMAGE = "/storage/emulated/0/Music/Image";
-    public static String FILE_DIR_VIDEO = "/storage/emulated/0/Music/Video";
+    public static final String FILE_DIR_MUSIC = "/storage/emulated/0/Music/Music";
+    public static final String FILE_DIR_IMAGE = "/storage/emulated/0/Music/Image";
+    public static final String FILE_DIR_VIDEO = "/storage/emulated/0/Music/Video";
+    public static final String FILE_DIR = "/storage/emulated/0/Music";
 
 
     private static ExecutorService singlePool, fixPool, scheduledPool;

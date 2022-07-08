@@ -62,7 +62,7 @@ public class MediaScannerService extends Service {
                     ArrayList<Files> filesList = new ArrayList<>();
                     for (int i = 0; i < musicList.size(); i++) {
                         Files mf = new Files();
-                        mf.name = musicList.get(i).name;
+                        mf.name = musicList.get(i).title;
                         mf.path = musicList.get(i).path;
                         mf.size = musicList.get(i).size;
                         mf.display_name = musicList.get(i).displayName;
@@ -76,8 +76,9 @@ public class MediaScannerService extends Service {
                     dao.insertFiles2(filesList);//插入Provider数据库
                     total.set(filesList.size());
                 }
+                getContentResolver().notifyChange(BaseConstants.CUSTOMER_URI, null);
+                sendFinishBroadCast();
             });
-        sendFinishBroadCast();
         L.d("end doScan:" + total.get() + "  payTime:" + (System.currentTimeMillis() - startTime));
     }
 
@@ -98,7 +99,7 @@ public class MediaScannerService extends Service {
             long start = System.currentTimeMillis();
             MediaInfo entry = new MediaInfo();
             entry.size = file.length();
-            entry.name = file.getName();
+            entry.displayName = file.getName();
             entry.path = file.getAbsolutePath();
             try {
                 mmr.setDataSource(file.getAbsolutePath());
@@ -133,6 +134,7 @@ public class MediaScannerService extends Service {
 //                L.d("paytime:" + (System.currentTimeMillis() - start) + "\u3000\u3000" + file.getAbsolutePath());
                 datas.append(index, entry);
                 index++;
+                L.v("scanfile:" + entry);
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 L.e("mmr.setDataSource err");

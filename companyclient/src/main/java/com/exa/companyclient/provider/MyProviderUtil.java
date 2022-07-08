@@ -3,16 +3,37 @@ package com.exa.companyclient.provider;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import com.exa.baselib.utils.L;
 import com.exa.baselib.BaseConstants;
+import com.exa.companyclient.App;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+
 public class MyProviderUtil {
+    private static ContentObserver observer;
+
+    public static ContentObserver getObserver() {
+        if (observer == null) {
+            HandlerThread handlerThread = new HandlerThread("another");
+            handlerThread.start();
+            observer = new ContentObserver(new Handler(handlerThread.getLooper())) {
+                @Override
+                public void onChange(boolean selfChange, @Nullable Uri uri) {//搜到uri变化回调
+                    L.d("ContentObserver.onChange:" + uri);
+                }
+            };
+        }
+        return observer;
+    }
 
     //测试provider功能
     public static void testMyProvider(Context context) {
@@ -22,6 +43,30 @@ public class MyProviderUtil {
 //            MyProviderUtil.updateData(context, files.get(0));
 //            MyProviderUtil.insert(context, files.get(0));
 //        }
+    }
+
+    /**
+     * 注册监听者 监听uri的变化
+     *
+     * @param context
+     * @param observer
+     */
+    public static void registerObserver(Context context, ContentObserver observer) {
+        L.dd();
+        ContentResolver resolver = context.getContentResolver();
+        resolver.registerContentObserver(BaseConstants.CUSTOMER_URI, true, observer);
+    }
+
+    /**
+     * 注销监听者
+     *
+     * @param context
+     * @param observer
+     */
+    public static void unregisterObserver(Context context, ContentObserver observer) {
+        L.dd();
+        ContentResolver resolver = context.getContentResolver();
+        resolver.unregisterContentObserver(observer);
     }
 
     public static List<Files> getProviderData(Context context) {

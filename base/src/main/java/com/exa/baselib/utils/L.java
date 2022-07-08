@@ -21,9 +21,19 @@ public class L {
             Log.e(TAG, "" + msg);
     }
 
+    public static void v(String msg) {
+        if (isLog)
+            Log.v(TAG, "" + msg);
+    }
+
     public static void e(String TAG, String msg) {
         if (isLog)
             Log.e(L.TAG + TAG, "" + msg);
+    }
+
+    public static void v(String TAG, String msg) {
+        if (isLog)
+            Log.v(L.TAG + TAG, "" + msg);
     }
 
     public static void d(String TAG, String msg) {

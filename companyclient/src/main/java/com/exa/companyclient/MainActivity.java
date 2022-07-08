@@ -1,20 +1,41 @@
 package com.exa.companyclient;
 
 import android.Manifest;
-import android.os.Bundle;
+import android.database.ContentObserver;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
 
+import com.exa.baselib.base.BaseBindActivity;
+import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.PermissionUtil;
+import com.exa.companyclient.databinding.ActivityMainBinding;
+import com.exa.companyclient.provider.MyProviderUtil;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    protected int setContentViewLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initView() {
         checkPermissions();
+        bind.btn1.setOnClickListener(view -> {
+            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
+        });
+        bind.btn2.setOnClickListener(view -> {
+            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
+        });
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     private void checkPermissions() {
@@ -24,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+
+
 //        SystemMediaProviderUtil.getSystemMediaProviderData(this,Constants.SystemMediaType.Audio);
 //        MyProviderUtil.testMyProvider(this);
     }

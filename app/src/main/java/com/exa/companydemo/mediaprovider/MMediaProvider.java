@@ -66,6 +66,7 @@ public class MMediaProvider extends ContentProvider {
         SQLiteDatabase db = dao.getHelper().getWritableDatabase();
         db.insert("files", null, values);
         db.close();
+        getContext().getContentResolver().notifyChange(uri, null);
         return uri;
     }
 
@@ -76,7 +77,7 @@ public class MMediaProvider extends ContentProvider {
         SQLiteDatabase db = dao.getHelper().getWritableDatabase();
         int result = db.delete("files", selection, selectionArgs);
         db.close();
-//        getContext().getContentResolver().notifyChange(uri, null);
+        getContext().getContentResolver().notifyChange(uri, null);
         return result;
     }
 
@@ -87,6 +88,7 @@ public class MMediaProvider extends ContentProvider {
         SQLiteDatabase db = dao.getHelper().getWritableDatabase();
         int result = db.update("files", values, selection, selectionArgs);
         db.close();
+        getContext().getContentResolver().notifyChange(uri, null);
         return result;
     }
 

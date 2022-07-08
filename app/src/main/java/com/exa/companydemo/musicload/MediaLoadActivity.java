@@ -53,7 +53,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 TextView artListT = view.findViewById(R.id.artList);
                 TextView pathT = view.findViewById(R.id.path);
 //                image.setImageBitmap(Utils.getCover(data.path));
-                titleT.setText(data.title == null ? data.name : data.title);
+                titleT.setText(data.title == null ? data.displayName : data.title);
                 int r = data.duration / 1000;
                 artListT.setText(r / 60 + "\'" + r % 60 + "\" " + (data.album == null ? "" : data.album) + " " + (data.size / 1024 + "KB"));
                 pathT.setText(data.path);
@@ -76,7 +76,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
                 if (!musicList.isEmpty()) {
                     for (int i = 0; i < musicList.size(); i++) {
                         Files mf = new Files();
-                        mf.name = musicList.get(i).name;
+                        mf.name = musicList.get(i).title;
                         mf.path = musicList.get(i).path;
                         mf.size = musicList.get(i).size;
                         mf.display_name = musicList.get(i).displayName;
@@ -137,7 +137,7 @@ public class MediaLoadActivity extends BaseBindActivity<ActivityMusicLoadBinding
             long start = System.currentTimeMillis();
             MediaInfo entry = new MediaInfo();
             entry.size = file.length();
-            entry.name = file.getName();
+            entry.displayName = file.getName();
             entry.path = file.getAbsolutePath();
             try {
                 mmr.setDataSource(file.getAbsolutePath());
