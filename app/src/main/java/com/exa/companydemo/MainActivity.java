@@ -2,16 +2,11 @@ package com.exa.companydemo;
 
 import android.Manifest;
 import android.content.Intent;
-import android.media.MediaMetadataRetriever;
 import android.widget.Toast;
 
-import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
-import com.exa.companydemo.musicload.MediaInfo;
 import com.exa.companydemo.utils.PermissionUtil;
-
-import java.io.File;
 
 import androidx.annotation.NonNull;
 
