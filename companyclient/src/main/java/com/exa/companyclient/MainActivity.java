@@ -3,6 +3,7 @@ package com.exa.companyclient;
 import android.Manifest;
 import android.database.ContentObserver;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 
@@ -27,17 +28,21 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     @Override
     protected void initView() {
         checkPermissions();
+
+        SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
         bind.btn1.setOnClickListener(view -> {
-            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
+//            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
+            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
         });
         bind.btn2.setOnClickListener(view -> {
-            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
+//            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
+            SystemMediaProviderUtil.unregisterObserver(this, SystemMediaProviderUtil.getObserver());
         });
     }
 
     @Override
     protected void initData() {
-
+        L.d("Android OS:" + Build.VERSION.RELEASE);
     }
 
     private void checkPermissions() {
