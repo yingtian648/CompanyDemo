@@ -1,4 +1,4 @@
-package com.exa.companyclient.provider;
+package com.exa.baselib.bean;
 
 
 import java.util.Objects;

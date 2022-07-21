@@ -20,12 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- <action android:name="android.intent.action.MEDIA_MOUNTED" />-->
+        <!-- <action android:name="android.intent.action.MEDIA_UNMOUNTED" />-->
         <receiver android:name=".provider.MediaScannerReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" />
                 <action android:name="android.intent.action.MEDIA_SCANNER_STARTED" />
-<!--                <action android:name="android.intent.action.MEDIA_MOUNTED" />-->
-<!--                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />-->
                 <action android:name="com.media.mine.finish" />
             </intent-filter>
         </receiver>

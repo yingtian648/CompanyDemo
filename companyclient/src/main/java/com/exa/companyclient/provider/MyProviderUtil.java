@@ -9,9 +9,9 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.BaseConstants;
-import com.exa.companyclient.App;
 
 import java.util.ArrayList;
 import java.util.List;

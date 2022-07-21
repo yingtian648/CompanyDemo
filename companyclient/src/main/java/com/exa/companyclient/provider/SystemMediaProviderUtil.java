@@ -4,12 +4,12 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
-import android.media.MediaFormat;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.MediaStore;
 
+import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.BaseConstants;
 
@@ -27,9 +27,15 @@ public class SystemMediaProviderUtil {
             HandlerThread handlerThread = new HandlerThread("another");
             handlerThread.start();
             observer = new ContentObserver(new Handler(handlerThread.getLooper())) {
+                boolean isReceived = false;
+
                 @Override
                 public void onChange(boolean selfChange, @Nullable Uri uri) {//搜到uri变化回调
                     L.d("ContentObserver.onChange:" + uri);
+                    if (!isReceived) {
+                        isReceived = true;
+                        ExeHelper.getInstance().exeGetSystemMediaProviderData();
+                    }
                 }
             };
         }
@@ -71,7 +77,7 @@ public class SystemMediaProviderUtil {
     public static List<Files> getSystemMediaProviderData(Context context, int type) {
         L.d("getSystemMediaProviderData start:" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         Uri urip = Uri.parse("content://media").buildUpon().appendPath("external").appendPath("audio").appendPath("media").build();
-        L.d("urip:"+urip.toString());
+        L.d("urip:" + urip.toString());
         ContentResolver resolver = context.getContentResolver();
         String[] projection;
         Uri uri;
