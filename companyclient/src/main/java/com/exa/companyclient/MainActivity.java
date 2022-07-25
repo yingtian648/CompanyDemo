@@ -7,9 +7,8 @@ import android.content.IntentFilter;
 import android.os.Build;
 
 import com.exa.baselib.base.BaseBindActivity;
-import com.exa.baselib.utils.L;
 import com.exa.baselib.bean.EventBean;
-import com.exa.baselib.utils.Utils;
+import com.exa.baselib.utils.L;
 import com.exa.companyclient.databinding.ActivityMainBinding;
 import com.exa.companyclient.provider.SystemMediaProviderUtil;
 
@@ -19,16 +18,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import androidx.annotation.NonNull;
 
 public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
-
-    private boolean isFinish = false;
-    private int index = 0;
-    private Timer timer;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -40,7 +33,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     protected void initView() {
         checkPermissions();
         registerBroadcast();
-        timer = new Timer();
         SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
@@ -68,26 +60,12 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
 //        SystemMediaProviderUtil.getSystemMediaProviderData(this, BaseConstants.SystemMediaType.Audio);
 //        MyProviderUtil.testMyProvider(this);
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (isFinish) {
-                    cancel();
-                }
-                index++;
-                runOnUiThread(() -> {
-                    bind.text.setText("加载中..." + index);
-                });
-            }
-        }, 1000, 1000);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(EventBean bean) {
-        isFinish = true;
         if (bean.hasData()) {
-            setText("显示结果：" + (bean.datas.size() == 0 ? "null" : bean.datas.size()));
+            setText(bean.message + (bean.datas.size() == 0 ? "null" : bean.datas.size()));
         } else {
             setText(bean.message);
         }
@@ -97,7 +75,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = format.format(new Date());
         runOnUiThread(() -> {
-            String n = bind.text.getText().toString() + "\n" + date + "\n" + msg;
+            String n = date + "\n" + msg + "\n" + bind.text.getText().toString();
             bind.text.setText(n);
         });
     }
@@ -112,7 +90,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         @Override
         public void onReceive(Context context, Intent intent) {
             L.d("client onReceived:" + intent.getAction());
-            setText("client onReceived:" + intent.getAction());
+            setText("client onReceived:" + intent.getAction() + " " + ((intent.getExtras() == null) ? "" : intent.getExtras().keySet()));
         }
     };
 
@@ -135,7 +113,5 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         super.onDestroy();
         unregisterReceiver(mReceiver);
         EventBus.getDefault().unregister(this);
-        if (timer != null)
-            timer.cancel();
     }
 }

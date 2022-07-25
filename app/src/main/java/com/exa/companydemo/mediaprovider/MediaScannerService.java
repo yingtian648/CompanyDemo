@@ -1,11 +1,11 @@
 package com.exa.companydemo.mediaprovider;
 
-import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.MediaMetadataRetriever;
-import android.os.IBinder;
+import android.net.Uri;
 import android.util.SparseArray;
 
 import com.exa.baselib.BaseConstants;
@@ -19,9 +19,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
-public class MediaScannerService extends Service {
+public class MediaScannerService extends JobIntentService {
+    private static final int JOB_ID = -300;
     private FilesDao dao;
     private final BitmapFactory.Options mBitmapOptions = new BitmapFactory.Options();
 
@@ -31,23 +33,31 @@ public class MediaScannerService extends Service {
         dao = new FilesDao(this);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        doScan(intent);
-        return Service.START_REDELIVER_INTENT;
+    /**
+     * 外部调用 —— 用于将任务丢入队列
+     * @param context
+     * @param work
+     */
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, MediaScannerService.class, JOB_ID, work);
     }
 
-    @Nullable
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    protected void onHandleWork(@NonNull Intent intent) {
+        doScan(intent);
     }
 
     private void doScan(Intent intent) {
         String mroot = Constants.FILE_DIR_MUSIC;
-        if (intent != null && intent.getExtras() != null) {
-            mroot = intent.getExtras().getString("path");
+        try {
+            if (intent != null && intent.getData() != null) {
+                final File file = new File(intent.getData().getPath()).getCanonicalFile();
+                mroot = file.getAbsolutePath();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        mroot = "/storage/usb1";
         L.d("start doScan:" + mroot);
         long startTime = System.currentTimeMillis();
         File file = new File(mroot);
@@ -73,7 +83,7 @@ public class MediaScannerService extends Service {
                         mf.duration = musicList.get(i).duration;
                         filesList.add(mf);
                     }
-                    dao.insertByContentValues(filesList);//插入Provider数据库
+                    dao.insertBySQLiteStatement(filesList);//插入Provider数据库
                     total.set(filesList.size());
                     L.d("end doScan:" + total.get() + "  payTime:" + (System.currentTimeMillis() - startTime));
                 }
@@ -106,27 +116,20 @@ public class MediaScannerService extends Service {
             entry.displayName = file.getName();
             entry.path = file.getAbsolutePath();
             try {
-                mmr.setDataSource(file.getAbsolutePath());
-                String author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_AUTHOR);
-                entry.author = author;
-                String album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-                entry.album = album;
-                String artist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-                entry.artList = artist;
-                String albumartist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
-                entry.albumArtist = albumartist;
-                String composer = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_COMPOSER);
-                entry.composer = composer;
+                mmr.setDataSource(file.getCanonicalPath());
+                entry.author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_AUTHOR);
+                entry.album = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+                entry.artList = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+                entry.albumArtist = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
+                entry.composer = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_COMPOSER);
 //                String genre = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
 //                entry.handleStringTag("genre", genre);
-                String title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                entry.title = title;
+                entry.title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
 //                String year = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_YEAR);
 //                entry.handleStringTag("year", year);
                 String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
                 entry.duration = duration == null ? 0 : Integer.parseInt(duration);
-                String mimeType = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
-                entry.mimeType = mimeType;
+                entry.mimeType = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
 //                String writer = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
 //                entry.handleStringTag("writer", writer);
 //                String compilation = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_COMPILATION);
@@ -136,13 +139,13 @@ public class MediaScannerService extends Service {
                 String height = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT);
                 entry.height = height == null ? 0 : Integer.parseInt(height);
 //                L.d("paytime:" + (System.currentTimeMillis() - start) + "\u3000\u3000" + file.getAbsolutePath());
-                datas.append(index, entry);
-                index++;
-//                L.v("scanfile:" + entry);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 e.printStackTrace();
-                L.e("mmr.setDataSource err");
+                L.e("mmr.setDataSource err:"+ e.getMessage());
             }
+            datas.append(index, entry);
+            index++;
+            L.d("scanFile:" + entry);
         }
         return datas;
     }

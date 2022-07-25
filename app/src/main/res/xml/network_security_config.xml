@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!--    CLEARTEXT communication to ** not permitted by network security policy-->
+    <!--从 Android 9（API 级别 28）开始，系统默认情况下已停用明文支持[cleartextTrafficPermitted="false"]。-->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+    <!-- 特别配置 -->
+<!--    <domain-config cleartextTrafficPermitted="true">-->
+<!--        &lt;!&ndash;正式CDN图片&ndash;&gt;-->
+<!--        <domain includeSubdomains="true">img.solnovel.com</domain>-->
+<!--        &lt;!&ndash;测试和开发CDN图片&ndash;&gt;-->
+<!--        <domain includeSubdomains="true">cdn-dev.solnovel.net</domain>-->
+<!--    </domain-config>-->
+
+
+</network-security-config>

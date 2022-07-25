@@ -9,9 +9,12 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.MediaStore;
 
+import com.exa.baselib.bean.EventBean;
 import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.BaseConstants;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +30,14 @@ public class SystemMediaProviderUtil {
             HandlerThread handlerThread = new HandlerThread("another");
             handlerThread.start();
             observer = new ContentObserver(new Handler(handlerThread.getLooper())) {
-                boolean isReceived = false;
+                long last = 0;
 
                 @Override
                 public void onChange(boolean selfChange, @Nullable Uri uri) {//搜到uri变化回调
                     L.d("ContentObserver.onChange:" + uri);
-                    if (!isReceived) {
-                        isReceived = true;
+                    EventBus.getDefault().post(new EventBean("ContentObserver.onChange:" + uri));
+                    if (System.currentTimeMillis()-last>1000) {
+                        last = System.currentTimeMillis();
                         ExeHelper.getInstance().exeGetSystemMediaProviderData();
                     }
                 }
@@ -74,7 +78,7 @@ public class SystemMediaProviderUtil {
      * @param type    1音频 2视频 3图片
      * @return data
      */
-    public static List<Files> getSystemMediaProviderData(Context context, int type) {
+    public static ArrayList<Files> getSystemMediaProviderData(Context context, int type) {
         L.d("getSystemMediaProviderData start:" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
         Uri urip = Uri.parse("content://media").buildUpon().appendPath("external").appendPath("audio").appendPath("media").build();
         L.d("urip:" + urip.toString());
@@ -138,7 +142,7 @@ public class SystemMediaProviderUtil {
         }
         Cursor cursor = resolver.query(uri,//外部存储
                 projection, null, null, null);
-        List<Files> dataList = new ArrayList<>();
+        ArrayList<Files> dataList = new ArrayList<>();
         while (cursor.moveToNext()) {
             Files info = new Files();
             info.name = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));

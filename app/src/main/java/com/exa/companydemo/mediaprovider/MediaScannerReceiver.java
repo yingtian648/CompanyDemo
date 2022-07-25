@@ -39,7 +39,8 @@ public class MediaScannerReceiver extends BroadcastReceiver {
     private void startMediaScannerService(Context context) {
         Intent intent = new Intent(context, MediaScannerService.class);
         Bundle b = new Bundle();
-        b.putString("path", BaseConstants.FILE_DIR_MUSIC);
+//        b.putString("path", BaseConstants.FILE_DIR_MUSIC);
+        b.putString("path","/mnt/media_rw/usb1");
         intent.putExtras(b);
         context.startService(intent);
     }

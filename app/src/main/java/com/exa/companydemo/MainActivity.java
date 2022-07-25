@@ -1,13 +1,17 @@
 package com.exa.companydemo;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.widget.Toast;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
-import com.exa.companydemo.usb.USBReceiver;
+import com.exa.companydemo.mediaprovider.MediaScannerService;
 import com.exa.companydemo.utils.PermissionUtil;
 
 import androidx.annotation.NonNull;
@@ -21,6 +25,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        checkPermission();
         findViewById(R.id.btn).setOnClickListener(view -> {
             L.d("点击Toast测试1");
             Toast.makeText(this, "原生Toast测试", Toast.LENGTH_SHORT).show();
@@ -29,6 +34,7 @@ public class MainActivity extends BaseActivity {
             L.d("点击跳转到第二个页面");
             startActivity(new Intent(this, SecondActivity.class));
         });
+        registerBroadcast();
     }
 
     @Override
@@ -38,7 +44,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void test() {
-        registerBroadcast();
+
     }
 
     private void checkPermission() {
@@ -54,7 +60,27 @@ public class MainActivity extends BaseActivity {
         checkPermission();
     }
 
-    private USBReceiver mReceiver = new USBReceiver();
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.d("main onReceived:" + intent.getAction());
+            String action = intent.getAction();
+            switch (action) {
+                case BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH://自定义媒体扫描完成
+                    break;
+                case Intent.ACTION_MEDIA_MOUNTED://挂载
+                    startMediaScannerService(context,intent);
+                    break;
+                case Intent.ACTION_MEDIA_UNMOUNTED://卸载
+                    break;
+                case Intent.ACTION_MEDIA_SCANNER_STARTED://扫描开始
+                    break;
+                case Intent.ACTION_MEDIA_SCANNER_FINISHED://扫描结束
+
+                    break;
+            }
+        }
+    };
 
     private void registerBroadcast() {
         L.d("registerBroadcast");
@@ -68,6 +94,15 @@ public class MainActivity extends BaseActivity {
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
         filter.addDataScheme("file");
         registerReceiver(mReceiver, filter);
+    }
+
+    private void startMediaScannerService(Context context,Intent intentRes) {
+//        Intent intent = new Intent(context, MediaScannerService.class);
+//        Bundle b = new Bundle();
+//        b.putString("path", BaseConstants.FILE_DIR_MUSIC);
+//        b.putString("path","/mnt/media_rw/usb1");
+//        intent.putExtras(b);
+        MediaScannerService.enqueueWork(this,intentRes);
     }
 
     @Override

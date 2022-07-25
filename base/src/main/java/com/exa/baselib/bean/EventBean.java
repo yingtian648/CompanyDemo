@@ -20,4 +20,9 @@ public class EventBean {
     public EventBean(List<Files> datas) {
         this.datas = datas;
     }
+
+    public EventBean(String message, List<Files> datas) {
+        this.message = message;
+        this.datas = datas;
+    }
 }

@@ -8,6 +8,7 @@ import com.exa.baselib.bean.EventBean;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExeHelper {
@@ -25,18 +26,18 @@ public class ExeHelper {
     public void exeGetSystemMediaProviderData() {
         EventBus.getDefault().post(new EventBean("开始获取结果..."));
         BaseConstants.getFixPool().execute(() -> {
-            List<Files> files = SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Audio);
-            EventBus.getDefault().post(new EventBean(files));
+            ArrayList<Files> files = SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Audio);
+            EventBus.getDefault().post(new EventBean("获取媒体文件：音频 >> ",files));
             L.d("\n");
             L.d("\n");
             L.d("\n");
-            List<Files> files2 = SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Video);
-            EventBus.getDefault().post(new EventBean(files2));
+            ArrayList<Files> files2 = SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Video);
+            EventBus.getDefault().post(new EventBean("获取媒体文件：视频 >> ",files2));
             L.d("\n");
             L.d("\n");
             L.d("\n");
-            List<Files> files3 = SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Image);
-            EventBus.getDefault().post(new EventBean(files3));
+            ArrayList<Files> files3 = SystemMediaProviderUtil.getSystemMediaProviderData(App.getContext(), BaseConstants.SystemMediaType.Image);
+            EventBus.getDefault().post(new EventBean("获取媒体文件：图片 >> ",files3));
         });
     }
 
