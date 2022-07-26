@@ -79,9 +79,6 @@ public class SystemMediaProviderUtil {
      * @return data
      */
     public static ArrayList<Files> getSystemMediaProviderData(Context context, int type) {
-        L.d("getSystemMediaProviderData start:" + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-        Uri urip = Uri.parse("content://media").buildUpon().appendPath("external").appendPath("audio").appendPath("media").build();
-        L.d("urip:" + urip.toString());
         ContentResolver resolver = context.getContentResolver();
         String[] projection;
         Uri uri;
@@ -140,6 +137,7 @@ public class SystemMediaProviderUtil {
                 };
                 break;
         }
+        L.e("getSystemMediaProviderData start:" + uri +"  "+uri.getPathSegments().get(0)+"  "+uri.getAuthority());
         Cursor cursor = resolver.query(uri,//外部存储
                 projection, null, null, null);
         ArrayList<Files> dataList = new ArrayList<>();
@@ -160,10 +158,10 @@ public class SystemMediaProviderUtil {
                 info.height = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.HEIGHT));
             }
             dataList.add(info);
-            L.d("query result:" + info);
+//            L.d("query result:" + info);
         }
         cursor.close();
-        L.d("getSystemMediaProviderData : " + dataList.size());
+        L.d("getSystemMediaProviderData result: " + dataList.size());
         return dataList;
     }
 }

@@ -35,6 +35,7 @@ public class MediaScannerService extends JobIntentService {
 
     /**
      * 外部调用 —— 用于将任务丢入队列
+     *
      * @param context
      * @param work
      */
@@ -44,6 +45,17 @@ public class MediaScannerService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
+        try {
+            final File file = new File(intent.getData().getPath()).getCanonicalFile();
+            L.d("----------------------");
+            L.d(file.getAbsolutePath());
+            L.d("----------------------");
+            if (file.getName().toLowerCase().matches("jpg|jpeg|raw")) {
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         doScan(intent);
     }
 
@@ -141,7 +153,7 @@ public class MediaScannerService extends JobIntentService {
 //                L.d("paytime:" + (System.currentTimeMillis() - start) + "\u3000\u3000" + file.getAbsolutePath());
             } catch (IllegalArgumentException | IOException e) {
                 e.printStackTrace();
-                L.e("mmr.setDataSource err:"+ e.getMessage());
+                L.e("mmr.setDataSource err:" + e.getMessage());
             }
             datas.append(index, entry);
             index++;

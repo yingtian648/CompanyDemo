@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
+import android.text.method.ScrollingMovementMethod;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.EventBean;
@@ -33,6 +34,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     protected void initView() {
         checkPermissions();
         registerBroadcast();
+        bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
@@ -65,7 +67,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(EventBean bean) {
         if (bean.hasData()) {
-            setText(bean.message + (bean.datas.size() == 0 ? "null" : bean.datas.size()));
+            setText(bean.message + (bean.datas.size() == 0 ? "null" : bean.datas.get(0).toString()));
         } else {
             setText(bean.message);
         }

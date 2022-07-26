@@ -9,18 +9,18 @@
         tools:context=".MainActivity">
 
         <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            >
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <Button
                 android:id="@+id/btn1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:textSize="25px"
-                android:text="注册观察者" />
+                android:text="注册观察者"
+                android:textSize="25px" />
 
             <Button
                 android:id="@+id/btn2"
@@ -28,8 +28,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:textSize="25px"
-                android:text="注销观察者" />
+                android:text="注销观察者"
+                android:textSize="25px" />
         </LinearLayout>
 
         <TextView
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:text="Hello World!"
             android:textSize="25px"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/linear"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
