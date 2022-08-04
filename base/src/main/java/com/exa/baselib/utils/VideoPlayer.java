@@ -81,6 +81,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             play(context, frameLayout, playList.take());
         } catch (InterruptedException e) {
             e.printStackTrace();
+            L.e("play InterruptedException:" + e.getMessage());
         }
     }
 

@@ -95,7 +95,12 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
             switch (bean.type) {
                 case 1://图片
                     BaseConstants.getHandler().postDelayed(() -> {
-                        Glide.with(this).load(bean.datas.get(0).path).into(bind.iamge);
+                        for (int i = 0; i < bean.datas.size(); i++) {
+                            if (bean.datas.get(i).path.matches("(.*).(png|jpg|gif)$")) {
+                                Glide.with(this).load(bean.datas.get(i).path).into(bind.iamge);
+                                L.d("加载图片：" + bean.datas.get(i).path);
+                            }
+                        }
                     }, 1000);
                     break;
                 case 2://音频
@@ -110,12 +115,13 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     break;
                 case 3:
                     BaseConstants.getHandler().postDelayed(() -> {
+                        List<String> list = new ArrayList<>();
                         for (int i = 0; i < bean.datas.size(); i++) {
                             if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp4")) {
-                                playVideo(bean.datas);
-                                return;
+                                list.add(bean.datas.get(i).path);
                             }
                         }
+                        playVideo(list);
                     }, 1000);
                     break;
             }
@@ -147,7 +153,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         });
     }
 
-    private void playVideo(List<Files> files) {
+    private void playVideo(List<String> paths) {
 //        path = path.replace("mnt/media_rw", "storage");
         VideoPlayer.getInstance().setCallback(new VideoPlayer.Callback() {
             @Override
@@ -165,10 +171,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
             }
         });
-        List<String> paths = new ArrayList<>();
-        for (int i = 0; i < files.size(); i++) {
-            paths.add(files.get(i).path);
-        }
         VideoPlayer.getInstance().play(this, bind.frame, paths);
     }
 
