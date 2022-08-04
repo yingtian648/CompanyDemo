@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.exa.baselib.BaseConstants;
+import com.exa.baselib.utils.CrashHandle;
 import com.exa.baselib.utils.L;
 
 public class App extends Application {
@@ -17,6 +18,7 @@ public class App extends Application {
         app = this;
         L.init("client--->", true);
         BaseConstants.init();
+        CrashHandle.getInstance().init(this);
     }
 
     public static Context getContext() {

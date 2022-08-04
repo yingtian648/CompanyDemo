@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
             test();
         });
         findViewById(R.id.btn2).setOnClickListener(view -> {
-            L.d("点击跳转到第二个页面");
+            L.d("点击跳转  到第二个页面");
             startActivity(new Intent(this, SecondActivity.class));
         });
         registerBroadcast();

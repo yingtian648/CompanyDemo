@@ -1,6 +1,7 @@
 package com.exa.baselib.utils;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,9 +24,13 @@ import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
 
 
 /**
@@ -33,6 +38,7 @@ import java.util.concurrent.Executors;
  * @备注 播放网络视频需要添加权限 Manifest.permission.INTERNET
  */
 public class VideoPlayer implements TextureView.SurfaceTextureListener {
+    @SuppressLint("StaticFieldLeak")
     private static VideoPlayer player;
     private MediaPlayer mediaPlayer;
     private FrameLayout frameLayout;
@@ -43,6 +49,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     private ExecutorService service;
     private boolean isRunning = false;
     private TextureView textureView;
+    private BlockingDeque<String> playList;
 
     public interface Callback {
         void onError(String msg);
@@ -53,6 +60,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     }
 
     private VideoPlayer() {
+        playList = new LinkedBlockingDeque();
     }
 
     public static VideoPlayer getInstance() {
@@ -64,6 +72,16 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             }
         }
         return player;
+    }
+
+    public void play(Context context, FrameLayout frameLayout, List<String> pathList) {
+        playList.clear();
+        playList.addAll(pathList);
+        try {
+            play(context, frameLayout, playList.take());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -84,7 +102,11 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             if (frameLayout.getChildAt(i) != null
                     && (frameLayout.getChildAt(i) instanceof TextureView
                     || frameLayout.getChildAt(i) instanceof ProgressBar)) {
-                frameLayout.removeView(frameLayout.getChildAt(i));
+                try {
+                    frameLayout.removeView(frameLayout.getChildAt(i));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         textureView = new TextureView(context);
@@ -131,6 +153,9 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
      */
     public void stop() {
         isRunning = false;
+        if (frameLayout != null) {
+            frameLayout.removeAllViews();
+        }
         if (mediaPlayer != null) {
             if (mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
@@ -189,7 +214,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         try {
             if (mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
-
+            mediaPlayer.reset();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setScreenOnWhilePlaying(true);
 
@@ -204,7 +229,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             mediaPlayer.setOnPreparedListener(mp -> {
                 this.progressBar.setVisibility(View.GONE);
                 mp.start();
-                L.d("mediaPlayer.start");
+                L.d("mediaPlayer.start:" + playPath);
                 if (callback != null) {
                     callback.onStarted();
                 }
@@ -250,8 +275,17 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 if (callback != null) {
                     callback.onComplete();
                 }
+                if (!playList.isEmpty()) {
+                    try {
+                        playPath = playList.take();
+                        startPlay(surface);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        L.e("播放 InterruptedException:" + playPath);
+                    }
+                }
             });
-            mediaPlayer.setLooping(true);
+            mediaPlayer.setLooping(false);
         } catch (IllegalStateException ie) {
             ie.printStackTrace();
             L.e("mediaPlayer-IllegalStateException:" + ie.getMessage(), ie);

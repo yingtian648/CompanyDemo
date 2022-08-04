@@ -11,9 +11,11 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.method.ScrollingMovementMethod;
 
+import com.bumptech.glide.Glide;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.EventBean;
+import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.AudioPlayerUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.PermissionUtil;
@@ -28,8 +30,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -61,7 +65,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     @Override
     protected void initData() {
         L.d("Android OS:" + Build.VERSION.RELEASE);
-        L.d("Environment root:" + Environment.getStorageDirectory());
+//        L.d("Environment root:" + Environment.getStorageDirectory());
     }
 
     private void checkPermissions() {
@@ -89,9 +93,12 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         if (bean.hasData()) {
             setText(bean.message + (bean.datas.size() + "  " + bean.datas.get(0).toString()));
             switch (bean.type) {
-                case 1:
+                case 1://图片
+                    BaseConstants.getHandler().postDelayed(() -> {
+                        Glide.with(this).load(bean.datas.get(0).path).into(bind.iamge);
+                    }, 1000);
                     break;
-                case 2:
+                case 2://音频
 //                    BaseConstants.getHandler().postDelayed(() -> {
 //                        for (int i = 0; i < bean.datas.size(); i++) {
 //                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
@@ -105,7 +112,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     BaseConstants.getHandler().postDelayed(() -> {
                         for (int i = 0; i < bean.datas.size(); i++) {
                             if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp4")) {
-                                playVideo(bean.datas.get(i).path);
+                                playVideo(bean.datas);
                                 return;
                             }
                         }
@@ -140,8 +147,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         });
     }
 
-    private void playVideo(String path) {
-        L.dd(path);
+    private void playVideo(List<Files> files) {
 //        path = path.replace("mnt/media_rw", "storage");
         VideoPlayer.getInstance().setCallback(new VideoPlayer.Callback() {
             @Override
@@ -159,7 +165,11 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
             }
         });
-        VideoPlayer.getInstance().play(this, bind.frame, path);
+        List<String> paths = new ArrayList<>();
+        for (int i = 0; i < files.size(); i++) {
+            paths.add(files.get(i).path);
+        }
+        VideoPlayer.getInstance().play(this, bind.frame, paths);
     }
 
     private void setText(String msg) {
@@ -197,6 +207,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     ExeHelper.getInstance().exeGetSystemMediaProviderData();
                     break;
                 case Intent.ACTION_MEDIA_EJECT://拔出
+                    VideoPlayer.getInstance().stop();
+                    bind.iamge.setImageBitmap(null);
                     break;
             }
         }
