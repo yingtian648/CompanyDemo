@@ -17,23 +17,29 @@ android {
 
     signingConfigs {
         debug {
-            keyAlias 'key'
-            keyPassword 'android'
-            storePassword 'android'
-            storeFile file('platform.jks')
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('platform.keystore')
         }
         release {
-            keyAlias 'key'
-            keyPassword 'android'
-            storePassword 'android'
-            storeFile file('platform.jks')
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('platform.keystore')
         }
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 

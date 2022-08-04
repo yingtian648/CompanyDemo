@@ -3,7 +3,7 @@ package com.exa.baselib.utils;
 import android.util.Log;
 
 public class L {
-    private static String TAG = "--->";
+    public static String TAG = "--->";
     private static boolean isLog = true;
 
     public static void init(String tag, boolean isLog) {

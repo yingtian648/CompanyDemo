@@ -62,7 +62,7 @@ public class MMediaProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
-        L.d(TAG, "update: " + uri + "\u3000\u3000values:" + values);
+        L.d(TAG, "insert: " + uri + "\u3000\u3000values:" + values);
         SQLiteDatabase db = dao.getHelper().getWritableDatabase();
         db.insert("files", null, values);
         db.close();

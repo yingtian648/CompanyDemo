@@ -8,6 +8,13 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="640px"
+            android:layout_height="480px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <LinearLayout
             android:id="@+id/linear"
             android:layout_width="match_parent"
@@ -28,7 +35,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:text="注销观察者"
+                android:text="获取数据"
                 android:textSize="25px" />
         </LinearLayout>
 

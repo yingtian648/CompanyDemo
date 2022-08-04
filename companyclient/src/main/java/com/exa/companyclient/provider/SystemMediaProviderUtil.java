@@ -21,6 +21,8 @@ import java.util.List;
 
 import androidx.annotation.Nullable;
 
+import static android.provider.MediaStore.VOLUME_EXTERNAL_PRIMARY;
+
 public class SystemMediaProviderUtil {
 
     private static ContentObserver observer;
@@ -36,7 +38,7 @@ public class SystemMediaProviderUtil {
                 public void onChange(boolean selfChange, @Nullable Uri uri) {//搜到uri变化回调
                     L.d("ContentObserver.onChange:" + uri);
                     EventBus.getDefault().post(new EventBean("ContentObserver.onChange:" + uri));
-                    if (System.currentTimeMillis()-last>1000) {
+                    if (System.currentTimeMillis() - last > 1000) {
                         last = System.currentTimeMillis();
                         ExeHelper.getInstance().exeGetSystemMediaProviderData();
                     }
@@ -71,6 +73,23 @@ public class SystemMediaProviderUtil {
         resolver.unregisterContentObserver(observer);
     }
 
+    public static void deleteAll(Context context) {
+        ContentResolver resolver = context.getContentResolver();
+        Uri urip = Uri.parse("content://media").buildUpon().appendPath("internal").appendPath("audio").appendPath("media").build();
+        urip = Uri.parse("content://media").buildUpon().appendPath("external").appendPath("audio").appendPath("media").build();
+        resolver.delete(urip, null);
+        urip = Uri.parse("content://media").buildUpon().appendPath("external").appendPath("images").appendPath("media").build();
+        resolver.delete(urip, null);
+        urip = Uri.parse("content://media").buildUpon().appendPath("external").appendPath("video").appendPath("media").build();
+        resolver.delete(urip, null);
+        urip = Uri.parse("content://media").buildUpon().appendPath("internal").appendPath("audio").appendPath("media").build();
+        resolver.delete(urip, null);
+        urip = Uri.parse("content://media").buildUpon().appendPath("internal").appendPath("video").appendPath("media").build();
+        resolver.delete(urip, null);
+        urip = Uri.parse("content://media").buildUpon().appendPath("internal").appendPath("images").appendPath("media").build();
+        resolver.delete(urip, null);
+    }
+
     /**
      * 获取系统MediaProvider数据?
      *
@@ -79,12 +98,16 @@ public class SystemMediaProviderUtil {
      * @return data
      */
     public static ArrayList<Files> getSystemMediaProviderData(Context context, int type) {
+        Uri urip = Uri.parse("content://media").buildUpon()
+                .appendPath("external_primary")
+                .appendPath("audio")
+                .appendPath("media").build();
         ContentResolver resolver = context.getContentResolver();
         String[] projection;
         Uri uri;
         switch (type) {
             case BaseConstants.SystemMediaType.Image:
-                uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);//MediaStore.VOLUME_EXTERNAL_PRIMARY
                 projection = new String[]{
                         MediaStore.Video.Media._ID,
                         MediaStore.Video.Media.TITLE,
@@ -101,7 +124,7 @@ public class SystemMediaProviderUtil {
                 };
                 break;
             case BaseConstants.SystemMediaType.Video:
-                uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                uri = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);//MediaStore.VOLUME_EXTERNAL_PRIMARY
                 projection = new String[]{
                         MediaStore.Video.Media._ID,
                         MediaStore.Video.Media.TITLE,
@@ -120,7 +143,7 @@ public class SystemMediaProviderUtil {
                 };
                 break;
             default:
-                uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                uri = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);//MediaStore.VOLUME_EXTERNAL_PRIMARY
                 projection = new String[]{
                         MediaStore.Video.Media._ID,
                         MediaStore.Video.Media.TITLE,
@@ -137,7 +160,7 @@ public class SystemMediaProviderUtil {
                 };
                 break;
         }
-        L.e("getSystemMediaProviderData start:" + uri +"  "+uri.getPathSegments().get(0)+"  "+uri.getAuthority());
+        L.e("getSystemMediaProviderData start:" + uri + "  volume:" + uri.getPathSegments().get(0) + "  AUTHORITY:" + uri.getAuthority());
         Cursor cursor = resolver.query(uri,//外部存储
                 projection, null, null, null);
         ArrayList<Files> dataList = new ArrayList<>();
@@ -158,7 +181,7 @@ public class SystemMediaProviderUtil {
                 info.height = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.HEIGHT));
             }
             dataList.add(info);
-//            L.d("query result:" + info);
+            L.d("query result:" + info);
         }
         cursor.close();
         L.d("getSystemMediaProviderData result: " + dataList.size());

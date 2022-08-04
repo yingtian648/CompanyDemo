@@ -297,24 +297,27 @@ public class FilesDao {
      */
     public boolean updateById(long id, Files files) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        db.beginTransaction();
-        String sql = "UPDATE files SET add_time=?,modify_time=?,size=?,duration=?,width=?,height=?," +
-                "file_type=?,name=?,path=?,root_dir=?,mime_type=?,artist=?," +
-                "album=?,display_name=?,tags=? WHERE id=?";
-        try {
-            db.execSQL(sql, new Object[]{
-                    files.add_time, files.modify_time, files.size, files.duration, files.width, files.height,
-                    files.file_type, files.name, files.path, files.root_dir, files.mime_type, files.artist,
-                    files.album, files.display_name, files.tags, id
-
-            });
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Log.e(TAG, "updateById SQLException:" + e.getMessage());
-            return false;
-        } finally {
-            db.endTransaction();
-        }
+        ContentValues values = new ContentValues();
+        values.put("name","2022208021011");
+        db.update("files",values,"id="+id,null);
+//        db.beginTransaction();
+//        String sql = "UPDATE files SET add_time=?,modify_time=?,size=?,duration=?,width=?,height=?," +
+//                "file_type=?,name=?,path=?,root_dir=?,mime_type=?,artist=?," +
+//                "album=?,display_name=?,tags=? WHERE id=?";
+//        try {
+//            db.execSQL(sql, new Object[]{
+//                    files.add_time, files.modify_time, files.size, files.duration, files.width, files.height,
+//                    files.file_type, files.name, files.path, files.root_dir, files.mime_type, files.artist,
+//                    files.album, files.display_name, files.tags, id
+//
+//            });
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            Log.e(TAG, "updateById SQLException:" + e.getMessage());
+//            return false;
+//        } finally {
+//            db.endTransaction();
+//        }
         db.close();
         return true;
     }

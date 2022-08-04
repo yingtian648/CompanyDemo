@@ -5,14 +5,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
-import android.widget.Toast;
+import android.media.MediaMetadataRetriever;
+import android.text.TextUtils;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
+import com.exa.companydemo.mediacenterthreadpool.TestUtil;
 import com.exa.companydemo.mediaprovider.MediaScannerService;
+import com.exa.companydemo.mediacenterthreadpool.ParsePoolUtil;
+import com.exa.companydemo.mediacenterthreadpool.Task;
+import com.exa.companydemo.mediacenterthreadpool.TaskCallback;
 import com.exa.companydemo.utils.PermissionUtil;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import androidx.annotation.NonNull;
 
@@ -28,7 +35,7 @@ public class MainActivity extends BaseActivity {
         checkPermission();
         findViewById(R.id.btn).setOnClickListener(view -> {
             L.d("点击Toast测试1");
-            Toast.makeText(this, "原生Toast测试", Toast.LENGTH_SHORT).show();
+            test();
         });
         findViewById(R.id.btn2).setOnClickListener(view -> {
             L.d("点击跳转到第二个页面");
@@ -46,6 +53,7 @@ public class MainActivity extends BaseActivity {
     private void test() {
 
     }
+
 
     private void checkPermission() {
         PermissionUtil.requestPermission(this, () -> {
@@ -69,7 +77,7 @@ public class MainActivity extends BaseActivity {
                 case BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH://自定义媒体扫描完成
                     break;
                 case Intent.ACTION_MEDIA_MOUNTED://挂载
-                    startMediaScannerService(context,intent);
+                    startMediaScannerService(context, intent);
                     break;
                 case Intent.ACTION_MEDIA_UNMOUNTED://卸载
                     break;
@@ -96,13 +104,13 @@ public class MainActivity extends BaseActivity {
         registerReceiver(mReceiver, filter);
     }
 
-    private void startMediaScannerService(Context context,Intent intentRes) {
+    private void startMediaScannerService(Context context, Intent intentRes) {
 //        Intent intent = new Intent(context, MediaScannerService.class);
 //        Bundle b = new Bundle();
 //        b.putString("path", BaseConstants.FILE_DIR_MUSIC);
 //        b.putString("path","/mnt/media_rw/usb1");
 //        intent.putExtras(b);
-        MediaScannerService.enqueueWork(this,intentRes);
+        MediaScannerService.enqueueWork(this, intentRes);
     }
 
     @Override

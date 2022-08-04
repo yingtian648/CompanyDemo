@@ -1,23 +1,34 @@
 package com.exa.companyclient;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.text.method.ScrollingMovementMethod;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.EventBean;
+import com.exa.baselib.utils.AudioPlayerUtil;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.PermissionUtil;
+import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companyclient.databinding.ActivityMainBinding;
+import com.exa.companyclient.provider.ExeHelper;
 import com.exa.companyclient.provider.SystemMediaProviderUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
@@ -35,14 +46,14 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         checkPermissions();
         registerBroadcast();
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
-        SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
+//        SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
             SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
         });
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
-            SystemMediaProviderUtil.unregisterObserver(this, SystemMediaProviderUtil.getObserver());
+            ExeHelper.getInstance().exeGetSystemMediaProviderData();
         });
         loadData();
     }
@@ -50,27 +61,105 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     @Override
     protected void initData() {
         L.d("Android OS:" + Build.VERSION.RELEASE);
+        L.d("Environment root:" + Environment.getStorageDirectory());
     }
 
     private void checkPermissions() {
-//        PermissionUtil.requestPermission(this, this::loadData,
-//                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE});
+        PermissionUtil.requestPermission(this, this::loadData,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE});
     }
 
     private void loadData() {
-
 //        SystemMediaProviderUtil.getSystemMediaProviderData(this, BaseConstants.SystemMediaType.Audio);
 //        MyProviderUtil.testMyProvider(this);
+        File file = new File("/mnt/media_rw/usb1");
+        file = new File("/storage/usb1");
+        if (file.isDirectory()) {
+            L.d(file.getAbsolutePath() + " : " + Arrays.toString(file.list()));
+        } else {
+            L.d("/mnt/media_rw/usb1 : not found");
+        }
+        ContentValues values = new ContentValues();
+        values.put("volume_name", "12121");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(EventBean bean) {
         if (bean.hasData()) {
-            setText(bean.message + (bean.datas.size() == 0 ? "null" : bean.datas.get(0).toString()));
+            setText(bean.message + (bean.datas.size() + "  " + bean.datas.get(0).toString()));
+            switch (bean.type) {
+                case 1:
+                    break;
+                case 2:
+//                    BaseConstants.getHandler().postDelayed(() -> {
+//                        for (int i = 0; i < bean.datas.size(); i++) {
+//                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
+//                                playAudio(bean.datas.get(i).path);
+//                                return;
+//                            }
+//                        }
+//                    }, 1000);
+                    break;
+                case 3:
+                    BaseConstants.getHandler().postDelayed(() -> {
+                        for (int i = 0; i < bean.datas.size(); i++) {
+                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp4")) {
+                                playVideo(bean.datas.get(i).path);
+                                return;
+                            }
+                        }
+                    }, 1000);
+                    break;
+            }
         } else {
             setText(bean.message);
         }
+    }
+
+    private void playAudio(String path) {
+        L.dd(path);
+        setText("playAudio:" + path);
+//        path = path.replace("mnt/media_rw", "storage");
+        AudioPlayerUtil.getInstance().play(this, Uri.parse(path), new AudioPlayerUtil.AudioPlayerListener() {
+            @Override
+            public void onStarted() {
+                L.d("开始播放：歌曲");
+                setText("开始播放：歌曲");
+            }
+
+            @Override
+            public void onErr(String msg) {
+                setText("播放歌曲失败：" + msg);
+            }
+
+            @Override
+            public void onComplete() {
+                L.d("歌曲 播放结束");
+            }
+        });
+    }
+
+    private void playVideo(String path) {
+        L.dd(path);
+//        path = path.replace("mnt/media_rw", "storage");
+        VideoPlayer.getInstance().setCallback(new VideoPlayer.Callback() {
+            @Override
+            public void onError(String msg) {
+                L.e("playVideo onError:" + msg);
+            }
+
+            @Override
+            public void onStarted() {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+        VideoPlayer.getInstance().play(this, bind.frame, path);
     }
 
     private void setText(String msg) {
@@ -91,8 +180,25 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            L.d("client onReceived:" + intent.getAction());
-            setText("client onReceived:" + intent.getAction() + " " + ((intent.getExtras() == null) ? "" : intent.getExtras().keySet()));
+            String action = intent.getAction();
+            L.d("client onReceived:" + action);
+            setText("client onReceived:" + action + " " + ((intent.getExtras() == null) ? "" : intent.getExtras().keySet()));
+            switch (action) {
+                case BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH://自定义媒体扫描完成
+                    ExeHelper.getInstance().exeGetMyMediaProviderData();
+                    break;
+                case Intent.ACTION_MEDIA_MOUNTED://挂载
+                    break;
+                case Intent.ACTION_MEDIA_UNMOUNTED://卸载
+                    break;
+                case Intent.ACTION_MEDIA_SCANNER_STARTED://扫描开始
+                    break;
+                case Intent.ACTION_MEDIA_SCANNER_FINISHED://扫描结束
+                    ExeHelper.getInstance().exeGetSystemMediaProviderData();
+                    break;
+                case Intent.ACTION_MEDIA_EJECT://拔出
+                    break;
+            }
         }
     };
 
@@ -102,6 +208,10 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         filter.addAction("android.hardware.usb.action.USB_DEVICE_ATTACHED");
         filter.addAction("android.hardware.usb.action.USB_DEVICE_DETACHED");
         filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
+        filter.addAction(Intent.ACTION_MEDIA_EJECT);
+        filter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
+        filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
         filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         filter.addAction(Intent.ACTION_PACKAGE_DATA_CLEARED);
         filter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);

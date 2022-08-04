@@ -19,7 +19,7 @@
         android:id="@+id/btn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="弹出toast"
+        android:text="Test按钮"
         app:layout_constraintBottom_toTopOf="@id/btn2"
         />
     <Button
