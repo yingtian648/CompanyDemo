@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.bean.EventBean;
@@ -75,6 +76,7 @@ public class Utils {
 
     /**
      * 获取字符串编码格式
+     *
      * @param str
      * @return
      */
@@ -121,5 +123,18 @@ public class Utils {
          */
 
         return "未识别编码格式";
+    }
+
+    /**
+     * 判断是否是图片文件
+     *
+     * @param path
+     * @return
+     */
+    public static boolean isImagePath(String path) {
+        if (!TextUtils.isEmpty(path)) {
+            return path.toLowerCase().matches("(.*).(png|jpg|gif|jpeg|bmp)$");
+        }
+        return false;
     }
 }
