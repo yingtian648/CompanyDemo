@@ -28,6 +28,13 @@ android {
         // for view binding
         // viewBinding = true  //for id 'kotlin-parcelize'
     }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java-gen']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 //implementation编译的依赖只作用于当前的module; api编译的依赖可以用在依赖此模块的模块中

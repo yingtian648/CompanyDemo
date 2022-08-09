@@ -46,6 +46,13 @@ android {
         // for view binding
         // viewBinding = true  //for id 'kotlin-parcelize'
     }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java-gen','src/main/aidl']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {

@@ -2,23 +2,26 @@ package com.exa.companyclient;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.text.method.ScrollingMovementMethod;
 
 import com.bumptech.glide.Glide;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.EventBean;
-import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.AudioPlayerUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.PermissionUtil;
+import com.exa.baselib.utils.Utils;
 import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companyclient.databinding.ActivityMainBinding;
 import com.exa.companyclient.provider.ExeHelper;
@@ -36,6 +39,8 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import gxa.car.extlocationservice.GnssHwInfo;
+import gxa.car.extlocationservice.IExtiLocationInterface;
 
 public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
@@ -66,6 +71,9 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     protected void initData() {
         L.d("Android OS:" + Build.VERSION.RELEASE);
 //        L.d("Environment root:" + Environment.getStorageDirectory());
+        Intent intent = new Intent("com.exa.companydemo.ExtLocationAidlService");
+        intent.setPackage("com.exa.companydemo");
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     private void checkPermissions() {
@@ -96,7 +104,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                 case 1://图片
                     BaseConstants.getHandler().postDelayed(() -> {
                         for (int i = 0; i < bean.datas.size(); i++) {
-                            if (bean.datas.get(i).path.matches("(.*).(png|jpg|gif)$")) {
+                            if (Utils.isImagePath(bean.datas.get(i).path)) {
                                 Glide.with(this).load(bean.datas.get(i).path).into(bind.iamge);
                                 L.d("加载图片：" + bean.datas.get(i).path);
                             }
@@ -213,6 +221,27 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     bind.iamge.setImageBitmap(null);
                     break;
             }
+        }
+    };
+
+    private IExtiLocationInterface binder;
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            L.d("onServiceConnected");
+            binder = IExtiLocationInterface.Stub.asInterface(service);
+            try {
+                GnssHwInfo result = binder.getGnssHwInfo();
+                L.d("binder.getGnssHwInfo:" + result.getVersion());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            L.d("onServiceDisconnected");
         }
     };
 
