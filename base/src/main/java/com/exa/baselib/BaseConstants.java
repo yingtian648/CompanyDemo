@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class BaseConstants {
-    public static String AUTHORITY = "com.media.mine";
+    public static String AUTHORITY = "com.media.my";
     public static final String ACTION_MY_PROVIDER_SCAN_FINISH = "com.media.mine.finish";
 
     public static final Uri CUSTOMER_URI = Uri.parse("content://" + AUTHORITY + "/customer");

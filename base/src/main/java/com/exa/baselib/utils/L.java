@@ -5,6 +5,7 @@ import android.util.Log;
 public class L {
     public static String TAG = "--->";
     private static boolean isLog = true;
+    public static String msg = null;
 
     public static void init(String tag, boolean isLog) {
         L.TAG = tag;
@@ -12,41 +13,49 @@ public class L {
     }
 
     public static void d(String msg) {
+        L.msg = msg;
         if (isLog)
             Log.d(TAG, "" + msg);
     }
 
     public static void e(String msg) {
+        L.msg = msg;
         if (isLog)
             Log.e(TAG, "" + msg);
     }
 
     public static void v(String msg) {
+        L.msg = msg;
         if (isLog)
             Log.v(TAG, "" + msg);
     }
 
     public static void e(String TAG, String msg) {
+        L.msg = msg;
         if (isLog)
             Log.e(L.TAG + TAG, "" + msg);
     }
 
     public static void v(String TAG, String msg) {
+        L.msg = msg;
         if (isLog)
             Log.v(L.TAG + TAG, "" + msg);
     }
 
     public static void d(String TAG, String msg) {
+        L.msg = msg;
         if (isLog)
             Log.d(L.TAG + TAG, "" + msg);
     }
 
     public static void e(String msg, Throwable throwable) {
+        L.msg = msg;
         if (isLog)
             Log.e(TAG, "" + msg + getThrowableLineNum(throwable));
     }
 
     public static void e(String TAG, String msg, Throwable throwable) {
+        L.msg = msg;
         if (isLog)
             Log.d(L.TAG + TAG, "" + msg + getThrowableLineNum(throwable));
     }

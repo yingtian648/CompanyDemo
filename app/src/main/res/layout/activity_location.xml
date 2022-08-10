@@ -8,11 +8,19 @@
         android:layout_height="match_parent"
         tools:context=".location.LocationActivity">
 
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="25px"
+            android:text="获取定位信息" />
+
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="30px" />
+            android:textSize="25px" />
     </RelativeLayout>
 </layout>

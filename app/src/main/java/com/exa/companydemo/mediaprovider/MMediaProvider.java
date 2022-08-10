@@ -21,7 +21,7 @@ import com.exa.baselib.utils.L;
  */
 public class MMediaProvider extends ContentProvider {
     private final String TAG = MMediaProvider.class.getSimpleName();
-    private static final String AUTHORITY = "com.media.mine";
+    private static final String AUTHORITY = "com.media.my";
     private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/customer");
     private FilesDao dao;

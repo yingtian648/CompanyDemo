@@ -3,18 +3,17 @@ package com.exa.companydemo.location;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
+import android.view.View;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityLocationBinding;
 import com.exa.companydemo.utils.PermissionUtil;
@@ -25,92 +24,144 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> {
 
+    private LocationManager locationManager;
+
     @Override
     protected int setContentViewLayoutId() {
-        checkPermission();
         return R.layout.activity_location;
     }
 
     @Override
     protected void initView() {
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
-        //获取位置管理器
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        bind.btn.setOnClickListener(new OnClickViewListener() {
+            @Override
+            public void onClickView(View v) {
+                loadBaseLocationInfo();
+            }
+        });
+        checkPermission();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             L.e("缺少定位权限");
+            setText("缺少定位权限");
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                1000,//时间隔时间
-                1F,//位置更新之间的最小距离
-                new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
-                        locationUpdate(location, location.getProvider());
-                    }
+        //获取位置管理器
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        List<String> providers = locationManager.getAllProviders();
+        List<String> eProviders = locationManager.getProviders(true);
 
-                    @Override
-                    public void onProviderDisabled(@NonNull String provider) {
-                        LocationListener.super.onProviderDisabled(provider);
-                        L.d("onProviderDisabled:" + provider);
-                    }
+        L.d("getAllProviders: " + (providers != null ? providers : "null"));
+        setText(L.msg);
+        L.d("getProviders(enabledOnly=true): " + (eProviders != null ? eProviders : "null"));
+        setText(L.msg);
 
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                        LocationListener.super.onStatusChanged(provider, status, extras);
-                        L.d("onStatusChanged:" + provider + "  " + status);
-                    }
-                });
-        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,
-                1000,//时间隔时间
-                1F,//位置更新之间的最小距离
-                new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
-                        locationUpdate(location, location.getProvider());
-                    }
+        if (eProviders != null) {
+            for (int i = 0; i < eProviders.size(); i++) {
+                locationManager.requestLocationUpdates(eProviders.get(i),
+                        1000,//时间隔时间
+                        1F,//位置更新之间的最小距离
+                        new LocationListener() {
+                            @Override
+                            public void onLocationChanged(@NonNull Location location) {
+                                L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
+                                locationUpdate(location, location.getProvider());
+                            }
 
-                    @Override
-                    public void onProviderDisabled(@NonNull String provider) {
-                        LocationListener.super.onProviderDisabled(provider);
-                        L.d("onProviderDisabled:" + provider);
-                    }
+                            @Override
+                            public void onProviderDisabled(@NonNull String provider) {
+                                L.d("onProviderDisabled:" + provider);
+                            }
 
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                        LocationListener.super.onStatusChanged(provider, status, extras);
-                        L.d("onStatusChanged:" + provider + "  " + status);
-                    }
-                });
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                1000,//时间隔时间
-                1F,//位置更新之间的最小距离
-                new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-                        L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
-                        locationUpdate(location, location.getProvider());
-                    }
+                            @Override
+                            public void onStatusChanged(String provider, int status, Bundle extras) {
+                                L.d("onStatusChanged:" + provider + "  " + status);
+                            }
+                        });
+            }
+        }
 
-                    @Override
-                    public void onProviderDisabled(@NonNull String provider) {
-                        LocationListener.super.onProviderDisabled(provider);
-                        L.d("onProviderDisabled:" + provider);
-                    }
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+//                1000,//时间隔时间
+//                1F,//位置更新之间的最小距离
+//                new LocationListener() {
+//                    @Override
+//                    public void onLocationChanged(@NonNull Location location) {
+//                        L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
+//                        locationUpdate(location, location.getProvider());
+//                    }
+//
+//                    @Override
+//                    public void onProviderDisabled(@NonNull String provider) {
+//                        LocationListener.super.onProviderDisabled(provider);
+//                        L.d("onProviderDisabled:" + provider);
+//                    }
+//
+//                    @Override
+//                    public void onStatusChanged(String provider, int status, Bundle extras) {
+//                        LocationListener.super.onStatusChanged(provider, status, extras);
+//                        L.d("onStatusChanged:" + provider + "  " + status);
+//                    }
+//                });
+//        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,
+//                1000,//时间隔时间
+//                1F,//位置更新之间的最小距离
+//                new LocationListener() {
+//                    @Override
+//                    public void onLocationChanged(@NonNull Location location) {
+//                        L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
+//                        locationUpdate(location, location.getProvider());
+//                    }
+//
+//                    @Override
+//                    public void onProviderDisabled(@NonNull String provider) {
+//                        LocationListener.super.onProviderDisabled(provider);
+//                        L.d("onProviderDisabled:" + provider);
+//                    }
+//
+//                    @Override
+//                    public void onStatusChanged(String provider, int status, Bundle extras) {
+//                        LocationListener.super.onStatusChanged(provider, status, extras);
+//                        L.d("onStatusChanged:" + provider + "  " + status);
+//                    }
+//                });
+//        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+//                1000,//时间隔时间
+//                1F,//位置更新之间的最小距离
+//                new LocationListener() {
+//                    @Override
+//                    public void onLocationChanged(@NonNull Location location) {
+//                        L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
+//                        locationUpdate(location, location.getProvider());
+//                    }
+//
+//                    @Override
+//                    public void onProviderDisabled(@NonNull String provider) {
+//                        LocationListener.super.onProviderDisabled(provider);
+//                        L.d("onProviderDisabled:" + provider);
+//                    }
+//
+//                    @Override
+//                    public void onStatusChanged(String provider, int status, Bundle extras) {
+//                        LocationListener.super.onStatusChanged(provider, status, extras);
+//                        L.d("onStatusChanged:" + provider + "  " + status);
+//                    }
+//                });
+        loadBaseLocationInfo();
+    }
 
-                    @Override
-                    public void onStatusChanged(String provider, int status, Bundle extras) {
-                        LocationListener.super.onStatusChanged(provider, status, extras);
-                        L.d("onStatusChanged:" + provider + "  " + status);
-                    }
-                });
+    private void loadBaseLocationInfo(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            L.e("缺少定位权限");
+            setText("缺少定位权限");
+            return;
+        }
         //获取最新的定位信息
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         //将最新的定位信息，传递给LocationUpdates()方法
@@ -126,7 +177,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             setText(provider + "::" + location.getLongitude() + "," + location.getLatitude());
             getAddress(location.getLongitude(), location.getLatitude(), provider);
         } else {
-            setText("没有获取到GPS信息");
+            setText("没有获取到定位信息:" + provider);
         }
     }
 
@@ -152,15 +203,15 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 //返回一个具体的位置串，这个就不用进行拼接了。
                 String addressLines = address.getAddressLine(0);
                 String specificAddress = countryName + adminArea + subLocality + featureName;
-                setText(provider + "::" + longitude + "," + latitude + " " + addressLines);
-                L.d(provider + "::" + longitude + "," + latitude + " " + addressLines + " " + specificAddress);
+                setText(provider + "::" + latitude + "," + longitude + " " + addressLines);
+                L.d(provider + "::" + latitude + "," + longitude + " " + addressLines + " " + specificAddress);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setText(String msg) {
+    private void setText(final String msg) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = format.format(new Date());
         runOnUiThread(() -> {
@@ -175,8 +226,14 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void checkPermission() {
-        PermissionUtil.requestPermission(this, () -> L.d("有定位权限"),
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_BACKGROUND_LOCATION});
+        PermissionUtil.requestPermission(this, () -> {
+                    L.d("有定位权限");
+                    setText("有定位权限");
+                },
+                new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                });
     }
 }
