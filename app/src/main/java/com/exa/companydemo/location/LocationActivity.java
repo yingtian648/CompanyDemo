@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.GnssCapabilities;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.OnNmeaMessageListener;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.view.View;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
+import com.exa.companydemo.Constants;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityLocationBinding;
 import com.exa.companydemo.utils.PermissionUtil;
@@ -56,6 +59,10 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         List<String> providers = locationManager.getAllProviders();
         List<String> eProviders = locationManager.getProviders(true);
 
+        GnssCapabilities capabilities = locationManager.getGnssCapabilities();
+        L.d("getGnssCapabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
+        int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();//精确度
+        L.d("accuracy: " + accuracy);
         L.d("getAllProviders: " + (providers != null ? providers : "null"));
         setText(L.msg);
         L.d("getProviders(enabledOnly=true): " + (eProviders != null ? eProviders : "null"));
