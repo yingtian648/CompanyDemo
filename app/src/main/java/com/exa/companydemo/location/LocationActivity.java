@@ -36,6 +36,7 @@ import androidx.core.app.ActivityCompat;
 public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> {
 
     private LocationManager locationManager;
+    private int index = 0;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -248,6 +249,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void checkPermission() {
+        index++;
         PermissionUtil.requestPermission(this, () -> {
                     L.d("有定位权限");
                     setText("有定位权限");
@@ -262,6 +264,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        initView();
+        if (index < 3) {
+            initView();
+        }
     }
 }

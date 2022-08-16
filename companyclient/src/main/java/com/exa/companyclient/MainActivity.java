@@ -26,6 +26,7 @@ import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companyclient.databinding.ActivityMainBinding;
 import com.exa.companyclient.provider.ExeHelper;
 import com.exa.companyclient.provider.SystemMediaProviderUtil;
+import com.exa.companyclient.utils.TestLock;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -58,7 +59,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 //        SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
-            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
+//            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
+            new TestLock().startTest();
         });
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
