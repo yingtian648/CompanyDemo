@@ -61,6 +61,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = "LocationServiceTest.apk"
+        }
+    }
 }
 
 dependencies {

@@ -71,9 +71,11 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     protected void initData() {
         L.d("Android OS:" + Build.VERSION.RELEASE);
 //        L.d("Environment root:" + Environment.getStorageDirectory());
-        Intent intent = new Intent("com.exa.companydemo.ExtLocationAidlService");
-        intent.setPackage("com.exa.companydemo");
-        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+//        Intent intent = new Intent("com.exa.companydemo.ExtLocationAidlService");
+//        intent.setPackage("com.exa.companydemo");
+//        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+        startService(new Intent(this, MyClientService.class));
     }
 
     private void checkPermissions() {

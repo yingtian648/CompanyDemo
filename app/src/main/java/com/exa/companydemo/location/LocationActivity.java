@@ -3,12 +3,16 @@ package com.exa.companydemo.location;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.GnssCapabilities;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.location.OnNmeaMessageListener;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -44,6 +48,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override
             public void onClickView(View v) {
+                setText("\n");
                 loadBaseLocationInfo();
             }
         });
@@ -56,19 +61,32 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         }
         //获取位置管理器
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        setText("定位是否开启：" + isOPenGPS());
+        setText("");
         List<String> providers = locationManager.getAllProviders();
         List<String> eProviders = locationManager.getProviders(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            GnssCapabilities capabilities = locationManager.getGnssCapabilities();
+            L.d("getGnssCapabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
+            int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();//精确度
+            L.d("精度accuracy: " + accuracy);
+        }
+        L.d("全部定位方式: " + (providers != null ? providers : "null"));
+        setText(L.msg);
+        L.d("可用的定位方式: " + (eProviders != null ? eProviders : "null"));
+        setText(L.msg);
 
-        GnssCapabilities capabilities = locationManager.getGnssCapabilities();
-        L.d("getGnssCapabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
-        int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();//精确度
-        L.d("accuracy: " + accuracy);
-        L.d("getAllProviders: " + (providers != null ? providers : "null"));
-        setText(L.msg);
-        L.d("getProviders(enabledOnly=true): " + (eProviders != null ? eProviders : "null"));
-        setText(L.msg);
+        locationManager.addGpsStatusListener(new GpsStatus.Listener() {
+            @Override
+            public void onGpsStatusChanged(int event) {
+                setText("GPS状态的监听器:" + event);
+            }
+        });
 
         if (eProviders != null) {
+            for (int i = 0; i < eProviders.size(); i++) {
+                getProviderSupportInfo(eProviders.get(i));
+            }
             for (int i = 0; i < eProviders.size(); i++) {
                 locationManager.requestLocationUpdates(eProviders.get(i),
                         1000,//时间隔时间
@@ -93,6 +111,42 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             }
         }
         loadBaseLocationInfo();
+        getBestProvider();
+    }
+
+    /**
+     * 获取最佳的provider
+     */
+    private void getBestProvider() {
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        //设置不需要获取海拔方向数据
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        //设置允许产生资费
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);//要求低耗电
+        String provider = locationManager.getBestProvider(criteria, true);
+        L.e("获取最佳定位方式: " + getProviderStr(provider));
+        setText("获取最佳定位方式: " + getProviderStr(provider));
+        setText(getProviderStr(provider) + " 是否可用: " + locationManager.isProviderEnabled(provider));
+    }
+
+    private void getProviderSupportInfo(String ps) {
+        LocationProvider provider = locationManager.getProvider(ps);
+        StringBuilder builder = new StringBuilder();
+        builder.append(getProviderStr(ps))
+                .append(": 精度=").append(provider.getAccuracy())
+                .append(" 支持速度=").append(provider.supportsSpeed())
+                .append(" 电源需求=").append(provider.getPowerRequirement())
+                .append(" 支持海拔=").append(provider.supportsAltitude())
+                .append(" 需要访问基站=").append(provider.requiresCell())
+                .append(" 需要网络数据=").append(provider.requiresNetwork())
+                .append(" 支持方向信息=").append(provider.supportsBearing())
+                .append(" 访问卫星的定位系统=").append(provider.requiresSatellite())
+                .append("");
+        L.d(builder.toString());
+        setText(builder.toString());
     }
 
     private void loadBaseLocationInfo() {
@@ -113,6 +167,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void locationUpdate(Location location, String provider) {
+        provider = getProviderStr(provider);
         if (null != location) {
             setText(provider + "::" + location.getLongitude() + "," + location.getLatitude());
             getAddress(location.getLongitude(), location.getLatitude(), provider);
@@ -151,6 +206,22 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         }
     }
 
+    /**
+     * 判断GPS是否开启，GPS或者AGPS开启一个就认为是开启的
+     *
+     * @return true 表示开启
+     */
+    private boolean isOPenGPS() {
+        // GPS定位
+        boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        // 网络服务定位
+        boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        if (gps || network) {
+            return true;
+        }
+        return false;
+    }
+
     private void setText(final String msg) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = format.format(new Date());
@@ -158,6 +229,17 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             String n = msg + "\n" + bind.text.getText().toString();
             bind.text.setText(n);
         });
+    }
+
+    private String getProviderStr(String provider) {
+        switch (provider) {
+            case "network":
+                return "网络定位";
+            case "passive":
+                return "被动/基站定位";
+            default:
+                return "GPS定位";
+        }
     }
 
     @Override
