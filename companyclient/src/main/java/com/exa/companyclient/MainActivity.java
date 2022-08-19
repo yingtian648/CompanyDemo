@@ -1,6 +1,7 @@
 package com.exa.companyclient;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -11,6 +12,7 @@ import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.RemoteException;
 import android.text.method.ScrollingMovementMethod;
 
@@ -60,7 +62,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
 //            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
-            new TestLock().startTest();
+            startService(new Intent(this, MyClientService.class));
         });
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
@@ -76,8 +78,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 //        Intent intent = new Intent("com.exa.companydemo.ExtLocationAidlService");
 //        intent.setPackage("com.exa.companydemo");
 //        bindService(intent, connection, Context.BIND_AUTO_CREATE);
-
-        startService(new Intent(this, MyClientService.class));
     }
 
     private void checkPermissions() {
@@ -96,8 +96,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         } else {
             L.d("/mnt/media_rw/usb1 : not found");
         }
-        ContentValues values = new ContentValues();
-        values.put("volume_name", "12121");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

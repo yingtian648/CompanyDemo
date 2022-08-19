@@ -89,13 +89,14 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 getProviderSupportInfo(eProviders.get(i));
             }
             for (int i = 0; i < eProviders.size(); i++) {
+                L.d(eProviders.get(i) + " requestLocationUpdates");
                 locationManager.requestLocationUpdates(eProviders.get(i),
-                        1000,//时间隔时间
-                        1F,//位置更新之间的最小距离
+                        2000,//时间隔时间
+                        10F,//位置更新之间的最小距离
                         new LocationListener() {
                             @Override
                             public void onLocationChanged(@NonNull Location location) {
-                                L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location.getExtras().keySet());
+                                L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location);
                                 locationUpdate(location, location.getProvider());
                             }
 
@@ -171,18 +172,18 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         provider = getProviderStr(provider);
         if (null != location) {
             setText(provider + "::" + location.getLongitude() + "," + location.getLatitude());
-            getAddress(location.getLongitude(), location.getLatitude(), provider);
+            getAddress(location, location.getLongitude(), location.getLatitude(), provider);
         } else {
             setText("没有获取到定位信息:" + provider);
         }
     }
 
-    private void getAddress(double longitude, double latitude, String provider) {
+    private void getAddress(Location location, double longitude, double latitude, String provider) {
         //Geocoder通过经纬度获取具体信息
         Geocoder gc = new Geocoder(this, Locale.getDefault());
         try {
             List<Address> addressList = gc.getFromLocation(latitude, longitude, 1);
-            if (addressList != null) {
+            if (addressList != null && addressList.size() != 0) {
                 Address address = addressList.get(0);
                 //获取国家名称
                 String countryName = address.getCountryName();
@@ -199,11 +200,12 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 //返回一个具体的位置串，这个就不用进行拼接了。
                 String addressLines = address.getAddressLine(0);
                 String specificAddress = countryName + adminArea + subLocality + featureName;
-                setText(provider + "::" + latitude + "," + longitude + " " + addressLines);
+                setText(provider + "::" + latitude + "," + longitude + " " + addressLines + "," + location);
                 L.d(provider + "::" + latitude + "," + longitude + " " + addressLines + " " + specificAddress);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            L.e("getAddress Exception", e);
         }
     }
 

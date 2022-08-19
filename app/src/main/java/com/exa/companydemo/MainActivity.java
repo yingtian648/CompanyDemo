@@ -5,27 +5,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.media.MediaMetadataRetriever;
-import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
-import com.exa.companydemo.mediacenterthreadpool.TestUtil;
+import com.exa.companydemo.location.LocationActivity;
 import com.exa.companydemo.mediaprovider.MediaScannerService;
-import com.exa.companydemo.mediacenterthreadpool.ParsePoolUtil;
-import com.exa.companydemo.mediacenterthreadpool.Task;
-import com.exa.companydemo.mediacenterthreadpool.TaskCallback;
 import com.exa.companydemo.utils.PermissionUtil;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 import androidx.annotation.NonNull;
 
 public class MainActivity extends BaseActivity {
     private TextView text;
+
     @Override
     protected void initData() {
         test();
@@ -37,7 +30,7 @@ public class MainActivity extends BaseActivity {
         checkPermission();
         findViewById(R.id.btnApp).setOnClickListener(view -> {
             L.d("点击App信息");
-            startActivity(new Intent(this,AppInfoActivity.class));
+            startActivity(new Intent(this, LocationActivity.class));
             text.setText("点击App信息");
         });
         findViewById(R.id.btn).setOnClickListener(view -> {
@@ -60,7 +53,6 @@ public class MainActivity extends BaseActivity {
     private void test() {
 
     }
-
 
     private void checkPermission() {
         PermissionUtil.requestPermission(this, () -> {
