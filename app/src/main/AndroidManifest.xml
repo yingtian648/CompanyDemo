@@ -108,9 +108,9 @@
             android:name=".aidlservice.ExtLocationService"
             android:enabled="true"
             android:exported="true">
-            <intent-filter>
-                <action android:name="${applicationId}.ExtLocationService" />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="${applicationId}.ExtLocationService" />-->
+<!--            </intent-filter>-->
         </service>
     </application>
 

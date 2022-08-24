@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
@@ -188,7 +189,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String date = format.format(new Date());
         runOnUiThread(() -> {
-            String n = date + "\n" + msg + "\n" + bind.text.getText().toString();
+            String n = msg + "\n" + bind.text.getText().toString();
             bind.text.setText(n);
         });
     }
@@ -270,5 +271,10 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         super.onDestroy();
         unregisterReceiver(mReceiver);
         EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLocation(Location location) {
+        setText("onLocation:" + location);
     }
 }

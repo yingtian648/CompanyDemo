@@ -14,6 +14,8 @@ import android.location.LocationProvider;
 import android.location.OnNmeaMessageListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
@@ -50,6 +52,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             @Override
             public void onClickView(View v) {
                 setText("\n");
+                getProviderSupportInfo(LocationManager.GPS_PROVIDER);
                 loadBaseLocationInfo();
             }
         });
@@ -71,6 +74,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             L.d("getGnssCapabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
             int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();//精确度
             L.d("精度accuracy: " + accuracy);
+            setText("Gnss硬件模块名称:"+locationManager.getGnssHardwareModelName());
+            L.d("getGnssHardwareModelName:"+locationManager.getGnssHardwareModelName());
         }
         L.d("全部定位方式: " + (providers != null ? providers : "null"));
         setText(L.msg);
@@ -81,6 +86,14 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             @Override
             public void onGpsStatusChanged(int event) {
                 setText("GPS状态的监听器:" + event);
+                L.d("GPS状态的监听器:" + event);
+            }
+        });
+        locationManager.addNmeaListener(new GpsStatus.NmeaListener() {
+            @Override
+            public void onNmeaReceived(long timestamp, String nmea) {
+                setText("onNmeaReceived:" + nmea);
+                L.d("onNmeaReceived:" + nmea);
             }
         });
 
