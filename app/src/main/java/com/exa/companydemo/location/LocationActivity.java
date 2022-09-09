@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
+import android.location.GnssAntennaInfo;
 import android.location.GnssCapabilities;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -20,6 +21,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
 import com.exa.baselib.base.BaseBindActivity;
+import com.exa.baselib.bean.EventBean;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.companydemo.Constants;
@@ -31,6 +33,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -203,6 +207,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 //返回地址的国家代码，CN
                 String countryCode = address.getCountryCode();
                 //对应的省或者市
+
                 String adminArea = address.getAdminArea();
                 //子管理区域 对应的镇
                 String subAdminArea = address.getSubAdminArea();
@@ -252,7 +257,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             case "network":
                 return "网络定位";
             case "passive":
-                return "被动/基站定位";
+                return "被动定位";
             default:
                 return "GPS定位";
         }

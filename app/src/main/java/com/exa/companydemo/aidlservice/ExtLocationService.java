@@ -2,18 +2,18 @@ package com.exa.companydemo.aidlservice;
 
 import android.app.Service;
 import android.content.Intent;
+import android.location.IExtLocationCallback;
+import android.location.IExtLocationInterface;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.util.Log;
 
-import com.android.server.location.cell.IExtLocationCallback;
-import com.android.server.location.cell.IExtLocationInterface;
 import com.exa.baselib.utils.L;
 
 import androidx.annotation.Nullable;
@@ -68,6 +68,9 @@ public class ExtLocationService extends Service {
                 location.setAccuracy(2f);//精度
                 location.setBearing(0f);
                 location.setTime(System.currentTimeMillis());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    location.setElapsedRealtimeUncertaintyNanos(10000000.00);
+                }
                 Log.d(TAG, "circleSendLocation");
                 try {
                     mCallback.onLocation(mInterval, location);

@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.server.location.cell;
-
-import android.location.Location;
+package android.location;
 
 import android.util.Log;
 import android.os.IBinder;
@@ -27,22 +25,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 
-import com.android.server.location.cell.IExtLocationCallback;
-import com.android.server.location.cell.IExtLocationInterface;
-//import com.android.server.location.gnss.GnssLocationProvider;
-//import com.android.internal.location.ProviderProperties;
-import android.location.Criteria;
-
 import android.os.Handler;
 import android.os.Looper;
 
-import org.greenrobot.eventbus.EventBus;
+import com.exa.baselib.utils.L;
 
 /**
  * Represents a GNSS position mode.
  */
-public class CellLocationProvider {
-    private final String TAG = "CellLocation--->";
+public class CellLocationProvider{
+    private final String TAG = "CellLocationProvider";
     private String provider;
     private IExtLocationInterface binder;
     private Context mContext;
@@ -51,26 +43,15 @@ public class CellLocationProvider {
     private final long REQUEST_INTERVAL = 1000;//请求location时间间隔
     private final long DELAY_BIND_SERVICE = 3000;//延时绑定服务
 
-//    private static final ProviderProperties PROPERTIES = new ProviderProperties(
-//            /* requiresNetwork = */true,
-//            /* requiresSatellite = */true,
-//            /* requiresCell = */false,
-//            /* hasMonetaryCost = */false,
-//            /* supportAltitude = */true,
-//            /* supportsSpeed = */true,
-//            /* supportsBearing = */true,
-//            Criteria.POWER_LOW,
-//            Criteria.ACCURACY_HIGH);
-
-    public static CellLocationProvider getInstance() {
+    public static CellLocationProvider getInstance(){
         return ClazzHolder.cellLocationProvider;
     }
 
-    private static class ClazzHolder {
+    private static class ClazzHolder{
         private static CellLocationProvider cellLocationProvider = new CellLocationProvider();
     }
 
-    private CellLocationProvider() {
+    private CellLocationProvider(){
 
     }
 
@@ -88,20 +69,7 @@ public class CellLocationProvider {
         Log.v(TAG, "reportLocationInfo:" + location.toString());
         if (provider != null) {
 //            provider.reportLocation(location);
-            EventBus.getDefault().post(location);
             // provider.handleReportLocation(true, location);
-        }
-    }
-
-    /**
-     * 设置定位模式属性Properties
-     *
-     * @param properties
-     */
-    private void setProperties(String properties) {
-        Log.v(TAG, "setProperties:" + properties.toString());
-        if (provider != null) {
-//            provider.setProperties(properties);
         }
     }
 
@@ -123,7 +91,7 @@ public class CellLocationProvider {
      */
     public void stop() {
         Log.v(TAG, "stop");
-        if (binder != null) {
+        if(binder != null){
             mContext.unbindService(connection);
         }
         handler.removeCallbacksAndMessages(null);
@@ -137,20 +105,13 @@ public class CellLocationProvider {
             Log.d(TAG, "onServiceConnected");
             binder = IExtLocationInterface.Stub.asInterface(service);
             requestLocation();
-            setProperties("PROPERTIES");
-            try {
-                String gnssInfo = binder.getGnssHwInfo();
-                Log.d(TAG, "getGnssHwInfo:" + gnssInfo);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-                Log.e(TAG, "getGnssHwInfo RemoteException");
-            }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.e(TAG, "onServiceDisconnected");
             binder = null;
+            checkConnectServerStatus("onServiceDisconnected rebind");
         }
     };
 
@@ -166,8 +127,7 @@ public class CellLocationProvider {
         Log.v(TAG, "bindExtServer");
         try {
             Intent intentExt = new Intent();
-//            intentExt.setClassName("com.exa.companydemo","com.exa.companydemo.aidlservice.ExtLocationService");
-            intentExt.setClassName("com.gxa.car.service.location", "com.gxa.car.service.location.LocationExtService");
+            intentExt.setClassName("com.exa.companydemo", "com.exa.companydemo.aidlservice.ExtLocationService");
             mContext.bindService(intentExt, connection, Context.BIND_AUTO_CREATE);
             checkConnectServerStatus(intentExt.getComponent() == null ? intentExt.getPackage() : intentExt.getComponent().toString());
         } catch (Exception e) {
@@ -191,7 +151,9 @@ public class CellLocationProvider {
     private void requestLocation() {
         Log.d(TAG, "requestLocation");
         try {
-            binder.setLocationRequest(REQUEST_INTERVAL, callback);
+            if(binder!=null){
+                binder.setLocationRequest(REQUEST_INTERVAL, callback);
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
             binder = null;

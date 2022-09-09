@@ -137,4 +137,12 @@ public class Utils {
         }
         return false;
     }
+
+    /**
+     * 发送消息
+     * @param msg
+     */
+    public static void postEventMessage(String msg){
+        EventBus.getDefault().post(new EventBean(msg));
+    }
 }

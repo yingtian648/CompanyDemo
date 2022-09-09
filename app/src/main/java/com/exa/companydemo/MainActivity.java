@@ -109,7 +109,6 @@ public class MainActivity extends BaseActivity {
 //        b.putString("path", BaseConstants.FILE_DIR_MUSIC);
 //        b.putString("path","/mnt/media_rw/usb1");
 //        intent.putExtras(b);
-        MediaScannerService.enqueueWork(this, intentRes);
     }
 
     @Override

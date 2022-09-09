@@ -88,15 +88,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     }
 
     private void loadData() {
-//        SystemMediaProviderUtil.getSystemMediaProviderData(this, BaseConstants.SystemMediaType.Audio);
-//        MyProviderUtil.testMyProvider(this);
-        File file = new File("/mnt/media_rw/usb1");
-        file = new File("/storage/usb1");
-        if (file.isDirectory()) {
-            L.d(file.getAbsolutePath() + " : " + Arrays.toString(file.list()));
-        } else {
-            L.d("/mnt/media_rw/usb1 : not found");
-        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
