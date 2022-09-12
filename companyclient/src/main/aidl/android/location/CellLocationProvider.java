@@ -16,42 +16,41 @@
 
 package android.location;
 
-import android.util.Log;
-import android.os.IBinder;
-import android.os.RemoteException;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
-
-import com.exa.baselib.utils.L;
+import android.os.RemoteException;
+import android.util.Log;
 
 /**
  * Represents a GNSS position mode.
  */
-public class CellLocationProvider{
+public class CellLocationProvider {
     private final String TAG = "CellLocationProvider";
     private String provider;
     private IExtLocationInterface binder;
     private Context mContext;
     private Handler handler = new Handler(Looper.myLooper());
 
-    private final long REQUEST_INTERVAL = 1000;//请求location时间间隔
-    private final long DELAY_BIND_SERVICE = 3000;//延时绑定服务
+    private final long REQUEST_INTERVAL = 1000;//request location time ineterval
+    private final long DELAY_BIND_SERVICE = 3000;//delay bind service
+    private final int MAX_RECONNECT_TIME = 3;//max reconnect times
 
-    public static CellLocationProvider getInstance(){
+    private int reConnectTime = 0;
+
+    public static CellLocationProvider getInstance() {
         return ClazzHolder.cellLocationProvider;
     }
 
-    private static class ClazzHolder{
+    private static class ClazzHolder {
         private static CellLocationProvider cellLocationProvider = new CellLocationProvider();
     }
 
-    private CellLocationProvider(){
+    private CellLocationProvider() {
 
     }
 
@@ -78,6 +77,7 @@ public class CellLocationProvider{
      */
     public void start() {
         Log.v(TAG, "start");
+        reConnectTime = 0;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -91,7 +91,7 @@ public class CellLocationProvider{
      */
     public void stop() {
         Log.v(TAG, "stop");
-        if(binder != null){
+        if (binder != null) {
             mContext.unbindService(connection);
         }
         handler.removeCallbacksAndMessages(null);
@@ -111,6 +111,7 @@ public class CellLocationProvider{
         public void onServiceDisconnected(ComponentName name) {
             Log.e(TAG, "onServiceDisconnected");
             binder = null;
+            reConnectTime = 0;
             checkConnectServerStatus("onServiceDisconnected rebind");
         }
     };
@@ -118,7 +119,7 @@ public class CellLocationProvider{
     private IExtLocationCallback.Stub callback = new IExtLocationCallback.Stub() {
         @Override
         public void onLocation(long interval, Location location) throws RemoteException {
-            Log.d(TAG, "onLocation:" + interval + "," + location.getLongitude() + "," + location.getLatitude());
+            // Log.d(TAG, "onLocation:" + interval + "," + location.getLongitude() + "," + location.getLatitude());
             reportLocationInfo(location);
         }
     };
@@ -142,7 +143,10 @@ public class CellLocationProvider{
             public void run() {
                 if (binder == null) {
                     Log.d(TAG, "bindExtServer[" + bindInfo + "] timeout,rebind!");
-                    bindServer();
+                    reConnectTime++;
+                    if (reConnectTime < MAX_RECONNECT_TIME) {
+                        bindServer();
+                    }
                 }
             }
         }, DELAY_BIND_SERVICE);
@@ -151,7 +155,7 @@ public class CellLocationProvider{
     private void requestLocation() {
         Log.d(TAG, "requestLocation");
         try {
-            if(binder!=null){
+            if (binder != null) {
                 binder.setLocationRequest(REQUEST_INTERVAL, callback);
             }
         } catch (RemoteException e) {

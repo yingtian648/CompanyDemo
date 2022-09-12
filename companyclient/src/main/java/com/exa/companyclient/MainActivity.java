@@ -88,7 +88,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     }
 
     private void loadData() {
-
+//        intentExt.setClassName("com.exa.companydemo", "com.exa.companydemo.aidlservice.ExtLocationService");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
