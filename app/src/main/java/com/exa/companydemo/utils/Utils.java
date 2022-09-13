@@ -1,8 +1,15 @@
 package com.exa.companydemo.utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
 
 import com.exa.baselib.utils.L;
 
@@ -29,5 +36,28 @@ public class Utils {
             mmr.release();
         }
         return null;
+    }
+
+    /**
+     * 隐藏输入法
+     *
+     * @param editW
+     */
+    public static void hideKeyboard(@NonNull EditText editW) {
+        editW.clearFocus();
+        try {
+            InputMethodManager imm = (InputMethodManager) editW.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(editW.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.e("hideKeyboard:" + e.getMessage());
+        }
+    }
+
+    //将文本复制到剪贴板
+    public static void copyText(Context context, String text) {
+        ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = ClipData.newPlainText(null, text);
+        clip.setPrimaryClip(data);
     }
 }
