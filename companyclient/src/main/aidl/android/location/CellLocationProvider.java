@@ -118,9 +118,19 @@ public class CellLocationProvider {
 
     private IExtLocationCallback.Stub callback = new IExtLocationCallback.Stub() {
         @Override
-        public void onLocation(long interval, Location location) throws RemoteException {
+        public void onLocation(Location location) throws RemoteException {
             // Log.d(TAG, "onLocation:" + interval + "," + location.getLongitude() + "," + location.getLatitude());
             reportLocationInfo(location);
+        }
+
+        @Override
+        public void onProviderEnabled() throws RemoteException {
+
+        }
+
+        @Override
+        public void onProviderDisabled() throws RemoteException {
+
         }
     };
 
@@ -156,7 +166,7 @@ public class CellLocationProvider {
         Log.d(TAG, "requestLocation");
         try {
             if (binder != null) {
-                binder.setLocationRequest(REQUEST_INTERVAL, callback);
+                binder.setCallback(callback);
             }
         } catch (RemoteException e) {
             e.printStackTrace();

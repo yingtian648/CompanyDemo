@@ -22,20 +22,28 @@ public class ExtLocationService extends Service {
     private final String TAG = "ExtLocationService";
     private IExtLocationCallback mCallback;
     private Handler handler;
-    private long mInterval = 2000;//默认2秒更新一次location
     private IExtLocationInterface.Stub binder = new IExtLocationInterface.Stub() {
 
         @Override
-        public void setLocationRequest(long interval, IExtLocationCallback callback) throws RemoteException {
+        public void setCallback(IExtLocationCallback callback) throws RemoteException {
             Log.d(TAG, "setLocationRequest from client");
             mCallback = callback;
-            mInterval = interval;
             circleSendLocation();
         }
 
         @Override
         public String getGnssHwInfo() throws RemoteException {
             return "mk123";
+        }
+
+        @Override
+        public boolean setEnable() throws RemoteException {
+            return false;
+        }
+
+        @Override
+        public boolean setDisable() throws RemoteException {
+            return false;
         }
     };
 
@@ -73,7 +81,7 @@ public class ExtLocationService extends Service {
                 }
                 Log.d(TAG, "circleSendLocation");
                 try {
-                    mCallback.onLocation(mInterval, location);
+                    mCallback.onLocation(location);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                     mCallback = null;
@@ -82,7 +90,7 @@ public class ExtLocationService extends Service {
                 circleSendLocation();
             }
 
-        }, mInterval);
+        }, 1000);
 
     }
 

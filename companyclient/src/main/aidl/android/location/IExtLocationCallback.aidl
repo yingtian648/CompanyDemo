@@ -7,5 +7,9 @@ import android.location.Location;
  */
 interface IExtLocationCallback {
     //interval
-    void onLocation(long interval,in Location location);
+    void onLocation(in Location location);
+
+    void onProviderEnabled();
+
+    void onProviderDisabled();
 }

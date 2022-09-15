@@ -10,8 +10,14 @@ import android.location.IExtLocationCallback;
  */
 interface IExtLocationInterface {
     //setLocationRequest callback(interval：Unit: mm)
-    void setLocationRequest(long interval,in IExtLocationCallback callback);
+    void setCallback(in IExtLocationCallback callback);
 
     //Get GNSS hardware information and return hardware information
     String getGnssHwInfo();
+
+    //enable source capability
+    boolean setEnable();
+
+    //disable source capability
+    boolean setDisable();
 }
