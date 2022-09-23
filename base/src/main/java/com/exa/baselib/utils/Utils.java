@@ -1,10 +1,17 @@
 package com.exa.baselib.utils;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.bean.EventBean;
@@ -15,6 +22,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+
+import androidx.annotation.NonNull;
+
+import static com.exa.baselib.utils.L.TAG;
 
 public class Utils {
     public static Bitmap loadVideoThumbnail(Context context, String path) {
@@ -139,10 +150,70 @@ public class Utils {
     }
 
     /**
+     * 获取封面
+     *
+     * @param path
+     * @return
+     */
+    public static Bitmap getCover(String path) {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        try {
+            mmr.setDataSource(path);
+            byte[] cover = mmr.getEmbeddedPicture();
+            if (cover != null) {
+                L.d("封面大小:" + cover.length);
+                return BitmapFactory.decodeByteArray(cover, 0, cover.length);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            L.d("onViewHolder mmr.setDataSource err");
+        } finally {
+            mmr.release();
+        }
+        return null;
+    }
+
+    /**
+     * 隐藏输入法
+     *
+     * @param editW
+     */
+    public static void hideKeyboard(@NonNull EditText editW) {
+        editW.clearFocus();
+        try {
+            InputMethodManager imm = (InputMethodManager) editW.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(editW.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.e("hideKeyboard:" + e.getMessage());
+        }
+    }
+
+    //将文本复制到剪贴板
+    public static void copyText(Context context, String text) {
+        ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData data = ClipData.newPlainText(null, text);
+        clip.setPrimaryClip(data);
+    }
+
+    /**
      * 发送消息
+     *
      * @param msg
      */
-    public static void postEventMessage(String msg){
+    public static void postEventMessage(String msg) {
         EventBus.getDefault().post(new EventBean(msg));
+    }
+
+    public static boolean isAppInstalled(Context context, String pkgName) {
+        if (pkgName != null) {
+            try {
+                context.getPackageManager().getPackageInfo(pkgName, 0);
+            } catch (Exception e) {
+                Log.d(TAG, "isAppInstalled false: " + e.getMessage());
+                return false;
+            }
+        }
+        return true;
     }
 }

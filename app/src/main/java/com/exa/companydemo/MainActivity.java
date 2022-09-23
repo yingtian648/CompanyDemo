@@ -5,11 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.Tools;
+import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.location.LocationActivity;
 import com.exa.companydemo.mediaprovider.MediaScannerService;
 import com.exa.companydemo.utils.PermissionUtil;
@@ -26,7 +31,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        String screen = "屏幕宽高：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
+        L.d(screen);
         text = findViewById(R.id.text);
+        text.setText(screen);
         checkPermission();
         findViewById(R.id.btnApp).setOnClickListener(view -> {
             L.d("点击App信息");
@@ -51,13 +59,13 @@ public class MainActivity extends BaseActivity {
 
 
     private void test() {
-
+//        Gravity.applyDisplay();
     }
 
     private void checkPermission() {
-        PermissionUtil.requestPermission(this, () -> {
-            L.d("已授权 读写权限");
-        }, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE});
+//        PermissionUtil.requestPermission(this, () -> {
+//            L.d("已授权 读写权限");
+//        }, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE});
     }
 
     @Override
@@ -104,11 +112,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void startMediaScannerService(Context context, Intent intentRes) {
-//        Intent intent = new Intent(context, MediaScannerService.class);
-//        Bundle b = new Bundle();
-//        b.putString("path", BaseConstants.FILE_DIR_MUSIC);
-//        b.putString("path","/mnt/media_rw/usb1");
-//        intent.putExtras(b);
+
     }
 
     @Override

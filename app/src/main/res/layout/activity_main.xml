@@ -4,7 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnApp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="App信息"
+        app:layout_constraintBottom_toTopOf="@id/btn" />
+
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Test按钮"
+        app:layout_constraintBottom_toTopOf="@id/btn2" />
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="跳转到第二个页面"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <EditText
+        android:id="@+id/edt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:hint="输入框..."
+        android:textSize="30px"
+        app:layout_constraintBottom_toTopOf="@id/btnApp" />
 
     <TextView
         android:id="@+id/text"
@@ -15,25 +46,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <Button
-        android:id="@+id/btnApp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="App信息"
-        app:layout_constraintBottom_toTopOf="@id/btn"
-        />
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Test按钮"
-        app:layout_constraintBottom_toTopOf="@id/btn2"
-        />
-    <Button
-        android:id="@+id/btn2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="跳转到第二个页面"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
 </androidx.constraintlayout.widget.ConstraintLayout>

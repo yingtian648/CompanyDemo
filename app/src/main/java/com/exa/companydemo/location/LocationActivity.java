@@ -2,29 +2,27 @@ package com.exa.companydemo.location;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
-import android.location.GnssAntennaInfo;
 import android.location.GnssCapabilities;
+import android.location.GnssStatus;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.location.OnNmeaMessageListener;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.View;
 
 import com.exa.baselib.base.BaseBindActivity;
-import com.exa.baselib.bean.EventBean;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
-import com.exa.companydemo.Constants;
+import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityLocationBinding;
 import com.exa.companydemo.utils.PermissionUtil;
@@ -33,8 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -51,6 +47,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     @Override
     protected void initView() {
+
+        Utils.isAppInstalled(this, "sdasdhash.csdas.sa");
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override
@@ -73,14 +71,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         setText("");
         List<String> providers = locationManager.getAllProviders();
         List<String> eProviders = locationManager.getProviders(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            GnssCapabilities capabilities = locationManager.getGnssCapabilities();
-            L.d("getGnssCapabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
-            int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();//精确度
-            L.d("精度accuracy: " + accuracy);
-            setText("Gnss硬件模块名称:"+locationManager.getGnssHardwareModelName());
-            L.d("getGnssHardwareModelName:"+locationManager.getGnssHardwareModelName());
-        }
+        getLocationManagerInfo();
         L.d("全部定位方式: " + (providers != null ? providers : "null"));
         setText(L.msg);
         L.d("可用的定位方式: " + (eProviders != null ? eProviders : "null"));
@@ -168,6 +159,46 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         setText(builder.toString());
     }
 
+    private void getLocationManagerInfo() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            GnssCapabilities capabilities = locationManager.getGnssCapabilities();
+            L.d("getGnssCapabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
+            int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();//精确度
+            L.d("精度accuracy: " + accuracy);
+            setText("Gnss硬件模块名称:" + locationManager.getGnssHardwareModelName());
+            L.d("getGnssHardwareModelName:" + locationManager.getGnssHardwareModelName());
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
+                @Override
+                public void onStarted() {//navigation start
+                    super.onStarted();
+                    L.d("onStarted");
+                }
+
+                @Override
+                public void onStopped() {
+                    super.onStopped();
+                    L.d("onStopped");
+                }
+
+                @Override
+                public void onFirstFix(int ttffMillis) {
+                    super.onFirstFix(ttffMillis);
+                    L.d("onFirstFix:"+ttffMillis);
+                }
+
+                @Override
+                public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
+                    super.onSatelliteStatusChanged(status);
+                }
+            }, null);
+        }
+    }
+
     private void loadBaseLocationInfo() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -183,6 +214,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         locationUpdate(location, LocationManager.PASSIVE_PROVIDER);
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         locationUpdate(location, LocationManager.NETWORK_PROVIDER);
+
+        Gravity.apply(Gravity.BOTTOM,500,200,new Rect(0,0,100,500),100,50,new Rect(0,0,100,500));
     }
 
     private void locationUpdate(Location location, String provider) {
