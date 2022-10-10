@@ -142,7 +142,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 //                            }
 //                        }
                         checkSdkToLoadThumb();
-                    }, 5000);
+                    }, 3000);
                     break;
                 case 3:
                     BaseConstants.getHandler().postDelayed(() -> {
@@ -212,18 +212,22 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void getAudioThumbToShow() {
-        Bitmap bitmap = SystemMediaProviderUtil.loadAudioAlbumThumbnail(audioThumbs.get(audioThumbsIndex).album_id,audioThumbs.get(audioThumbsIndex).path);
-        if (bitmap == null) {
-            audioThumbsIndex++;
-            if (audioThumbsIndex > audioThumbs.size() - 1) {
-                audioThumbsIndex = 0;
+        BaseConstants.getFixPool().execute(() -> {
+            Bitmap bitmap = SystemMediaProviderUtil.loadAudioAlbumThumbnail(audioThumbs.get(audioThumbsIndex).album_id, audioThumbs.get(audioThumbsIndex).path);
+            if (bitmap == null) {
+                audioThumbsIndex++;
+                if (audioThumbsIndex > audioThumbs.size() - 1) {
+                    audioThumbsIndex = 0;
+                } else {
+                    getAudioThumbToShow();
+                }
             } else {
-                getAudioThumbToShow();
+                runOnUiThread(() -> {
+                    bind.aImage.setImageBitmap(bitmap);
+                    bind.aImageName.setText(audioThumbs.get(audioThumbsIndex).path);
+                });
             }
-        } else {
-            bind.aImage.setImageBitmap(bitmap);
-            bind.aImageName.setText(audioThumbs.get(audioThumbsIndex).path);
-        }
+        });
     }
 
     private void playAudio(String path) {
