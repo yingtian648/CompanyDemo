@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -46,6 +47,8 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+
 import gxa.car.extlocationservice.GnssHwInfo;
 import gxa.car.extlocationservice.IExtiLocationInterface;
 
@@ -82,7 +85,11 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                 if (audioThumbsIndex > audioThumbs.size() - 1) {
                     audioThumbsIndex = 0;
                 }
-                showAudioThumb();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    getAudioThumbToShow();
+                } else {
+                    showAudioThumb();
+                }
             }
         });
         loadData();
@@ -118,6 +125,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                             if (Utils.isImagePath(bean.datas.get(i).path)) {
                                 Glide.with(this).load(bean.datas.get(i).path).into(bind.iamge);
                                 L.d("加载图片：" + bean.datas.get(i).path);
+                                return;
                             }
                         }
                     }, 1000);
@@ -133,7 +141,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 //                                return;
 //                            }
 //                        }
-                    }, 1000);
+                        checkSdkToLoadThumb();
+                    }, 5000);
                     break;
                 case 3:
                     BaseConstants.getHandler().postDelayed(() -> {
@@ -167,19 +176,54 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         }
     }
 
+    private void checkSdkToLoadThumb() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !audios.isEmpty()) {
+            BaseConstants.getFixPool().execute(() -> {
+                List<String> aids = new ArrayList<>();
+                for (int i = 0; i < audios.size(); i++) {
+                    if (audios.get(i).album_id != null && !aids.contains(audios.get(i).album_id)) {
+                        aids.add(audios.get(i).album_id);
+                        audioThumbs.add(audios.get(i));
+                    }
+                }
+                updateAudioThumbs();
+            });
+        }
+    }
+
     private void updateAudioThumbs() {
         audioThumbsIndex = 0;
         if (audioThumbs.isEmpty()) {
             bind.aImage.setImageBitmap(null);
             bind.aImageName.setText("");
         } else {
-            showAudioThumb();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                getAudioThumbToShow();
+            } else {
+                showAudioThumb();
+            }
         }
     }
 
     private void showAudioThumb() {
         Glide.with(this).load(audioThumbs.get(audioThumbsIndex).album_path).into(bind.aImage);
         bind.aImageName.setText(audioThumbs.get(audioThumbsIndex).path);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    private void getAudioThumbToShow() {
+        Bitmap bitmap = SystemMediaProviderUtil.loadAudioAlbumThumbnail(audioThumbs.get(audioThumbsIndex).album_id,audioThumbs.get(audioThumbsIndex).path);
+        if (bitmap == null) {
+            audioThumbsIndex++;
+            if (audioThumbsIndex > audioThumbs.size() - 1) {
+                audioThumbsIndex = 0;
+            } else {
+                getAudioThumbToShow();
+            }
+        } else {
+            bind.aImage.setImageBitmap(bitmap);
+            bind.aImageName.setText(audioThumbs.get(audioThumbsIndex).path);
+        }
     }
 
     private void playAudio(String path) {

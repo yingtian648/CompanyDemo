@@ -1,6 +1,7 @@
 package com.exa.companyclient.provider;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.L;
@@ -50,15 +51,20 @@ public class ExeHelper {
     public void getSystemAudioThumbs(ArrayList<Files> files) {
         EventBus.getDefault().post(new EventBean("开始获取歌曲封面..."));
         List<String> thumbIds = new ArrayList<>();
-        for (int i = 0; i < files.size(); i++) {
-            if (files.get(i).path != null && files.get(i).album_id != null && !thumbIds.contains(files.get(i).album_id)) {
-                thumbIds.add(files.get(i).album_id);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){//单独获取
+            L.e("android Q以上使用ContentResolver.loadThumbnail来获取");
+        }else {
+            for (int i = 0; i < files.size(); i++) {
+                if (files.get(i).path != null && files.get(i).album_id != null && !thumbIds.contains(files.get(i).album_id)) {
+                    thumbIds.add(files.get(i).album_id);
+                }
+            }
+            if (!thumbIds.isEmpty()) {
+                List<Files> filesThumb = SystemMediaProviderUtil.getAudioAlbumThumbnail(App.getContext(), thumbIds.toArray(new String[]{}));
+                EventBus.getDefault().post(new EventBean(4, "获取媒体文件：音频封面 >> ", filesThumb));
             }
         }
-        if (!thumbIds.isEmpty()) {
-            List<Files> filesThumb = SystemMediaProviderUtil.getAudioAlbumThumbnail(App.getContext(), thumbIds.toArray(new String[]{}));
-            EventBus.getDefault().post(new EventBean(4, "获取媒体文件：音频封面 >> ", filesThumb));
-        }
+
     }
 
     public void exeGetMyMediaProviderData() {

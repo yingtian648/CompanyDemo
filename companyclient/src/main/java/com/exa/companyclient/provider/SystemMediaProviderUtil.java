@@ -1,27 +1,34 @@
 package com.exa.companyclient.provider;
 
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.MediaStore;
+import android.util.Size;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.bean.EventBean;
 import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.L;
+import com.exa.companyclient.App;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.Nullable;
 
 public class SystemMediaProviderUtil {
 
@@ -192,6 +199,13 @@ public class SystemMediaProviderUtil {
         return dataList;
     }
 
+    /**
+     * android Q以下的获取专辑封面方式
+     *
+     * @param context
+     * @param ids
+     * @return
+     */
     public static List<Files> getAudioAlbumThumbnail(Context context, String... ids) {
         if (ids == null) return null;
         StringBuilder builder = new StringBuilder();
@@ -227,5 +241,26 @@ public class SystemMediaProviderUtil {
         }
         cursor.close();
         return files;
+    }
+
+    /**
+     * android Q及以上的获取专辑封面方式
+     *
+     * @param albumId
+     * @return
+     */
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static Bitmap loadAudioAlbumThumbnail(@NonNull String albumId, String path) {
+        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, Long.parseLong(albumId));
+        L.d("loadAudioAlbumThumbnail: " + uri + ", path:" + path);
+        Size size = new Size(200, 200);
+        ContentResolver resolver = App.getContext().getContentResolver();
+        try {
+            return resolver.loadThumbnail(uri, size, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+            L.e("loadAudioAlbumThumbnail IOException:" + e.getMessage());
+        }
+        return null;
     }
 }
