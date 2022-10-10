@@ -39,5 +39,6 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
         runOnUiThread(() -> {
             bind.text.setText(stringBuilder.toString());
         });
+
     }
 }

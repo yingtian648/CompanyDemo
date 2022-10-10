@@ -39,6 +39,7 @@ public class BaseConstants {
         public static final int Audio = 1;// 音频
         public static final int Video = 2;// 视频
         public static final int Image = 3;// 图片
+        public static final int AudioThumb = 4;// 音频缩略图
     }
 
     /**

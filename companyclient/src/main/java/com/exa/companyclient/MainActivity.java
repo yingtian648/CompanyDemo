@@ -16,13 +16,16 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.EventBean;
+import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.AudioPlayerUtil;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Utils;
 import com.exa.baselib.utils.VideoPlayer;
@@ -47,6 +50,9 @@ import gxa.car.extlocationservice.GnssHwInfo;
 import gxa.car.extlocationservice.IExtiLocationInterface;
 
 public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
+    private List<Files> audios = new ArrayList<>();
+    private List<Files> audioThumbs = new ArrayList<>();
+    private int audioThumbsIndex = 0;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -68,6 +74,16 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
             ExeHelper.getInstance().exeGetSystemMediaProviderData();
+        });
+        bind.aImage.setOnClickListener(new OnClickViewListener() {
+            @Override
+            public void onClickView(View v) {
+                audioThumbsIndex++;
+                if (audioThumbsIndex > audioThumbs.size() - 1) {
+                    audioThumbsIndex = 0;
+                }
+                showAudioThumb();
+            }
         });
         loadData();
     }
@@ -107,14 +123,17 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     }, 1000);
                     break;
                 case 2://音频
-//                    BaseConstants.getHandler().postDelayed(() -> {
+                    audios.clear();
+                    audioThumbs.clear();
+                    BaseConstants.getHandler().postDelayed(() -> {
+                        audios.addAll(bean.datas);
 //                        for (int i = 0; i < bean.datas.size(); i++) {
 //                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
 //                                playAudio(bean.datas.get(i).path);
 //                                return;
 //                            }
 //                        }
-//                    }, 1000);
+                    }, 1000);
                     break;
                 case 3:
                     BaseConstants.getHandler().postDelayed(() -> {
@@ -127,10 +146,40 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                         playVideo(list);
                     }, 1000);
                     break;
+                case 4://歌曲封面
+                    BaseConstants.getHandler().postDelayed(() -> {
+                        if (!audios.isEmpty() && !bean.datas.isEmpty()) {
+                            for (int j = 0; j < bean.datas.size(); j++) {
+                                for (int i = 0; i < audios.size(); i++) {
+                                    if (audios.get(i).album_id.equals(bean.datas.get(j).album_id)) {
+                                        audios.get(i).album_path = bean.datas.get(j).album_path;
+                                        audioThumbs.add(audios.get(i));
+                                    }
+                                }
+                            }
+                            updateAudioThumbs();
+                        }
+                    }, 1000);
+                    break;
             }
         } else {
             setText(bean.message);
         }
+    }
+
+    private void updateAudioThumbs() {
+        audioThumbsIndex = 0;
+        if (audioThumbs.isEmpty()) {
+            bind.aImage.setImageBitmap(null);
+            bind.aImageName.setText("");
+        } else {
+            showAudioThumb();
+        }
+    }
+
+    private void showAudioThumb() {
+        Glide.with(this).load(audioThumbs.get(audioThumbsIndex).album_path).into(bind.aImage);
+        bind.aImageName.setText(audioThumbs.get(audioThumbsIndex).path);
     }
 
     private void playAudio(String path) {

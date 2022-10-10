@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
+    android:fitsSystemWindows = "true"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/btnApp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="App信息"
+        android:textAllCaps="false"
+        android:text="LocationTest"
         app:layout_constraintBottom_toTopOf="@id/btn" />
 
     <Button
@@ -25,7 +27,8 @@
         android:id="@+id/btn2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="跳转到第二个页面"
+        android:text="AppInfos"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <EditText

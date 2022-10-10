@@ -1,5 +1,6 @@
 package com.exa.companyclient.provider;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
@@ -9,19 +10,18 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.provider.MediaStore;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.bean.EventBean;
 import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.BaseConstants;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-
-import static android.provider.MediaStore.VOLUME_EXTERNAL_PRIMARY;
 
 public class SystemMediaProviderUtil {
 
@@ -109,18 +109,18 @@ public class SystemMediaProviderUtil {
             case BaseConstants.SystemMediaType.Image:
                 uri = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);//MediaStore.VOLUME_EXTERNAL_PRIMARY
                 projection = new String[]{
-                        MediaStore.Video.Media._ID,
-                        MediaStore.Video.Media.TITLE,
-                        MediaStore.Video.Media.SIZE,
-                        MediaStore.Video.Media.MIME_TYPE,
-                        MediaStore.Video.Media.DISPLAY_NAME,
-//                MediaStore.Video.Media.AUTHOR,//API 30
-//                MediaStore.Video.Media.ALBUM_ARTIST,//API 30
-                        MediaStore.Video.Media.DATA,
-                        MediaStore.Video.Media.DATE_ADDED,
-                        MediaStore.Video.Media.DATE_MODIFIED,
-                        MediaStore.Video.Media.HEIGHT,
-                        MediaStore.Video.Media.WIDTH,
+                        MediaStore.Images.Media._ID,
+                        MediaStore.Images.Media.TITLE,
+                        MediaStore.Images.Media.SIZE,
+                        MediaStore.Images.Media.MIME_TYPE,
+                        MediaStore.Images.Media.DISPLAY_NAME,
+//                MediaStore.Video.Images.AUTHOR,//API 30
+//                MediaStore.Video.Images.ALBUM_ARTIST,//API 30
+                        MediaStore.Images.Media.DATA,
+                        MediaStore.Images.Media.DATE_ADDED,
+                        MediaStore.Images.Media.DATE_MODIFIED,
+                        MediaStore.Images.Media.HEIGHT,
+                        MediaStore.Images.Media.WIDTH,
                 };
                 break;
             case BaseConstants.SystemMediaType.Video:
@@ -145,18 +145,19 @@ public class SystemMediaProviderUtil {
             default:
                 uri = MediaStore.Audio.Media.getContentUri(MediaStore.VOLUME_EXTERNAL);//MediaStore.VOLUME_EXTERNAL_PRIMARY
                 projection = new String[]{
-                        MediaStore.Video.Media._ID,
-                        MediaStore.Video.Media.TITLE,
-                        MediaStore.Video.Media.ALBUM,
-                        MediaStore.Video.Media.SIZE,
-                        MediaStore.Video.Media.DURATION,
-                        MediaStore.Video.Media.MIME_TYPE,
-                        MediaStore.Video.Media.DISPLAY_NAME,
-//                MediaStore.Video.Media.AUTHOR,//API 30
-//                MediaStore.Video.Media.ALBUM_ARTIST,//API 30
-                        MediaStore.Video.Media.DATA,
-                        MediaStore.Video.Media.DATE_ADDED,
-                        MediaStore.Video.Media.DATE_MODIFIED,
+                        MediaStore.Audio.Media._ID,
+                        MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media.ALBUM,
+                        MediaStore.Audio.Media.SIZE,
+                        MediaStore.Audio.Media.DURATION,
+                        MediaStore.Audio.Media.MIME_TYPE,
+                        MediaStore.Audio.Media.DISPLAY_NAME,
+//                MediaStore.Video.Audio.AUTHOR,//API 30
+//                MediaStore.Video.Audio.ALBUM_ARTIST,//API 30
+                        MediaStore.Audio.Media.DATA,
+                        MediaStore.Audio.Media.DATE_ADDED,
+                        MediaStore.Audio.Media.DATE_MODIFIED,
+                        MediaStore.Audio.AudioColumns.ALBUM_ID,
                 };
                 break;
         }
@@ -180,11 +181,51 @@ public class SystemMediaProviderUtil {
                 info.width = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.WIDTH));
                 info.height = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media.HEIGHT));
             }
+            if (type == BaseConstants.SystemMediaType.Audio) {
+                info.album_id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID));
+            }
             dataList.add(info);
             L.d("query result:" + info);
         }
         cursor.close();
         L.d("getSystemMediaProviderData result: " + dataList.size());
         return dataList;
+    }
+
+    public static List<Files> getAudioAlbumThumbnail(Context context, String... ids) {
+        if (ids == null) return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append("(");
+        for (int i = 0; i < ids.length; i++) {
+            builder.append(ids[i]).append(",");
+        }
+        builder.deleteCharAt(builder.lastIndexOf(","));
+        builder.append(")");
+        L.d("getAlbumThumbnail " + builder);
+
+        ContentResolver resolver = context.getContentResolver();
+        Uri albumUri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
+        String[] projection = new String[]{
+                MediaStore.Audio.Albums._ID,
+                MediaStore.Audio.Albums.ALBUM_ART
+        };
+        String thumbnail = MediaStore.Audio.Albums.ALBUM_ART;
+        String idColumn = MediaStore.Audio.Albums._ID;
+        String selection = idColumn + " in " + builder;
+        Cursor cursor = resolver.query(albumUri, projection, selection, null, null);
+        List<Files> files = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String id = cursor.getString(cursor.getColumnIndex(idColumn));
+            String path = cursor.getString(cursor.getColumnIndex(thumbnail));
+            if (path != null && new File(path).exists()) {
+                L.d("歌曲专辑图片:album_id=" + id + "  " + path);
+                Files file = new Files();
+                file.album_id = id;
+                file.album_path = path;
+                files.add(file);
+            }
+        }
+        cursor.close();
+        return files;
     }
 }

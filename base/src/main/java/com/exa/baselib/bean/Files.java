@@ -26,6 +26,8 @@ public class Files {
     public String mime_type;
     public String artist;
     public String album;
+    public String album_id;
+    public String album_path;
     public String display_name;
     public String tags;
 
@@ -60,6 +62,8 @@ public class Files {
                 ", root_dir='" + root_dir + '\'' +
                 ", artist='" + artist + '\'' +
                 ", album='" + album + '\'' +
+                ", album_id='" + album_id + '\'' +
+                ", album_path='" + album_path + '\'' +
                 ", tags='" + tags + '\'' +
                 '}';
     }
