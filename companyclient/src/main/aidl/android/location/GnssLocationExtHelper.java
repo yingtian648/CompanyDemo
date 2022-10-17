@@ -20,12 +20,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.location.Location;
-import android.location.LocationListener;
-
-import android.location.IExtLocationInterface;
-import android.location.IExtLocationCallback;
-
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -41,9 +35,9 @@ public class GnssLocationExtHelper {
     private IExtLocationInterface binder;
     private Context mContext;
     private final Handler mHandler;
-    private LocationListener mLocationListener;
-    private final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
-    private final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
+    private Callback mLocationListener;
+    private final String SERVICE_PACKAGE_NAME = "com.exa.companydemo";
+    private final String SERVICE_CLASS_NAME = "com.exa.companydemo.aidlservice.ExtLocationService";
 
     private final long DELAY_BIND_SERVICE = 1000;//delay bind service
 
@@ -53,6 +47,12 @@ public class GnssLocationExtHelper {
 
     private static class ClazzHolder {
         private static final GnssLocationExtHelper cellLocationProvider = new GnssLocationExtHelper();
+    }
+
+    public interface Callback extends LocationListener {
+        void repoSvStatus(int svCount, int[] svidWithFlags, float[] cn0s,
+                            float[] svElevations, float[] svAzimuths, float[] svCarrierFreqs,
+                            float[] basebandCn0s);
     }
 
     private GnssLocationExtHelper() {
@@ -67,7 +67,7 @@ public class GnssLocationExtHelper {
      * @param context
      * @param locationListener
      */
-    public void init(Context context, LocationListener locationListener) {
+    public void init(Context context, Callback locationListener) {
         this.mContext = context;
         this.mLocationListener = locationListener;
     }
@@ -75,8 +75,8 @@ public class GnssLocationExtHelper {
     public void bindServer() {
         Log.v(TAG, "bindExtServer");
         if (binder == null && mContext != null) {
-            boolean serverValid = isServiceAppInstalled(mContext,SERVICE_PACKAGE_NAME);
-            if(serverValid){
+            boolean serverValid = isServiceAppInstalled(mContext, SERVICE_PACKAGE_NAME);
+            if (serverValid) {
                 try {
                     Intent intentExt = new Intent();
                     intentExt.setClassName(SERVICE_PACKAGE_NAME, SERVICE_CLASS_NAME);
@@ -124,6 +124,14 @@ public class GnssLocationExtHelper {
             // Log.d(TAG, "onLocation:" + interval + "," + location.getLongitude() + "," + location.getLatitude());
             if (mLocationListener != null) {
                 mLocationListener.onLocationChanged(location);
+            }
+        }
+
+        @Override
+        public void reportSvStatus(int svCount, int[] svidWithFlags, float[] cn0s, float[] svElevations,
+                                   float[] svAzimuths, float[] svCarrierFreqs, float[] basebandCn0s) throws RemoteException {
+            if (mLocationListener != null) {
+                mLocationListener.repoSvStatus(svCount, svidWithFlags, cn0s, svElevations, svAzimuths, svCarrierFreqs, basebandCn0s);
             }
         }
 

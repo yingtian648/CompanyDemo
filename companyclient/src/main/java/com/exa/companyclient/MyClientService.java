@@ -11,6 +11,8 @@ import com.exa.baselib.utils.L;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Arrays;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -34,24 +36,34 @@ public class MyClientService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         L.d(getClass().getName() + ": onStartCommand");
         GnssLocationExtHelper provider = GnssLocationExtHelper.getInstance();
-        provider.init(this, new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
-                L.d("MyClientService onLocationChanged:"+ location);
-                EventBus.getDefault().post(location);
-            }
-
-            @Override
-            public void onProviderEnabled(@NonNull String provider) {
-                L.d("MyClientService onProviderEnabled:"+provider);
-            }
-
-            @Override
-            public void onProviderDisabled(@NonNull String provider) {
-                L.d("MyClientService onProviderDisabled:"+provider);
-            }
-        });
+        provider.init(this, new GnssLocationExtListener());
         provider.bindServer();
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private final class GnssLocationExtListener implements GnssLocationExtHelper.Callback {
+        @Override
+        public void repoSvStatus(int svCount, int[] svidWithFlags, float[] cn0s, float[] svElevations, float[] svAzimuths, float[] svCarrierFreqs, float[] basebandCn0s) {
+            L.d("repoSvStatus: " + svCount + ",svidWithFlags:" + Arrays.toString(svidWithFlags)
+                    + ",cn0s:" + Arrays.toString(cn0s)
+                    + ",svElevations:" + Arrays.toString(svElevations)
+                    + ",svAzimuths:" + Arrays.toString(svAzimuths)
+                    + ",svCarrierFreqs:" + Arrays.toString(svCarrierFreqs)
+                    + ",basebandCn0s:" + Arrays.toString(basebandCn0s)
+            );
+        }
+
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            L.d("onLocationChanged: " + location);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+        }
     }
 }

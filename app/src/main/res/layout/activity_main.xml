@@ -34,7 +34,7 @@
     <EditText
         android:id="@+id/edt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100px"
         android:padding="5dp"
         android:hint="输入框..."
         android:textSize="30px"

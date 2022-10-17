@@ -82,6 +82,8 @@ public class ExtLocationService extends Service {
                 Log.d(TAG, "circleSendLocation");
                 try {
                     mCallback.onLocation(location);
+                    mCallback.reportSvStatus(3, new int[]{1,2,3}, new float[]{4,5,6}, new float[]{7,8,9}, new float[]{10,11,12}, new float[]{13,14,15}, new float[]{16,17,18});
+//                    mCallback.reportSvStatus(3, null, null, null, null, null,null);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                     mCallback = null;

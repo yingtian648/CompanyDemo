@@ -77,18 +77,33 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         L.d("可用的定位方式: " + (eProviders != null ? eProviders : "null"));
         setText(L.msg);
 
-        locationManager.addGpsStatusListener(new GpsStatus.Listener() {
+        locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
             @Override
-            public void onGpsStatusChanged(int event) {
-                setText("GPS状态的监听器:" + event);
-                L.d("GPS状态的监听器:" + event);
+            public void onStarted() {
+                super.onStarted();
+                setText("GnssStatusCallback:onStarted");
+                L.d("GnssStatusCallback:onStarted");
             }
-        });
-        locationManager.addNmeaListener(new GpsStatus.NmeaListener() {
+
             @Override
-            public void onNmeaReceived(long timestamp, String nmea) {
-                setText("onNmeaReceived:" + nmea);
-                L.d("onNmeaReceived:" + nmea);
+            public void onStopped() {
+                super.onStopped();
+                setText("GnssStatusCallback:onStopped");
+                L.d("GnssStatusCallback:onStopped");
+            }
+
+            @Override
+            public void onFirstFix(int ttffMillis) {
+                super.onFirstFix(ttffMillis);
+                setText("GnssStatusCallback:onFirstFix:" + ttffMillis);
+                L.d("GnssStatusCallback:onFirstFix:" + ttffMillis);
+            }
+
+            @Override
+            public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
+                super.onSatelliteStatusChanged(status);
+                setText("GnssStatusCallback:onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
+                L.d("GnssStatusCallback:onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
             }
         });
 
@@ -139,7 +154,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         String provider = locationManager.getBestProvider(criteria, true);
         L.e("获取最佳定位方式: " + getProviderStr(provider));
         setText("获取最佳定位方式: " + getProviderStr(provider));
-        setText(getProviderStr(provider) + " 是否可用: " + locationManager.isProviderEnabled(provider));
+        setText(getProviderStr(provider) + " 是否可用: " + (provider == null ? "provider is null" : locationManager.isProviderEnabled(provider)));
     }
 
     private void getProviderSupportInfo(String ps) {
@@ -168,35 +183,33 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             setText("Gnss硬件模块名称:" + locationManager.getGnssHardwareModelName());
             L.d("getGnssHardwareModelName:" + locationManager.getGnssHardwareModelName());
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
-                @Override
-                public void onStarted() {//navigation start
-                    super.onStarted();
-                    L.d("onStarted");
-                }
-
-                @Override
-                public void onStopped() {
-                    super.onStopped();
-                    L.d("onStopped");
-                }
-
-                @Override
-                public void onFirstFix(int ttffMillis) {
-                    super.onFirstFix(ttffMillis);
-                    L.d("onFirstFix:"+ttffMillis);
-                }
-
-                @Override
-                public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
-                    super.onSatelliteStatusChanged(status);
-                }
-            }, null);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
+        locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
+            @Override
+            public void onStarted() {//navigation start
+                super.onStarted();
+                L.d("onStarted");
+            }
+
+            @Override
+            public void onStopped() {
+                super.onStopped();
+                L.d("onStopped");
+            }
+
+            @Override
+            public void onFirstFix(int ttffMillis) {
+                super.onFirstFix(ttffMillis);
+                L.d("onFirstFix:" + ttffMillis);
+            }
+
+            @Override
+            public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
+                super.onSatelliteStatusChanged(status);
+            }
+        }, null);
     }
 
     private void loadBaseLocationInfo() {
@@ -215,7 +228,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         locationUpdate(location, LocationManager.NETWORK_PROVIDER);
 
-        Gravity.apply(Gravity.BOTTOM,500,200,new Rect(0,0,100,500),100,50,new Rect(0,0,100,500));
+        Gravity.apply(Gravity.BOTTOM, 500, 200, new Rect(0, 0, 100, 500), 100, 50, new Rect(0, 0, 100, 500));
     }
 
     private void locationUpdate(Location location, String provider) {
@@ -286,14 +299,16 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private String getProviderStr(String provider) {
-        switch (provider) {
-            case "network":
-                return "网络定位";
-            case "passive":
-                return "被动定位";
-            default:
-                return "GPS定位";
-        }
+        if (provider != null)
+            switch (provider) {
+                case "network":
+                    return "网络定位";
+                case "passive":
+                    return "被动定位";
+                default:
+                    return "GPS定位";
+            }
+        return "GPS定位";
     }
 
     @Override

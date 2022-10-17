@@ -1,54 +1,47 @@
 package com.exa.companydemo;
 
-import android.Manifest;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Rect;
-import android.location.Location;
-import android.location.LocationListener;
+import android.graphics.Typeface;
+import android.graphics.fonts.Font;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StatFs;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.Tools;
-import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.location.LocationActivity;
-import com.exa.companydemo.mediaprovider.MediaScannerService;
-import com.exa.companydemo.utils.PermissionUtil;
+
+import java.io.File;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
-import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+import static android.graphics.fonts.SystemFonts.getAvailableFonts;
 
 public class MainActivity extends BaseActivity {
     private TextView text;
 
     @Override
     protected void initData() {
-        test();
+
     }
 
     @Override
     protected void initView() {
-//        getWindow().getDecorView().setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//        );
         String screen = "屏幕宽高：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
         L.d(screen);
         text = findViewById(R.id.text);
@@ -72,16 +65,115 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-//        getWindow().getAttributes().systemUiVisibility = 0;
-//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        int flages = getWindow().getAttributes().flags;
+        int visiable = getWindow().getDecorView().getSystemUiVisibility();
+        int appearance = -2;
+        int behavior = -2;
+        L.d("flags before:" + flages + ",SystemUiVisibility:" + visiable);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController controller = getWindow().getDecorView().getWindowInsetsController();
+            if (controller != null) {
+                appearance = controller.getSystemBarsAppearance();
+                behavior = controller.getSystemBarsBehavior();
+                L.d("flags before:" + flages + ",appearance:" + appearance + ",behavior:" + behavior + ",SystemUiVisibility:" + visiable);
+
+
+//                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+//                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+
+
+                appearance = controller.getSystemBarsAppearance();
+                behavior = controller.getSystemBarsBehavior();
+            }
+            visiable = getWindow().getDecorView().getSystemUiVisibility();
+            flages = getWindow().getAttributes().flags;
+            L.d("flags after:" + flages + ",appearance:" + appearance + ",behavior:" + behavior + ",SystemUiVisibility:" + visiable);
+        }
         return R.layout.activity_main;
     }
 
 
     private void test() {
 
-        Rect rt = new Rect();
-        rt.bottom = 200;
+        BaseConstants.getFixPool().execute(() -> {//获取字体
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                Set<Font> fonts = getAvailableFonts();
+                for (Font font : fonts) {
+                    L.d(font.toString());
+                }
+            }
+        });
+
+//        Dialog dialog = new MyDialog(this);
+//        dialog.show();
+    }
+
+    private class MyDialog extends Dialog {
+        private int mGravity;
+
+        public MyDialog(@NonNull Context context) {
+            this(context, 0);
+        }
+
+        public MyDialog(@NonNull Context context, int themeResId) {
+            super(context, themeResId);
+        }
+
+        protected MyDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+            super(context, cancelable, cancelListener);
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            mGravity = Gravity.BOTTOM;
+            initDialog();
+        }
+
+        private void updateWidthHeight(WindowManager.LayoutParams lp) {
+            if (lp.gravity == Gravity.TOP || lp.gravity == Gravity.BOTTOM) {
+                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            } else {
+                lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+            }
+        }
+
+        private void initDialog() {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+            lp.gravity = Gravity.BOTTOM;
+            updateWidthHeight(lp);
+            getWindow().setAttributes(lp);
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.input_layout, null, false);
+            setContentView(view);
+        }
+
+        private void initDockWindow() {
+            WindowManager.LayoutParams lp = getWindow().getAttributes();
+
+            lp.setTitle("模拟输入法");
+
+            lp.gravity = mGravity;
+            updateWidthHeight(lp);
+
+            getWindow().setAttributes(lp);
+
+            int windowSetFlags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+            int windowModFlags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                    WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+            boolean mTakesFocus = true;
+            if (!mTakesFocus) {
+                windowSetFlags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            } else {
+                windowSetFlags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+                windowModFlags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+            }
+
+            getWindow().setFlags(windowSetFlags, windowModFlags);
+        }
+
     }
 
     private void checkPermission() {
