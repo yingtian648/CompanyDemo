@@ -1,10 +1,12 @@
 package com.exa.companydemo;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.fonts.Font;
 import android.os.Build;
@@ -86,7 +88,10 @@ public class MainActivity extends BaseActivity {
             if (controller != null) {
                 appearance = controller.getSystemBarsAppearance();
                 behavior = controller.getSystemBarsBehavior();
-                L.d("flags before:" + flages + ",appearance:" + appearance + ",behavior:" + behavior + ",SystemUiVisibility:" + visiable);
+                L.d("flags before:" + flages + ",appearance:" + appearance + ",behavior:" + behavior
+                        + ",SystemUiVisibility:" + visiable
+                        + ",isNavBarShown:" + getNavMode()
+                );
                 L.d("(WindowInsets.Type.navigationBars() & behavior):"+(WindowInsets.Type.navigationBars() & behavior));
                 L.d("(WindowInsets.Type.navigationBars() | behavior):"+(WindowInsets.Type.navigationBars() | behavior));
                 L.d("-----------------------------------------------");
@@ -101,7 +106,10 @@ public class MainActivity extends BaseActivity {
             }
             visiable = getWindow().getDecorView().getSystemUiVisibility();
             flages = getWindow().getAttributes().flags;
-            L.d("flags after:" + flages + ",appearance:" + appearance + ",behavior:" + behavior + ",SystemUiVisibility:" + visiable);
+            L.d("flags after:" + flages + ",appearance:" + appearance + ",behavior:" + behavior
+                    + ",SystemUiVisibility:" + visiable
+                    + ",isNavBarShown:" + getNavMode()
+            );
         }
         return R.layout.activity_main;
     }
@@ -247,5 +255,39 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
+    }
+
+    private NavMode getNavMode() {
+        NavMode mode = null;
+        int modeInt = getSystemIntegerRes(this, "config_navBarInteractionMode");
+        for (NavMode m : NavMode.values()) {
+            if (m.resValue == modeInt) {
+                mode = m;
+            }
+        }
+        return mode;
+    }
+
+    private int getSystemIntegerRes(Context context, String resName) {
+        Resources res = context.getResources();
+        int resId = res.getIdentifier(resName, "integer", "android");
+        if (resId != 0) {
+            return res.getInteger(resId);
+        } else {
+            return -1;
+        }
+    }
+
+    public enum NavMode {
+        THREE_BUTTONS(false, 0),
+        TWO_BUTTONS(true, 1),
+        NO_BUTTON(true, 2);
+        public final boolean hasGestures;
+        public final int resValue;
+
+        NavMode(boolean hasGestures, int resValue) {
+            this.hasGestures = hasGestures;
+            this.resValue = resValue;
+        }
     }
 }
