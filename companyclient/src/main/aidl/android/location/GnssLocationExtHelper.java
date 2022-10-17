@@ -36,8 +36,8 @@ public class GnssLocationExtHelper {
     private Context mContext;
     private final Handler mHandler;
     private Callback mLocationListener;
-    private final String SERVICE_PACKAGE_NAME = "com.exa.companydemo";
-    private final String SERVICE_CLASS_NAME = "com.exa.companydemo.aidlservice.ExtLocationService";
+    private final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
+    private final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
 
     private final long DELAY_BIND_SERVICE = 1000;//delay bind service
 
@@ -171,7 +171,7 @@ public class GnssLocationExtHelper {
      * set service callback
      */
     private void setCallback() {
-        Log.d(TAG, "requestLocation");
+        Log.d(TAG, "setCallback");
         try {
             if (binder != null) {
                 binder.setCallback(callback);

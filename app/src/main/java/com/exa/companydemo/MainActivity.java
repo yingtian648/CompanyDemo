@@ -11,11 +11,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.StatFs;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.exa.baselib.BaseConstants;
@@ -34,6 +36,7 @@ import static android.graphics.fonts.SystemFonts.getAvailableFonts;
 
 public class MainActivity extends BaseActivity {
     private TextView text;
+    private EditText editText;
 
     @Override
     protected void initData() {
@@ -45,6 +48,7 @@ public class MainActivity extends BaseActivity {
         String screen = "屏幕宽高：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
         L.d(screen);
         text = findViewById(R.id.text);
+        editText = findViewById(R.id.edt);
         text.setText(screen);
         checkPermission();
         findViewById(R.id.btnApp).setOnClickListener(view -> {
@@ -59,6 +63,13 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn2).setOnClickListener(view -> {
             L.d("点击跳转  到第二个页面");
             startActivity(new Intent(this, AppInfoActivity.class));
+        });
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Tools.hideKeyboard(editText);
+                return false;
+            }
         });
         registerBroadcast();
     }
@@ -76,14 +87,17 @@ public class MainActivity extends BaseActivity {
                 appearance = controller.getSystemBarsAppearance();
                 behavior = controller.getSystemBarsBehavior();
                 L.d("flags before:" + flages + ",appearance:" + appearance + ",behavior:" + behavior + ",SystemUiVisibility:" + visiable);
-
-
-//                controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
-//                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-
+                L.d("(WindowInsets.Type.navigationBars() & behavior):"+(WindowInsets.Type.navigationBars() & behavior));
+                L.d("(WindowInsets.Type.navigationBars() | behavior):"+(WindowInsets.Type.navigationBars() | behavior));
+                L.d("-----------------------------------------------");
+                controller.hide(WindowInsets.Type.navigationBars());
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 
                 appearance = controller.getSystemBarsAppearance();
                 behavior = controller.getSystemBarsBehavior();
+
+                L.d("(WindowInsets.Type.navigationBars() & behavior):"+(WindowInsets.Type.navigationBars() & behavior));
+                L.d("(WindowInsets.Type.navigationBars() | behavior):"+(WindowInsets.Type.navigationBars() | behavior));
             }
             visiable = getWindow().getDecorView().getSystemUiVisibility();
             flages = getWindow().getAttributes().flags;

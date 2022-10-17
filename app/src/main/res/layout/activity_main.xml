@@ -37,7 +37,10 @@
         android:layout_height="100px"
         android:padding="5dp"
         android:hint="输入框..."
+        android:imeOptions="actionNext"
         android:textSize="30px"
+        android:maxLines="1"
+        android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@id/btnApp" />
 
     <TextView
