@@ -4,12 +4,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.location.GnssLocationExtHelper;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.IBinder;
 
 import com.exa.baselib.utils.L;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.Arrays;
 
@@ -35,9 +32,11 @@ public class MyClientService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         L.d(getClass().getName() + ": onStartCommand");
+
         GnssLocationExtHelper provider = GnssLocationExtHelper.getInstance();
         provider.init(this, new GnssLocationExtListener());
         provider.bindServer();
+
         return super.onStartCommand(intent, flags, startId);
     }
 

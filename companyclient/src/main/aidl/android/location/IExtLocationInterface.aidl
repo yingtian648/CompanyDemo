@@ -9,7 +9,7 @@ import android.location.IExtLocationCallback;
  * {@hide}
  */
 interface IExtLocationInterface {
-    //setLocationRequest callback(interval：Unit: mm)
+    //setCallback
     void setCallback(in IExtLocationCallback callback);
 
     //Get GNSS hardware information and return hardware information
