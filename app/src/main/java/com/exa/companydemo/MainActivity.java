@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.graphics.Insets;
 import android.graphics.Typeface;
 import android.graphics.fonts.Font;
 import android.os.Build;
@@ -29,10 +30,14 @@ import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import static android.graphics.fonts.SystemFonts.getAvailableFonts;
 
@@ -42,7 +47,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        getNavMode();
     }
 
     @Override
@@ -78,45 +83,48 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        int flages = getWindow().getAttributes().flags;
-        int visiable = getWindow().getDecorView().getSystemUiVisibility();
-        int appearance = -2;
-        int behavior = -2;
-        L.d("flags before:" + flages + ",SystemUiVisibility:" + visiable);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = getWindow().getDecorView().getWindowInsetsController();
             if (controller != null) {
-                appearance = controller.getSystemBarsAppearance();
-                behavior = controller.getSystemBarsBehavior();
-                L.d("flags before:" + flages + ",appearance:" + appearance + ",behavior:" + behavior
-                        + ",SystemUiVisibility:" + visiable
-                        + ",isNavBarShown:" + getNavMode()
-                );
-                L.d("(WindowInsets.Type.navigationBars() & behavior):"+(WindowInsets.Type.navigationBars() & behavior));
-                L.d("(WindowInsets.Type.navigationBars() | behavior):"+(WindowInsets.Type.navigationBars() | behavior));
+                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+                    @Override
+                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+                        if (WindowInsets.Type.statusBars() == typeMask) {
+                            L.d("InsetsChanged:" + typeMask + ",controller:" + controller.getClass());
+
+                            WindowInsets windowInsets = new  WindowInsets.Builder().build();
+                            L.d("InsetsChanged windowInsets:" + windowInsets.isVisible(WindowInsets.Type.navigationBars()));
+                            getNavMode();
+                        }
+                    }
+                });
+                getNavMode();
                 L.d("-----------------------------------------------");
-                controller.hide(WindowInsets.Type.navigationBars());
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-
-                appearance = controller.getSystemBarsAppearance();
-                behavior = controller.getSystemBarsBehavior();
-
-                L.d("(WindowInsets.Type.navigationBars() & behavior):"+(WindowInsets.Type.navigationBars() & behavior));
-                L.d("(WindowInsets.Type.navigationBars() | behavior):"+(WindowInsets.Type.navigationBars() | behavior));
+//                controller.hide(WindowInsets.Type.navigationBars());
+                controller.hide(WindowInsets.Type.statusBars());
             }
-            visiable = getWindow().getDecorView().getSystemUiVisibility();
-            flages = getWindow().getAttributes().flags;
-            L.d("flags after:" + flages + ",appearance:" + appearance + ",behavior:" + behavior
-                    + ",SystemUiVisibility:" + visiable
-                    + ",isNavBarShown:" + getNavMode()
-            );
         }
         return R.layout.activity_main;
     }
 
+    private void getNavMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsets windowInsets = WindowInsets.CONSUMED;
+            L.d("hasInsets:" + windowInsets.hasInsets() + ",isConsumed:" + windowInsets.isConsumed());
+            L.d("NavigationBar is visible:" + windowInsets.getInsets(WindowInsets.Type.navigationBars()));
+            L.d("StatusBars is visible:" + windowInsets.getInsets(WindowInsets.Type.statusBars()));
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        L.d("onResume");
+    }
 
     private void test() {
-
         BaseConstants.getFixPool().execute(() -> {//获取字体
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 Set<Font> fonts = getAvailableFonts();
@@ -125,77 +133,6 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-
-//        Dialog dialog = new MyDialog(this);
-//        dialog.show();
-    }
-
-    private class MyDialog extends Dialog {
-        private int mGravity;
-
-        public MyDialog(@NonNull Context context) {
-            this(context, 0);
-        }
-
-        public MyDialog(@NonNull Context context, int themeResId) {
-            super(context, themeResId);
-        }
-
-        protected MyDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-            super(context, cancelable, cancelListener);
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            mGravity = Gravity.BOTTOM;
-            initDialog();
-        }
-
-        private void updateWidthHeight(WindowManager.LayoutParams lp) {
-            if (lp.gravity == Gravity.TOP || lp.gravity == Gravity.BOTTOM) {
-                lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            } else {
-                lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-                lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-            }
-        }
-
-        private void initDialog() {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-            lp.gravity = Gravity.BOTTOM;
-            updateWidthHeight(lp);
-            getWindow().setAttributes(lp);
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.input_layout, null, false);
-            setContentView(view);
-        }
-
-        private void initDockWindow() {
-            WindowManager.LayoutParams lp = getWindow().getAttributes();
-
-            lp.setTitle("模拟输入法");
-
-            lp.gravity = mGravity;
-            updateWidthHeight(lp);
-
-            getWindow().setAttributes(lp);
-
-            int windowSetFlags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
-            int windowModFlags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-                    WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-            boolean mTakesFocus = true;
-            if (!mTakesFocus) {
-                windowSetFlags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-            } else {
-                windowSetFlags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-                windowModFlags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-            }
-
-            getWindow().setFlags(windowSetFlags, windowModFlags);
-        }
-
     }
 
     private void checkPermission() {
@@ -255,39 +192,5 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
-    }
-
-    private NavMode getNavMode() {
-        NavMode mode = null;
-        int modeInt = getSystemIntegerRes(this, "config_navBarInteractionMode");
-        for (NavMode m : NavMode.values()) {
-            if (m.resValue == modeInt) {
-                mode = m;
-            }
-        }
-        return mode;
-    }
-
-    private int getSystemIntegerRes(Context context, String resName) {
-        Resources res = context.getResources();
-        int resId = res.getIdentifier(resName, "integer", "android");
-        if (resId != 0) {
-            return res.getInteger(resId);
-        } else {
-            return -1;
-        }
-    }
-
-    public enum NavMode {
-        THREE_BUTTONS(false, 0),
-        TWO_BUTTONS(true, 1),
-        NO_BUTTON(true, 2);
-        public final boolean hasGestures;
-        public final int resValue;
-
-        NavMode(boolean hasGestures, int resValue) {
-            this.hasGestures = hasGestures;
-            this.resValue = resValue;
-        }
     }
 }

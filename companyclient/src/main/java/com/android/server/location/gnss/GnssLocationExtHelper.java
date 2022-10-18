@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package android.location;
+package com.android.server.location.gnss;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.location.Location;
+import android.location.LocationListener;
+
+import android.location.IExtLocationInterface;
+import android.location.IExtLocationCallback;
+
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -41,18 +47,18 @@ public class GnssLocationExtHelper {
 
     private final long DELAY_BIND_SERVICE = 1000;//delay bind service
 
+	public interface Callback extends LocationListener {
+        void repoSvStatus(int svCount, int[] svidWithFlags, float[] cn0s,
+                            float[] svElevations, float[] svAzimuths, float[] svCarrierFreqs,
+                            float[] basebandCn0s);
+    }
+
     public static GnssLocationExtHelper getInstance() {
         return ClazzHolder.cellLocationProvider;
     }
 
     private static class ClazzHolder {
         private static final GnssLocationExtHelper cellLocationProvider = new GnssLocationExtHelper();
-    }
-
-    public interface Callback extends LocationListener {
-        void repoSvStatus(int svCount, int[] svidWithFlags, float[] cn0s,
-                            float[] svElevations, float[] svAzimuths, float[] svCarrierFreqs,
-                            float[] basebandCn0s);
     }
 
     private GnssLocationExtHelper() {
@@ -91,6 +97,40 @@ public class GnssLocationExtHelper {
     }
 
     /**
+     * on user enable Location
+     */
+    public boolean setEnable() {
+        Log.d(TAG, "setEnable");
+        try {
+            if (binder != null) {
+                return binder.setEnable();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            binder = null;
+            Log.e(TAG, "setEnable RemoteException: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * on user disable Location
+     */
+    public boolean setDisable() {
+        Log.d(TAG, "setDisable");
+        try {
+            if (binder != null) {
+                return binder.setDisable();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            binder = null;
+            Log.e(TAG, "setDisable RemoteException: " + e.getMessage());
+        }
+        return false;
+    }
+
+    /**
      * unbind ExtServer
      */
     public void unbind() {
@@ -126,8 +166,8 @@ public class GnssLocationExtHelper {
                 mLocationListener.onLocationChanged(location);
             }
         }
-
-        @Override
+		
+		@Override
         public void reportSvStatus(int svCount, int[] svidWithFlags, float[] cn0s, float[] svElevations,
                                    float[] svAzimuths, float[] svCarrierFreqs, float[] basebandCn0s) throws RemoteException {
             if (mLocationListener != null) {
@@ -137,6 +177,7 @@ public class GnssLocationExtHelper {
 
         @Override
         public void onProviderEnabled() throws RemoteException {
+            Log.d(TAG, "onProviderEnabled");
             if (mLocationListener != null) {
                 mLocationListener.onProviderEnabled(PROVIDER_NAME);
             }
@@ -144,6 +185,7 @@ public class GnssLocationExtHelper {
 
         @Override
         public void onProviderDisabled() throws RemoteException {
+            Log.d(TAG, "onProviderDisabled");
             if (mLocationListener != null) {
                 mLocationListener.onProviderDisabled(PROVIDER_NAME);
             }
@@ -179,7 +221,7 @@ public class GnssLocationExtHelper {
         } catch (RemoteException e) {
             e.printStackTrace();
             binder = null;
-            Log.e(TAG, "requestLocation RemoteException: " + e.getMessage());
+            Log.e(TAG, "setCallback RemoteException: " + e.getMessage());
         }
     }
 
@@ -192,7 +234,7 @@ public class GnssLocationExtHelper {
             try {
                 context.getPackageManager().getPackageInfo(pkgName, 0);
             } catch (Exception e) {
-                Log.d(TAG, "isAppInstalled false: " + e.getMessage());
+                Log.d(TAG, "isServiceAppInstalled false: " + e.getMessage());
                 return false;
             }
         }

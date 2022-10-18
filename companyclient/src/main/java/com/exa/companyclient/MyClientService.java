@@ -2,7 +2,7 @@ package com.exa.companyclient;
 
 import android.app.Service;
 import android.content.Intent;
-import android.location.GnssLocationExtHelper;
+import com.android.server.location.gnss.GnssLocationExtHelper;
 import android.location.Location;
 import android.os.IBinder;
 
