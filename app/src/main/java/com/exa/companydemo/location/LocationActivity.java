@@ -22,10 +22,10 @@ import android.view.View;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
+import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityLocationBinding;
-import com.exa.companydemo.utils.PermissionUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

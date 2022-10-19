@@ -17,6 +17,7 @@ public class BaseConstants {
     public static final String FILE_DIR_IMAGE = "/storage/emulated/0/Music/Image";
     public static final String FILE_DIR_VIDEO = "/storage/emulated/0/Music/Video";
     public static final String FILE_DIR = "/storage/emulated/0/Music";
+    public static final String FILE_DIR_TEST = "/storage/emulated/0/Music/TestFile";
 
 
     private static ExecutorService singlePool, fixPool, scheduledPool;

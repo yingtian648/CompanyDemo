@@ -1,45 +1,26 @@
 package com.exa.companydemo;
 
-import android.app.Activity;
-import android.app.Dialog;
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.graphics.Insets;
-import android.graphics.Typeface;
-import android.graphics.fonts.Font;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.StatFs;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
+import com.exa.companydemo.utils.LogTools;
+import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.util.Set;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
-
-import static android.graphics.fonts.SystemFonts.getAvailableFonts;
 
 public class MainActivity extends BaseActivity {
     private TextView text;
@@ -78,7 +59,7 @@ public class MainActivity extends BaseActivity {
                 return false;
             }
         });
-        registerBroadcast();
+        registerBroadcast(mReceiver);
     }
 
     @Override
@@ -91,18 +72,15 @@ public class MainActivity extends BaseActivity {
                     public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
                         if (WindowInsets.Type.statusBars() == typeMask) {
                             L.d("InsetsChanged:" + typeMask + ",controller:" + controller.getClass());
-
-                            WindowInsets windowInsets = new  WindowInsets.Builder().build();
-                            L.d("InsetsChanged windowInsets:" + windowInsets.isVisible(WindowInsets.Type.navigationBars()));
                             getNavMode();
                         }
                     }
                 });
                 getNavMode();
                 L.d("-----------------------------------------------");
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+//                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 //                controller.hide(WindowInsets.Type.navigationBars());
-                controller.hide(WindowInsets.Type.statusBars());
+//                controller.hide(WindowInsets.Type.statusBars());
             }
         }
         return R.layout.activity_main;
@@ -112,9 +90,8 @@ public class MainActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsets windowInsets = WindowInsets.CONSUMED;
             L.d("hasInsets:" + windowInsets.hasInsets() + ",isConsumed:" + windowInsets.isConsumed());
-            L.d("NavigationBar is visible:" + windowInsets.getInsets(WindowInsets.Type.navigationBars()));
-            L.d("StatusBars is visible:" + windowInsets.getInsets(WindowInsets.Type.statusBars()));
-
+            L.d("NavigationBar is visible:" + windowInsets.isVisible(WindowInsets.Type.navigationBars()));
+            L.d("StatusBars is visible:" + windowInsets.isVisible(WindowInsets.Type.statusBars()));
         }
     }
 
@@ -122,17 +99,11 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         L.d("onResume");
+        getNavMode();
     }
 
     private void test() {
-        BaseConstants.getFixPool().execute(() -> {//获取字体
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                Set<Font> fonts = getAvailableFonts();
-                for (Font font : fonts) {
-                    L.d(font.toString());
-                }
-            }
-        });
+        LogTools.logSystemFonts();
     }
 
     private void checkPermission() {
@@ -157,7 +128,6 @@ public class MainActivity extends BaseActivity {
                 case BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH://自定义媒体扫描完成
                     break;
                 case Intent.ACTION_MEDIA_MOUNTED://挂载
-                    startMediaScannerService(context, intent);
                     break;
                 case Intent.ACTION_MEDIA_UNMOUNTED://卸载
                     break;
@@ -170,7 +140,7 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-    private void registerBroadcast() {
+    private void registerBroadcast(BroadcastReceiver receiver) {
         L.d("registerBroadcast");
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.hardware.usb.action.USB_DEVICE_ATTACHED");
@@ -181,11 +151,7 @@ public class MainActivity extends BaseActivity {
         filter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
         filter.addDataScheme("file");
-        registerReceiver(mReceiver, filter);
-    }
-
-    private void startMediaScannerService(Context context, Intent intentRes) {
-
+        registerReceiver(receiver, filter);
     }
 
     @Override
