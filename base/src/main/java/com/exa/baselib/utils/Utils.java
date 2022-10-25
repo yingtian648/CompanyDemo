@@ -1,15 +1,22 @@
 package com.exa.baselib.utils;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -215,5 +222,74 @@ public class Utils {
             }
         }
         return true;
+    }
+
+    /**
+     * 设置当前Activity屏幕亮度
+     * @param activity
+     * @param brightness  0.0-1.0
+     */
+    public static void setScreenBrightness(Activity activity,float brightness){
+        Window window = activity.getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        lp.screenBrightness = brightness;
+        window.setAttributes(lp);
+    }
+
+    /**
+     * 设置当前Activity屏幕亮度
+     * @param context
+     * @param brightness 0-255
+     */
+    public static void setSystemScreenBrightness(Context context,int brightness){
+        int currBrightness = 255;
+        ContentResolver resolver = context.getContentResolver();
+        try {
+            int mode =  Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE);
+            currBrightness = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS);
+            Log.d("Tools","SystemScreenBrightness mode: " + mode + ",curr:" + currBrightness);
+            if (mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {//自动调节屏幕亮度模式值为1
+                Settings.System.putInt(resolver,Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+            }
+            Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            Log.e("Tools","setSystemScreenBrightness: " + e.getMessage());
+        }
+    }
+
+    /**
+     * textview edittext
+     * 获取密码转换器
+     * @return
+     */
+    public static PasswordTransformationMethod getPasswordTransformationMethod(){
+        return new PasswordTransformationMethod(){
+            @Override
+            public CharSequence getTransformation(CharSequence source, View view) {
+                return new PasswordCharSequence(source);
+            }
+
+            class PasswordCharSequence implements CharSequence {
+
+                private CharSequence mSource;
+
+                public PasswordCharSequence(CharSequence source) {
+                    mSource = source;
+                }
+
+                public char charAt(int index) {//设置需要显示得字符
+                    return '*';
+                }
+
+                public int length() {
+                    return mSource.length();
+                }
+
+                public CharSequence subSequence(int start, int end) {
+                    return mSource.subSequence(start, end); // Return default
+                }
+            }
+        };
     }
 }

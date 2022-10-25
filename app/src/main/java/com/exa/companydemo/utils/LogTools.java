@@ -1,5 +1,6 @@
 package com.exa.companydemo.utils;
 
+import android.graphics.Typeface;
 import android.graphics.fonts.Font;
 import android.os.Build;
 
@@ -24,6 +25,8 @@ public class LogTools {
         L.d("------------logSystemFonts-------------");
         BaseConstants.getFixPool().execute(() -> {//获取字体
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                Typeface def = Typeface.DEFAULT;
+                L.d("default fonts: style:" + def.getStyle() + ",weight:" + def.getWeight() + "," + def.equals(Typeface.create("GacFont-Regular",Typeface.NORMAL)));
                 Set<Font> fonts = getAvailableFonts();
                 if (!fonts.isEmpty()) {
                     StringBuilder builder = new StringBuilder();
@@ -42,16 +45,20 @@ public class LogTools {
      * 歌曲文件放在下面位置
      * /data/user/0/com.exa.companydemo/files
      */
-    public static void logAudioFileAttr() {
-        String path = App.getContext().getFilesDir().getPath();
+    public static void logAudioFileAttr(String path) {
+        if (path == null) {
+            path = App.getContext().getFilesDir().getPath();
+        }
         File file = new File(path);
-        L.d("path:" + file.getAbsolutePath());
-        if (file.exists()) {
+        L.d("path:" + file.getAbsolutePath() + "," + (file.exists() ? ("exists," + file.list()) : "not exists"));
+        if (file.exists() && file.list() != null) {
             L.d("path:" + Arrays.toString(file.list()));
             File[] files = file.listFiles();
             if (files != null) {
                 com.exa.companydemo.utils.Tools.loadFileAttrs(files);
             }
+        } else {
+            L.e("logAudioFileAttr path is null or has no child");
         }
     }
 }

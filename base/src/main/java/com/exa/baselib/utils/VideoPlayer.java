@@ -310,11 +310,22 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         if (playPath.startsWith("http://") || playPath.startsWith("https://")) {
             uri = Uri.parse(playPath);
         } else {
+            if(!new File(playPath).exists()){
+                L.e("playPath is null");
+                return;
+            }
             uri = Uri.fromFile(new File(playPath));
         }
-        mmr.setDataSource(context, uri);
-        int vw = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-        int vh = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        int vw = 0;
+        int vh = 0;
+        try {
+            mmr.setDataSource(context, uri);
+            vw = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            vh = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        } catch (IllegalArgumentException | SecurityException e) {
+            e.printStackTrace();
+            L.e("onSurfaceTextureAvailable mmr.setDataSource err:" + e.getMessage());
+        }
 
         int lw = frameLayout.getWidth();
         int lh = frameLayout.getHeight();

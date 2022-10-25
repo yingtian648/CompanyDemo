@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -72,7 +74,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
 //            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
-            startService(new Intent(this, MyClientService.class));
+//            startService(new Intent(this, MyClientService.class));
+            playVideoFile();
         });
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
@@ -93,6 +96,33 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
             }
         });
         loadData();
+    }
+
+    public void playVideoFile() {
+        String path = App.getContext().getFilesDir().getPath();
+
+        //手机调试
+//        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/Weixin";
+
+        File file = new File(path);
+
+        L.d("playVideoFile:" + path + "," + file.exists());
+        if (file.exists()) {
+            L.d("playVideoFile list:" + Arrays.toString(file.list()));
+        }
+        if (file.exists() && file.list() != null) {
+            List<String> playList = new ArrayList<>();
+            for (File child : Objects.requireNonNull(file.listFiles())) {
+                if (!child.isDirectory() && (child.getName().toLowerCase().contains(".mp4")
+                        || child.getName().toLowerCase().contains(".wmv")
+                        || child.getName().toLowerCase().contains(".armvb")
+                        || child.getName().toLowerCase().contains(".avi")
+                        || child.getName().toLowerCase().contains(".asf"))) {
+                    playList.add(child.getAbsolutePath());
+                }
+            }
+            playVideo(playList);
+        }
     }
 
     @Override
