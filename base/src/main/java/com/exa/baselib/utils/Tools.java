@@ -957,4 +957,28 @@ public class Tools {
         intent.setData(data);
         context.startActivity(intent);
     }
+
+    /**
+     * 转无符号字节
+     *
+     * @param b
+     * @return
+     */
+    public static short string2UnsignedByte(byte b) {
+        return (short) ((short) b & 0xFF);
+    }
+
+    /**
+     * 转无符号字节数组
+     *
+     * @param b
+     * @return
+     */
+    public static short[] string2UnsignedBytes(byte[] b) {
+        short[] result = new short[b.length];
+        for (int i = 0; i < b.length; i++) {
+            result[i] = string2UnsignedByte(b[i]);
+        }
+        return result;
+    }
 }

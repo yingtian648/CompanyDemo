@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
-    android:fitsSystemWindows = "true"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/btnApp"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:textAllCaps="false"
         android:text="LocationTest"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@id/btn" />
 
     <Button
@@ -35,22 +35,62 @@
         android:id="@+id/edt"
         android:layout_width="match_parent"
         android:layout_height="120px"
-        android:padding="5dp"
         android:hint="输入框..."
         android:imeOptions="actionNext"
-        android:textSize="40px"
         android:maxLines="1"
+        android:padding="5dp"
         android:singleLine="true"
+        android:textSize="40px"
         app:layout_constraintBottom_toTopOf="@id/btnApp" />
 
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100px"
         android:text="Hello World!"
+        style="@style/customstyle"
         android:textSize="40px"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10px"
+        android:text="Hello World!"
+        android:textSize="40px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text" />
+
+    <TextView
+        android:id="@+id/text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10px"
+        android:text="Hello World!"
+        android:textSize="40px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text1" />
+
+    <TextView
+        android:id="@+id/text3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10px"
+        android:text="Hello World!"
+        android:textSize="40px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text2" />
+
+    <TextView
+        android:id="@+id/text4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10px"
+        android:text="Hello World!"
+        android:textSize="40px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

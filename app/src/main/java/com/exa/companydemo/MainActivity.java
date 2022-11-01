@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.text.Html;
 import android.text.Spanned;
 import android.view.KeyEvent;
@@ -22,11 +25,17 @@ import android.widget.TextView;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
+import com.exa.companydemo.utils.LocationInfo;
 import com.exa.companydemo.utils.LogTools;
 import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
+import com.exa.companydemo.utils.SatInfo_t;
+import com.google.gson.Gson;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Optional;
 
 import androidx.annotation.NonNull;
@@ -34,8 +43,9 @@ import androidx.annotation.NonNull;
 import static android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE;
 
 public class MainActivity extends BaseActivity {
-    private TextView text;
+    private TextView text, text1, text2, text3, text4;
     private EditText editText;
+    private final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
 
     @Override
     protected void initData() {
@@ -47,40 +57,15 @@ public class MainActivity extends BaseActivity {
         String screen = "屏幕宽高：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
         L.d(screen);
         text = findViewById(R.id.text);
-        text.setTypeface(Typeface.DEFAULT);
+        text1 = findViewById(R.id.text1);
+        text2 = findViewById(R.id.text2);
+        text3 = findViewById(R.id.text3);
+        text4 = findViewById(R.id.text4);
         editText = findViewById(R.id.edt);
-        text.setText(screen);
         checkPermission();
         findViewById(R.id.btnApp).setOnClickListener(view -> {
-            L.d("点击App信息");
-//            startActivity(new Intent(this, LocationActivity.class));
-            text.setText("点击App信息");
-
-//            text.setTypeface(Typeface.create("sans-serif",Typeface.BOLD));
-//            text.setTypeface(Typeface.create("GacFont-Regular",Typeface.NORMAL));
-            text.setTypeface(Typeface.create("GacFont-Bold", Typeface.NORMAL));
-            L.d("GacFont-Bold");
-            editText.setText("设置GacFont-Bold");
-            text.postDelayed(() -> {
-                text.setTypeface(Typeface.DEFAULT_BOLD);
-                L.d("Typeface.DEFAULT_BOLD");
-                editText.setText("设置DEFAULT_BOLD");
-            }, 2000);
-            text.postDelayed(() -> {
-                text.setTypeface(Typeface.create("GacFont-Regular", Typeface.NORMAL));
-                L.d("设置GacFont-Regular");
-                editText.setText("设置GacFont-Regular");
-            }, 5000);
-            text.postDelayed(() -> {
-                text.setTypeface(Typeface.DEFAULT);
-                L.d("set DEFAULT");
-                editText.setText("设置DEFAULT");
-            }, 8000);
-            text.postDelayed(() -> {
-                text.setTypeface(Typeface.create("Roboto-Regular", Typeface.NORMAL));
-                L.d("set Roboto-Regular");
-                editText.setText("设置Roboto-Regular");
-            }, 11000);
+            L.d("点击Location Test");
+            startActivity(new Intent(this, LocationActivity.class));
         });
         findViewById(R.id.btn).setOnClickListener(view -> {
             L.d("点击Toast测试1");
@@ -99,6 +84,30 @@ public class MainActivity extends BaseActivity {
         });
 
         registerBroadcast(mReceiver);
+
+
+        text.setText(fontTestWords);
+        text1.setText(fontTestWords + "   GacFont");
+        text2.setText(fontTestWords + "   sans-serif");
+        text3.setText(fontTestWords + "   serif");
+        text4.setText(fontTestWords + "   monospace");
+        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
+
+        Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
+        Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
+        Typeface serif = Typeface.create("serif", Typeface.BOLD);
+        Typeface monospace = Typeface.create("monospace", Typeface.BOLD);
+        text1.setTypeface(GacFont);
+        text2.setTypeface(sans_serif);
+        text3.setTypeface(serif);
+        text4.setTypeface(monospace);
+
+        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+        L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
+        L.d("serif is Default ? " + (serif.equals(aDefault)));
+        L.d("monospace is Default ? " + (monospace.equals(aDefault)));
+
+        getDataJson();
     }
 
     @Override
@@ -120,12 +129,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void getNavMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsets windowInsets = WindowInsets.CONSUMED;
-            L.d("hasInsets:" + windowInsets.hasInsets() + ",isConsumed:" + windowInsets.isConsumed());
-            L.d("NavigationBar is visible:" + windowInsets.isVisible(WindowInsets.Type.navigationBars()));
-            L.d("StatusBars is visible:" + windowInsets.isVisible(WindowInsets.Type.statusBars()));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            WindowInsets windowInsets = WindowInsets.CONSUMED;
+//            L.d("hasInsets:" + windowInsets.hasInsets() + ",isConsumed:" + windowInsets.isConsumed());
+//            L.d("NavigationBar is visible:" + windowInsets.isVisible(WindowInsets.Type.navigationBars()));
+//            L.d("StatusBars is visible:" + windowInsets.isVisible(WindowInsets.Type.statusBars()));
+//        }
     }
 
     @Override
@@ -198,5 +207,34 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mReceiver);
+    }
+
+    private void getDataJson() {
+        LocationInfo location = new LocationInfo();
+        location.setUTCTime(System.currentTimeMillis());
+        location.setUTCDate(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        location.setLongitude(104.03453435);
+        location.setLatitude(34.5624251);
+        location.setSpeed(20f);//单位：米/秒
+        location.setAltitude(600);//海拔
+        location.setHorizontalAccuracy(4f);//启动后的纳秒数，包括睡眠时间
+        location.setDirection(260);//精度
+        location.setVerticalAccuracy(3f);
+        location.setBearingAccuracy(5f);
+        location.setSpdAccuracy(5f);
+        location.setSatAvailable((byte) 0);
+        location.setGNSSValidFlag((byte) 1);
+        SatInfo_t satInfoT = new SatInfo_t();
+        satInfoT.azimuth = 30;
+        satInfoT.elevation = 128000;
+        satInfoT.pRN = 1;
+        satInfoT.sNR = 1;
+        location.setSatInfoList(new SatInfo_t[]{satInfoT});
+        String json = new Gson().toJson(location);
+        L.d("---------------------------------------------------------------------------------");
+        L.d(json);
+        byte [] jb = json.getBytes(StandardCharsets.UTF_8);
+
+        L.d("---------------------------------------------------------------------------------");
     }
 }

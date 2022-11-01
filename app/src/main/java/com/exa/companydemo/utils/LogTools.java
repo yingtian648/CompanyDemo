@@ -25,7 +25,7 @@ public class LogTools {
         L.d("------------logSystemFonts-------------");
         BaseConstants.getFixPool().execute(() -> {//获取字体
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                Typeface def = Typeface.DEFAULT;
+                Typeface def = Typeface.create(Typeface.DEFAULT,Typeface.NORMAL);
                 L.d("default fonts: style:" + def.getStyle() + ",weight:" + def.getWeight() + "," + def.equals(Typeface.create("GacFont-Regular",Typeface.NORMAL)));
                 Set<Font> fonts = getAvailableFonts();
                 if (!fonts.isEmpty()) {

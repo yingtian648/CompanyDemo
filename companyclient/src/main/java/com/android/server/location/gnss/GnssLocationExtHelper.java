@@ -2,12 +2,12 @@
  * Copyright (C) 2020 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * you may not use this file except compliance with the License.
+ * You may obtaa copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by applicable law or agreed to writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -20,6 +20,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.location.GnssAntennaInfo;
+import android.location.GnssMeasurementsEvent;
+import android.location.GnssNavigationMessage;
 import android.location.Location;
 import android.location.LocationListener;
 
@@ -32,12 +35,14 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.List;
+
 /**
  * Represents a GNSS position mode.
  */
 public class GnssLocationExtHelper {
     private final String TAG = "GnssLocationExtHelper";
-    private final String PROVIDER_NAME = "extend";
+    private final String PROVIDER_NAME = "expand";
     private IExtLocationInterface binder;
     private Context mContext;
     private final Handler mHandler;
@@ -46,12 +51,6 @@ public class GnssLocationExtHelper {
     private final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
 
     private final long DELAY_BIND_SERVICE = 1000;//delay bind service
-
-	public interface Callback extends LocationListener {
-        void repoSvStatus(int svCount, int[] svidWithFlags, float[] cn0s,
-                            float[] svElevations, float[] svAzimuths, float[] svCarrierFreqs,
-                            float[] basebandCn0s);
-    }
 
     public static GnssLocationExtHelper getInstance() {
         return ClazzHolder.cellLocationProvider;
@@ -166,13 +165,24 @@ public class GnssLocationExtHelper {
                 mLocationListener.onLocationChanged(location);
             }
         }
-		
-		@Override
+
+        @Override
         public void reportSvStatus(int svCount, int[] svidWithFlags, float[] cn0s, float[] svElevations,
                                    float[] svAzimuths, float[] svCarrierFreqs, float[] basebandCn0s) throws RemoteException {
             if (mLocationListener != null) {
-                mLocationListener.repoSvStatus(svCount, svidWithFlags, cn0s, svElevations, svAzimuths, svCarrierFreqs, basebandCn0s);
+                if ((svidWithFlags != null && svidWithFlags.length < svCount) ||
+                        (cn0s != null && cn0s.length < svCount) ||
+                        (svElevations != null && svElevations.length < svCount) ||
+                        (svAzimuths != null && svAzimuths.length < svCount) ||
+                        (svCarrierFreqs != null && svCarrierFreqs.length < svCount) ||
+                        (basebandCn0s != null && basebandCn0s.length < svCount)) {
+                    Log.e(TAG, "reportSvStatus err data: The number of satellites cannot be greater than the array length");
+                } else {
+                    mLocationListener.repoSvStatus(svCount, svidWithFlags, cn0s, svElevations, svAzimuths, svCarrierFreqs, basebandCn0s);
+                }
             }
+
+
         }
 
         @Override
@@ -189,6 +199,111 @@ public class GnssLocationExtHelper {
             if (mLocationListener != null) {
                 mLocationListener.onProviderDisabled(PROVIDER_NAME);
             }
+        }
+
+        @Override
+        public boolean isInEmergencySession() throws RemoteException {
+            return false;
+        }
+
+        @Override
+        public void reportAGpsStatus(int agpsType, int agpsStatus, byte[] suplIpAddr) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportNmea(long time) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportMeasurementData(GnssMeasurementsEvent event) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportAntennaInfo(List<GnssAntennaInfo> antennaInfos) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportNavigationMessage(GnssNavigationMessage event) throws RemoteException {
+
+        }
+
+        @Override
+        public void setTopHalCapabilities(int topHalCapabilities) throws RemoteException {
+
+        }
+
+        @Override
+        public void setSubHalMeasurementCorrectionsCapabilities(int subHalCapabilities) throws RemoteException {
+
+        }
+
+        @Override
+        public void setGnssYearOfHardware(int yearOfHardware) throws RemoteException {
+
+        }
+
+        @Override
+        public void setGnssHardwareModelName(String modelName) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportGnssServiceDied() throws RemoteException {
+
+        }
+
+        @Override
+        public void reportLocationBatch(Location[] locationArray) throws RemoteException {
+
+        }
+
+        @Override
+        public void psdsDownloadRequest() throws RemoteException {
+
+        }
+
+        @Override
+        public void reportGeofenceTransition(int geofenceId, Location location, int transition, long transitionTimestamp) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportGeofenceStatus(int status, Location location) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportGeofenceAddStatus(int geofenceId, int status) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportGeofenceRemoveStatus(int geofenceId, int status) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportGeofencePauseStatus(int geofenceId, int status) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportGeofenceResumeStatus(int geofenceId, int status) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportNfwNotification(String proxyAppPackageName, byte protocolStack, String otherProtocolStackName, byte requestor, String requestorId, byte responseType, boolean inEmergencyMode, boolean isCachedLocation) throws RemoteException {
+
+        }
+
+        @Override
+        public void reportNiNotification(int notificationId, int niType, int notifyFlags, int timeout, int defaultResponse, String requestorId, String text, int requestorIdEncoding, int textEncoding) throws RemoteException {
+
         }
     };
 
@@ -239,5 +354,57 @@ public class GnssLocationExtHelper {
             }
         }
         return true;
+    }
+
+    public interface Callback extends LocationListener {
+        void repoSvStatus(int svCount, int[] svidWithFlags, float[] cn0s,
+                          float[] svElevations, float[] svAzimuths, float[] svCarrierFreqs,
+                          float[] basebandCn0s);
+
+        boolean isInEmergencySession();
+
+        void reportAGpsStatus(int agpsType, int agpsStatus, byte[] suplIpAddr);
+
+        void reportNmea(long time);
+
+        void reportMeasurementData(GnssMeasurementsEvent event);
+
+        void reportAntennaInfo(List<GnssAntennaInfo> antennaInfos);
+
+        void reportNavigationMessage(GnssNavigationMessage event);
+
+        void setTopHalCapabilities(int topHalCapabilities);
+
+        void setSubHalMeasurementCorrectionsCapabilities(int subHalCapabilities);
+
+        void setGnssYearOfHardware(int yearOfHardware);
+
+        void setGnssHardwareModelName(String modelName);
+
+        void reportGnssServiceDied();
+
+        void reportLocationBatch(Location[] locationArray);
+
+        void psdsDownloadRequest();
+
+        void reportGeofenceTransition(int geofenceId, Location location, int transition, long transitionTimestamp);
+
+        void reportGeofenceStatus(int status, Location location);
+
+        void reportGeofenceAddStatus(int geofenceId, int status);
+
+        void reportGeofenceRemoveStatus(int geofenceId, int status);
+
+        void reportGeofencePauseStatus(int geofenceId, int status);
+
+        void reportGeofenceResumeStatus(int geofenceId, int status);
+
+        void reportNfwNotification(String proxyAppPackageName, byte protocolStack,
+                                   String otherProtocolStackName, byte requestor, String requestorId, byte responseType,
+                                   boolean inEmergencyMode, boolean isCachedLocation);
+
+        void reportNiNotification(int notificationId, int niType, int notifyFlags,
+                                  int timeout, int defaultResponse, String requestorId, String text,
+                                  int requestorIdEncoding, int textEncoding);
     }
 }

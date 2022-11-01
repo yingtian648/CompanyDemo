@@ -22,6 +22,7 @@ public class ExtLocationService extends Service {
     private final String TAG = "ExtLocationService";
     private IExtLocationCallback mCallback;
     private Handler handler;
+    private int index = 0;
     private IExtLocationInterface.Stub binder = new IExtLocationInterface.Stub() {
 
         @Override
@@ -45,6 +46,56 @@ public class ExtLocationService extends Service {
         public boolean setDisable() throws RemoteException {
             return false;
         }
+
+        @Override
+        public boolean isGnssVisibilityControlSupported() throws RemoteException {
+            return false;
+        }
+
+        @Override
+        public void cleanUp() throws RemoteException {
+
+        }
+
+        @Override
+        public void setPositionMode(int mode, int recurrence, int min_interval, int preferred_accuracy, int preferred_time, boolean lowPowerMode) throws RemoteException {
+
+        }
+
+        @Override
+        public void deleteAidingData() throws RemoteException {
+
+        }
+
+        @Override
+        public int readNmea(byte[] buffer, int bufferSize) throws RemoteException {
+            return 0;
+        }
+
+        @Override
+        public void agpsNiMessage(byte[] msg, int length) throws RemoteException {
+
+        }
+
+        @Override
+        public void setAgpsServer(int type, String hostname, int port) throws RemoteException {
+
+        }
+
+        @Override
+        public void sendNiResponse(int notificationId, int userResponse) throws RemoteException {
+
+        }
+
+        @Override
+        public void agpsSetRefLocationCellid(int type, int mcc, int mnc, int lac, int cid) throws RemoteException {
+
+        }
+
+        @Override
+        public void agpsSetId(int type, String setid) throws RemoteException {
+
+        }
     };
 
     @Override
@@ -65,6 +116,7 @@ public class ExtLocationService extends Service {
         handler.postDelayed(() -> {
             handler.removeCallbacksAndMessages(null);
             if (mCallback != null) {
+                index++;
                 lat += Math.random() / 1000;
                 Location location = new Location(LocationManager.GPS_PROVIDER);
                 location.setTime(System.currentTimeMillis());
@@ -82,7 +134,7 @@ public class ExtLocationService extends Service {
                 Log.d(TAG, "circleSendLocation");
                 try {
                     mCallback.onLocation(location);
-                    mCallback.reportSvStatus(3, new int[]{1,2,3}, new float[]{4,5,6}, new float[]{7,8,9}, new float[]{10,11,12}, new float[]{13,14,15}, new float[]{16,17,18});
+                    mCallback.reportSvStatus(index, new int[]{1,2,3}, new float[]{4,5,6}, new float[]{7,8,9}, new float[]{10,11,12}, new float[]{13,14,15}, new float[]{16,17,18});
 //                    mCallback.reportSvStatus(3, null, null, null, null, null,null);
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -91,9 +143,13 @@ public class ExtLocationService extends Service {
                 }
                 circleSendLocation();
             }
-
+            if(index==10){
+                index = 0;
+                L.d("make crash");
+                int x = 10/0;
+                L.d("" + x);
+            }
         }, 1000);
-
     }
 
     @Nullable

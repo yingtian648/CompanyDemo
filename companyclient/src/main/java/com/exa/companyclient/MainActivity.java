@@ -74,8 +74,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
 //            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
-//            startService(new Intent(this, MyClientService.class));
-            playVideoFile();
+            startService(new Intent(this, MyClientService.class));
+//            playVideoFile();
         });
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());

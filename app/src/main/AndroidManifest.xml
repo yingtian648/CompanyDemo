@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
+    android:sharedUserId="android.uid.system"
     >
-<!--    android:sharedUserId="android.uid.system"-->
 
     <application
         android:name=".App"
@@ -35,10 +35,8 @@
         <activity
             android:name=".location.LocationActivity"
             android:exported="true">
-
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
-
 
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
@@ -114,14 +112,6 @@
             android:name=".MyService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".aidlservice.ExtLocationAidlService"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="${applicationId}.ExtLocationAidlService" />
-            </intent-filter>
-        </service>
         <service
             android:name=".aidlservice.ExtLocationService"
             android:enabled="true"
