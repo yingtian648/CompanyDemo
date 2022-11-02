@@ -49,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100px"
         android:text="Hello World!"
-        style="@style/customstyle"
         android:textSize="40px"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

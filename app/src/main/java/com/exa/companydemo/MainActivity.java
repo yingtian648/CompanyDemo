@@ -6,19 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
-import android.os.Environment;
-import android.os.SystemClock;
-import android.text.Html;
-import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowInsets;
 import android.view.WindowInsetsController;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -35,12 +26,8 @@ import com.google.gson.Gson;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
 
 import androidx.annotation.NonNull;
-
-import static android.text.Html.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE;
 
 public class MainActivity extends BaseActivity {
     private TextView text, text1, text2, text3, text4;
@@ -97,6 +84,7 @@ public class MainActivity extends BaseActivity {
         Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
         Typeface serif = Typeface.create("serif", Typeface.BOLD);
         Typeface monospace = Typeface.create("monospace", Typeface.BOLD);
+        text.setTypeface(aDefault);
         text1.setTypeface(GacFont);
         text2.setTypeface(sans_serif);
         text3.setTypeface(serif);

@@ -47,6 +47,7 @@ public class GnssLocationExtHelper {
     private Context mContext;
     private final Handler mHandler;
     private Callback mLocationListener;
+    private boolean isEnable;
     private final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
     private final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
 
@@ -75,6 +76,17 @@ public class GnssLocationExtHelper {
     public void init(Context context, Callback locationListener) {
         this.mContext = context;
         this.mLocationListener = locationListener;
+        isEnable = isServiceAppInstalled(mContext, SERVICE_PACKAGE_NAME);
+        Log.d(TAG, "GnssLocationExtHelper isEnable: " + isEnable);
+    }
+
+    /**
+     * 是否可用
+     *
+     * @return
+     */
+    public boolean isEnable() {
+        return isEnable;
     }
 
     public void bindServer() {
@@ -176,13 +188,11 @@ public class GnssLocationExtHelper {
                         (svAzimuths != null && svAzimuths.length < svCount) ||
                         (svCarrierFreqs != null && svCarrierFreqs.length < svCount) ||
                         (basebandCn0s != null && basebandCn0s.length < svCount)) {
-                    Log.e(TAG, "reportSvStatus err data: The number of satellites cannot be greater than the array length");
+                    Log.i(TAG, "reportSvStatus err data: The number of satellites cannot be greater than the array length");
                 } else {
                     mLocationListener.repoSvStatus(svCount, svidWithFlags, cn0s, svElevations, svAzimuths, svCarrierFreqs, basebandCn0s);
                 }
             }
-
-
         }
 
         @Override
@@ -313,6 +323,7 @@ public class GnssLocationExtHelper {
      * @param bindInfo
      */
     private void checkConnectServerStatus(final String bindInfo) {
+        mHandler.removeCallbacksAndMessages(null);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

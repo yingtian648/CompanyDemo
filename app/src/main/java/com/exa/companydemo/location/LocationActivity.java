@@ -130,7 +130,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
                             @Override
                             public void onStatusChanged(String provider, int status, Bundle extras) {
-                                L.d("onStatusChanged:" + provider + "  " + status);
+                                L.d("onStatusChanged:" + provider + "  " + status + "," + (extras==null?"":extras.keySet()));
                             }
                         });
             }
