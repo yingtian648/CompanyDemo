@@ -183,33 +183,6 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             setText("Gnss硬件模块名称:" + locationManager.getGnssHardwareModelName());
             L.d("getGnssHardwareModelName:" + locationManager.getGnssHardwareModelName());
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
-            @Override
-            public void onStarted() {//navigation start
-                super.onStarted();
-                L.d("onStarted");
-            }
-
-            @Override
-            public void onStopped() {
-                super.onStopped();
-                L.d("onStopped");
-            }
-
-            @Override
-            public void onFirstFix(int ttffMillis) {
-                super.onFirstFix(ttffMillis);
-                L.d("onFirstFix:" + ttffMillis);
-            }
-
-            @Override
-            public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
-                super.onSatelliteStatusChanged(status);
-            }
-        }, null);
     }
 
     private void loadBaseLocationInfo() {

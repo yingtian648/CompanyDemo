@@ -23,31 +23,33 @@ import android.content.ServiceConnection;
 import android.location.GnssAntennaInfo;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
+import android.location.IExtLocationCallback;
+import android.location.IExtLocationInterface;
 import android.location.Location;
 import android.location.LocationListener;
-
-import android.location.IExtLocationInterface;
-import android.location.IExtLocationCallback;
-
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Represents a GNSS position mode.
  */
 public class GnssLocationExtHelper {
-    private final String TAG = "GnssLocationExtHelper";
+    private static final String TAG = "GnssLocationExtHelper";
+    private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
+    private static final boolean VERBOSE = Log.isLoggable(TAG, Log.VERBOSE);
+
     private final String PROVIDER_NAME = "expand";
     private IExtLocationInterface binder;
     private Context mContext;
     private final Handler mHandler;
     private Callback mLocationListener;
-    private boolean isEnable;
+    private boolean isServiceAvailable;
     private final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
     private final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
 
@@ -76,33 +78,25 @@ public class GnssLocationExtHelper {
     public void init(Context context, Callback locationListener) {
         this.mContext = context;
         this.mLocationListener = locationListener;
-        isEnable = isServiceAppInstalled(mContext, SERVICE_PACKAGE_NAME);
-        Log.d(TAG, "GnssLocationExtHelper isEnable: " + isEnable);
+        isServiceAvailable = isServiceAppInstalled(mContext, SERVICE_PACKAGE_NAME);
+        Log.d(TAG, "GnssLocationExtHelper isServiceAvailable: " + isServiceAvailable);
     }
 
-    /**
-     * 是否可用
-     *
-     * @return
-     */
     public boolean isEnable() {
-        return isEnable;
+        return binder != null;
     }
 
     public void bindServer() {
-        Log.v(TAG, "bindExtServer");
-        if (binder == null && mContext != null) {
-            boolean serverValid = isServiceAppInstalled(mContext, SERVICE_PACKAGE_NAME);
-            if (serverValid) {
-                try {
-                    Intent intentExt = new Intent();
-                    intentExt.setClassName(SERVICE_PACKAGE_NAME, SERVICE_CLASS_NAME);
-                    mContext.bindService(intentExt, mServiceConnection, Context.BIND_AUTO_CREATE);
-                    checkConnectServerStatus(intentExt.getComponent() == null ? intentExt.getPackage() : intentExt.getComponent().toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "bindExtServer Exception: " + e.getMessage());
-                }
+        Log.v(TAG, "bindExtServer :" + isServiceAvailable);
+        if (binder == null && mContext != null && isServiceAvailable) {
+            try {
+                Intent intentExt = new Intent();
+                intentExt.setClassName(SERVICE_PACKAGE_NAME, SERVICE_CLASS_NAME);
+                checkConnectServerStatus(intentExt.getComponent() == null ? intentExt.getPackage() : intentExt.getComponent().toString());
+                mContext.bindService(intentExt, mServiceConnection, Context.BIND_AUTO_CREATE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG, "bindExtServer Exception: " + e.getMessage());
             }
         }
     }
@@ -172,7 +166,7 @@ public class GnssLocationExtHelper {
     private IExtLocationCallback.Stub callback = new IExtLocationCallback.Stub() {
         @Override
         public void onLocation(Location location) throws RemoteException {
-            // Log.d(TAG, "onLocation:" + interval + "," + location.getLongitude() + "," + location.getLatitude());
+            if (DEBUG) Log.d(TAG, "onLocation:" + location);
             if (mLocationListener != null) {
                 mLocationListener.onLocationChanged(location);
             }
@@ -181,16 +175,25 @@ public class GnssLocationExtHelper {
         @Override
         public void reportSvStatus(int svCount, int[] svidWithFlags, float[] cn0s, float[] svElevations,
                                    float[] svAzimuths, float[] svCarrierFreqs, float[] basebandCn0s) throws RemoteException {
-            if (mLocationListener != null) {
-                if ((svidWithFlags != null && svidWithFlags.length < svCount) ||
-                        (cn0s != null && cn0s.length < svCount) ||
-                        (svElevations != null && svElevations.length < svCount) ||
-                        (svAzimuths != null && svAzimuths.length < svCount) ||
-                        (svCarrierFreqs != null && svCarrierFreqs.length < svCount) ||
-                        (basebandCn0s != null && basebandCn0s.length < svCount)) {
-                    Log.i(TAG, "reportSvStatus err data: The number of satellites cannot be greater than the array length");
-                } else {
+            if (DEBUG) {
+                Log.d(TAG, "reportSvStatus:" + svCount
+                        + Arrays.toString(svidWithFlags) + Arrays.toString(cn0s)
+                        + Arrays.toString(svElevations) + Arrays.toString(svAzimuths)
+                        + Arrays.toString(svCarrierFreqs) + Arrays.toString(basebandCn0s)
+                );
+            }
+            if (mLocationListener != null && svCount > 0) {
+                if (svidWithFlags != null && cn0s != null && svElevations != null
+                        && svAzimuths != null && svCarrierFreqs != null && basebandCn0s != null
+                        && svidWithFlags.length >= svCount
+                        && cn0s.length >= svCount
+                        && svElevations.length >= svCount
+                        && svAzimuths.length >= svCount
+                        && svCarrierFreqs.length >= svCount
+                        && basebandCn0s.length >= svCount) {
                     mLocationListener.repoSvStatus(svCount, svidWithFlags, cn0s, svElevations, svAzimuths, svCarrierFreqs, basebandCn0s);
+                } else {
+                    Log.i(TAG, "reportSvStatus err data: svCount cannot be greater than the array length");
                 }
             }
         }
