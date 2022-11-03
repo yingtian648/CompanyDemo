@@ -82,8 +82,8 @@ public class GnssLocationExtHelper {
         Log.d(TAG, "GnssLocationExtHelper isServiceAvailable: " + isServiceAvailable);
     }
 
-    public boolean isEnable() {
-        return binder != null;
+    public boolean isAvailable() {
+        return isServiceAvailable;
     }
 
     public void bindServer() {

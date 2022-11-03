@@ -8,19 +8,38 @@
         android:layout_height="match_parent"
         tools:context=".location.LocationActivity">
 
-        <Button
-            android:id="@+id/btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:textSize="25px"
-            android:text="获取定位信息" />
-
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textSize="25px" />
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textSize="25px"
+            android:text="获取定位信息" />
+
+        <Button
+            android:id="@+id/openBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@id/closeBtn"
+            android:layout_marginEnd="10px"
+            android:textSize="25px"
+            android:text="打开定位功能" />
+
+        <Button
+            android:id="@+id/closeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:textSize="25px"
+            android:text="关闭定位功能" />
     </RelativeLayout>
 </layout>

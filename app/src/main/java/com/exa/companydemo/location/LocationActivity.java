@@ -15,6 +15,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
@@ -65,9 +66,23 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             checkPermission();
             return;
         }
+        bind.openBtn.setOnClickListener(v -> {
+            L.d("打开定位功能");
+            Settings.Secure.putInt(getContentResolver(), Settings.Secure.LOCATION_MODE,
+                    Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
+        });
+        bind.closeBtn.setOnClickListener(v -> {
+            L.d("关闭定位功能");
+            Settings.Secure.putInt(getContentResolver(), Settings.Secure.LOCATION_MODE,
+                    Settings.Secure.LOCATION_MODE_OFF);
+        });
         //获取位置管理器
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        setText("定位是否开启：" + isOPenGPS());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            setText("定位功能是否开启：" + locationManager.isLocationEnabled());
+        }
+        setText("GPS是否开启：" + isOPenGPS());
         setText("");
         List<String> providers = locationManager.getAllProviders();
         List<String> eProviders = locationManager.getProviders(true);
@@ -83,6 +98,9 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 super.onStarted();
                 setText("GnssStatusCallback:onStarted");
                 L.d("GnssStatusCallback:onStarted");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    setText("定位功能是否开启：" + locationManager.isLocationEnabled());
+                }
             }
 
             @Override
@@ -90,6 +108,9 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 super.onStopped();
                 setText("GnssStatusCallback:onStopped");
                 L.d("GnssStatusCallback:onStopped");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    setText("定位功能是否开启：" + locationManager.isLocationEnabled());
+                }
             }
 
             @Override
@@ -130,7 +151,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
                             @Override
                             public void onStatusChanged(String provider, int status, Bundle extras) {
-                                L.d("onStatusChanged:" + provider + "  " + status + "," + (extras==null?"":extras.keySet()));
+                                L.d("onStatusChanged:" + provider + "  " + status + "," + (extras == null ? "" : extras.keySet()));
                             }
                         });
             }
