@@ -73,14 +73,14 @@ public class MainActivity extends BaseActivity {
         registerBroadcast(mReceiver);
 
 
-        text.setText(fontTestWords);
-        text1.setText(fontTestWords + "   GacFont");
+        text.setText(fontTestWords + "   Default");
+        text1.setText(fontTestWords + "   NotoSansHans");
         text2.setText(fontTestWords + "   sans-serif");
         text3.setText(fontTestWords + "   serif");
         text4.setText(fontTestWords + "   monospace");
         Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
 
-        Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
+        Typeface GacFont = Typeface.create("NotoSansHans", Typeface.BOLD);
         Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
         Typeface serif = Typeface.create("serif", Typeface.BOLD);
         Typeface monospace = Typeface.create("monospace", Typeface.BOLD);

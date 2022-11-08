@@ -49,9 +49,8 @@ public class GnssLocationExtHelper {
     private Context mContext;
     private final Handler mHandler;
     private Callback mLocationListener;
-    private boolean isServiceAvailable;
-    private final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
-    private final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
+    private static final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
+    private static final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
 
     private final long DELAY_BIND_SERVICE = 1000;//delay bind service
 
@@ -78,17 +77,16 @@ public class GnssLocationExtHelper {
     public void init(Context context, Callback locationListener) {
         this.mContext = context;
         this.mLocationListener = locationListener;
-        isServiceAvailable = isServiceAppInstalled(mContext, SERVICE_PACKAGE_NAME);
-        Log.d(TAG, "GnssLocationExtHelper isServiceAvailable: " + isServiceAvailable);
+        Log.d(TAG, "GnssLocationExtHelper init");
     }
 
-    public boolean isAvailable() {
-        return isServiceAvailable;
+    public static boolean isAvailable(Context context) {
+        return isServiceAppInstalled(context, SERVICE_PACKAGE_NAME);
     }
 
     public void bindServer() {
-        Log.v(TAG, "bindExtServer :" + isServiceAvailable);
-        if (binder == null && mContext != null && isServiceAvailable) {
+        Log.v(TAG, "bindExtServer");
+        if (binder == null && mContext != null) {
             try {
                 Intent intentExt = new Intent();
                 intentExt.setClassName(SERVICE_PACKAGE_NAME, SERVICE_CLASS_NAME);
@@ -358,7 +356,7 @@ public class GnssLocationExtHelper {
         return PROVIDER_NAME;
     }
 
-    private boolean isServiceAppInstalled(Context context, String pkgName) {
+    private static boolean isServiceAppInstalled(Context context, String pkgName) {
         if (pkgName != null) {
             try {
                 context.getPackageManager().getPackageInfo(pkgName, 0);
