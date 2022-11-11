@@ -37,59 +37,59 @@
         android:layout_height="120px"
         android:hint="输入框..."
         android:imeOptions="actionNext"
+        android:inputType="textPassword"
         android:maxLines="1"
         android:padding="5dp"
         android:singleLine="true"
         android:textSize="40px"
         app:layout_constraintBottom_toTopOf="@id/btnApp" />
 
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100px"
-        android:text="Hello World!"
-        android:textSize="40px"
+        android:layout_marginTop="80px"
+        android:orientation="vertical"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10px"
-        android:text="Hello World!"
-        android:textSize="40px"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text" />
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"
+            android:textSize="40px" />
 
-    <TextView
-        android:id="@+id/text2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10px"
-        android:text="Hello World!"
-        android:textSize="40px"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text1" />
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:text="Hello World!"
+            android:textSize="40px" />
 
-    <TextView
-        android:id="@+id/text3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10px"
-        android:text="Hello World!"
-        android:textSize="40px"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text2" />
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:text="Hello World!"
+            android:textSize="40px" />
 
-    <TextView
-        android:id="@+id/text4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10px"
-        android:text="Hello World!"
-        android:textSize="40px"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text3" />
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:text="Hello World!"
+            android:textSize="40px" />
+
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:text="Hello World!"
+            android:textSize="40px" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

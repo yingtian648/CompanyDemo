@@ -137,7 +137,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     private void checkPermissions() {
         PermissionUtil.requestPermission(this, this::loadData,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE});
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.MANAGE_EXTERNAL_STORAGE});
     }
 
     private void loadData() {
@@ -165,24 +165,24 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     audioThumbs.clear();
                     BaseConstants.getHandler().postDelayed(() -> {
                         audios.addAll(bean.datas);
-//                        for (int i = 0; i < bean.datas.size(); i++) {
-//                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
-//                                playAudio(bean.datas.get(i).path);
-//                                return;
-//                            }
-//                        }
+                        for (int i = 0; i < bean.datas.size(); i++) {
+                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
+                                playAudio(bean.datas.get(i).path);
+                                return;
+                            }
+                        }
                         checkSdkToLoadThumb();
                     }, 3000);
                     break;
                 case 3:
                     BaseConstants.getHandler().postDelayed(() -> {
-                        List<String> list = new ArrayList<>();
-                        for (int i = 0; i < bean.datas.size(); i++) {
-                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp4")) {
-                                list.add(bean.datas.get(i).path);
-                            }
-                        }
-                        playVideo(list);
+//                        List<String> list = new ArrayList<>();
+//                        for (int i = 0; i < bean.datas.size(); i++) {
+//                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp4")) {
+//                                list.add(bean.datas.get(i).path);
+//                            }
+//                        }
+//                        playVideo(list);
                     }, 1000);
                     break;
                 case 4://歌曲封面

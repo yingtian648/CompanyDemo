@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -97,6 +98,12 @@ public class AudioPlayerUtil {
                 listener.onErr("mPlayer.prepareAsync-IOException:" + e.getMessage());
             }
             L.e("mPlayer.prepareAsync-IOException:" + e.getMessage(), e);
+        }catch (IllegalArgumentException e1){
+            L.e("mPlayer.prepareAsync-IllegalArgumentException:" + e1.getMessage(), e1);
+        }catch (SecurityException se){
+            L.e("mPlayer.prepareAsync-SecurityException:" + se.getMessage(), se);
+        }catch (IllegalStateException ie){
+            L.e("mPlayer.prepareAsync-IllegalStateException:" + ie.getMessage(), ie);
         }
     }
 

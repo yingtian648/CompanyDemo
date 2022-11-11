@@ -16,16 +16,10 @@ import android.widget.TextView;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
-import com.exa.companydemo.utils.LocationInfo;
-import com.exa.companydemo.utils.LogTools;
 import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
-import com.exa.companydemo.utils.SatInfo_t;
-import com.google.gson.Gson;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Calendar;
+import com.exa.companydemo.utils.LogTools;
 
 import androidx.annotation.NonNull;
 
@@ -50,6 +44,7 @@ public class MainActivity extends BaseActivity {
         text4 = findViewById(R.id.text4);
         editText = findViewById(R.id.edt);
         checkPermission();
+
         findViewById(R.id.btnApp).setOnClickListener(view -> {
             L.d("点击Location Test");
             startActivity(new Intent(this, LocationActivity.class));
@@ -71,42 +66,19 @@ public class MainActivity extends BaseActivity {
         });
 
         registerBroadcast(mReceiver);
-
-
-        text.setText(fontTestWords + "   Default");
-        text1.setText(fontTestWords + "   NotoSansHans");
-        text2.setText(fontTestWords + "   sans-serif");
-        text3.setText(fontTestWords + "   serif");
-        text4.setText(fontTestWords + "   monospace");
-        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
-
-        Typeface GacFont = Typeface.create("NotoSansHans", Typeface.BOLD);
-        Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
-        Typeface serif = Typeface.create("serif", Typeface.BOLD);
-        Typeface monospace = Typeface.create("monospace", Typeface.BOLD);
-        text.setTypeface(aDefault);
-        text1.setTypeface(GacFont);
-        text2.setTypeface(sans_serif);
-        text3.setTypeface(serif);
-        text4.setTypeface(monospace);
-
-        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
-        L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
-        L.d("serif is Default ? " + (serif.equals(aDefault)));
-        L.d("monospace is Default ? " + (monospace.equals(aDefault)));
-
-        getDataJson();
     }
+
+    private static char DOT = '\u2022';
 
     @Override
     protected int getLayoutId() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = getWindow().getDecorView().getWindowInsetsController();
-            if (controller != null) {
+//            WindowInsetsController controller = getWindow().getDecorView().getWindowInsetsController();
+//            if (controller != null) {
 //                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 //                controller.hide(WindowInsets.Type.navigationBars());
 //                controller.hide(WindowInsets.Type.statusBars());
-            }
+//            }
         } else {
             int uiOpts = View.SYSTEM_UI_FLAG_IMMERSIVE
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -140,13 +112,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void checkPermission() {
-        String[] ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE};
-        }
-        PermissionUtil.requestPermission(this, () -> {
-            L.d("已授权 读写权限");
-        }, ps);
+//        String[] ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE};
+//        }
+//        PermissionUtil.requestPermission(this, () -> {
+//            L.d("已授权 读写权限");
+//        }, ps);
     }
 
     @Override
@@ -197,32 +169,71 @@ public class MainActivity extends BaseActivity {
         unregisterReceiver(mReceiver);
     }
 
-    private void getDataJson() {
-        LocationInfo location = new LocationInfo();
-        location.setUTCTime(System.currentTimeMillis());
-        location.setUTCDate(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        location.setLongitude(104.03453435);
-        location.setLatitude(34.5624251);
-        location.setSpeed(20f);//单位：米/秒
-        location.setAltitude(600);//海拔
-        location.setHorizontalAccuracy(4f);//启动后的纳秒数，包括睡眠时间
-        location.setDirection(260);//精度
-        location.setVerticalAccuracy(3f);
-        location.setBearingAccuracy(5f);
-        location.setSpdAccuracy(5f);
-        location.setSatAvailable((byte) 0);
-        location.setGNSSValidFlag((byte) 1);
-        SatInfo_t satInfoT = new SatInfo_t();
-        satInfoT.azimuth = 30;
-        satInfoT.elevation = 128000;
-        satInfoT.pRN = 1;
-        satInfoT.sNR = 1;
-        location.setSatInfoList(new SatInfo_t[]{satInfoT});
-        String json = new Gson().toJson(location);
-        L.d("---------------------------------------------------------------------------------");
-        L.d(json);
-        byte [] jb = json.getBytes(StandardCharsets.UTF_8);
+    /**
+     * 调试字体
+     */
+    private void testFonts() {
+        text.setText(fontTestWords + "   Default");
+        text1.setText(fontTestWords + "   SourceHanSansCN");
+        text2.setText(fontTestWords + "   sans-serif");
+        text3.setText(fontTestWords + "   serif");
+        text4.setText(fontTestWords + "   monospace");
+        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
 
-        L.d("---------------------------------------------------------------------------------");
+        Typeface GacFont = Typeface.create("SourceHanSansCN", Typeface.BOLD);
+        Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
+        Typeface serif = Typeface.create("serif", Typeface.BOLD);
+        Typeface monospace = Typeface.create("monospace", Typeface.BOLD);
+
+        text.setTypeface(aDefault);
+        text1.setTypeface(GacFont);
+        text2.setTypeface(sans_serif);
+        text3.setTypeface(serif);
+        text4.setTypeface(monospace);
+
+
+        Typeface fonts1 = Typeface.create("SourceHanSansCN", Typeface.NORMAL);
+        Typeface fonts2 = Typeface.create("SourceHanSansCN-ExtraLight", Typeface.NORMAL);
+        Typeface fonts3 = Typeface.create("SourceHanSansCN-Light", Typeface.NORMAL);
+        Typeface fonts4 = Typeface.create("SourceHanSansCN-Normal", Typeface.NORMAL);
+        Typeface fonts5 = Typeface.create("SourceHanSansCN-Regular", Typeface.NORMAL);
+
+        text.postDelayed(() -> {
+            text.setText(fontTestWords + "   Default");
+            text1.setText(fontTestWords + "   ExtraLight");
+            text2.setText(fontTestWords + "   Light");
+            text3.setText(fontTestWords + "   Normal");
+            text4.setText(fontTestWords + "   Regular");
+            text.setTypeface(fonts1);
+            text1.setTypeface(fonts2);
+            text2.setTypeface(fonts3);
+            text3.setTypeface(fonts4);
+            text4.setTypeface(fonts5);
+        }, 10000);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Typeface fonts11 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 200, false);
+            Typeface fonts22 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 300, false);
+            Typeface fonts33 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 400, false);
+            Typeface fonts44 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 500, false);
+            Typeface fonts55 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 700, false);
+            text.postDelayed(() -> {
+                text.setText(fontTestWords + "   weight 200");
+                text1.setText(fontTestWords + "   weight 300");
+                text2.setText(fontTestWords + "   weight 400");
+                text3.setText(fontTestWords + "   weight 500");
+                text4.setText(fontTestWords + "   weight 700");
+                text.setTypeface(fonts11);
+                text1.setTypeface(fonts22);
+                text2.setTypeface(fonts33);
+                text3.setTypeface(fonts44);
+                text4.setTypeface(fonts55);
+            }, 20000);
+        }
+
+        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+        L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
+        L.d("serif is Default ? " + (serif.equals(aDefault)));
+        L.d("monospace is Default ? " + (monospace.equals(aDefault)));
     }
 }

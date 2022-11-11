@@ -17,16 +17,16 @@ android {
 
     signingConfigs {
         debug {
-            keyAlias 'key'
-            keyPassword 'android'
-            storePassword 'android'
-            storeFile file('platform.jks')
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('platform.keystore')
         }
         release {
-            keyAlias 'key'
-            keyPassword 'android'
-            storePassword 'android'
-            storeFile file('platform.jks')
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('platform.keystore')
         }
     }
 
