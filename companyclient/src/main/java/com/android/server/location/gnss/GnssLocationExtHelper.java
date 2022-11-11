@@ -49,8 +49,8 @@ public class GnssLocationExtHelper {
     private Context mContext;
     private final Handler mHandler;
     private Callback mLocationListener;
-    private static final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
-    private static final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
+    private static final String SERVICE_PACKAGE_NAME = "com.exa.companydemo";
+    private static final String SERVICE_CLASS_NAME = "com.exa.companydemo.aidlservice.ExtLocationService";
 
     private final long DELAY_BIND_SERVICE = 1000;//delay bind service
 
