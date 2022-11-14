@@ -1,6 +1,7 @@
 package com.exa.companyclient;
 
 import android.Manifest;
+import android.app.ActivityOptions;
 import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
+import android.hardware.display.DisplayManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +20,9 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -58,6 +63,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     private List<Files> audios = new ArrayList<>();
     private List<Files> audioThumbs = new ArrayList<>();
     private int audioThumbsIndex = 0;
+    private int textClickIndex = 0;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -93,6 +99,21 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                 } else {
                     showAudioThumb();
                 }
+            }
+        });
+        bind.backBtn.setOnClickListener(v -> finish());
+        bind.text.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_UP:
+                        textClickIndex++;
+                        Log.d("InputEventReceiver", "Text被触摸了:" + textClickIndex + " 次");
+                        bind.text.setText("Text被点击了 " + textClickIndex + " 次");
+                        break;
+                }
+                return false;
             }
         });
         loadData();
@@ -132,12 +153,28 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 //        Intent intent = new Intent("com.exa.companydemo.ExtLocationAidlService");
 //        intent.setPackage("com.exa.companydemo");
 //        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+
+        Display mDisplay = getWindowManager().getDefaultDisplay();
+        setText("默认显示器：" + mDisplay.getDisplayId() + ", " + mDisplay.getName() + ", " + mDisplay.isValid());
+        DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+        Display[] displays = displayManager.getDisplays(null);
+        if (displays != null) {
+            for (int i = 0; i < displays.length; i++) {
+                setText("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
+            }
+        }
+
+        //FLAG_ACTIVITY_LAUNCH_ADJACENT 多屏使用
+        Intent intent = new Intent(this, this.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
+        ActivityOptions options = ActivityOptions.makeBasic().setLaunchDisplayId(5);
+        startActivity(intent, options.toBundle());
     }
 
     private void checkPermissions() {
         PermissionUtil.requestPermission(this, this::loadData,
                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.MANAGE_EXTERNAL_STORAGE});
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE});
     }
 
     private void loadData() {

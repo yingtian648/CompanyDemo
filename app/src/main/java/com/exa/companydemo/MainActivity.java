@@ -9,7 +9,9 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.PermissionUtil;
+import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
 import com.exa.companydemo.utils.LogTools;
@@ -72,19 +75,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            WindowInsetsController controller = getWindow().getDecorView().getWindowInsetsController();
-//            if (controller != null) {
-//                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-//                controller.hide(WindowInsets.Type.navigationBars());
-//                controller.hide(WindowInsets.Type.statusBars());
-//            }
-        } else {
-            int uiOpts = View.SYSTEM_UI_FLAG_IMMERSIVE
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN;
-            getWindow().getDecorView().setSystemUiVisibility(uiOpts);
-        }
+//        ScreenUtils.setFullScreen(this);
         return R.layout.activity_main;
     }
 
