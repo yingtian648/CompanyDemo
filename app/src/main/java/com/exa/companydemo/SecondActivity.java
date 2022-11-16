@@ -42,6 +42,6 @@ public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
 
     @Override
     protected void initView() {
-
+        bind.text.setOnClickListener(v -> finish());
     }
 }

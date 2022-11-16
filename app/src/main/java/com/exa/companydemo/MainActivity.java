@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity {
         });
         findViewById(R.id.btn).setOnClickListener(view -> {
             L.d("点击Toast测试1");
-            test();
+            startActivity(new Intent(this,SecondActivity.class));
         });
         findViewById(R.id.btn2).setOnClickListener(view -> {
             L.d("点击跳转  到第二个页面");
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-//        ScreenUtils.setFullScreen(this);
+        ScreenUtils.setFullScreen(this);
         return R.layout.activity_main;
     }
 

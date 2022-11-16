@@ -107,7 +107,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         this.context = context.getApplicationContext();
         this.playPath = path;
         this.frameLayout = frameLayout;
-        if (frameLayout == null || path == null) return;
+        if (frameLayout == null || (path == null && assetFileDescriptor == null)) return;
         for (int i = 0; i < frameLayout.getChildCount(); i++) {
             if (frameLayout.getChildAt(i) != null
                     && (frameLayout.getChildAt(i) instanceof TextureView
@@ -321,50 +321,52 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {// 初始化完成
         //按比例缩放视频
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        Uri uri;
-        if (playPath.startsWith("http://") || playPath.startsWith("https://")) {
-            uri = Uri.parse(playPath);
-        } else {
-            if (!new File(playPath).exists()) {
-                L.e("playPath is null");
-                return;
-            }
-            uri = Uri.fromFile(new File(playPath));
-        }
-        int vw = 0;
-        int vh = 0;
-        try {
-            if (assetFileDescriptor != null) {
-                mmr.setDataSource(assetFileDescriptor.getFileDescriptor());
+        Uri uri = null;
+        if (playPath != null)
+            if (playPath.startsWith("http://") || playPath.startsWith("https://")) {
+                uri = Uri.parse(playPath);
             } else {
-                mmr.setDataSource(context, uri);
+                if (!new File(playPath).exists()) {
+                    L.e("playPath is null");
+                    return;
+                }
+                uri = Uri.fromFile(new File(playPath));
             }
-            vw = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-            vh = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-        } catch (IllegalArgumentException | SecurityException e) {
+        try {
+//            if (assetFileDescriptor != null) {
+//                mmr.setDataSource(assetFileDescriptor.getFileDescriptor());
+//            } else {
+//                mmr.setDataSource(context, uri);
+//            }
+//            int vw = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+//            int vh = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+//            int lw = frameLayout.getWidth();
+//            int lh = frameLayout.getHeight();
+//            if (vw > lw || vh > lh) {
+//                // 如果video的宽或者高超出了当前屏幕的大小，则要进行缩放
+//                float wRatio = (float) vw / (float) lw;
+//                float hRatio = (float) vh / (float) lh;
+//
+//                // 选择大的一个进行缩放
+//                float ratio = Math.max(wRatio, hRatio);
+//                vw = (int) Math.ceil((float) vw / ratio);
+//                vh = (int) Math.ceil((float) vh / ratio);
+//
+//                // 设置surfaceView的布局参数
+//                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(vw, vh);
+//                lp.gravity = Gravity.CENTER;
+//                textureView.setLayoutParams(lp);
+//            }
+            startPlay(new Surface(surface));
+        } catch (Exception e) {
             e.printStackTrace();
             L.e("onSurfaceTextureAvailable mmr.setDataSource err:" + e.getMessage());
+            if (callback != null) {
+                callback.onError("获取视频属性异常: " + e.getMessage());
+            }
         }
-
-        int lw = frameLayout.getWidth();
-        int lh = frameLayout.getHeight();
-        if (vw > lw || vh > lh) {
-            // 如果video的宽或者高超出了当前屏幕的大小，则要进行缩放
-            float wRatio = (float) vw / (float) lw;
-            float hRatio = (float) vh / (float) lh;
-
-            // 选择大的一个进行缩放
-            float ratio = Math.max(wRatio, hRatio);
-            vw = (int) Math.ceil((float) vw / ratio);
-            vh = (int) Math.ceil((float) vh / ratio);
-
-            // 设置surfaceView的布局参数
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(vw, vh);
-            lp.gravity = Gravity.CENTER;
-            textureView.setLayoutParams(lp);
-        }
-        startPlay(new Surface(surface));
     }
+
 
     @Override
     public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
