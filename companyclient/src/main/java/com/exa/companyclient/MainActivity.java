@@ -110,10 +110,10 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     case MotionEvent.ACTION_UP:
                         textClickIndex++;
                         Log.d("InputEventReceiver", "Text被触摸了:" + textClickIndex + " 次");
-                        bind.text.setText("Text被点击了 " + textClickIndex + " 次");
+                        bind.text.setText("Text被触摸了 " + textClickIndex + " 次");
                         break;
                 }
-                return false;
+                return true;
             }
         });
         loadData();
@@ -164,11 +164,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
             }
         }
 
-        //FLAG_ACTIVITY_LAUNCH_ADJACENT 多屏使用
-        Intent intent = new Intent(this, this.getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
-        ActivityOptions options = ActivityOptions.makeBasic().setLaunchDisplayId(5);
-        startActivity(intent, options.toBundle());
+        Utils.startActivityByDisplayId(this, getClass(), 5);
     }
 
     private void checkPermissions() {

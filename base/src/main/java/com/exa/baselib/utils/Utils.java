@@ -1,10 +1,12 @@
 package com.exa.baselib.utils;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -226,10 +228,11 @@ public class Utils {
 
     /**
      * 设置当前Activity屏幕亮度
+     *
      * @param activity
-     * @param brightness  0.0-1.0
+     * @param brightness 0.0-1.0
      */
-    public static void setScreenBrightness(Activity activity,float brightness){
+    public static void setScreenBrightness(Activity activity, float brightness) {
         Window window = activity.getWindow();
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.screenBrightness = brightness;
@@ -238,33 +241,35 @@ public class Utils {
 
     /**
      * 设置当前Activity屏幕亮度
+     *
      * @param context
      * @param brightness 0-255
      */
-    public static void setSystemScreenBrightness(Context context,int brightness){
+    public static void setSystemScreenBrightness(Context context, int brightness) {
         int currBrightness = 255;
         ContentResolver resolver = context.getContentResolver();
         try {
-            int mode =  Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE);
+            int mode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE);
             currBrightness = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS);
-            Log.d("Tools","SystemScreenBrightness mode: " + mode + ",curr:" + currBrightness);
+            Log.d("Tools", "SystemScreenBrightness mode: " + mode + ",curr:" + currBrightness);
             if (mode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {//自动调节屏幕亮度模式值为1
-                Settings.System.putInt(resolver,Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+                Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
             }
             Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, brightness);
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
-            Log.e("Tools","setSystemScreenBrightness: " + e.getMessage());
+            Log.e("Tools", "setSystemScreenBrightness: " + e.getMessage());
         }
     }
 
     /**
      * textview edittext
      * 获取密码转换器
+     *
      * @return
      */
-    public static PasswordTransformationMethod getPasswordTransformationMethod(){
-        return new PasswordTransformationMethod(){
+    public static PasswordTransformationMethod getPasswordTransformationMethod() {
+        return new PasswordTransformationMethod() {
             @Override
             public CharSequence getTransformation(CharSequence source, View view) {
                 return new PasswordCharSequence(source);
@@ -291,5 +296,19 @@ public class Utils {
                 }
             }
         };
+    }
+
+    /**
+     * 在指定屏幕上启动Activity
+     * @param context
+     * @param clazz
+     * @param displayId
+     */
+    public static void startActivityByDisplayId(Context context,Class clazz, int displayId) {
+        //FLAG_ACTIVITY_LAUNCH_ADJACENT 多屏使用
+        Intent intent = new Intent(context, clazz);
+        intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
+        ActivityOptions options = ActivityOptions.makeBasic().setLaunchDisplayId(displayId);
+        context.startActivity(intent, options.toBundle());
     }
 }
