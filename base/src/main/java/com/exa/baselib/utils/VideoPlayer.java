@@ -3,9 +3,11 @@ package com.exa.baselib.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -50,6 +52,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     private boolean isRunning = false;
     private TextureView textureView;
     private BlockingDeque<String> playList;
+    private AssetFileDescriptor assetFileDescriptor;
 
     public interface Callback {
         void onError(String msg);
@@ -83,6 +86,12 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             e.printStackTrace();
             L.e("play InterruptedException:" + e.getMessage());
         }
+    }
+
+    public void play(Context context, FrameLayout frameLayout, AssetFileDescriptor fileDescriptor) {
+        playList.clear();
+        assetFileDescriptor = fileDescriptor;
+        play(context, frameLayout, (String) null);
     }
 
     /**
@@ -216,10 +225,16 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             if (mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
             mediaPlayer.reset();
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setLegacyStreamType(AudioManager.STREAM_MUSIC)
+                    .build();
+            mediaPlayer.setAudioAttributes(audioAttributes);
             mediaPlayer.setScreenOnWhilePlaying(true);
 
-            if (playPath.startsWith("http:") || playPath.startsWith("https:")) {
+            if (assetFileDescriptor != null) {
+                mediaPlayer.setDataSource(assetFileDescriptor);
+            } else if (playPath.startsWith("http:") || playPath.startsWith("https:")) {
                 mediaPlayer.setDataSource(this.context, Uri.parse(playPath));
             } else {
                 mediaPlayer.setDataSource(playPath);
@@ -310,7 +325,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         if (playPath.startsWith("http://") || playPath.startsWith("https://")) {
             uri = Uri.parse(playPath);
         } else {
-            if(!new File(playPath).exists()){
+            if (!new File(playPath).exists()) {
                 L.e("playPath is null");
                 return;
             }
@@ -319,7 +334,11 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         int vw = 0;
         int vh = 0;
         try {
-            mmr.setDataSource(context, uri);
+            if (assetFileDescriptor != null) {
+                mmr.setDataSource(assetFileDescriptor.getFileDescriptor());
+            } else {
+                mmr.setDataSource(context, uri);
+            }
             vw = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
             vh = Integer.parseInt(mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
         } catch (IllegalArgumentException | SecurityException e) {
