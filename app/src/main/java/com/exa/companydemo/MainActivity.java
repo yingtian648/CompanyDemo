@@ -38,8 +38,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
-        String screen = "屏幕宽高：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
-        L.d(screen);
         text = findViewById(R.id.text);
         text1 = findViewById(R.id.text1);
         text2 = findViewById(R.id.text2);

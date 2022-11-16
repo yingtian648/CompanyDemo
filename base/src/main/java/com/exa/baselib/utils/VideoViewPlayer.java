@@ -1,12 +1,15 @@
 package com.exa.baselib.utils;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+
+import com.exa.baselib.BuildConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -133,6 +136,25 @@ public class VideoViewPlayer {
             }
             videoView.setVideoPath(path);
         }
+        //用来设置起始播放位置，为0表示从开始播放
+        videoView.seekTo(0);
+        //用来设置mp4播放器是否可以聚焦
+        videoView.requestFocus();
+        videoView.bringToFront();
+    }
+
+    public void play(Uri uri) {
+        L.d("VideoPlayerUtil.play:" + uri);
+        if (mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        videoView.resume();
+        //用来设置要播放的mp4文件
+        videoView.setVideoURI(uri);
         //用来设置起始播放位置，为0表示从开始播放
         videoView.seekTo(0);
         //用来设置mp4播放器是否可以聚焦

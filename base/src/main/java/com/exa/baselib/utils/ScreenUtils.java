@@ -10,6 +10,7 @@ public class ScreenUtils {
 
     /**
      * 全屏适配
+     *
      * @param activity
      */
     public static void setFullScreen(Activity activity) {

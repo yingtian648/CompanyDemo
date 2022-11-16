@@ -8,24 +8,67 @@
         android:layout_height="match_parent"
         tools:context=".SecondActivity">
 
+
         <FrameLayout
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <LinearLayout
+            android:id="@+id/controllerLine"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="30px"
+            android:paddingBottom="30px"
+            android:background="#77666666"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/durT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="20px"
+                android:text="00:00:00"
+                android:layout_marginStart="100px" />
+
+            <SeekBar
+                android:id="@+id/progressBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20px"
+                android:layout_marginEnd="20px"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/totalT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="20px"
+                android:text="00:00:00"
+                android:layout_marginEnd="100px" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/text"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_margin="50px"
-            android:drawablePadding="10px"
-            android:drawableLeft="@drawable/arrow_back_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="50px"
+            android:drawableLeft="@drawable/arrow_back_white"
+            android:drawablePadding="10px"
             android:gravity="center"
-            android:textSize="25dp"
-            android:textColor="@color/white"
             android:text="Back"
-            />
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.exa.baselib.view.FullVideoView
+            android:id="@+id/video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

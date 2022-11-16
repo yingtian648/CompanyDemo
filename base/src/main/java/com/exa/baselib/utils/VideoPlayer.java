@@ -14,12 +14,15 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -42,6 +45,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class VideoPlayer implements TextureView.SurfaceTextureListener {
     @SuppressLint("StaticFieldLeak")
     private static VideoPlayer player;
+    private final Handler handler;
     private MediaPlayer mediaPlayer;
     private FrameLayout frameLayout;
     private String playPath;// 播放路径
@@ -53,17 +57,36 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     private TextureView textureView;
     private BlockingDeque<String> playList;
     private AssetFileDescriptor assetFileDescriptor;
+    private final int HANDLE_REPEAT_TIME = 1;
 
     public interface Callback {
         void onError(String msg);
 
-        void onStarted();
+        void onStarted(int duration);
 
         void onComplete();
+
+        void onPlayTime(int timeMillis);
+
+        void onScreenClick();
     }
 
     private VideoPlayer() {
         playList = new LinkedBlockingDeque();
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                if (msg.what == HANDLE_REPEAT_TIME) {
+                    if (isRunning) {
+                        if (callback != null) {
+                            callback.onPlayTime(mediaPlayer.getCurrentPosition());
+                        }
+                        sendEmptyMessageDelayed(HANDLE_REPEAT_TIME, 1000);
+                    }
+                }
+            }
+        };
     }
 
     public static VideoPlayer getInstance() {
@@ -132,6 +155,11 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         this.progressBar.setLayoutParams(plp);
         frameLayout.addView(textureView);
         frameLayout.addView(this.progressBar);
+        textureView.setOnClickListener(v -> {
+            if (callback != null) {
+                callback.onScreenClick();
+            }
+        });
     }
 
     /**
@@ -231,7 +259,6 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                     .build();
             mediaPlayer.setAudioAttributes(audioAttributes);
             mediaPlayer.setScreenOnWhilePlaying(true);
-
             if (assetFileDescriptor != null) {
                 mediaPlayer.setDataSource(assetFileDescriptor);
             } else if (playPath.startsWith("http:") || playPath.startsWith("https:")) {
@@ -247,8 +274,9 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 mp.start();
                 L.d("mediaPlayer.start:" + playPath);
                 if (callback != null) {
-                    callback.onStarted();
+                    callback.onStarted(mp.getDuration());
                 }
+                handler.sendEmptyMessage(HANDLE_REPEAT_TIME);
             });
 
             /**
@@ -288,20 +316,23 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 return false;
             });
             mediaPlayer.setOnCompletionListener(mp -> {
-                if (callback != null) {
+                isRunning = false;
+                if (mp.isLooping()) {
+                    if (!playList.isEmpty()) {
+                        try {
+                            playPath = playList.take();
+                            startPlay(surface);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            L.e("播放 InterruptedException:" + playPath);
+                        }
+                    } else {
+                        startPlay(surface);
+                    }
+                } else if (callback != null) {
                     callback.onComplete();
                 }
-                if (!playList.isEmpty()) {
-                    try {
-                        playPath = playList.take();
-                        startPlay(surface);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        L.e("播放 InterruptedException:" + playPath);
-                    }
-                }
             });
-            mediaPlayer.setLooping(false);
         } catch (IllegalStateException ie) {
             ie.printStackTrace();
             L.e("mediaPlayer-IllegalStateException:" + ie.getMessage(), ie);
@@ -393,7 +424,6 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
      */
     public void setVideoFirstFrame(@NonNull Context context, View view, @NonNull String path) {
         isRunning = true;
-        Handler handler = new Handler(Looper.getMainLooper());
         if (service == null) {
             service = Executors.newSingleThreadExecutor();
         }

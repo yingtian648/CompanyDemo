@@ -325,12 +325,22 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
             }
 
             @Override
-            public void onStarted() {
+            public void onStarted(int duration) {
 
             }
 
             @Override
             public void onComplete() {
+
+            }
+
+            @Override
+            public void onPlayTime(int timeMillis) {
+
+            }
+
+            @Override
+            public void onScreenClick() {
 
             }
         });
