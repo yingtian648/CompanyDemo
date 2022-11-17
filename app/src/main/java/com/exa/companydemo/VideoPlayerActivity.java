@@ -102,20 +102,39 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
             public void onStopTrackingTouch(SeekBar seekBar) {
                 L.d("max:" + seekBar.getMax());
                 player.seekTo(seekBar.getProgress() * 1000);
-                wakeController = false;
-                delayHideControl();
+                BaseConstants.getHandler().postDelayed(() -> {
+                    wakeController = false;
+                    hideController();
+                }, 7000);
             }
         });
         bind.progressBar.setEnabled(false);
-        bind.toggleStatuBarBtn.setOnClickListener(v -> {
+        bind.fullBtn.setOnClickListener(v -> {
             if (isFullScreen) {
                 ScreenUtils.showStatusBars(this);
-                bind.toggleStatuBarBtn.setText("全屏");
+                bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_white);
             } else {
                 ScreenUtils.setFullScreen(this);
-                bind.toggleStatuBarBtn.setText("非全屏");
+                bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_exit_white);
             }
             isFullScreen = !isFullScreen;
+            wakeController = true;
+            BaseConstants.getHandler().postDelayed(() -> {
+                wakeController = false;
+                hideController();
+            }, 7000);
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        player.pause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        player.stop();
     }
 }
