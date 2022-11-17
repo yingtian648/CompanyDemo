@@ -17,6 +17,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     private VideoPlayer player;
     private boolean wakeController = false;
     private boolean isFullScreen = false;
+    private boolean isTouchSeekbar;
 
     @Override
     protected void initData() {
@@ -49,6 +50,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
 
             @Override
             public void onScreenClick() {
+                BaseConstants.getHandler().removeCallbacksAndMessages(null);
                 updateControllerStatus();
             }
 
@@ -91,11 +93,17 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
         bind.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(isTouchSeekbar){
+                    BaseConstants.getHandler().post(()->{
+                        bind.durT.setText(String.valueOf(progress));
+                    });
+                }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 wakeController = true;
+                isTouchSeekbar = true;
             }
 
             @Override
@@ -104,6 +112,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
                 player.seekTo(seekBar.getProgress() * 1000);
                 BaseConstants.getHandler().postDelayed(() -> {
                     wakeController = false;
+                    isTouchSeekbar = false;
                     hideController();
                 }, 7000);
             }

@@ -54,6 +54,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     private ProgressBar progressBar;
     private ExecutorService service;
     private boolean isRunning = false;
+    private boolean isLoop = true;
     private TextureView textureView;
     private BlockingDeque<String> playList;
     private AssetFileDescriptor assetFileDescriptor;
@@ -229,6 +230,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
      * @param isLoop
      */
     public void setLoop(boolean isLoop) {
+        this.isLoop = isLoop;
         if (mediaPlayer != null) {
             mediaPlayer.setLooping(isLoop);
         }
@@ -277,6 +279,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             mediaPlayer.prepareAsync();
             L.d("prepareAsync");
             mediaPlayer.setOnPreparedListener(mp -> {
+                isRunning = true;
                 this.progressBar.setVisibility(View.GONE);
                 mp.start();
                 L.d("mediaPlayer.start:" + playPath);
@@ -324,7 +327,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             });
             mediaPlayer.setOnCompletionListener(mp -> {
                 isRunning = false;
-                if (mp.isLooping()) {
+                if (isLoop) {
                     if (!playList.isEmpty()) {
                         try {
                             playPath = playList.take();
