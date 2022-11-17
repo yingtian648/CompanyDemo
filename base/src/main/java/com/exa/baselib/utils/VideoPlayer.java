@@ -243,6 +243,13 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         this.callback = callback;
     }
 
+    public void seekTo(int position) {
+        L.d("seekTo:" + position);
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.seekTo(position);
+        }
+    }
+
     /**
      * 开始播放
      *

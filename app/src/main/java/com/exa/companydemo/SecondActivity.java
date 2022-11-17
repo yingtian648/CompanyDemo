@@ -19,6 +19,8 @@ import com.exa.companydemo.databinding.ActivitySecondBinding;
 public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
 
     private VideoPlayer player;
+    private boolean wakeController = false;
+    private boolean isFullScreen = false;
 
     @Override
     protected void initData() {
@@ -32,11 +34,10 @@ public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
 
             @Override
             public void onStarted(int duration) {
+                bind.progressBar.setEnabled(true);
                 bind.progressBar.setMax(duration / 1000);
                 bind.totalT.setText(String.valueOf(duration / 1000));
-                BaseConstants.getHandler().postDelayed(()->{
-                    hideController();
-                },8000);
+                delayHideControl();
             }
 
             @Override
@@ -58,9 +59,6 @@ public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
         });
         AssetFileDescriptor afd = getResources().openRawResourceFd(R.raw.test);
         player.play(this, bind.frame, afd);
-
-//        VideoViewPlayer player = new VideoViewPlayer(this, bind.video);
-//        player.play(Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.raw.test));
     }
 
     private boolean isShowController = true;
@@ -68,18 +66,26 @@ public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
     private void updateControllerStatus() {
         L.dd();
         isShowController = !isShowController;
-        bind.controllerLine.setVisibility(isShowController ? View.GONE : View.VISIBLE);
+        bind.controllerLine.setVisibility(isShowController ? View.VISIBLE : View.GONE);
+        if (isShowController) {
+            delayHideControl();
+        }
+    }
+
+    private void delayHideControl() {
+        BaseConstants.getHandler().postDelayed(this::hideController, 7000);
     }
 
     private void hideController() {
         L.dd();
-        isShowController = false;
-        bind.controllerLine.setVisibility(View.GONE);
+        if (!wakeController) {
+            isShowController = false;
+            bind.controllerLine.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected int setContentViewLayoutId() {
-        ScreenUtils.setFullScreen(this);
         return R.layout.activity_second;
     }
 
@@ -89,18 +95,31 @@ public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
         bind.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                wakeController = true;
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                L.d("max:" + seekBar.getMax());
+                player.seekTo(seekBar.getProgress() * 1000);
+                wakeController = false;
+                delayHideControl();
             }
+        });
+        bind.progressBar.setEnabled(false);
+        bind.toggleStatuBarBtn.setOnClickListener(v -> {
+            if (isFullScreen) {
+                ScreenUtils.showStatusBars(this);
+                bind.toggleStatuBarBtn.setText("全屏");
+            } else {
+                ScreenUtils.setFullScreen(this);
+                bind.toggleStatuBarBtn.setText("非全屏");
+            }
+            isFullScreen = !isFullScreen;
         });
     }
 }

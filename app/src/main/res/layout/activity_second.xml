@@ -65,10 +65,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.exa.baselib.view.FullVideoView
-            android:id="@+id/video"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
+        <Button
+            android:id="@+id/toggleStatuBarBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="全屏"
+            app:layout_constraintBottom_toTopOf="@id/controllerLine"
+            android:layout_marginBottom="160px"
+            android:layout_margin="20px"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
