@@ -52,7 +52,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".SecondActivity"
+            android:name=".VideoPlayerActivity"
             android:screenOrientation="landscape"
             android:exported="true" >
             <intent-filter>

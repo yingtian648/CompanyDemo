@@ -1,8 +1,6 @@
 package com.exa.companydemo;
 
 import android.content.res.AssetFileDescriptor;
-import android.net.Uri;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -10,13 +8,11 @@ import android.widget.Toast;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.VideoPlayer;
-import com.exa.baselib.utils.VideoViewPlayer;
 import com.exa.companydemo.databinding.ActivitySecondBinding;
 
-public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
+public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding> {
 
     private VideoPlayer player;
     private boolean wakeController = false;
@@ -29,7 +25,7 @@ public class SecondActivity extends BaseBindActivity<ActivitySecondBinding> {
         player.setCallback(new VideoPlayer.Callback() {
             @Override
             public void onError(String msg) {
-                Toast.makeText(SecondActivity.this, msg, Toast.LENGTH_LONG).show();
+                Toast.makeText(VideoPlayerActivity.this, msg, Toast.LENGTH_LONG).show();
             }
 
             @Override

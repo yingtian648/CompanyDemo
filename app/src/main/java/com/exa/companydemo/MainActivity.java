@@ -1,6 +1,5 @@
 package com.exa.companydemo;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,17 +7,12 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
@@ -52,7 +46,7 @@ public class MainActivity extends BaseActivity {
         });
         findViewById(R.id.btn).setOnClickListener(view -> {
             L.d("点击Toast测试1");
-            startActivity(new Intent(this,SecondActivity.class));
+            startActivity(new Intent(this, VideoPlayerActivity.class));
         });
         findViewById(R.id.btn2).setOnClickListener(view -> {
             L.d("点击跳转  到第二个页面");
