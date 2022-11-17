@@ -62,9 +62,8 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     private boolean isShowController = true;
 
     private void updateControllerStatus() {
-        L.dd();
         isShowController = !isShowController;
-        bind.controllerLine.setVisibility(isShowController ? View.VISIBLE : View.GONE);
+//        bind.controllerLine.setVisibility(isShowController ? View.VISIBLE : View.GONE);
         if (isShowController) {
             delayHideControl();
         }
@@ -75,11 +74,10 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     }
 
     private void hideController() {
-        L.dd();
-        if (!wakeController) {
-            isShowController = false;
-            bind.controllerLine.setVisibility(View.GONE);
-        }
+//        if (!wakeController) {
+//            isShowController = false;
+//            bind.controllerLine.setVisibility(View.GONE);
+//        }
     }
 
     @Override

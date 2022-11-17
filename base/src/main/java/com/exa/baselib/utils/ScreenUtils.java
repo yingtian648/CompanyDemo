@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 
+import androidx.annotation.NonNull;
+
 public class ScreenUtils {
 
     /**
@@ -17,7 +19,13 @@ public class ScreenUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
             if (controller != null) {
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);//手机自动隐藏状态栏导航栏
+                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+                    @Override
+                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+                        L.d("onControllableInsetsChanged：setFullScreen");
+                    }
+                });
                 controller.hide(WindowInsets.Type.navigationBars());
                 controller.hide(WindowInsets.Type.statusBars());
             }
@@ -32,11 +40,16 @@ public class ScreenUtils {
         }
     }
 
-    public static void showStatusBars(Activity activity){
+    public static void showStatusBars(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
             if (controller != null) {
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+                    @Override
+                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+                        L.d("onControllableInsetsChanged：showStatusBars");
+                    }
+                });
                 controller.show(WindowInsets.Type.navigationBars());
                 controller.show(WindowInsets.Type.statusBars());
             }

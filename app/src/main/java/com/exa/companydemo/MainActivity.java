@@ -18,6 +18,8 @@ import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
 import com.exa.companydemo.utils.LogTools;
 
+import java.util.Objects;
+
 import androidx.annotation.NonNull;
 
 public class MainActivity extends BaseActivity {
@@ -91,7 +93,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void test() {
-        LogTools.logSystemFonts();
+        L.dd();
+//        LogTools.logSystemFonts();
     }
 
     private void checkPermission() {
