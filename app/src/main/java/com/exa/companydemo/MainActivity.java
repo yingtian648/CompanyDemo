@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 public class MainActivity extends BaseActivity {
     private TextView text, text1, text2, text3, text4;
     private EditText editText;
+    private boolean isFullScreen;
     private final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
 
     @Override
@@ -48,7 +49,13 @@ public class MainActivity extends BaseActivity {
         });
         findViewById(R.id.btn).setOnClickListener(view -> {
             L.d("点击Toast测试1");
-            startActivity(new Intent(this, VideoPlayerActivity.class));
+//            startActivity(new Intent(this, VideoPlayerActivity.class));
+            if (isFullScreen) {
+                ScreenUtils.showStatusBars(this);
+            } else {
+                ScreenUtils.setFullScreen(this);
+            }
+            isFullScreen = !isFullScreen;
         });
         findViewById(R.id.btn2).setOnClickListener(view -> {
             L.d("点击跳转  到第二个页面");
@@ -69,7 +76,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        ScreenUtils.setFullScreen(this);
+//        ScreenUtils.setFullScreen(this);
         return R.layout.activity_main;
     }
 

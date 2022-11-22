@@ -9,24 +9,33 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/btnApp"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="LocationTest"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toTopOf="@id/btn" />
-
-    <Button
         android:id="@+id/btn"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Test按钮"
+        android:layout_height="70dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/teal_700"
+        android:text="全屏测试按钮"
+        android:textSize="30px"
+        app:layout_constraintBottom_toTopOf="@id/btnApp" />
+
+    <Button
+        android:id="@+id/btnApp"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/teal_700"
+        android:text="LocationTest"
+        android:textSize="30px"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toTopOf="@id/btn2" />
 
     <Button
         android:id="@+id/btn2"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
+        android:background="@color/teal_700"
+        android:layout_marginBottom="10dp"
+        android:textSize="30px"
         android:text="AppInfos"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent" />
@@ -35,6 +44,9 @@
         android:id="@+id/edt"
         android:layout_width="match_parent"
         android:layout_height="120px"
+        android:paddingStart="50px"
+        android:paddingEnd="50px"
+        android:layout_marginBottom="10px"
         android:hint="输入框..."
         android:imeOptions="actionNext"
         android:inputType="textPassword"
@@ -42,7 +54,7 @@
         android:padding="5dp"
         android:singleLine="true"
         android:textSize="40px"
-        app:layout_constraintBottom_toTopOf="@id/btnApp" />
+        app:layout_constraintBottom_toTopOf="@id/btn" />
 
     <LinearLayout
         android:layout_width="match_parent"
