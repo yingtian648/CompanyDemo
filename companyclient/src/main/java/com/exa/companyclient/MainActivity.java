@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewParent;
 
 import com.bumptech.glide.Glide;
 import com.exa.baselib.BaseConstants;
@@ -163,7 +164,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                 setText("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
             }
         }
-
         Utils.startActivityByDisplayId(this, getClass(), 5);
     }
 

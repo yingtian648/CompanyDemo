@@ -5,6 +5,7 @@ import android.os.Build;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
@@ -26,8 +27,7 @@ public class ScreenUtils {
                         L.d("onControllableInsetsChanged：setFullScreen");
                     }
                 });
-                controller.hide(WindowInsets.Type.navigationBars());
-                controller.hide(WindowInsets.Type.statusBars());
+                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -50,8 +50,7 @@ public class ScreenUtils {
                         L.d("onControllableInsetsChanged：showStatusBars");
                     }
                 });
-                controller.show(WindowInsets.Type.navigationBars());
-                controller.show(WindowInsets.Type.statusBars());
+                controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_VISIBLE;

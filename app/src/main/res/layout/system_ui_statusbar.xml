@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="76px"
+    android:layout_marginTop="10px"
+    android:background="#30E1E1E1"
+    android:gravity="center_vertical"
+    android:paddingStart="20px"
+    android:paddingEnd="20px">
+
+    <ImageButton
+        android:id="@+id/BtnUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/user_white" />
+
+    <ImageButton
+        android:id="@+id/BtnMail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50px"
+        android:background="@android:color/transparent"
+        android:src="@drawable/mail_white" />
+
+    <ImageButton
+        android:id="@+id/BtnWifi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50px"
+        android:background="@android:color/transparent"
+        android:src="@drawable/wifi_white" />
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50px"
+        android:text="00:00:00"
+        android:textColor="@color/white"
+        android:textSize="30px" />
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.exa.companydemo;
 
 import android.content.res.AssetFileDescriptor;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -12,6 +13,12 @@ import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companydemo.databinding.ActivitySecondBinding;
 
+import androidx.annotation.Nullable;
+
+import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
+import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+
 public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding> {
 
     private VideoPlayer player;
@@ -21,6 +28,13 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
 
     @Override
     protected void initData() {
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        layoutParams.format = -3;
+        layoutParams.flags |= -2138832824;
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        layoutParams.height = 76;
+
         player = VideoPlayer.getInstance();
         player.setLoop(true);
         player.setCallback(new VideoPlayer.Callback() {
@@ -91,8 +105,8 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
         bind.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(isTouchSeekbar){
-                    BaseConstants.getHandler().post(()->{
+                if (isTouchSeekbar) {
+                    BaseConstants.getHandler().post(() -> {
                         bind.durT.setText(String.valueOf(progress));
                     });
                 }
@@ -120,9 +134,15 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
             if (isFullScreen) {
                 ScreenUtils.showStatusBars(this);
                 bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_white);
+//                bind.fullBtn.setSystemUiVisibility(SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                // getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             } else {
                 ScreenUtils.setFullScreen(this);
                 bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_exit_white);
+//                bind.fullBtn.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|SYSTEM_UI_FLAG_HIDE_NAVIGATION|SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+//                getWindow().getDecorView().setSystemUiVisibility(
+//                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+//                );
             }
             isFullScreen = !isFullScreen;
             wakeController = true;
@@ -131,12 +151,19 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
                 hideController();
             }, 7000);
         });
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         player.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        player.resume();
     }
 
     @Override
