@@ -164,7 +164,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                 setText("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
             }
         }
-        Utils.startActivityByDisplayId(this, getClass(), 5);
+//        Utils.startActivityByDisplayId(this, getClass(), 5);//启动在第二块屏上
     }
 
     private void checkPermissions() {

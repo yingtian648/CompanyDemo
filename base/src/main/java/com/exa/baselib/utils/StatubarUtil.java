@@ -1,4 +1,4 @@
-package com.exa.companydemo.utils;
+package com.exa.baselib.utils;
 
 import android.app.Activity;
 import android.content.Context;

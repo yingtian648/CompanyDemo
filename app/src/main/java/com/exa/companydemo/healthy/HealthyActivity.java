@@ -1,12 +1,11 @@
 package com.exa.companydemo.healthy;
 
-import android.text.format.DateUtils;
 import android.view.View;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityHelthyBinding;
-import com.exa.companydemo.utils.StatubarUtil;
+import com.exa.baselib.utils.StatubarUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

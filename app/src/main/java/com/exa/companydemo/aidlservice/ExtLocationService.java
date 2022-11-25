@@ -2,8 +2,8 @@ package com.exa.companydemo.aidlservice;
 
 import android.app.Service;
 import android.content.Intent;
-import android.location.IExtLocationCallback;
-import android.location.IExtLocationInterface;
+import com.android.server.location.gnss.IExtLocationCallback;
+import com.android.server.location.gnss.IExtLocationInterface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;

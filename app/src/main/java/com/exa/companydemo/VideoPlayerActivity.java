@@ -1,6 +1,7 @@
 package com.exa.companydemo;
 
 import android.content.res.AssetFileDescriptor;
+import android.graphics.Insets;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.SeekBar;

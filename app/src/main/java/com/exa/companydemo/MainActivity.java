@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.ScreenUtils;
+import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
 import com.exa.companydemo.utils.LogTools;
@@ -77,6 +79,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected int getLayoutId() {
 //        ScreenUtils.setFullScreen(this);
+//        StatubarUtil.setStatusBarInvasion(this,false);
         return R.layout.activity_main;
     }
 
@@ -154,6 +157,11 @@ public class MainActivity extends BaseActivity {
         filter.addAction(Intent.ACTION_LOCALE_CHANGED);
         filter.addDataScheme("file");
         registerReceiver(receiver, filter);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override

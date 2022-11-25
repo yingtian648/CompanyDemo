@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package android.location;
+package com.android.server.location.gnss;
 
 import android.location.Location;
-import android.location.IExtLocationCallback;
+import com.android.server.location.gnss.IExtLocationCallback;
 
 /**
  * {@hide}
