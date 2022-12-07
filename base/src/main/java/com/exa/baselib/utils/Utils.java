@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.display.DisplayManager;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
 import android.provider.MediaStore;
@@ -16,6 +17,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -304,7 +306,15 @@ public class Utils {
      * @param clazz
      * @param displayId
      */
-    public static void startActivityByDisplayId(Context context,Class clazz, int displayId) {
+    public static void startActivityByDisplayId(Activity context,Class clazz, int displayId) {
+        Display mDisplay = context.getWindowManager().getDefaultDisplay();//默认显示器id 0
+        DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+        Display[] displays = displayManager.getDisplays(null);
+        if (displays != null) {
+            for (int i = 0; i < displays.length; i++) {
+                L.d("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
+            }
+        }
         //FLAG_ACTIVITY_LAUNCH_ADJACENT 多屏使用
         Intent intent = new Intent(context, clazz);
         intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);

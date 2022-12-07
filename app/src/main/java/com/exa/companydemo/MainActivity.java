@@ -7,7 +7,9 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Xml;
 import android.view.KeyEvent;
+import android.view.ViewParent;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,15 +22,19 @@ import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
 import com.exa.companydemo.utils.LogTools;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 
 public class MainActivity extends BaseActivity {
-    private TextView text, text1, text2, text3, text4;
+    private TextView text, text1, text2, text3, text4, text5,text6;
     private EditText editText;
     private boolean isFullScreen;
     private final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
+
+    //implements ViewParent   extends ViewParent
 
     @Override
     protected void initData() {
@@ -42,6 +48,8 @@ public class MainActivity extends BaseActivity {
         text2 = findViewById(R.id.text2);
         text3 = findViewById(R.id.text3);
         text4 = findViewById(R.id.text4);
+        text5 = findViewById(R.id.text5);
+        text6 = findViewById(R.id.text6);
         editText = findViewById(R.id.edt);
         checkPermission();
 
@@ -63,6 +71,10 @@ public class MainActivity extends BaseActivity {
             L.d("点击跳转  到第二个页面");
             startActivity(new Intent(this, AppInfoActivity.class));
         });
+        findViewById(R.id.btn4).setOnClickListener(view -> {
+            L.d("字体测试");
+            testFonts();
+        });
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -78,8 +90,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-//        ScreenUtils.setFullScreen(this);
-//        StatubarUtil.setStatusBarInvasion(this,false);
+        ScreenUtils.setFullScreen(this);
+        StatubarUtil.setStatusBarInvasion(this, false);
         return R.layout.activity_main;
     }
 
@@ -103,6 +115,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void test() {
+        XmlPullParser parser = Xml.newPullParser();
         L.dd();
 //        LogTools.logSystemFonts();
     }
@@ -174,67 +187,33 @@ public class MainActivity extends BaseActivity {
      * 调试字体
      */
     private void testFonts() {
+        LogTools.logSystemFonts();
         text.setText(fontTestWords + "   Default");
         text1.setText(fontTestWords + "   SourceHanSansCN");
         text2.setText(fontTestWords + "   sans-serif");
         text3.setText(fontTestWords + "   serif");
         text4.setText(fontTestWords + "   monospace");
-        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
+        text5.setText(fontTestWords + "   GacFont");
+        text6.setText(fontTestWords);
 
-        Typeface GacFont = Typeface.create("SourceHanSansCN", Typeface.BOLD);
+        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
+        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.BOLD);
         Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
         Typeface serif = Typeface.create("serif", Typeface.BOLD);
         Typeface monospace = Typeface.create("monospace", Typeface.BOLD);
+        Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
 
         text.setTypeface(aDefault);
-        text1.setTypeface(GacFont);
+        text1.setTypeface(SourceHanSansCN);
         text2.setTypeface(sans_serif);
         text3.setTypeface(serif);
         text4.setTypeface(monospace);
+        text5.setTypeface(GacFont);
 
-
-        Typeface fonts1 = Typeface.create("SourceHanSansCN", Typeface.NORMAL);
-        Typeface fonts2 = Typeface.create("SourceHanSansCN-ExtraLight", Typeface.NORMAL);
-        Typeface fonts3 = Typeface.create("SourceHanSansCN-Light", Typeface.NORMAL);
-        Typeface fonts4 = Typeface.create("SourceHanSansCN-Normal", Typeface.NORMAL);
-        Typeface fonts5 = Typeface.create("SourceHanSansCN-Regular", Typeface.NORMAL);
-
-        text.postDelayed(() -> {
-            text.setText(fontTestWords + "   Default");
-            text1.setText(fontTestWords + "   ExtraLight");
-            text2.setText(fontTestWords + "   Light");
-            text3.setText(fontTestWords + "   Normal");
-            text4.setText(fontTestWords + "   Regular");
-            text.setTypeface(fonts1);
-            text1.setTypeface(fonts2);
-            text2.setTypeface(fonts3);
-            text3.setTypeface(fonts4);
-            text4.setTypeface(fonts5);
-        }, 10000);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            Typeface fonts11 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 200, false);
-            Typeface fonts22 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 300, false);
-            Typeface fonts33 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 400, false);
-            Typeface fonts44 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 500, false);
-            Typeface fonts55 = Typeface.create(Typeface.create("SourceHanSansCN", Typeface.NORMAL), 700, false);
-            text.postDelayed(() -> {
-                text.setText(fontTestWords + "   weight 200");
-                text1.setText(fontTestWords + "   weight 300");
-                text2.setText(fontTestWords + "   weight 400");
-                text3.setText(fontTestWords + "   weight 500");
-                text4.setText(fontTestWords + "   weight 700");
-                text.setTypeface(fonts11);
-                text1.setTypeface(fonts22);
-                text2.setTypeface(fonts33);
-                text3.setTypeface(fonts44);
-                text4.setTypeface(fonts55);
-            }, 20000);
-        }
-
-        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+        L.d("SourceHanSansCN is Default ? " + (SourceHanSansCN.equals(aDefault)));
         L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
         L.d("serif is Default ? " + (serif.equals(aDefault)));
         L.d("monospace is Default ? " + (monospace.equals(aDefault)));
+        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
     }
 }

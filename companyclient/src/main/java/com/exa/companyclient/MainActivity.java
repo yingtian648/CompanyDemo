@@ -1,30 +1,27 @@
 package com.exa.companyclient;
 
 import android.Manifest;
-import android.app.ActivityOptions;
-import android.app.AlarmManager;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.hardware.display.DisplayManager;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.Looper;
+import android.os.PowerManager;
 import android.os.RemoteException;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewParent;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.exa.baselib.BaseConstants;
@@ -34,37 +31,55 @@ import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.AudioPlayerUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
-import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Utils;
 import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companyclient.databinding.ActivityMainBinding;
 import com.exa.companyclient.provider.ExeHelper;
 import com.exa.companyclient.provider.SystemMediaProviderUtil;
-import com.exa.companyclient.utils.TestLock;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-
+import androidx.core.content.PermissionChecker;
 import gxa.car.extlocationservice.GnssHwInfo;
 import gxa.car.extlocationservice.IExtiLocationInterface;
 
 public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
+
+    private static final int REQUEST_PERMISSION_STORAGE = 100;
+
     private List<Files> audios = new ArrayList<>();
     private List<Files> audioThumbs = new ArrayList<>();
     private int audioThumbsIndex = 0;
     private int textClickIndex = 0;
+
+    private final ActivityResultLauncher<String> mRequestPermissionRegister = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri result) {
+                    // TODO
+                }
+            }
+    );
 
     @Override
     protected int setContentViewLayoutId() {
@@ -74,7 +89,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
     @Override
     protected void initView() {
-        checkPermissions();
+        // checkPermissions();
         registerBroadcast();
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
 //        SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
@@ -86,7 +101,10 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         });
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
-            ExeHelper.getInstance().exeGetSystemMediaProviderData();
+            // ExeHelper.getInstance().exeGetSystemMediaProviderData();
+            if (checkStoragePermission(true)) {
+                testCreateFile();
+            }
         });
         bind.aImage.setOnClickListener(new OnClickViewListener() {
             @Override
@@ -120,11 +138,15 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         loadData();
     }
 
+    private void log2Text(Object message) {
+        bind.text.append("" + message + "\n");
+    }
+
     public void playVideoFile() {
         String path = App.getContext().getFilesDir().getPath();
 
         //手机调试
-//        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/Weixin";
+        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/Weixin";
 
         File file = new File(path);
 
@@ -155,26 +177,67 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 //        intent.setPackage("com.exa.companydemo");
 //        bindService(intent, connection, Context.BIND_AUTO_CREATE);
 
-        Display mDisplay = getWindowManager().getDefaultDisplay();
-        setText("默认显示器：" + mDisplay.getDisplayId() + ", " + mDisplay.getName() + ", " + mDisplay.isValid());
-        DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
-        Display[] displays = displayManager.getDisplays(null);
-        if (displays != null) {
-            for (int i = 0; i < displays.length; i++) {
-                setText("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
-            }
-        }
+        //多屏显示时使用
+//        Display mDisplay = getWindowManager().getDefaultDisplay();
+//        setText("默认显示器：" + mDisplay.getDisplayId() + ", " + mDisplay.getName() + ", " + mDisplay.isValid());
+//        DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+//        Display[] displays = displayManager.getDisplays(null);
+//        if (displays != null) {
+//            for (int i = 0; i < displays.length; i++) {
+//                setText("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
+//            }
+//        }
 //        Utils.startActivityByDisplayId(this, getClass(), 5);//启动在第二块屏上
-    }
-
-    private void checkPermissions() {
-        PermissionUtil.requestPermission(this, this::loadData,
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE});
     }
 
     private void loadData() {
 //        intentExt.setClassName("com.exa.companydemo", "com.exa.companydemo.aidlservice.ExtLocationService");
+    }
+
+    private static final String[] STORAGE_PERMISSION = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+    };
+
+    private static String permissionResultToString(int permissionResult) {
+        switch (permissionResult) {
+            case PermissionChecker.PERMISSION_DENIED:
+                return "PERMISSION_DENIED";
+            case PermissionChecker.PERMISSION_GRANTED:
+                return "PERMISSION_GRANTED";
+            case PermissionChecker.PERMISSION_DENIED_APP_OP:
+                return "PERMISSION_DENIED_APP_OP";
+            default:
+                return "unknown:" + permissionResult;
+        }
+    }
+
+    private void testCreateFile() {
+        final int permissionResult1 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[0]);
+        final int permissionResult2 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[1]);
+//        final int permissionResult3 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[2]);
+        log2Text("testCreateFile start permissionResult1:" + permissionResultToString(permissionResult1)
+                + ", permissionResult2:" + permissionResultToString(permissionResult2)
+//                + ", permissionResult3:" + permissionResultToString(permissionResult3)
+        );
+
+        // String path = getExternalFilesDir(null).getAbsolutePath();
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        // String path = "/storage/usb1";
+        log2Text("path:" + path);
+        File file = new File(path, "SubDir1");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write("test code\n".getBytes(StandardCharsets.UTF_8));
+            fos.close();
+            log2Text("last modify: " + file.lastModified() + ", file:" + file);
+            Toast.makeText(this, "创建目录成功：" + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            log2Text("创建失败：" + e.getMessage());
+            Toast.makeText(this, "创建目录失败", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -356,10 +419,39 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         });
     }
 
+    private boolean checkStoragePermission(boolean requestPermissionIfRequired) {
+        if (requestPermissionIfRequired) {
+            requestPermissions(STORAGE_PERMISSION, REQUEST_PERMISSION_STORAGE);
+            return false;
+        }
+        int result = PermissionChecker.checkSelfPermission(this, STORAGE_PERMISSION[0]);
+        if (result != PermissionChecker.PERMISSION_GRANTED) {
+            Toast.makeText(this, "缺少权限：" + STORAGE_PERMISSION[0], Toast.LENGTH_SHORT).show();
+            requestPermissions(STORAGE_PERMISSION, REQUEST_PERMISSION_STORAGE);
+            return false;
+        }
+
+        result = PermissionChecker.checkSelfPermission(this, STORAGE_PERMISSION[1]);
+        if (result != PermissionChecker.PERMISSION_GRANTED) {
+            Toast.makeText(this, "缺少权限：" + STORAGE_PERMISSION[1], Toast.LENGTH_SHORT).show();
+            requestPermissions(STORAGE_PERMISSION, REQUEST_PERMISSION_STORAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        checkPermissions();
+
+        if (requestCode == REQUEST_PERMISSION_STORAGE) {
+
+            log2Text("grantResults:" + Arrays.stream(grantResults).mapToObj(MainActivity::permissionResultToString).collect(Collectors.joining()));
+            if (checkStoragePermission(false)) {
+                testCreateFile();
+            }
+        }
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {

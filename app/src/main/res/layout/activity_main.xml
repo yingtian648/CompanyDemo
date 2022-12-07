@@ -4,72 +4,121 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:focusableInTouchMode="true"
+    android:background="#F1F1F1"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btn"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/teal_700"
-        android:text="全屏测试按钮"
-        android:textSize="30px"
-        app:layout_constraintBottom_toTopOf="@id/btnApp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:text="Top TextView"
+        android:padding="30px"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
-    <Button
-        android:id="@+id/btnApp"
+    <LinearLayout
+        android:id="@+id/btnBox"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/teal_700"
-        android:text="LocationTest"
-        android:textSize="30px"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toTopOf="@id/btn2" />
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_marginEnd="300dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:background="@drawable/style_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="全屏测试按钮"
+            android:textSize="30px"
+            app:layout_constraintBottom_toTopOf="@id/btnApp" />
 
-    <Button
-        android:id="@+id/btn2"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/teal_700"
-        android:layout_marginBottom="10dp"
-        android:textSize="30px"
-        android:text="AppInfos"
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <Button
+            android:id="@+id/btnApp"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:layout_marginStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/style_bg"
+            android:text="LocationTest"
+            android:textSize="30px"
+            android:textAllCaps="false"
+            />
+
+        <Button
+            android:id="@+id/btn2"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:background="@drawable/style_bg"
+            android:layout_marginStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="30px"
+            android:text="AppInfos"
+            android:textAllCaps="false"
+           />
+
+        <Button
+            android:id="@+id/btn4"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:background="@drawable/style_bg"
+            android:layout_marginStart="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="30px"
+            android:text="字体测试"
+            android:textAllCaps="false"
+             />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/edt"
         android:layout_width="match_parent"
-        android:layout_height="120px"
-        android:paddingStart="50px"
-        android:paddingEnd="50px"
-        android:layout_marginBottom="10px"
+        android:layout_height="120dp"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:layout_marginBottom="10dp"
         android:hint="输入框..."
         android:imeOptions="actionNext"
-        android:inputType="textPassword"
+        android:background="@color/purple_200"
         android:maxLines="1"
         android:padding="5dp"
         android:singleLine="true"
         android:textSize="40px"
-        app:layout_constraintBottom_toTopOf="@id/btn" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80px"
+        android:layout_marginTop="180dp"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:text="Hello World!"
+            android:textColor="@color/black33"
+            android:textSize="40px" />
 
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Hello World!"
+            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -77,7 +126,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
+            android:textColor="@color/black33"
             android:text="Hello World!"
+            android:textSize="40px" />
+
+        <TextView
+            android:id="@+id/text5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10px"
+            android:text="Hello World!"
+            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -86,6 +145,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
             android:text="Hello World!"
+            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -93,6 +153,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
+            android:textColor="@color/black33"
             android:text="Hello World!"
             android:textSize="40px" />
 
@@ -101,7 +162,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
+            android:textColor="@color/black33"
             android:text="Hello World!"
             android:textSize="40px" />
+
+
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

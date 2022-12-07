@@ -16,6 +16,7 @@
             android:gravity="center"
             android:text="Hello World!"
             android:textSize="25px"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/linear"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

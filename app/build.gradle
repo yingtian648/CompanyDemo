@@ -30,6 +30,7 @@ android {
         }
     }
 
+    //高版本的不用配，默认会使用signingConfigs的签名配置
     buildTypes {
         debug {
             minifyEnabled false

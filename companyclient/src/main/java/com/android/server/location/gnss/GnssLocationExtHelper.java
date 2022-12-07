@@ -49,8 +49,8 @@ public class GnssLocationExtHelper {
     private Context mContext;
     private final Handler mHandler;
     private Callback mLocationListener;
-    private static final String SERVICE_PACKAGE_NAME = "com.exa.companydemo";
-    private static final String SERVICE_CLASS_NAME = "com.exa.companydemo.aidlservice.ExtLocationService";
+    private static final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
+    private static final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
 
     private final long DELAY_BIND_SERVICE = 1000;//delay bind service
 
@@ -164,7 +164,9 @@ public class GnssLocationExtHelper {
     private IExtLocationCallback.Stub callback = new IExtLocationCallback.Stub() {
         @Override
         public void onLocation(Location location) throws RemoteException {
-            if (DEBUG) Log.d(TAG, "onLocation:" + location);
+            if (DEBUG) {
+                Log.d(TAG, "onLocation:" + location);
+            }
             if (mLocationListener != null) {
                 mLocationListener.onLocationChanged(location);
             }
