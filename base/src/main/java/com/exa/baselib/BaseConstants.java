@@ -7,6 +7,9 @@ import android.os.Looper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author Administrator
+ */
 public class BaseConstants {
     public static String AUTHORITY = "com.media.my";
     public static final String ACTION_MY_PROVIDER_SCAN_FINISH = "com.media.mine.finish";
@@ -21,7 +24,10 @@ public class BaseConstants {
 
 
     private static ExecutorService singlePool, fixPool, scheduledPool;
-    private static final int MAX_FIX_POOL_SIZE = 5;//最大核心线程数
+    /**
+     * 最大核心线程数
+     */
+    private static final int MAX_FIX_POOL_SIZE = 5;
 
     private static Handler handler;
 

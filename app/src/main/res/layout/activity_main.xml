@@ -4,34 +4,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E1E1E1"
     android:focusableInTouchMode="true"
-    android:background="#F1F1F1"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:text="Top TextView"
-        android:padding="30px"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+    <EditText
+        android:id="@+id/edt"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/purple_200"
+        android:hint="输入框..."
+        android:imeOptions="actionNext"
+        android:maxLines="1"
+        android:padding="5dp"
+        android:paddingStart="50dp"
+        android:paddingEnd="50dp"
+        android:singleLine="true"
+        android:textSize="40px"
+        app:layout_constraintBottom_toTopOf="@id/btnBox" />
 
     <LinearLayout
         android:id="@+id/btnBox"
         android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
-        android:gravity="right"
-        android:layout_marginEnd="300dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <Button
             android:id="@+id/btn"
             android:layout_width="wrap_content"
-            android:layout_height="170dp"
+            android:layout_height="match_parent"
             android:background="@drawable/style_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -42,58 +47,39 @@
         <Button
             android:id="@+id/btnApp"
             android:layout_width="wrap_content"
-            android:layout_height="170dp"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
+            android:background="@drawable/style_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:background="@drawable/style_bg"
             android:text="LocationTest"
-            android:textSize="30px"
             android:textAllCaps="false"
-            />
+            android:textSize="30px" />
 
         <Button
             android:id="@+id/btn2"
             android:layout_width="wrap_content"
-            android:layout_height="170dp"
-            android:background="@drawable/style_bg"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
+            android:background="@drawable/style_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textSize="30px"
             android:text="AppInfos"
             android:textAllCaps="false"
-           />
+            android:textSize="30px" />
 
         <Button
             android:id="@+id/btn4"
             android:layout_width="wrap_content"
-            android:layout_height="170dp"
-            android:background="@drawable/style_bg"
+            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
+            android:background="@drawable/style_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:textSize="30px"
-            android:text="字体测试"
+            android:text="测试按钮"
             android:textAllCaps="false"
-             />
+            android:textSize="30px" />
     </LinearLayout>
-
-    <EditText
-        android:id="@+id/edt"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:paddingStart="50dp"
-        android:paddingEnd="50dp"
-        android:layout_marginBottom="10dp"
-        android:hint="输入框..."
-        android:imeOptions="actionNext"
-        android:background="@color/purple_200"
-        android:maxLines="1"
-        android:padding="5dp"
-        android:singleLine="true"
-        android:textSize="40px"
-        app:layout_constraintBottom_toBottomOf="parent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -101,23 +87,32 @@
         android:layout_marginTop="180dp"
         android:orientation="vertical"
         android:visibility="visible"
+        android:padding="20px"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/text6"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:text="Hello World!"
+            android:background="@drawable/toast_shadow"
+            android:maxWidth="600dp"
+            android:paddingStart="44px"
+            android:paddingTop="6px"
+            android:paddingEnd="44px"
+            android:paddingBottom="6px"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:gravity="center"
             android:textColor="@color/black33"
-            android:textSize="40px" />
+            android:textSize="40px"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
             android:textColor="@color/black33"
             android:textSize="40px" />
 
@@ -127,7 +122,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
             android:textColor="@color/black33"
-            android:text="Hello World!"
             android:textSize="40px" />
 
         <TextView
@@ -135,7 +129,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:text="Hello World!"
             android:textColor="@color/black33"
             android:textSize="40px" />
 
@@ -144,7 +137,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:text="Hello World!"
             android:textColor="@color/black33"
             android:textSize="40px" />
 
@@ -154,7 +146,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
             android:textColor="@color/black33"
-            android:text="Hello World!"
             android:textSize="40px" />
 
         <TextView
@@ -163,10 +154,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
             android:textColor="@color/black33"
-            android:text="Hello World!"
             android:textSize="40px" />
-
-
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/topT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="30px"
+        android:text="Top TextView"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

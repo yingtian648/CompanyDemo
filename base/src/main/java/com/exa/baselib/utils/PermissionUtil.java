@@ -51,11 +51,7 @@ public class PermissionUtil {
         if (hasPermission(context, permission)) {
             listener.permissionGranted();
         } else {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-                listener.permissionGranted();
-            } else {
-                ActivityCompat.requestPermissions(context, permission, 0x120);
-            }
+            ActivityCompat.requestPermissions(context, permission, 0x120);
         }
     }
 

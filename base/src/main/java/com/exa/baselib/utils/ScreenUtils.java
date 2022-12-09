@@ -9,6 +9,9 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
+/**
+ * @author Administrator
+ */
 public class ScreenUtils {
 
     /**
@@ -20,11 +23,12 @@ public class ScreenUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
             if (controller != null) {
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);//手机自动隐藏状态栏导航栏
+                // 手机自动隐藏状态栏导航栏
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                 controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
                     @Override
                     public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-                        L.d("onControllableInsetsChanged：setFullScreen");
+//                        L.d("onControllableInsetsChanged：setFullScreen");
                     }
                 });
                 controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
@@ -47,7 +51,7 @@ public class ScreenUtils {
                 controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
                     @Override
                     public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-                        L.d("onControllableInsetsChanged：showStatusBars");
+//                        L.d("onControllableInsetsChanged：showStatusBars");
                     }
                 });
                 controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());

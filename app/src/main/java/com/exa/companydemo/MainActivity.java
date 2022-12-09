@@ -1,5 +1,6 @@
 package com.exa.companydemo;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +11,16 @@ import android.os.Bundle;
 import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.ViewParent;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
+import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
@@ -28,31 +33,28 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 
+/**
+ * @author Administrator
+ */
 public class MainActivity extends BaseActivity {
-    private TextView text, text1, text2, text3, text4, text5,text6;
+    private TextView topT,text, text1, text2, text3, text4, text5, text6;
     private EditText editText;
     private boolean isFullScreen;
     private final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
 
-    //implements ViewParent   extends ViewParent
-
     @Override
     protected void initData() {
-        getNavMode();
+        testFonts();
     }
 
     @Override
     protected void initView() {
-        text = findViewById(R.id.text);
-        text1 = findViewById(R.id.text1);
-        text2 = findViewById(R.id.text2);
-        text3 = findViewById(R.id.text3);
-        text4 = findViewById(R.id.text4);
-        text5 = findViewById(R.id.text5);
-        text6 = findViewById(R.id.text6);
         editText = findViewById(R.id.edt);
+        topT = findViewById(R.id.topT);
         checkPermission();
-
+        topT.setOnClickListener(v -> {
+            topT.setText(DateUtil.getNowTime() + " 点击了");
+        });
         findViewById(R.id.btnApp).setOnClickListener(view -> {
             L.d("点击Location Test");
             startActivity(new Intent(this, LocationActivity.class));
@@ -72,8 +74,10 @@ public class MainActivity extends BaseActivity {
             startActivity(new Intent(this, AppInfoActivity.class));
         });
         findViewById(R.id.btn4).setOnClickListener(view -> {
-            L.d("字体测试");
-            testFonts();
+            L.d("测试按钮");
+            String msg = "撒谎吉萨号登机口啥叫啊十大建设大家卡刷道";
+//            String msg = "撒谎吉萨号登机口啥叫啊十大建设大家卡刷道具卡啥叫看到啥就肯定会刷卡机打算结婚的卡刷道具卡撒谎撒谎的吉萨号登机口撒谎的加快速度安徽省贷记卡和数据库的啥叫看到";
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         });
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -84,24 +88,16 @@ public class MainActivity extends BaseActivity {
         });
 
         registerBroadcast(mReceiver);
-    }
 
-    private static char DOT = '\u2022';
+        WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
+        int width = mParams.width;
+    }
 
     @Override
     protected int getLayoutId() {
         ScreenUtils.setFullScreen(this);
         StatubarUtil.setStatusBarInvasion(this, false);
         return R.layout.activity_main;
-    }
-
-    private void getNavMode() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            WindowInsets windowInsets = WindowInsets.CONSUMED;
-//            L.d("hasInsets:" + windowInsets.hasInsets() + ",isConsumed:" + windowInsets.isConsumed());
-//            L.d("NavigationBar is visible:" + windowInsets.isVisible(WindowInsets.Type.navigationBars()));
-//            L.d("StatusBars is visible:" + windowInsets.isVisible(WindowInsets.Type.statusBars()));
-//        }
     }
 
     @Override
@@ -114,20 +110,14 @@ public class MainActivity extends BaseActivity {
 //        LogTools.logAudioFileAttr(path);
     }
 
-    private void test() {
-        XmlPullParser parser = Xml.newPullParser();
-        L.dd();
-//        LogTools.logSystemFonts();
-    }
-
     private void checkPermission() {
-//        String[] ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE};
-//        }
-//        PermissionUtil.requestPermission(this, () -> {
-//            L.d("已授权 读写权限");
-//        }, ps);
+        String[] ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            ps = new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE};
+        }
+        PermissionUtil.requestPermission(this, () -> {
+            L.d("已授权读写权限");
+        }, ps);
     }
 
     @Override
@@ -137,7 +127,7 @@ public class MainActivity extends BaseActivity {
         checkPermission();
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             L.d("main onReceived:" + intent.getAction());
@@ -152,7 +142,8 @@ public class MainActivity extends BaseActivity {
                 case Intent.ACTION_MEDIA_SCANNER_STARTED://扫描开始
                     break;
                 case Intent.ACTION_MEDIA_SCANNER_FINISHED://扫描结束
-
+                    break;
+                default:
                     break;
             }
         }
@@ -187,14 +178,21 @@ public class MainActivity extends BaseActivity {
      * 调试字体
      */
     private void testFonts() {
-        LogTools.logSystemFonts();
+        text = findViewById(R.id.text);
+        text1 = findViewById(R.id.text1);
+        text2 = findViewById(R.id.text2);
+        text3 = findViewById(R.id.text3);
+        text4 = findViewById(R.id.text4);
+        text5 = findViewById(R.id.text5);
+        text6 = findViewById(R.id.text6);
+
         text.setText(fontTestWords + "   Default");
         text1.setText(fontTestWords + "   SourceHanSansCN");
         text2.setText(fontTestWords + "   sans-serif");
         text3.setText(fontTestWords + "   serif");
         text4.setText(fontTestWords + "   monospace");
         text5.setText(fontTestWords + "   GacFont");
-        text6.setText(fontTestWords);
+        text6.setText(fontTestWords + "   多行end省略");
 
         Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
         Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.BOLD);
@@ -215,5 +213,7 @@ public class MainActivity extends BaseActivity {
         L.d("serif is Default ? " + (serif.equals(aDefault)));
         L.d("monospace is Default ? " + (monospace.equals(aDefault)));
         L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+
+//        LogTools.logSystemFonts();
     }
 }

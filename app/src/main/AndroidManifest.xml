@@ -5,6 +5,7 @@
     >
 
     <!--    android:sharedUserId="android.uid.system"-->
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -124,7 +125,7 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".aidlservice.ExtLocationService"
+            android:name=".service.ExtLocationService"
             android:enabled="true"
             android:exported="true">
 

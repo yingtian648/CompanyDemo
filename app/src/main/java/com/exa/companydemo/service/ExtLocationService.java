@@ -1,4 +1,4 @@
-package com.exa.companydemo.aidlservice;
+package com.exa.companydemo.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -18,6 +18,9 @@ import com.exa.baselib.utils.L;
 
 import androidx.annotation.Nullable;
 
+/**
+ * @author Administrator
+ */
 public class ExtLocationService extends Service {
     private final String TAG = "ExtLocationService";
     private IExtLocationCallback mCallback;

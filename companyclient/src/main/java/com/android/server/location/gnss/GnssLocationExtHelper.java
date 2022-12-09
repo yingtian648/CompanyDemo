@@ -23,8 +23,6 @@ import android.content.ServiceConnection;
 import android.location.GnssAntennaInfo;
 import android.location.GnssMeasurementsEvent;
 import android.location.GnssNavigationMessage;
-import com.android.server.location.gnss.IExtLocationCallback;
-import com.android.server.location.gnss.IExtLocationInterface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Handler;
@@ -51,8 +49,10 @@ public class GnssLocationExtHelper {
     private Callback mLocationListener;
     private static final String SERVICE_PACKAGE_NAME = "com.gxa.car.service.location";
     private static final String SERVICE_CLASS_NAME = "com.gxa.car.service.location.CarLocationService";
-
-    private final long DELAY_BIND_SERVICE = 1000;//delay bind service
+    //    private static final String SERVICE_PACKAGE_NAME = "com.exa.companydemo";
+//    private static final String SERVICE_CLASS_NAME = "com.exa.companydemo.service.ExtLocationService";
+    // delay bind service
+    private final long DELAY_BIND_SERVICE = 1000;
 
     public static GnssLocationExtHelper getInstance() {
         return ClazzHolder.cellLocationProvider;
@@ -342,7 +342,7 @@ public class GnssLocationExtHelper {
      * set service callback
      */
     private void setCallback() {
-        Log.d(TAG, "setCallback");
+        Log.d(TAG, "setCallback:" + Thread.currentThread().getId() + "," + Thread.currentThread().getName());
         try {
             if (binder != null) {
                 binder.setCallback(callback);
