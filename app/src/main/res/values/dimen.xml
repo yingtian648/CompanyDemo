@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="statusbar_height">76px</dimen>
+    <dimen name="toast_max_width">467dp</dimen>
+    <dimen name="toast_text_size">18px</dimen>
+    <dimen name="toast_text_marginHorizontal">44dp</dimen>
+    <dimen name="toast_text_marginVertical">6dp</dimen>
 </resources>

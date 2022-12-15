@@ -3,6 +3,7 @@ package com.exa.baselib.utils;
 import android.annotation.SuppressLint;
 import android.icu.text.SimpleDateFormat;
 
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -36,5 +37,20 @@ public class DateUtil {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL_NUM);
         return simpleDateFormat.format(new Date());
+    }
+
+    public static long getFullTimeMillis(String fullTime){
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL);
+        try {
+            return simpleDateFormat.parse(fullTime).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static Date getLocalDateFromUtcTime(){
+        return new Date();
     }
 }

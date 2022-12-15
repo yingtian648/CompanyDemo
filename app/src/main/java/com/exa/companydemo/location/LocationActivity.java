@@ -13,8 +13,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.location.OnNmeaMessageListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
@@ -91,6 +95,19 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         setText(L.msg);
         L.d("可用的定位方式: " + (eProviders != null ? eProviders : "null"));
         setText(L.msg);
+
+        locationManager.addNmeaListener(new OnNmeaMessageListener() {
+            @Override
+            public void onNmeaMessage(String message, long timestamp) {
+                L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
+            }
+        }, new Handler(Looper.myLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                L.d("addNmeaListener:handleMessage:" + msg);
+            }
+        });
 
         locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
             @Override

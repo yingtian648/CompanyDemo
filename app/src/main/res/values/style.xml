@@ -9,4 +9,9 @@
         <item name="android:layout_height">35dp</item>
         <item name="android:layout_width">0dp</item>
     </style>
+    <style name="TextAppearance.AppCompat.ToastNew">
+        <item name="fontFamily">GacFont</item>
+        <item name="android:textSize">@dimen/toast_text_size</item>
+    </style>
+
 </resources>

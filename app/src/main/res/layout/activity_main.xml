@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E1E1E1"
+    android:background="@color/window_bg"
     android:focusableInTouchMode="true"
     tools:context=".MainActivity">
 
@@ -28,8 +28,8 @@
         android:id="@+id/btnBox"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:gravity="center"
         android:layout_marginBottom="10dp"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -37,10 +37,11 @@
             android:id="@+id/btn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/style_bg"
+            android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="全屏测试按钮"
+            android:textColor="@color/text_color"
             android:textSize="30px"
             app:layout_constraintBottom_toTopOf="@id/btnApp" />
 
@@ -49,11 +50,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:background="@drawable/style_bg"
+            android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="LocationTest"
             android:textAllCaps="false"
+            android:textColor="@color/text_color"
             android:textSize="30px" />
 
         <Button
@@ -61,11 +63,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:background="@drawable/style_bg"
+            android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="AppInfos"
             android:textAllCaps="false"
+            android:textColor="@color/text_color"
             android:textSize="30px" />
 
         <Button
@@ -73,11 +76,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:background="@drawable/style_bg"
+            android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="测试按钮"
             android:textAllCaps="false"
+            android:textColor="@color/text_color"
             android:textSize="30px" />
     </LinearLayout>
 
@@ -86,26 +90,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="180dp"
         android:orientation="vertical"
-        android:visibility="visible"
         android:padding="20px"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/text6"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:background="@drawable/toast_shadow"
-            android:maxWidth="600dp"
-            android:paddingStart="44px"
-            android:paddingTop="6px"
-            android:paddingEnd="44px"
-            android:paddingBottom="6px"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:textColor="@color/black33"
             android:textSize="40px"
             android:textStyle="bold" />
 
@@ -113,7 +107,6 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -121,7 +114,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -129,7 +121,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -137,7 +128,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -145,7 +135,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:textColor="@color/black33"
             android:textSize="40px" />
 
         <TextView
@@ -153,18 +142,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10px"
-            android:textColor="@color/black33"
             android:textSize="40px" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/topT"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@color/btn_bg"
+        android:padding="36dp"
+        android:text="大家好"
+        android:textColor="@color/text_color"
+        android:textSize="36sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/topT2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:padding="30px"
-        android:text="Top TextView"
-        android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        android:background="@color/btn_bg"
+        android:padding="36dp"
+        android:text="大家好"
+        android:textColor="@color/text_color"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@id/topT"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

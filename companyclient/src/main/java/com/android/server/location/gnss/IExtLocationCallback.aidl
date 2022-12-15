@@ -28,7 +28,15 @@ interface IExtLocationCallback {
 
     void onLocation(in Location location);
 
-    //GnssLocationProvider.SvStatusInfo or GnssStatus.java 143
+
+    /**
+     * svidWithFlags 带标志的卫星编号d
+     * cn0s 带标志的卫星编号d
+     * svElevations 带标志的卫星编号d
+     * svAzimuths 方位角
+     * svCarrierFreqs 载波频率
+     * basebandCn0s 基带捕获灵敏度 30dBHz
+     */
     void reportSvStatus(in int svCount, in int[] svidWithFlags, in float[] cn0s,in float[] svElevations,
        in float[] svAzimuths,in float[] svCarrierFreqs,in float[] basebandCn0s);
 

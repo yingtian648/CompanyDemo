@@ -132,7 +132,6 @@ public class Tools {
                 .getSystemService(Context.WINDOW_SERVICE);
         int screenW = wm.getDefaultDisplay().getWidth();
         return screenW;
-
     }
 
     public static int getScreenH(Context context) {
@@ -203,8 +202,9 @@ public class Tools {
     }
 
     /**
-     * 获取dpi 屏幕密度
-     *
+     * 获取dpi 分辨率
+     * 中分辨率，160DPI，也就是1x
+     * 高分辨率，240DPI，换算为1.5x
      * @param context
      * @return
      */
