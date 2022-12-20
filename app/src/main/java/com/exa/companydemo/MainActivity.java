@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+//import android.widget.CarToast;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
+import com.exa.companydemo.utils.LogTools;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -105,15 +107,16 @@ public class MainActivity extends BaseActivity {
         L.d("convert1 lat:" + ddmmTodddd1(lon));
 
         //20220315163333
-        int date = 15032022;
-        double time = 233333.11;
-
-        long result = GpsConvertUtil.getCurrentTimeZoneTimeMillis(date,time);
-        SimpleDateFormat sdfOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.getDefault());
+        int date = 1122022;
+        double time = 0.12345;
+        L.d("-------------------------");
+        long result = GpsConvertUtil.getCurrentTimeZoneTimeMillis(date, time);
+        SimpleDateFormat sdfOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         L.d(String.valueOf(result));
         L.d(sdfOut.format(new Date(result)));
         L.d("-------------------------");
-        setTime(date,time);
+        setTime(date, time);
+        L.d("-------------------------");
     }
 
     private void setTime(int utcDate, double utcTime) {
@@ -136,7 +139,7 @@ public class MainActivity extends BaseActivity {
                 }
                 time = addO + time;
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss.SSS",Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss.SSS", Locale.getDefault());
             SimpleDateFormat sdfOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
             try {
@@ -198,98 +201,14 @@ public class MainActivity extends BaseActivity {
         return params;
     }
 
+    @SuppressLint("RestrictedApi")
     private void test() {
-        String msg = "撒谎吉萨号登机口啥叫啊十大建设大家";
-//        msg = "撒谎吉萨号登机口啥叫啊十大建设大家好刷道具卡啥叫看到啥就肯定会刷卡机打算结婚的卡";
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-
-
-//        WindowManager.LayoutParams mParams = createLayoutParams();
-//        mParams.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
-//        mParams.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-//        mParams.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            mParams.setFitInsetsTypes(0);
-//            mParams.setFitInsetsSides(0);
-//        }
-//        mParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
-//        final WindowManager mWindowManager = getSystemService(WindowManager.class);
-//        final View view = LayoutInflater.from(this).inflate(R.layout.transient_notification, null, false);
-//        TextView textView = view.findViewById(android.R.id.message);
-//        textView.setText(msg);
-//        mWindowManager.addView(view, mParams);
-//
-//        BaseConstants.getHandler().postDelayed(()->{
-//            mWindowManager.removeView(view);
-//        },2000);
-
-//        Toast toast = new Toast(this);
-//        View view = LayoutInflater.from(this).inflate(R.layout.transient_notification, null, false);
-//        TextView textView = view.findViewById(android.R.id.message);
-//        textView.setText(msg);
-//        toast.setView(view);
-//        toast.setGravity(Gravity.TOP, 0, 8);
-//        toast.getView().setFitsSystemWindows(false);
-//        int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                | View.SYSTEM_UI_FLAG_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-//        toast.getView().setSystemUiVisibility(option);
-//        toast.show();
-//        final Intent intent = new Intent();
-//        try {
-//            intent.setAction(ACTION_guide_dismiss);
-//            sendBroadcast(intent);
-//        } catch (Throwable e) {
-//            L.e("sendBroadcast err:" + intent.getAction());
-//        }
-//        editText.postDelayed(() -> {
-//            try {
-//                intent.setAction(ACTION_launcher);
-//                sendBroadcast(intent);
-//            } catch (Throwable e) {
-//                e.printStackTrace();
-//                L.e("sendBroadcast err:" + intent.getAction());
-//            }
-//        }, 1000);
-//        editText.postDelayed(() -> {
-//            try {
-//                intent.setAction(ACTION_guide_display);
-//                sendBroadcast(intent);
-//            } catch (Throwable e) {
-//                e.printStackTrace();
-//                L.e("sendBroadcast err:" + intent.getAction());
-//            }
-//        }, 2000);
-//        editText.postDelayed(() -> {
-//            try {
-//                intent.setAction(ACTION_timeSync);
-//                sendBroadcast(intent);
-//            } catch (Throwable e) {
-//                e.printStackTrace();
-//                L.e("sendBroadcast err:" + intent.getAction());
-//            }
-//        }, 3000);
-//        editText.postDelayed(() -> {
-//            try {
-//                intent.setAction(ACTION_schedule);
-//                sendBroadcast(intent);
-//            } catch (Throwable e) {
-//                e.printStackTrace();
-//                L.e("sendBroadcast err:" + intent.getAction());
-//            }
-//        }, 4000);
-//        editText.postDelayed(() -> {
-//            try {
-//                intent.setAction(ACTION_CloseScreen);
-//                sendBroadcast(intent);
-//            } catch (Throwable e) {
-//                e.printStackTrace();
-//                L.e("sendBroadcast err:" + intent.getAction());
-//            }
-//        }, 5000);
+        try {
+            TestUtil.sendBroadcast(this,"com.gxatek.cockpit.systemui.ALL_MENU_CLICK");
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.e("sendBroadcast Exception:" + e.getMessage());
+        }
     }
 
     @Override
@@ -310,13 +229,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void checkPermission() {
-        String[] ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            ps = new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE};
-        }
-        PermissionUtil.requestPermission(this, () -> {
-            L.d("已授权读写权限");
-        }, ps);
+//        String[] ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            ps = new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE};
+//        }
+//        PermissionUtil.requestPermission(this, () -> {
+//            L.d("已授权读写权限");
+//        }, ps);
     }
 
     @Override
@@ -356,6 +275,7 @@ public class MainActivity extends BaseActivity {
         filter.addAction(ACTION_timeSync);
         filter.addAction(ACTION_schedule);
         filter.addAction(ACTION_CloseScreen);
+        filter.addAction("com.gxa.service.systemui.control");
 //        filter.addDataScheme("file");//for MediaProvider
         registerReceiver(receiver, filter);
     }
@@ -405,6 +325,12 @@ public class MainActivity extends BaseActivity {
         text4.setTypeface(monospace);
         text5.setTypeface(GacFont);
 
+//        L.d("SourceHanSansCN is Default ? " + (SourceHanSansCN.equals(aDefault)));
+//        L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
+//        L.d("serif is Default ? " + (serif.equals(aDefault)));
+//        L.d("monospace is Default ? " + (monospace.equals(aDefault)));
+//        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+//
 //        LogTools.logSystemFonts();
     }
 }

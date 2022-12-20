@@ -21,9 +21,11 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
@@ -44,6 +46,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     private LocationManager locationManager;
     private int index = 0;
+    private Location lastLocation;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -137,13 +140,26 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 L.d("GnssStatusCallback:onFirstFix:" + ttffMillis);
             }
 
+            int index = 0;
+
             @Override
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
-                setText("GnssStatusCallback:onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
+                index = index > (status.getSatelliteCount() - 1) ? 0 : index;
+                setText("GnssStatusCallback:onSatelliteStatusChanged:count = " +
+                        status.getSatelliteCount()
+                        + "index:" + index
+                        + "********* Svid=" + status.getSvid(index)
+                        + ", Cn0=" + status.getCn0DbHz(index)
+                        + ", ElevationDegrees=" + status.getElevationDegrees(index)
+                        + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
+                        + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
+                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
+                );
+                index++;
                 L.d("GnssStatusCallback:onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
             }
-        });
+        }, new Handler(Looper.myLooper()));
 
         if (eProviders != null) {
             for (int i = 0; i < eProviders.size(); i++) {
@@ -175,6 +191,25 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         }
         loadBaseLocationInfo();
         getBestProvider();
+
+        BaseConstants.getHandler().postDelayed(this::recyclerGetNetworkLastLocation, 3000);
+    }
+
+    private void recyclerGetNetworkLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        BaseConstants.getHandler().postDelayed(() -> {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (location != null) {
+                lastLocation = location;
+                Log.d("lsh--->", "recyclerGetNetworkLastLocation:" + lastLocation.getLatitude() + lastLocation.getLongitude());
+                locationUpdate(lastLocation, LocationManager.NETWORK_PROVIDER);
+            } else {
+                Log.d("lsh--->", "recyclerGetNetworkLastLocation: null");
+            }
+            recyclerGetNetworkLastLocation();
+        }, 500);
     }
 
     /**
@@ -193,6 +228,11 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         L.e("获取最佳定位方式: " + getProviderStr(provider));
         setText("获取最佳定位方式: " + getProviderStr(provider));
         setText(getProviderStr(provider) + " 是否可用: " + (provider == null ? "provider is null" : locationManager.isProviderEnabled(provider)));
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        setText(getProviderStr(LocationManager.NETWORK_PROVIDER) + " LastKnownLocation: " + (location == null ? "null" : (location.getLatitude() + "," + location.getLongitude())));
     }
 
     private void getProviderSupportInfo(String ps) {
@@ -230,9 +270,9 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             setText("缺少定位权限");
             return;
         }
-        //获取最新的定位信息
+        // 获取最新的定位信息
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        //将最新的定位信息，传递给LocationUpdates()方法
+        // 将最新的定位信息，传递给LocationUpdates()方法
         locationUpdate(location, LocationManager.GPS_PROVIDER);
         location = locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         locationUpdate(location, LocationManager.PASSIVE_PROVIDER);

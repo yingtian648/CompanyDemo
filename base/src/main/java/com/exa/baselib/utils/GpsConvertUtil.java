@@ -9,8 +9,11 @@
 
 package com.exa.baselib.utils;
 
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -45,12 +48,18 @@ public class GpsConvertUtil {
      */
     public static long getCurrentTimeZoneTimeMillis(int utcDate, double utcTime) {
         long result = 0;
-        if (utcDate != 0) {
+        if (utcDate != 0 && utcTime >= 0) {
             String key = ".";
             String def0 = "0";
             int timeHeadLen = 6;
             String date = String.valueOf(utcDate);
             String time = String.valueOf(utcTime);
+            if (date.length() < 7) {
+                return result;
+            }
+            if (date.length() == 7) {
+                date = def0 + date;
+            }
             if (time.contains(key)) {
                 if (time.indexOf(key) < timeHeadLen) {
                     StringBuilder addO = new StringBuilder();
@@ -66,15 +75,11 @@ public class GpsConvertUtil {
                 }
                 time = addO + time;
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss.SSS", Locale.getDefault());
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss.SSS",Locale.getDefault());
             try {
                 Date dateGmt = sdf.parse(date + time);
                 if (dateGmt != null) {
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                    calendar.setTime(dateGmt);
-                    calendar.setTimeZone(TimeZone.getDefault());
-                    result = calendar.getTimeInMillis();
+                    result = dateGmt.getTime();
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

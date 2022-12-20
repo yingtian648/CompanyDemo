@@ -51,7 +51,7 @@ public class CarSystemUiService extends Service {
         mStatusBarParams = new WindowManager.LayoutParams();
         mStatusBarParams.format = PixelFormat.TRANSLUCENT;
         //mStateBarParams.type = WindowManager.LayoutParams.TYPE_STATUS_BAR;
-        mStatusBarParams.type = WindowManager.LayoutParams.TYPE_STATUS_BAR_PANEL;
+//        mStatusBarParams.type = WindowManager.LayoutParams.TYPE_STATUS_BAR_PANEL;
 
         mStatusBarParams.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 | WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING

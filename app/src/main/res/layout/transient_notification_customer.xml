@@ -19,10 +19,11 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/toast_text_marginHorizontal"
         android:maxLines="2"
+        android:lineHeight="@dimen/toast_line_height"
         android:ellipsize="end"
         android:gravity="center"
         android:layout_marginVertical="@dimen/toast_text_marginVertical"
-        android:textAppearance="@style/TextAppearance.AppCompat.ToastNew"
+        android:textSize="@dimen/toast_text_size"
         android:textColor="@color/primary_text_default_material_light"
         />
 
