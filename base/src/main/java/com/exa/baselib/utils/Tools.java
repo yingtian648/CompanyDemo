@@ -205,6 +205,7 @@ public class Tools {
      * 获取dpi 分辨率
      * 中分辨率，160DPI，也就是1x
      * 高分辨率，240DPI，换算为1.5x
+     *
      * @param context
      * @return
      */
@@ -325,7 +326,7 @@ public class Tools {
         localWindow.setAttributes(localLayoutParams);
     }
 
-    //启动三方app
+    // 启动三方app
     public static void startApp(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
         Intent it = packageManager.getLaunchIntentForPackage(packageName);
@@ -333,6 +334,14 @@ public class Tools {
             it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(it);
         }
+    }
+
+    // 启动App
+    public static void startAppByClassName(Context context,String className) {
+        Intent intent = new Intent();
+        intent.setClassName(context,className);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     //使用手机默认浏览器加载url

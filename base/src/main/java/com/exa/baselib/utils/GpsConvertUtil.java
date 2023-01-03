@@ -9,15 +9,7 @@
 
 package com.exa.baselib.utils;
 
-import android.util.Log;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class GpsConvertUtil {
     /**
@@ -40,49 +32,34 @@ public class GpsConvertUtil {
      * GMT date convert to current TimeZone date
      * <p>
      * GMT time
-     * int date = 15032022;
-     * double time = 3333.11;
+     * int date = 150322;
+     * double time = 113203.588;
      *
      * @param utcDate GMT ddMMyyyy
      * @param utcTime GMT hhmmss.SSS
      */
     public static long getCurrentTimeZoneTimeMillis(int utcDate, double utcTime) {
-        long result = 0;
-        if (utcDate != 0 && utcTime >= 0) {
-            String key = ".";
-            String def0 = "0";
-            int timeHeadLen = 6;
+        long result = System.currentTimeMillis();
+        if (utcDate > 0 && utcTime >= 0) {
             String date = String.valueOf(utcDate);
             String time = String.valueOf(utcTime);
-            if (date.length() < 7) {
-                return result;
+            if (time.contains(".")) {
+                time = time.substring(0, time.indexOf("."));
             }
-            if (date.length() == 7) {
-                date = def0 + date;
-            }
-            if (time.contains(key)) {
-                if (time.indexOf(key) < timeHeadLen) {
-                    StringBuilder addO = new StringBuilder();
-                    for (int i = 0; i < (timeHeadLen - time.indexOf(key)); i++) {
-                        addO.append(def0);
-                    }
-                    time = addO + time;
-                }
-            } else if (time.length() < timeHeadLen) {
-                StringBuilder addO = new StringBuilder();
-                for (int i = 0; i < (timeHeadLen - time.length()); i++) {
-                    addO.append(def0);
-                }
-                time = addO + time;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss.SSS",Locale.getDefault());
             try {
-                Date dateGmt = sdf.parse(date + time);
-                if (dateGmt != null) {
-                    result = dateGmt.getTime();
-                }
-            } catch (ParseException e) {
+                Calendar calendar = Calendar.getInstance();
+                int year = 2000 + Integer.parseInt(date.substring(date.length() - 2));
+                int mon = Integer.parseInt(date.substring(date.length() - 4, date.length() - 2));
+                int day = Integer.parseInt(date.substring(0, date.length() - 4));
+                int hh = Integer.parseInt(time.substring(0, time.length() - 4));
+                int mm = Integer.parseInt(time.substring(time.length() - 4, time.length() - 2));
+                int ss = Integer.parseInt(time.substring(time.length() - 2));
+                calendar.set(year, mon - 1, day, hh, mm, ss);
+                // LogUtil.debug("时间转换：" + year + "/" + mon + "/" + day + " " + hh + ":" + mm + ":" + ss);
+                result = calendar.getTimeInMillis();
+            } catch (Exception e) {
                 e.printStackTrace();
+                LogUtil.warn("getCurrentTimeZoneTimeMillis time parse err!!!");
             }
         }
         return result;

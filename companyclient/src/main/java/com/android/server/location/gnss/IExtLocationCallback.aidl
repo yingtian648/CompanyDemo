@@ -26,7 +26,7 @@ import android.location.GnssNavigationMessage;
  */
 interface IExtLocationCallback {
 
-    void onLocation(in Location location);
+    oneway void onLocation(in Location location);
 
 
     /**
@@ -37,7 +37,7 @@ interface IExtLocationCallback {
      * svCarrierFreqs 载波频率
      * basebandCn0s 基带捕获灵敏度 30dBHz
      */
-    void reportSvStatus(in int svCount, in int[] svidWithFlags, in float[] cn0s,in float[] svElevations,
+    oneway void reportSvStatus(in int svCount, in int[] svidWithFlags, in float[] cn0s,in float[] svElevations,
        in float[] svAzimuths,in float[] svCarrierFreqs,in float[] basebandCn0s);
 
     void onProviderEnabled();
@@ -46,9 +46,9 @@ interface IExtLocationCallback {
 
     boolean isInEmergencySession();
 
-    void reportAGpsStatus(in int agpsType, in int agpsStatus, in byte[] suplIpAddr);
+    void reportAGpsStatus(int agpsType, int agpsStatus, in byte[] suplIpAddr);
 
-    void reportNmea(in long time);
+    void reportNmea(long time);
 
     void reportMeasurementData(in GnssMeasurementsEvent event);
 
@@ -56,13 +56,13 @@ interface IExtLocationCallback {
 
     void reportNavigationMessage(in GnssNavigationMessage event);
 
-    void setTopHalCapabilities(in int topHalCapabilities);
+    void setTopHalCapabilities(int topHalCapabilities);
 
-    void setSubHalMeasurementCorrectionsCapabilities(in int subHalCapabilities);
+    void setSubHalMeasurementCorrectionsCapabilities(int subHalCapabilities);
 
-    void setGnssYearOfHardware(in int yearOfHardware);
+    void setGnssYearOfHardware(int yearOfHardware);
 
-    void setGnssHardwareModelName(in String modelName);
+    void setGnssHardwareModelName(String modelName);
 
     void reportGnssServiceDied();
 
@@ -70,23 +70,23 @@ interface IExtLocationCallback {
 
     void psdsDownloadRequest();
 
-    void reportGeofenceTransition(in int geofenceId, in Location location, in int transition, in long transitionTimestamp);
+    void reportGeofenceTransition(int geofenceId, in Location location, int transition, long transitionTimestamp);
 
-    void reportGeofenceStatus(in int status, in Location location);
+    void reportGeofenceStatus(int status, Location location);
 
-    void reportGeofenceAddStatus(in int geofenceId, in int status);
+    void reportGeofenceAddStatus(int geofenceId, int status);
 
-    void reportGeofenceRemoveStatus(in int geofenceId, in int status);
+    void reportGeofenceRemoveStatus(int geofenceId, int status);
 
-    void reportGeofencePauseStatus(in int geofenceId, in int status);
+    void reportGeofencePauseStatus(int geofenceId, int status);
 
-    void reportGeofenceResumeStatus(in int geofenceId, in int status);
+    void reportGeofenceResumeStatus(int geofenceId, int status);
 
-    void reportNfwNotification(in String proxyAppPackageName, in byte protocolStack,
-                String otherProtocolStackName, in byte requestor, in String requestorId, in byte responseType,
-                in boolean inEmergencyMode, in boolean isCachedLocation);
+    void reportNfwNotification(String proxyAppPackageName, byte protocolStack,
+                String otherProtocolStackName, byte requestor, String requestorId, byte responseType,
+                boolean inEmergencyMode, boolean isCachedLocation);
 
-    void reportNiNotification(in int notificationId, in int niType, in int notifyFlags,
-                in int timeout, in int defaultResponse, in String requestorId, String text,
-                in int requestorIdEncoding, in int textEncoding);
+    void reportNiNotification(int notificationId, int niType, int notifyFlags,
+                int timeout, int defaultResponse, String requestorId, String text,
+                int requestorIdEncoding, int textEncoding);
 }

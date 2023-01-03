@@ -146,12 +146,6 @@ public class ExtLocationService extends Service {
                 }
                 circleSendLocation();
             }
-            if(index==10){
-                index = 0;
-                L.d("make crash");
-                int x = 10/0;
-                L.d("" + x);
-            }
         }, 1000);
     }
 

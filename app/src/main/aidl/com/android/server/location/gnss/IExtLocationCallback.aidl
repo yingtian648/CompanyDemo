@@ -26,10 +26,18 @@ import android.location.GnssNavigationMessage;
  */
 interface IExtLocationCallback {
 
-    void onLocation(in Location location);
+    oneway void onLocation(in Location location);
 
-    //GnssLocationProvider.SvStatusInfo or GnssStatus.java 143
-    void reportSvStatus(in int svCount, in int[] svidWithFlags, in float[] cn0s,in float[] svElevations,
+
+    /**
+     * svidWithFlags 带标志的卫星编号d
+     * cn0s 带标志的卫星编号d
+     * svElevations 带标志的卫星编号d
+     * svAzimuths 方位角
+     * svCarrierFreqs 载波频率
+     * basebandCn0s 基带捕获灵敏度 30dBHz
+     */
+    oneway void reportSvStatus(in int svCount, in int[] svidWithFlags, in float[] cn0s,in float[] svElevations,
        in float[] svAzimuths,in float[] svCarrierFreqs,in float[] basebandCn0s);
 
     void onProviderEnabled();

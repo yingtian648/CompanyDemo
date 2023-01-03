@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.exa.companyclient">
+    package="com.exa.companyclient"
+    >
     <!--    android:sharedUserId="android.uid.system"-->
 
     <application
@@ -14,6 +15,7 @@
         android:resizeableActivity="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:persistent="true"
         android:theme="@style/Theme.CompanyDemo">
         <activity
             android:name=".MainActivity"
@@ -33,6 +35,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/pathlist" />
         </provider>
+
         <receiver
             android:name=".provider.MediaScannerReceiver"
             android:exported="true">
@@ -42,6 +45,15 @@
                 <action android:name="com.media.mine.finish" />
             </intent-filter>
         </receiver>
+
+        <receiver
+            android:name=".MyReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.exa.companyclient.ACTION_OPEN_CLIENT" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".MyClientService"
             android:exported="true" />

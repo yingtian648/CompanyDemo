@@ -27,6 +27,7 @@ import android.view.View;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
+import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.PermissionUtil;
@@ -55,7 +56,6 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     @Override
     protected void initView() {
-
         Utils.isAppInstalled(this, "sdasdhash.csdas.sa");
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.btn.setOnClickListener(new OnClickViewListener() {
@@ -102,15 +102,9 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         locationManager.addNmeaListener(new OnNmeaMessageListener() {
             @Override
             public void onNmeaMessage(String message, long timestamp) {
-                L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
+//                L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
             }
-        }, new Handler(Looper.myLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                L.d("addNmeaListener:handleMessage:" + msg);
-            }
-        });
+        }, new Handler(Looper.myLooper()));
 
         locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
             @Override
@@ -146,16 +140,16 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
                 index = index > (status.getSatelliteCount() - 1) ? 0 : index;
-                setText("GnssStatusCallback:onSatelliteStatusChanged:count = " +
-                        status.getSatelliteCount()
-                        + "index:" + index
-                        + "********* Svid=" + status.getSvid(index)
-                        + ", Cn0=" + status.getCn0DbHz(index)
-                        + ", ElevationDegrees=" + status.getElevationDegrees(index)
-                        + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
-                        + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
-                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
-                );
+//                setText("GnssStatusCallback:onSatelliteStatusChanged:count = " +
+//                        status.getSatelliteCount()
+//                        + "index:" + index
+//                        + "********* Svid=" + status.getSvid(index)
+//                        + ", Cn0=" + status.getCn0DbHz(index)
+//                        + ", ElevationDegrees=" + status.getElevationDegrees(index)
+//                        + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
+//                        + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
+//                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
+//                );
                 index++;
                 L.d("GnssStatusCallback:onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
             }
@@ -168,8 +162,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             for (int i = 0; i < eProviders.size(); i++) {
                 L.d(eProviders.get(i) + " requestLocationUpdates");
                 locationManager.requestLocationUpdates(eProviders.get(i),
-                        2000,//时间隔时间
-                        10F,//位置更新之间的最小距离
+                        1000,//时间隔时间
+                        0.1F,//位置更新之间的最小距离米
                         new LocationListener() {
                             @Override
                             public void onLocationChanged(@NonNull Location location) {
@@ -191,25 +185,26 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         }
         loadBaseLocationInfo();
         getBestProvider();
-
         BaseConstants.getHandler().postDelayed(this::recyclerGetNetworkLastLocation, 3000);
     }
 
     private void recyclerGetNetworkLastLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
         BaseConstants.getHandler().postDelayed(() -> {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            if (location != null) {
-                lastLocation = location;
-                Log.d("lsh--->", "recyclerGetNetworkLastLocation:" + lastLocation.getLatitude() + lastLocation.getLongitude());
-                locationUpdate(lastLocation, LocationManager.NETWORK_PROVIDER);
-            } else {
-                Log.d("lsh--->", "recyclerGetNetworkLastLocation: null");
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
             }
-            recyclerGetNetworkLastLocation();
-        }, 500);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location != null) {
+                setText("getLastKnownLocation gps:" + location.getTime() + "  " + location.getLatitude());
+                L.d("getLastKnownLocation gps:" + location.getTime() + "  " + location.getLatitude());
+            } else {
+                L.d("getLastKnownLocation gps: null");
+                setText("getLastKnownLocation gps: null");
+            }
+            if (activity != null) {
+                recyclerGetNetworkLastLocation();
+            }
+        }, 1000);
     }
 
     /**

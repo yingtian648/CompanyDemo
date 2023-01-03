@@ -12,9 +12,13 @@ import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
+import android.os.RemoteException;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 //import android.widget.CarToast;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,10 +50,12 @@ import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
  */
 public class MainActivity extends BaseActivity {
     private TextView topT, text, text1, text2, text3, text4, text5, text6;
+    private Button btn1, btn2, btn3, btn4;
     private EditText editText;
     private boolean isFullScreen;
     private Context mContext;
     private final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
+    private boolean isRegisterBroadCast;
 
     @Override
     protected void initData() {
@@ -58,11 +64,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+
+        int date = 10123;
+        double time = 123403.588;
+        L.d(date + " " + time + " 时间转换：" + GpsConvertUtil.getCurrentTimeZoneTimeMillis(date, time));
+
         mContext = this;
-        registerBroadcast(mReceiver);
+//        registerBroadcast(mReceiver);
 
         editText = findViewById(R.id.edt);
         topT = findViewById(R.id.topT);
+        btn4 = findViewById(R.id.btn4);
         checkPermission();
         topT.setOnClickListener(v -> {
 //            topT.setText(DateUtil.getNowTime() + " 点击了");
@@ -101,80 +113,8 @@ public class MainActivity extends BaseActivity {
                 return false;
             }
         });
-        double w = 102.5962240000;
-        double lon = 129.7029650020;
-        L.d("convert lat:" + GpsConvertUtil.convertCoordinates(lon));
-        L.d("convert1 lat:" + ddmmTodddd1(lon));
 
-        //20220315163333
-        int date = 1122022;
-        double time = 0.12345;
-        L.d("-------------------------");
-        long result = GpsConvertUtil.getCurrentTimeZoneTimeMillis(date, time);
-        SimpleDateFormat sdfOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
-        L.d(String.valueOf(result));
-        L.d(sdfOut.format(new Date(result)));
-        L.d("-------------------------");
-        setTime(date, time);
-        L.d("-------------------------");
-    }
-
-    private void setTime(int utcDate, double utcTime) {
-        long result = 0;
-        if (utcDate != 0) {
-            String date = String.valueOf(utcDate);
-            String time = String.valueOf(utcTime);
-            if (time.contains(".")) {
-                if (time.indexOf(".") < 6) {
-                    StringBuilder addO = new StringBuilder();
-                    for (int i = 0; i < (6 - time.indexOf(".")); i++) {
-                        addO.append("0");
-                    }
-                    time = addO + time;
-                }
-            } else if (time.length() < 6) {
-                StringBuilder addO = new StringBuilder();
-                for (int i = 0; i < (6 - time.length()); i++) {
-                    addO.append("0");
-                }
-                time = addO + time;
-            }
-            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyhhmmss.SSS", Locale.getDefault());
-            SimpleDateFormat sdfOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
-            try {
-                Date dateGmt = sdf.parse(date + time);
-                if (dateGmt != null) {
-                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                    calendar.setTime(dateGmt);
-                    calendar.setTimeZone(TimeZone.getDefault());
-                    sdfOut.format(calendar.getTime());
-                    result = calendar.getTimeInMillis();
-                    L.d(String.valueOf(result));
-                    L.d(sdfOut.format(calendar.getTime()));
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * @param res 2302.4545412/11325.45451212
-     * @return
-     */
-    private double ddmmTodddd1(double res) {
-        if (res == 0.0) {
-            return res;
-        }
-        String resStr = String.valueOf(res);
-        if (resStr.indexOf(".") < 2) {
-            return res;
-        }
-        String wmm = resStr.substring(resStr.indexOf(".") - 2);
-        String wdd = resStr.substring(0, resStr.indexOf(".") - 2);
-        double wmm_a = Double.parseDouble(wmm) / 60;
-        return Double.parseDouble(wdd) + wmm_a;
+        btn4.setText("CarToast测试");
     }
 
     /**
@@ -203,12 +143,19 @@ public class MainActivity extends BaseActivity {
 
     @SuppressLint("RestrictedApi")
     private void test() {
-        try {
-            TestUtil.sendBroadcast(this,"com.gxatek.cockpit.systemui.ALL_MENU_CLICK");
-        } catch (Exception e) {
-            e.printStackTrace();
-            L.e("sendBroadcast Exception:" + e.getMessage());
-        }
+        TestUtil.showToast(this);
+//        try {
+////            TestUtil.sendBroadcast(this, "com.gxatek.cockpit.systemui.ALL_MENU_CLICK", "com.gxatek.cockpit.shortcut");
+//            TestUtil.sendBroadcast(this, "com.gxatek.cockpit.systemui.ALL_MENU_CLICK", null);
+////            TestUtil.sendBroadcast(this, "com.gxa.guide.display", getPackageName());
+////            TestUtil.sendBroadcast(this,"com.exa.companyclient.ACTION_OPEN_CLIENT", "com.exa.companyclient");
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            L.e("sendBroadcast Exception:" + e.getMessage());
+//        }
+
+        registerBroadcast(mReceiver);
     }
 
     @Override
@@ -226,6 +173,14 @@ public class MainActivity extends BaseActivity {
 
 //        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/Weixin";
 //        LogTools.logAudioFileAttr(path);
+
+//        Intent intent = new Intent();
+//        intent.setPackage("com.exa.companyclient");
+//        intent.setAction("com.gxatek.cockpit.systemui.ALL_MENU_CLICK");
+//        L.d("&& FLAG_RECEIVER_REGISTERED_ONLY ：：" + ((intent.getFlags() & Intent.FLAG_RECEIVER_REGISTERED_ONLY) == 0));
+//        L.d("intent#getComponent#getPackageName ：：" + (intent.getComponent() == null ? "null" : intent.getComponent().getPackageName()));
+//        L.d("intent#getSelector ：：" + (intent.getSelector() == null ? "null" : intent.getSelector().getAction()));
+//        L.d("intent#getPackage ：：" + (intent.getPackage() == null ? "null" : intent.getPackage()));
     }
 
     private void checkPermission() {
@@ -258,6 +213,7 @@ public class MainActivity extends BaseActivity {
     private final String ACTION_timeSync = "com.gxa.car.timesync.clock.action.update.time";
     private final String ACTION_schedule = "update_schedule_widget";
     private final String ACTION_CloseScreen = "com.gxatek.cockpit.carsetting.CloseScreen";
+    private final String ACTION_Open_panel = "com.gxatek.cockpit.systemui.ALL_MENU_CLICK";
 
     private void registerBroadcast(BroadcastReceiver receiver) {
         L.d("registerBroadcast");
@@ -275,9 +231,10 @@ public class MainActivity extends BaseActivity {
         filter.addAction(ACTION_timeSync);
         filter.addAction(ACTION_schedule);
         filter.addAction(ACTION_CloseScreen);
-        filter.addAction("com.gxa.service.systemui.control");
+        filter.addAction(ACTION_Open_panel);
 //        filter.addDataScheme("file");//for MediaProvider
         registerReceiver(receiver, filter);
+        isRegisterBroadCast = true;
     }
 
     @Override
@@ -288,7 +245,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(mReceiver);
+        if (isRegisterBroadCast)
+            unregisterReceiver(mReceiver);
     }
 
     /**
