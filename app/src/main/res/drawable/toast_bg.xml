@@ -1,44 +1,37 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-/* Copyright 2017, The Android Open Source Project
-**
-** Licensed under the Apache License, Version 2.0 (the "License");
-** you may not use this file except in compliance with the License.
-** You may obtain a copy of the License at
-**
-**     http://www.apache.org/licenses/LICENSE-2.0
-**
-** Unless required by applicable law or agreed to in writing, software
-** distributed under the License is distributed on an "AS IS" BASIS,
-** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-** See the License for the specific language governing permissions and
-** limitations under the License.
-*/
+<?xml version="1.0" encoding="utf-8"?><!--
+  Copyright (C) 2022 SYNCORE AUTOTECH
+
+  All Rights Reserved by SYNCORE AUTOTECH Co., Ltd and its affiliates.
+  You may not use, copy, distribute, modify, transmit in any form this file
+  except in compliance with SYNCORE AUTOTECH in writing by applicable law.
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- shadow -->
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="10dp" />
+            <corners android:radius="@dimen/toast_bg_corners_radius" />
 
-            <gradient
-                android:centerColor="#1A0A1532"
-                android:centerX="0.5"
-                android:centerY="0.5"
-                android:endColor="#020A1532"
-                android:startColor="#020A1532"
-                android:type="radial" />
+            <!--            <gradient-->
+            <!--                android:angle="90"-->
+            <!--                android:centerColor="#010A1532"-->
+            <!--                android:centerX="0.5"-->
+            <!--                android:centerY="0.5"-->
+            <!--                android:endColor="#A10A1532"-->
+            <!--                android:startColor="#010A1532"-->
+            <!--                android:type="radial" />-->
             <padding
-                android:bottom="0dp"
-                android:left="0dp"
-                android:right="2dp"
-                android:top="2dp" />
+                android:bottom="16dp"
+                android:left="16dp"
+                android:right="16dp"
+                android:top="16dp" />
+
+            <solid android:color="#1A0A1532" />
         </shape>
     </item>
     <!-- Background -->
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="10dp" />
+            <corners android:radius="@dimen/toast_bg_corners_radius" />
             <solid android:color="#FFFFFF" />
         </shape>
     </item>

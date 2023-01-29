@@ -1,0 +1,44 @@
+fix[SystemU]:fix local SystemUI.
+    rootcause:refactor test chore
+    solution:rootcause
+Product:A02/T60Y
+Build:mpass
+Test:upass
+BugID:noid
+
+
+fix[Toast]:fix Toast and CarTost.
+    rootcause:refactor
+    solution:
+    1.modify dimens config.
+    2.modify ToastProxy and CarToast code.
+Product:A02/T60Y
+Build:mpass
+Test:upass
+BugID:TAPD-ID1074202
+
+feat[broadcast]:add protect-broadcast.
+    rootcause:avoid garbage broadcasting.
+    solution:add protect-broadcast.
+Product:A02
+Build:mpass
+Test:upass
+BugID:noid
+
+fix[Toast]:Fix toast display width problem.
+    rootcause:Toast view width is invalid.
+    solution:Adjust view display width.
+Product:A02/T60Y
+Build:mpass
+Test:upass
+BugID:TAPD-ID1074202
+
+
+fix[CarSystemUI]:Fix the USB permission window cannot be show
+    rootcause:refactor
+    solution:
+    1.include product CarSystemUI.
+    2.Mask native SystemUI.
+Build:pass
+Test:pass
+BugId:ID1070697

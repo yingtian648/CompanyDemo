@@ -17,6 +17,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.hardware.display.DisplayManager;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
@@ -128,17 +129,19 @@ public class Tools {
     }
 
     public static int getScreenW(Context context) {
+        Point point = new Point();
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
-        int screenW = wm.getDefaultDisplay().getWidth();
-        return screenW;
+        wm.getDefaultDisplay().getRealSize(point);
+        return point.x;
     }
 
     public static int getScreenH(Context context) {
+        Point point = new Point();
         WindowManager wm = (WindowManager) context
                 .getSystemService(Context.WINDOW_SERVICE);
-        int screenH = wm.getDefaultDisplay().getHeight();
-        return screenH;
+        wm.getDefaultDisplay().getRealSize(point);
+        return point.y;
     }
 
     /**
@@ -337,9 +340,9 @@ public class Tools {
     }
 
     // 启动App
-    public static void startAppByClassName(Context context,String className) {
+    public static void startAppByClassName(Context context, String className) {
         Intent intent = new Intent();
-        intent.setClassName(context,className);
+        intent.setClassName(context, className);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2022 SYNCORE AUTOTECH
+
+  All Rights Reserved by SYNCORE AUTOTECH Co., Ltd and its affiliates.
+  You may not use, copy, distribute, modify, transmit in any form this file
+  except in compliance with SYNCORE AUTOTECH in writing by applicable law.
+-->
+<resources>
+
+    <!-- Toast dimen config -->
+    <dimen name="toast_max_width">1040dp</dimen>
+    <dimen name="toast_text_size">36sp</dimen>
+    <dimen name="toast_line_height">56dp</dimen>
+    <dimen name="toast_line_min_height">80dp</dimen>
+    <dimen name="toast_text_marginHorizontal">88dp</dimen>
+    <dimen name="toast_text_marginVertical">12dp</dimen>
+    <dimen name="toast_bg_corners_radius">20dp</dimen>
+
+</resources>

@@ -56,7 +56,6 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     @Override
     protected void initView() {
-        Utils.isAppInstalled(this, "sdasdhash.csdas.sa");
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override
@@ -140,16 +139,16 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
                 index = index > (status.getSatelliteCount() - 1) ? 0 : index;
-//                setText("GnssStatusCallback:onSatelliteStatusChanged:count = " +
-//                        status.getSatelliteCount()
-//                        + "index:" + index
-//                        + "********* Svid=" + status.getSvid(index)
-//                        + ", Cn0=" + status.getCn0DbHz(index)
-//                        + ", ElevationDegrees=" + status.getElevationDegrees(index)
-//                        + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
-//                        + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
-//                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
-//                );
+                setText("GnssStatusCallback:onSatelliteStatusChanged:count = " +
+                        status.getSatelliteCount()
+                        + "index:" + index
+                        + "********* Svid=" + status.getSvid(index)
+                        + ", Cn0=" + status.getCn0DbHz(index)
+                        + ", ElevationDegrees=" + status.getElevationDegrees(index)
+                        + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
+                        + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
+                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
+                );
                 index++;
                 L.d("GnssStatusCallback:onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
             }
@@ -162,8 +161,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             for (int i = 0; i < eProviders.size(); i++) {
                 L.d(eProviders.get(i) + " requestLocationUpdates");
                 locationManager.requestLocationUpdates(eProviders.get(i),
-                        1000,//时间隔时间
-                        0.1F,//位置更新之间的最小距离米
+                        0,//时间隔时间
+                        0.0F,//位置更新之间的最小距离米
                         new LocationListener() {
                             @Override
                             public void onLocationChanged(@NonNull Location location) {

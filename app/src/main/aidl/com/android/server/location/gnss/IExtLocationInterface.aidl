@@ -24,7 +24,7 @@ import com.android.server.location.gnss.IExtLocationCallback;
  */
 interface IExtLocationInterface {
     //setCallback
-    void setCallback(in IExtLocationCallback callback);
+    oneway void setCallback(in IExtLocationCallback callback);
 
     //Get GNSS hardware information and return hardware information
     String getGnssHwInfo();

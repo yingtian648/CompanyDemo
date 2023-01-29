@@ -1,30 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   Copyright (C) 2022 SYNCORE AUTOTECH
 
   All Rights Reserved by SYNCORE AUTOTECH Co., Ltd and its affiliates.
   You may not use, copy, distribute, modify, transmit in any form this file
   except in compliance with SYNCORE AUTOTECH in writing by applicable law.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/toast_customer_normal"
-    android:maxWidth="@dimen/toast_max_width"
-    android:orientation="vertical">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@android:id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/toast_text_marginHorizontal"
-        android:maxLines="2"
-        android:lineHeight="@dimen/toast_line_height"
+        android:layout_gravity="center"
         android:ellipsize="end"
         android:gravity="center"
-        android:layout_marginVertical="@dimen/toast_text_marginVertical"
-        android:textSize="@dimen/toast_text_size"
+        android:lineHeight="@dimen/toast_line_height"
+        android:maxWidth="@dimen/toast_max_width"
+        android:maxLines="2"
+        android:minHeight="@dimen/toast_line_min_height"
+        android:paddingHorizontal="@dimen/toast_text_marginHorizontal"
+        android:paddingVertical="@dimen/toast_text_marginVertical"
         android:textColor="@color/primary_text_default_material_light"
-        />
+        android:textSize="@dimen/toast_text_size" />
 
-</LinearLayout>
+</FrameLayout>

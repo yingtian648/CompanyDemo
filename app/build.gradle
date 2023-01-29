@@ -20,15 +20,17 @@ android {
             storePassword 'Aa123456'
             keyPassword 'Aa123456'
             keyAlias 'platform'
-//            storeFile file('../signatures/a02_desay_platform.keystore')
-            storeFile file('../signatures/a02_boshi_platform.keystore')
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
         }
         release {
             storePassword 'Aa123456'
             keyPassword 'Aa123456'
             keyAlias 'platform'
-//            storeFile file('../signatures/a02_desay_platform.keystore')
-            storeFile file('../signatures/a02_boshi_platform.keystore')
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
         }
     }
 
@@ -92,5 +94,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-//    compileOnly files('libs/javalib.jar')
+    compileOnly files('libs/javalib.jar')
+    implementation 'com.github.mjdev:libaums:0.3'
 }

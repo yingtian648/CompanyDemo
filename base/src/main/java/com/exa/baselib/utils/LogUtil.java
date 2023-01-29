@@ -13,7 +13,7 @@ import android.util.Log;
 
 public final class LogUtil {
 
-    private static final String TAG = "CarLocationService";
+    private static final String TAG = L.TAG;
     private static boolean sGnssDebuggable = true;
 
     private LogUtil() {

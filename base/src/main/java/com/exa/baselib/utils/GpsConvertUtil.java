@@ -10,6 +10,8 @@
 package com.exa.baselib.utils;
 
 import java.util.Calendar;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class GpsConvertUtil {
     /**
@@ -22,18 +24,22 @@ public class GpsConvertUtil {
         if (res != 0) {
             int wdd = (int) (res / 100);
             double wmm = res % 100 / 60;
-            return wdd + wmm;
+            return getDoubleAcc7(wdd + wmm);
         } else {
             return res;
         }
+    }
+
+    public static double getDoubleAcc7(double value) {
+        return BigDecimal.valueOf(value).setScale(7, RoundingMode.HALF_UP).doubleValue();
     }
 
     /**
      * GMT date convert to current TimeZone date
      * <p>
      * GMT time
-     * int date = 150322;
-     * double time = 113203.588;
+     * int date = 150322; 20220315
+     * double time = 3333.11;
      *
      * @param utcDate GMT ddMMyyyy
      * @param utcTime GMT hhmmss.SSS
@@ -55,7 +61,6 @@ public class GpsConvertUtil {
                 int mm = Integer.parseInt(time.substring(time.length() - 4, time.length() - 2));
                 int ss = Integer.parseInt(time.substring(time.length() - 2));
                 calendar.set(year, mon - 1, day, hh, mm, ss);
-                // LogUtil.debug("时间转换：" + year + "/" + mon + "/" + day + " " + hh + ":" + mm + ":" + ss);
                 result = calendar.getTimeInMillis();
             } catch (Exception e) {
                 e.printStackTrace();
