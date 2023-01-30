@@ -24,14 +24,20 @@ public class GpsConvertUtil {
         if (res != 0) {
             int wdd = (int) (res / 100);
             double wmm = res % 100 / 60;
-            return getDoubleAcc7(wdd + wmm);
+            return getDoubleAcc(wdd + wmm,7);
         } else {
             return res;
         }
     }
 
-    public static double getDoubleAcc7(double value) {
-        return BigDecimal.valueOf(value).setScale(7, RoundingMode.HALF_UP).doubleValue();
+    /**
+     * Get the corresponding precision value
+     * @param value
+     * @param newScale target digits
+     * @return
+     */
+    public static double getDoubleAcc(double value,int newScale) {
+        return BigDecimal.valueOf(value).setScale(newScale, RoundingMode.HALF_UP).doubleValue();
     }
 
     /**

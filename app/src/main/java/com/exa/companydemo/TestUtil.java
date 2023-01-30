@@ -15,6 +15,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,6 +32,10 @@ import com.github.mjdev.libaums.fs.UsbFile;
 import com.github.mjdev.libaums.partition.Partition;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -282,5 +287,79 @@ public class TestUtil {
             }
         }
 
+    }
+
+    public static boolean isRegisterBroadCast = false;
+    public static final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.d("onReceive:" + intent.getAction());
+        }
+    };
+
+    public static final String ACTION_guide_dismiss = "com.gxa.guide.dismiss";
+    public static final String ACTION_launcher = "com.gxatek.cockpit.launcher.LAUNCHER_SCENE_CHANGED";
+    public static final String ACTION_guide_display = "com.gxa.guide.display";
+    public static final String ACTION_timeSync = "com.gxa.car.timesync.clock.action.update.time";
+    public static final String ACTION_schedule = "update_schedule_widget";
+    public static final String ACTION_CloseScreen = "com.gxatek.cockpit.carsetting.CloseScreen";
+    public static final String ACTION_Open_panel = "com.gxatek.cockpit.systemui.ALL_MENU_CLICK";
+
+    public static void registerBroadcast(Context context) {
+        L.d("registerBroadcast");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.hardware.usb.action.USB_DEVICE_ATTACHED");
+        filter.addAction("android.hardware.usb.action.USB_DEVICE_DETACHED");
+        filter.addAction("com.exa.companyclient.ACTION_OPEN_CLIENT");
+        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        filter.addAction(Intent.ACTION_PACKAGE_DATA_CLEARED);
+        filter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
+        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+        filter.addAction(ACTION_guide_dismiss);
+        filter.addAction(ACTION_launcher);
+        filter.addAction(ACTION_guide_display);
+        filter.addAction(ACTION_timeSync);
+        filter.addAction(ACTION_schedule);
+        filter.addAction(ACTION_CloseScreen);
+        filter.addAction(ACTION_Open_panel);
+//        filter.addDataScheme("file");//for MediaProvider
+        context.registerReceiver(mReceiver, filter);
+        isRegisterBroadCast = true;
+    }
+
+
+    /**
+     * android 11 use permission MANAGE_EXTERNAL_STORAGE
+     */
+    public static void testCreateFileInRootDir() {
+        FileOutputStream fos = null;
+        try {
+            final File dir = Environment.getExternalStorageDirectory();
+            final File newFile = new File(dir, "test_new_file");
+            newFile.mkdir();
+            final File newFile1 = new File(newFile.getAbsolutePath(), "newFile");
+            L.d("开始创建文件：" + newFile.getAbsolutePath());
+            if (!newFile1.exists()) {
+                newFile1.createNewFile();
+            }
+            fos = new FileOutputStream(newFile1, true);
+            L.d("向文件末尾写入内容：" + newFile.getAbsolutePath());
+            fos.write(("time:" + System.currentTimeMillis() + "\n").getBytes(StandardCharsets.UTF_8));
+            L.d("内容写入成功");
+            fos.close();
+            try {
+                FileInputStream fis = new FileInputStream(newFile1);
+                byte[] bytes = new byte[1024];
+                while (fis.read(bytes) != -1) {
+                    L.d("读取成功:" + new String(bytes));
+                }
+                fis.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (Throwable e) {
+            L.e(e.getMessage());
+        }
     }
 }

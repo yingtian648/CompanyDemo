@@ -57,6 +57,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -142,6 +144,17 @@ public class Tools {
                 .getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getRealSize(point);
         return point.y;
+    }
+
+    /**
+     * 获取double对应精度得值
+     *
+     * @param value
+     * @param newScale
+     * @return
+     */
+    public static double getDoubleAcc(double value, int newScale) {
+        return BigDecimal.valueOf(value).setScale(newScale, RoundingMode.HALF_UP).doubleValue();
     }
 
     /**

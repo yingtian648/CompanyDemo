@@ -7,29 +7,32 @@
 -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- shadow -->
-    <item>
-        <shape android:shape="rectangle">
+    <item android:left="24dp"
+        android:right="24dp"
+        android:top="16dp"
+        android:bottom="10dp">
+        <shape>
             <corners android:radius="@dimen/toast_bg_corners_radius" />
-
-            <!--            <gradient-->
-            <!--                android:angle="90"-->
-            <!--                android:centerColor="#010A1532"-->
-            <!--                android:centerX="0.5"-->
-            <!--                android:centerY="0.5"-->
-            <!--                android:endColor="#A10A1532"-->
-            <!--                android:startColor="#010A1532"-->
-            <!--                android:type="radial" />-->
-            <padding
-                android:bottom="16dp"
-                android:left="16dp"
-                android:right="16dp"
-                android:top="16dp" />
-
-            <solid android:color="#1A0A1532" />
+            <gradient
+                android:angle="270"
+                android:startColor="#6F0A1532"
+                android:endColor="#050A1532"
+                android:type="linear" />
         </shape>
     </item>
-    <!-- Background -->
-    <item>
+    <item android:left="22dp"
+        android:right="22dp"
+        android:top="15dp"
+        android:bottom="16dp">
+        <shape>
+            <corners android:radius="@dimen/toast_bg_corners_radius" />
+            <solid android:color="#0A0A1532" />
+        </shape>
+    </item>
+    <item android:left="24dp"
+        android:right="24dp"
+        android:top="16dp"
+        android:bottom="16dp">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/toast_bg_corners_radius" />
             <solid android:color="#FFFFFF" />
