@@ -16,7 +16,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         app = this;
-        L.init("client--->", true);
+        L.init("CompanyClient", true);
         BaseConstants.init();
         CrashHandle.getInstance().init(this);
     }

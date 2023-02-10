@@ -39,3 +39,4 @@ rootProject.name = "CompanyDemo"
 include ':app'
 include ':companyclient'
 include ':base'
+include ':mtestapp'

@@ -20,7 +20,7 @@ public class App extends Application {
         Constants.init();
         BaseConstants.init();
 
-        L.init("main--->", true);
+        L.init("CompanyDemo", true);
         app = this;
         String screen = "屏幕宽高px：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
         String screenDp = "屏幕宽高dp：" + (int)(Tools.getScreenW(this)/Tools.getScreenDensity(this))

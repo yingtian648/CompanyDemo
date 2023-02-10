@@ -1,12 +1,16 @@
 package com.exa.companydemo;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 //import android.widget.CarToast;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,17 +19,23 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.UserHandle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CarToast;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.OnClickViewListener;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
@@ -45,6 +55,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -103,6 +116,85 @@ public class TestUtil {
 //        }, 3000);
     }
 
+    public static void testDialog(Activity activity) {
+        final MyDialog dialog = new MyDialog(activity);
+        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_layout, null, false);
+        Button sureBtn = view.findViewById(R.id.sure_button);
+        Button cancelBtn = view.findViewById(R.id.cancel_button);
+        TextView titleT = view.findViewById(R.id.titleT);
+        titleT.setText("00000000000000000000");
+        dialog.setContentView(view);
+        sureBtn.setOnClickListener(v -> {
+            TestUtil.showToast(activity);
+        });
+        cancelBtn.setOnClickListener(new OnClickViewListener() {
+            @Override
+            public void onClickView(View v) {
+                dialog.cancel();
+            }
+        });
+        dialog.show();
+    }
+
+    private static class MyDialog extends Dialog {
+        public MyDialog(@NonNull Context context) {
+            super(context);
+            // setWindowAttrs();
+        }
+
+        public MyDialog(@NonNull Context context, int themeResId) {
+            super(context, themeResId);
+            // setWindowAttrs();
+        }
+
+        protected MyDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
+            super(context, cancelable, cancelListener);
+            // setWindowAttrs();
+        }
+
+        @Override
+        public void setContentView(@NonNull View view) {
+            super.setContentView(view);
+            // setWindowAttrs();
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            setWindowAttrs();
+            super.onCreate(savedInstanceState);
+        }
+
+        /* access modifiers changed from: protected */
+        @SuppressLint("WrongConstant")
+        private Window setWindowAttrs() {
+            Window window = getWindow();
+            if (window == null) {
+                return null;
+            }
+            WindowManager.LayoutParams attributes = window.getAttributes();
+            if (attributes == null) {
+                return window;
+            }
+            attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.height = WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.gravity = Gravity.CENTER;
+            attributes.format = PixelFormat.TRANSLUCENT;
+            attributes.dimAmount = 0f;
+            attributes.flags = attributes.flags | WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+            attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
+            attributes.setTitle("MainActivity_Dialog");
+            attributes.type = 2518;//对应windowType=SCENE_LOW_POWER
+            window.setAttributes(attributes);
+            return window;
+        }
+    }
+
+
     /**
      * 测试 发送广播
      *
@@ -110,7 +202,7 @@ public class TestUtil {
      * @param action
      * @param packageName 接收包名
      */
-    public static void sendBroadcast(Activity activity, String action, String packageName){
+    public static void sendBroadcast(Activity activity, String action, String packageName) {
         L.d("sendBroadcast:" + action);
         try {
             Intent intent = new Intent();
@@ -125,7 +217,7 @@ public class TestUtil {
         } catch (Exception e) {
             e.printStackTrace();
             L.e("sendBroadcast (" + action + ") Exception:" + e.getMessage());
-            Toast.makeText(activity,"sendBroadcast (" + action + ") Exception:" + e.getMessage(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, "sendBroadcast (" + action + ") Exception:" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -361,5 +453,49 @@ public class TestUtil {
         } catch (Throwable e) {
             L.e(e.getMessage());
         }
+    }
+
+    /**
+     * 调试字体
+     */
+    public static void testFonts(Activity activity) {
+        final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
+        TextView text0 = activity.findViewById(R.id.text);
+        TextView text1 = activity.findViewById(R.id.text1);
+        TextView text2 = activity.findViewById(R.id.text2);
+        TextView text3 = activity.findViewById(R.id.text3);
+        TextView text4 = activity.findViewById(R.id.text4);
+        TextView text5 = activity.findViewById(R.id.text5);
+        TextView text6 = activity.findViewById(R.id.text6);
+
+        text0.setText(fontTestWords + "   Default");
+        text1.setText(fontTestWords + "   SourceHanSansCN");
+        text2.setText(fontTestWords + "   sans-serif");
+        text3.setText(fontTestWords + "   serif");
+        text4.setText(fontTestWords + "   monospace");
+        text5.setText(fontTestWords + "   GacFont");
+        text6.setText(fontTestWords + "   多行end省略");
+
+        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
+        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.BOLD);
+        Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
+        Typeface serif = Typeface.create("serif", Typeface.BOLD);
+        Typeface monospace = Typeface.create("monospace", Typeface.BOLD);
+        Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
+
+        text0.setTypeface(aDefault);
+        text1.setTypeface(SourceHanSansCN);
+        text2.setTypeface(sans_serif);
+        text3.setTypeface(serif);
+        text4.setTypeface(monospace);
+        text5.setTypeface(GacFont);
+
+//        L.d("SourceHanSansCN is Default ? " + (SourceHanSansCN.equals(aDefault)));
+//        L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
+//        L.d("serif is Default ? " + (serif.equals(aDefault)));
+//        L.d("monospace is Default ? " + (monospace.equals(aDefault)));
+//        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+//
+//        LogTools.logSystemFonts();
     }
 }

@@ -9,12 +9,12 @@
 <resources>
 
     <!-- Toast dimen config -->
-    <dimen name="toast_max_width">780dp</dimen>
-    <dimen name="toast_line_min_height">60dp</dimen>
+    <dimen name="toast_max_width">816dp</dimen>
+    <dimen name="toast_line_min_height">84dp</dimen>
     <dimen name="toast_text_size">27sp</dimen>
     <dimen name="toast_line_height">42dp</dimen>
-    <dimen name="toast_text_marginHorizontal">66dp</dimen>
-    <dimen name="toast_text_marginVertical">9dp</dimen>
+    <dimen name="toast_text_marginHorizontal">84dp</dimen>
+    <dimen name="toast_text_marginVertical">21dp</dimen>
     <dimen name="toast_bg_corners_radius">15dp</dimen>
 
 </resources>

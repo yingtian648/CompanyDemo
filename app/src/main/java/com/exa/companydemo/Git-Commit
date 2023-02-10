@@ -7,19 +7,35 @@ Test:upass
 BugID:noid
 
 
-fix[Toast]:fix Toast and CarTost.
-    rootcause:refactor
-    solution:
-    1.modify dimens config.
-    2.modify ToastProxy and CarToast code.
-Product:A02/T60Y
+feat[CarLocationService]:add utcTime log
+rootcause:no utcTime log
+solution:add utcTime log
+Product:A02
 Build:mpass
 Test:upass
-BugID:TAPD-ID1074202
+BugID:noid
 
-feat[broadcast]:add protect-broadcast.
-    rootcause:avoid garbage broadcasting.
-    solution:add protect-broadcast.
+
+feat:[caradapter] update SOA jar to version 1.2.6
+     reason: update SOA jar to version 1.2.6
+     solution：fix some param change and function change
+     Product:A02
+     Build:mpass
+     Test:no test
+     BugID:noid
+     rootcause:update SOA jar to version 1.2.6
+
+fix[usb]:fix usb operate dialog err.
+rootcause:CarSystemUI show usb operate dialog or activity.
+solution:shield Usb operation dialog and activity.
+Product:T60Y
+Build:mpass
+Test:upass
+BugID:ID1082680
+
+fix[location]:fix GnssLocationExtHelper oneway err.
+rootcause:not allowed Use blocking interface in system_server.
+solution:allow blocking in GnssLocationExtHelper.
 Product:A02
 Build:mpass
 Test:upass
@@ -32,6 +48,15 @@ Product:A02/T60Y
 Build:mpass
 Test:upass
 BugID:TAPD-ID1074202
+
+
+fix[CarTransition]:fix scene layer err.
+rootcause:scene layer config err.
+solution: update scene layer config file.
+Product:A9E
+Build:mpass
+Test:upass
+BugID:jira33512
 
 
 fix[CarSystemUI]:Fix the USB permission window cannot be show

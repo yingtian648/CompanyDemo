@@ -12,6 +12,7 @@ package com.exa.baselib.utils;
 import java.util.Calendar;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.TimeZone;
 
 public class GpsConvertUtil {
     /**
@@ -59,7 +60,7 @@ public class GpsConvertUtil {
                 time = time.substring(0, time.indexOf("."));
             }
             try {
-                Calendar calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
                 int year = 2000 + Integer.parseInt(date.substring(date.length() - 2));
                 int mon = Integer.parseInt(date.substring(date.length() - 4, date.length() - 2));
                 int day = Integer.parseInt(date.substring(0, date.length() - 4));

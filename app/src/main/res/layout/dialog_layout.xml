@@ -1,50 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="500dp"
     android:layout_height="wrap_content"
-    >
+    android:focusableInTouchMode="false"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/titleT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="30dp"
-        android:layout_centerHorizontal="true"
-        android:background="@color/white"
-        android:orientation="vertical"
-        >
+        android:textSize="30dp"
+        android:layout_gravity="center_horizontal"
+        android:text="MyDialogTitle" />
 
+    <TextView
+        android:id="@+id/edt"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:paddingHorizontal="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:hint="input..." />
 
-        <TextView
-            android:id="@+id/titleT"
-            android:layout_gravity="center_horizontal"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="false"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MyDialogTitle"/>
+            android:layout_weight="1"
+            android:layout_height="80dp"
+            android:text="取消" />
 
-        <EditText
-            android:id="@+id/edt"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="input..."/>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/sure_button"
             android:layout_width="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/cancel_button"
-                android:layout_width="170dp"
-                android:layout_height="80dp"
-                android:text="取消" />
-
-            <Button
-                android:id="@+id/sure_button"
-                android:layout_width="170dp"
-                android:layout_height="80dp"
-                android:text="确认" />
-        </LinearLayout>
+            android:layout_weight="1"
+            android:layout_height="80dp"
+            android:text="确认" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

@@ -22,7 +22,8 @@ android {
             keyAlias 'platform'
 //            storeFile file('../signatures/a02_desay_platform.keystore')
 //            storeFile file('../signatures/a02_boshi_platform.keystore')
-            storeFile file('../signatures/t60y_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
+            storeFile file('../signatures/a9e_6125_platform.keystore')
         }
         release {
             storePassword 'Aa123456'

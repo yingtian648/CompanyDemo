@@ -27,6 +27,7 @@ import android.view.View;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
+import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
@@ -56,6 +57,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     @Override
     protected void initView() {
+        L.TAG = "CarLocationService-client";
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override
@@ -139,10 +141,9 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
                 index = index > (status.getSatelliteCount() - 1) ? 0 : index;
-                setText("GnssStatusCallback:onSatelliteStatusChanged:count = " +
-                        status.getSatelliteCount()
-                        + "index:" + index
-                        + "********* Svid=" + status.getSvid(index)
+                setText("onSatelliteStatusChanged:count=" + status.getSatelliteCount()
+                        + " index:" + index
+                        + "\t Svid=" + status.getSvid(index)
                         + ", Cn0=" + status.getCn0DbHz(index)
                         + ", ElevationDegrees=" + status.getElevationDegrees(index)
                         + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
@@ -150,7 +151,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                         + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
                 );
                 index++;
-                L.d("GnssStatusCallback:onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
+                L.d("onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
             }
         }, new Handler(Looper.myLooper()));
 
@@ -161,13 +162,13 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             for (int i = 0; i < eProviders.size(); i++) {
                 L.d(eProviders.get(i) + " requestLocationUpdates");
                 locationManager.requestLocationUpdates(eProviders.get(i),
-                        0,//时间隔时间
+                        800,//时间隔时间
                         0.0F,//位置更新之间的最小距离米
                         new LocationListener() {
                             @Override
                             public void onLocationChanged(@NonNull Location location) {
-                                L.d(location.getProvider() + "  onLocationChanged:" + location.getLatitude() + "," + location.getLongitude() + "  " + location);
-                                locationUpdate(location, location.getProvider());
+                                L.d(location.getProvider() + "  onLocationChanged:" + location);
+//                                locationUpdate(location, location.getProvider());
                             }
 
                             @Override
@@ -184,7 +185,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         }
         loadBaseLocationInfo();
         getBestProvider();
-        BaseConstants.getHandler().postDelayed(this::recyclerGetNetworkLastLocation, 3000);
+//        BaseConstants.getHandler().postDelayed(this::recyclerGetNetworkLastLocation, 3000);
     }
 
     private void recyclerGetNetworkLastLocation() {
@@ -197,8 +198,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 setText("getLastKnownLocation gps:" + location.getTime() + "  " + location.getLatitude());
                 L.d("getLastKnownLocation gps:" + location.getTime() + "  " + location.getLatitude());
             } else {
-                L.d("getLastKnownLocation gps: null");
-                setText("getLastKnownLocation gps: null");
+//                L.d("getLastKnownLocation gps: null");
+//                setText("getLastKnownLocation gps: null");
             }
             if (activity != null) {
                 recyclerGetNetworkLastLocation();
