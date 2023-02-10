@@ -70,20 +70,23 @@ public class L {
 
     public static void e(String TAG, String msg) {
         L.msg = msg;
-        if (isLog)
+        if (isLog){
             Log.e(L.TAG + TAG_DIVIDER + TAG, "" + msg);
+        }
     }
 
     public static void v(String TAG, String msg) {
         L.msg = msg;
-        if (isLog)
+        if (isLog){
             Log.v(L.TAG+ TAG_DIVIDER  + TAG, "" + msg);
+        }
     }
 
     public static void d(String TAG, String msg) {
         L.msg = msg;
-        if (isLog)
+        if (isLog){
             Log.d(L.TAG+ TAG_DIVIDER  + TAG, "" + msg);
+        }
     }
 
     public static void e(String msg, Throwable throwable) {
