@@ -70,7 +70,7 @@
                 android:textAllCaps="false"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="连接Location服务"
+                android:text="连接AIDL服务"
                 android:textSize="30px" />
 
             <Button

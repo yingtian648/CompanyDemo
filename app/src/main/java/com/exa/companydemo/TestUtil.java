@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-//import android.widget.CarToast;
 import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
@@ -18,10 +17,8 @@ import android.hardware.SensorManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.UserHandle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,7 +26,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CarToast;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,15 +42,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -73,7 +64,11 @@ public class TestUtil {
         String msg = "一二三四五六七八一二三四五六七八一二三四五六七八";
 //        msg = "一二三四五六七";
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-//        CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
+//        CarToast.makeText(context, msg, CarToast.LENGTH_SHORT).show();
+
+//        CarToast carToast = CarToast.makeText(context,msg,CarToast.LENGTH_SHORT);
+//        carToast.setType(CarToast.TYPE_WARNING);
+//        carToast.show();
 
 //        Toast toast = new Toast(context);
 //        View view = LayoutInflater.from(context).inflate(R.layout.layout, null, false);

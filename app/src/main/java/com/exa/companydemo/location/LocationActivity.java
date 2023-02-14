@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> {
@@ -137,6 +138,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
             int index = 0;
 
+            @RequiresApi(api = Build.VERSION_CODES.R)
             @Override
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);

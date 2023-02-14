@@ -1,5 +1,6 @@
 package com.exa.companydemo;
 
+import android.annotation.SuppressLint;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Insets;
 import android.view.View;
@@ -27,6 +28,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     private boolean isFullScreen = false;
     private boolean isTouchSeekbar;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void initData() {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
@@ -70,8 +72,8 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
             }
 
         });
-        AssetFileDescriptor afd = getResources().openRawResourceFd(R.raw.test);
-        player.play(this, bind.frame, afd);
+//        AssetFileDescriptor afd = getResources().openRawResourceFd(R.raw.test);
+//        player.play(this, bind.frame, afd);
     }
 
     private boolean isShowController = true;

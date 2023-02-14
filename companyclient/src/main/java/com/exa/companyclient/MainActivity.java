@@ -1,22 +1,15 @@
 package com.exa.companyclient;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Binder;
 import android.os.Build;
 import android.os.Environment;
-import android.os.IBinder;
-import android.os.PowerManager;
-import android.os.RemoteException;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,6 +26,7 @@ import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.Utils;
 import com.exa.baselib.utils.VideoPlayer;
+import com.exa.companyclient.common.MAidlClient;
 import com.exa.companyclient.databinding.ActivityMainBinding;
 import com.exa.companyclient.provider.ExeHelper;
 import com.exa.companyclient.provider.SystemMediaProviderUtil;
@@ -53,14 +47,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.PermissionChecker;
-import gxa.car.extlocationservice.GnssHwInfo;
-import gxa.car.extlocationservice.IExtiLocationInterface;
 
 public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
 
@@ -70,16 +59,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     private List<Files> audioThumbs = new ArrayList<>();
     private int audioThumbsIndex = 0;
     private int textClickIndex = 0;
-
-    private final ActivityResultLauncher<String> mRequestPermissionRegister = registerForActivityResult(
-            new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri result) {
-                    // TODO
-                }
-            }
-    );
 
     @Override
     protected int setContentViewLayoutId() {
@@ -96,7 +75,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         bind.btn1.setOnClickListener(view -> {
 //            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
 //            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
-            startService(new Intent(this, MyClientService.class));
+            MAidlClient client = new MAidlClient(this);
+            client.bindService();
 //            playVideoFile();
         });
         bind.btn2.setOnClickListener(view -> {
@@ -478,27 +458,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     bind.iamge.setImageBitmap(null);
                     break;
             }
-        }
-    };
-
-    private IExtiLocationInterface binder;
-
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            L.d("onServiceConnected");
-            binder = IExtiLocationInterface.Stub.asInterface(service);
-            try {
-                GnssHwInfo result = binder.getGnssHwInfo();
-                L.d("binder.getGnssHwInfo:" + result.getVersion());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            L.d("onServiceDisconnected");
         }
     };
 

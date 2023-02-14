@@ -20,12 +20,11 @@ public class AppInfo {
 
     @Override
     public String toString() {
-        return "AppInfo{" +
-                "name='" + name + '\'' +
-                ", packageName='" + packageName + '\'' +
-                ", versionName='" + versionName + '\'' +
-                ", apkSourceDir='" + apkSourceDir + '\'' +
-                ", versionCode=" + versionCode +
+        return "" + name +
+                "\t package='" + packageName + '\'' +
+                ", apkDir='" + apkSourceDir + '\'' +
+                ", vName='" + versionName + '\'' +
+                ", vCode=" + versionCode +
                 '}';
     }
 }

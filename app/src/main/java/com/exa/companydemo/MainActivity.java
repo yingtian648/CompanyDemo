@@ -1,77 +1,31 @@
 package com.exa.companydemo;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.ActivityNotFoundException;
+import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Typeface;
-import android.location.GnssAntennaInfo;
-import android.location.GnssMeasurementsEvent;
-import android.location.GnssNavigationMessage;
-import android.location.Location;
-import android.net.Uri;
-import android.os.Binder;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
-import android.os.RemoteException;
-import android.provider.Settings;
-import android.util.ArrayMap;
-import android.util.Slog;
-import android.util.SparseArray;
-import android.util.SparseIntArray;
-import android.util.Xml;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.server.location.gnss.IExtLocationCallback;
 import com.exa.baselib.base.BaseActivity;
-import com.exa.baselib.utils.DateUtil;
-import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.location.LocationActivity;
-import com.exa.companydemo.location.demo.LocationServiceImpl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatDelegate;
 
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 import static com.exa.companydemo.TestUtil.isRegisterBroadCast;
@@ -101,7 +55,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initView() {
         mContext = this;
-        Tools.setScreenBrightness(this,50);
+        Tools.setScreenBrightness(this, 50);
         checkPermission();
 
 //        TestUtil.registerBroadcast(this);
@@ -150,27 +104,35 @@ public class MainActivity extends BaseActivity {
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
-        L.dd("1212");
-//        TestUtil.showToast(this);
+        TestUtil.showToast(MainActivity.this);
 //        L.d("IBinder.FLAG_ONEWAY=" + IBinder.FLAG_ONEWAY);
 //        TestUtil.usbPermission(this);
 //        ScreenUtils.setFullScreen(this);
 
-//        TestUtil.sendBroadcast(this, "com.gxatek.cockpit.dvr.app", null);
+//        TestUtil.sendBroadcast(this, "com_exa_companydemo_action", null);
 //        TestUtil.sendBroadcast(this, "com.gxatek.cockpit.dvr.widge", null);
 //        TestUtil.sendBroadcast(this, "com.gxatek.cockpit.dvr.broadcast.PendingIntentReceiver", null);
 //        TestUtil.sendBroadcast(this, "com.gxatek.cockpit.weather.updateFirst", null);
 //        TestUtil.sendBroadcast(this, "com.gxatek.cockpit.weather.update", null);
 
-//        TestUtil.registerBroadcast(this);
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction("com_exa_companydemo_action");
+//        L.dd("registerReceiver");
+//        registerReceiver(new BroadcastReceiver() {
+//            @Override
+//            public void onReceive(Context context, Intent intent) {
+//                L.dd(intent.getAction());
+//            }
+//        }, filter);
 
+//        TestUtil.sendBroadcast(this, "com_exa_companydemo_action", null);
 //       testDialog();
     }
 
     @Override
     protected int getLayoutId() {
 //        ScreenUtils.setFullScreen(this);
-        StatubarUtil.setStatusBarInvasion(this, false);
+//        StatubarUtil.setStatusBarInvasion(this, false);
         return R.layout.activity_main;
     }
 

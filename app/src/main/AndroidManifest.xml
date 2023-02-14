@@ -2,9 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
+    android:sharedUserId="android.uid.system"
     >
     <!-- android:sharedUserId="android.uid.system" -->
     <!-- android:persistent="true" 开机自启动 -->
+    <uses-permission android:name="android.permission.SET_TIME"
+        tools:ignore="ProtectedPermissions" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -121,7 +124,7 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".service.ExtLocationService"
+            android:name=".service.MAidlService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

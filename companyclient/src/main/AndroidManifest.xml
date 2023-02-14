@@ -55,7 +55,7 @@
         </receiver>
 
         <service
-            android:name=".MyClientService"
+            android:name=".common.MAidlClient"
             android:exported="true" />
     </application>
 

@@ -803,7 +803,7 @@ public class Tools {
                 e.printStackTrace();
             }
             CharSequence name = info.activityInfo.loadLabel(context.getPackageManager());//app名称
-            Log.e("------>", name + "    " + packageName);
+            L.e(name + "    " + packageName);
             if (name != null && packageName != null)
                 infos.add(new AppInfo(name.toString(), packageName, versionCode, versionName, apkSourceDir));
         }
