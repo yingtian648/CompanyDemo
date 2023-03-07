@@ -20,8 +20,8 @@ android {
             storePassword 'Aa123456'
             keyPassword 'Aa123456'
             keyAlias 'platform'
-//            storeFile file('../signatures/a02_desay_platform.keystore')
-            storeFile file('../signatures/a02_boshi_platform.keystore')
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
         }
         release {
             storePassword 'Aa123456'
@@ -53,6 +53,12 @@ android {
         main {
             java.srcDirs = ['src/main/java', 'src/main/java-gen', 'src/main/aidl']
             jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = "shihuaclient.apk"
         }
     }
 }

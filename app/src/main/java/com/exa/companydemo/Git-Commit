@@ -7,9 +7,9 @@ Test:upass
 BugID:noid
 
 
-feat[CarLocationService]:add utcTime log
-rootcause:no utcTime log
-solution:add utcTime log
+feat[location]:add dump info
+rootcause:need more gps status info
+solution:add dump info
 Product:A02
 Build:mpass
 Test:upass
@@ -25,38 +25,58 @@ feat:[caradapter] update SOA jar to version 1.2.6
      BugID:noid
      rootcause:update SOA jar to version 1.2.6
 
-fix[usb]:fix usb operate dialog err.
-rootcause:CarSystemUI show usb operate dialog or activity.
-solution:shield Usb operation dialog and activity.
-Product:T60Y
-Build:mpass
-Test:upass
-BugID:ID1082680
-
-fix[location]:fix GnssLocationExtHelper oneway err.
-rootcause:not allowed Use blocking interface in system_server.
-solution:allow blocking in GnssLocationExtHelper.
+feat[CarLocationService]:Adjust log and timeout policies
+rootcause:Adjust log and timeout policies
+solution:
+1.Adjust log and timeout policies.
+2.Adjust the location conversion class.
 Product:A02
 Build:mpass
 Test:upass
 BugID:noid
 
-fix[Toast]:Fix toast display width problem.
-    rootcause:Toast view width is invalid.
-    solution:Adjust view display width.
+feat[CarLocationService]:add versionName and versionCode
+rootcause:add versionName and versionCode
+solution:add versionName and versionCode
+Product:A02
+Build:mpass
+Test:upass
+BugID:noid
+
+
+feat[CarPhoneWindowManager]:add customer scene layer policy.
+rootcause:add customer scene layer policy.
+solution:
+1.add package config in scene_layer_maps.xml.
+2.add method checkExtLayerPermission.
+Product:A02
+Build:mpass
+Test:upass
+BugID:noid
+
+fix[PhoneWindowManager]:Scene layer policy not suitable for T60Y.
+rootcause:Scene layer policy is not adapted to T60Y.
+solution:add A02 use scene layer policy overlay config.
 Product:A02/T60Y
 Build:mpass
 Test:upass
-BugID:TAPD-ID1074202
+BugID:ID1101947
 
+fix[Toast]:Fix toast display problem.
+rootcause:Toast shape is incorrect.
+solution:Adjust the toast background.
+Product:A02
+Build:mpass
+Test:upass
+BugID:TAPD-ID1075758
 
 fix[CarTransition]:fix scene layer err.
 rootcause:scene layer config err.
-solution: update scene layer config file.
-Product:A9E
+solution: update scene_layer_maps file.
+Product:A02
 Build:mpass
 Test:upass
-BugID:jira33512
+BugID:ID1100192
 
 
 fix[CarSystemUI]:Fix the USB permission window cannot be show

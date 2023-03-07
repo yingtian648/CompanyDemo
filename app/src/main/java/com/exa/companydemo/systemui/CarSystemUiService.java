@@ -2,11 +2,15 @@ package com.exa.companydemo.systemui;
 
 import android.annotation.SuppressLint;
 import android.app.Service;
+import android.app.StatusBarManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.ServiceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +34,7 @@ public class CarSystemUiService extends Service {
     private WindowManager.LayoutParams mNavigationBarParams;
     private WindowManager mWindowManager;
 
+    @SuppressLint("WrongConstant")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -50,7 +55,7 @@ public class CarSystemUiService extends Service {
         Log.d(TAG, "initStatusBar");
         mStatusBarParams = new WindowManager.LayoutParams();
         mStatusBarParams.format = PixelFormat.TRANSLUCENT;
-        //mStateBarParams.type = WindowManager.LayoutParams.TYPE_STATUS_BAR;
+//        mStateBarParams.type = WindowManager.LayoutParams.TYPE_STATUS_BAR;
 //        mStatusBarParams.type = WindowManager.LayoutParams.TYPE_STATUS_BAR_PANEL;
 
         mStatusBarParams.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
@@ -63,8 +68,8 @@ public class CarSystemUiService extends Service {
         mStatusBarParams.gravity = Gravity.TOP | Gravity.RIGHT;
         mStatusBarParams.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.system_ui_statusbar,null,false);
-        mWindowManager.addView(view,mStatusBarParams);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.system_ui_statusbar, null, false);
+        mWindowManager.addView(view, mStatusBarParams);
     }
 
     @SuppressLint("WrongConstant")
@@ -85,8 +90,8 @@ public class CarSystemUiService extends Service {
         mNavigationBarParams.height = NAVIGATION_BAR_HEIGHT;
         mNavigationBarParams.gravity = Gravity.BOTTOM;
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.system_ui_navigationbar,null,false);
-        mWindowManager.addView(view,mNavigationBarParams);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.system_ui_navigationbar, null, false);
+        mWindowManager.addView(view, mNavigationBarParams);
     }
 
     @Override

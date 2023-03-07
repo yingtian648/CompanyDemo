@@ -25,10 +25,10 @@ public class App extends Application {
         String screen = "屏幕宽高px：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
         String screenDp = "屏幕宽高dp：" + (int)(Tools.getScreenW(this)/Tools.getScreenDensity(this))
                 + "," + (int)(Tools.getScreenH(this)/Tools.getScreenDensity(this));
-        L.d(screen);
-        L.d("屏幕密度：" + Tools.getScreenDensity(this));
-        L.d(screenDp);
-        L.d("Android OS is " + Build.VERSION.RELEASE + " , SDK_INT= " + Build.VERSION.SDK_INT);
+        L.w(screen);
+        L.w("屏幕密度：" + Tools.getScreenDensity(this));
+        L.w(screenDp);
+        L.w("Android OS is " + Build.VERSION.RELEASE + " , SDK_INT= " + Build.VERSION.SDK_INT);
     }
 
     public static Context getContext() {

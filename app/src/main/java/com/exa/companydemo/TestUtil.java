@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
@@ -17,18 +18,27 @@ import android.hardware.SensorManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.ArrayMap;
+import android.util.Log;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CarToast;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
@@ -37,20 +47,27 @@ import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
 import com.github.mjdev.libaums.partition.Partition;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import static android.content.Context.SENSOR_SERVICE;
+import static com.exa.baselib.utils.L.TAG;
 
 public class TestUtil {
 
@@ -59,12 +76,18 @@ public class TestUtil {
      *
      * @param context
      */
-    public static void showToast(Context context) {
+    public static void showToast(Activity context) {
         L.d("showToast");
         String msg = "一二三四五六七八一二三四五六七八一二三四五六七八";
 //        msg = "一二三四五六七";
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-//        CarToast.makeText(context, msg, CarToast.LENGTH_SHORT).show();
+        BaseConstants.getHandler().postDelayed(() -> {
+            CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
+        }, 6000);
+        BaseConstants.getHandler().postDelayed(() -> {
+            String smsg = "好了";
+            Toast.makeText(context, smsg, Toast.LENGTH_LONG).show();
+        }, 12000);
 
 //        CarToast carToast = CarToast.makeText(context,msg,CarToast.LENGTH_SHORT);
 //        carToast.setType(CarToast.TYPE_WARNING);
@@ -129,6 +152,36 @@ public class TestUtil {
             }
         });
         dialog.show();
+    }
+
+    public static void parsePlatformConfigFile(String PLATFORM_CONFIG_PATH) throws IOException, JSONException {
+        Log.d(TAG, "parsePlatformConfigFile start");
+        int n;
+        FileInputStream in = null;
+        StringBuilder builder = new StringBuilder();
+        try {
+            in = new FileInputStream(PLATFORM_CONFIG_PATH);
+            byte[] buffer = new byte[4096];
+            while ((n = in.read(buffer, 0, 4096)) > -1) {
+                builder.append(new String(buffer, 0, n));
+            }
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+        Log.d(TAG, "parsePlatformConfigFile:" + builder.toString());
+        JSONObject jsonObject = new JSONObject(builder.toString());
+        if (jsonObject.has("package_info")) {
+            JSONObject pkgInfo = jsonObject.getJSONObject("package_info");
+            JSONObject internal = pkgInfo.getJSONObject("internal");
+            JSONObject external = pkgInfo.getJSONObject("internal");
+            String internalPkgName = internal.getString("name");
+            String internalAction = internal.getString("action");
+            String externalPkgName = external.getString("name");
+            String externalAction = external.getString("action");
+        }
+        Log.e(TAG, "parsePlatformConfigFile end");
     }
 
     private static class MyDialog extends Dialog {
@@ -492,5 +545,45 @@ public class TestUtil {
 //        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
 //
 //        LogTools.logSystemFonts();
+    }
+
+    /**
+     * Build.VERSION_CODES.O
+     * 全屏监听
+     *
+     * @param activity
+     */
+    public static void registerFullScreenListener(Activity activity) {
+        Uri uri = Settings.System.getUriFor("fullscreen");
+        activity.getContentResolver().registerContentObserver(uri, false, new ContentObserver(new Handler(Looper.myLooper())) {
+            @Override
+            public boolean deliverSelfNotifications() {
+                return super.deliverSelfNotifications();
+            }
+
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                L.e("registerFullScreenListener onChange1:" + selfChange);
+            }
+
+            @Override
+            public void onChange(boolean selfChange, @Nullable Uri uri) {
+                super.onChange(selfChange, uri);
+                L.e("registerFullScreenListener onChange2:" + selfChange);
+            }
+
+            @Override
+            public void onChange(boolean selfChange, @Nullable Uri uri, int flags) {
+                super.onChange(selfChange, uri, flags);
+                L.e("registerFullScreenListener onChange3:" + selfChange + ",flags:" + flags);
+            }
+
+            @Override
+            public void onChange(boolean selfChange, @NonNull Collection<Uri> uris, int flags) {
+                super.onChange(selfChange, uris, flags);
+                L.e("registerFullScreenListener onChange4:" + selfChange + ",flags:" + flags);
+            }
+        });
     }
 }

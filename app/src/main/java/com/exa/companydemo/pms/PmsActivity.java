@@ -17,11 +17,6 @@ public class PmsActivity extends BaseBindActivity<ActivityPmsBinding> {
     @Override
     protected void initView() {
         mPackageManager = getPackageManager();
-
-
-
-
-
     }
 
     @Override

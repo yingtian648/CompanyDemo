@@ -2,15 +2,21 @@ package com.exa.companydemo.utils;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
+import android.util.Slog;
 import android.util.SparseArray;
+import android.util.Xml;
 
 import com.exa.baselib.utils.L;
 import com.exa.companydemo.mediaprovider.FilesDao;
 import com.exa.companydemo.mediaprovider.entity.Files;
 import com.exa.companydemo.musicload.MediaInfo;
 
+import org.xmlpull.v1.XmlPullParser;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class Tools {
@@ -106,5 +112,75 @@ public class Tools {
         }
         L.d("getGbkStr:" + title + ",artist:" + artist);
         return title;
+    }
+
+    /**
+     * parseXmlFile
+     *
+     * @return
+     */
+    public static ArrayList<PhoneManagerServiceTemp.CustomerWindowType> parseXmlFile(String path) {
+        File configFile = new File(path);
+        if (!configFile.exists()) {
+            L.e("configFile: " + configFile.getAbsolutePath() + " isn't exist!");
+            return null;
+        }
+        ArrayList<PhoneManagerServiceTemp.CustomerWindowType> results = new ArrayList<>();
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(configFile);
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setInput(in, StandardCharsets.UTF_8.name());
+            int eventType = parser.getEventType();
+            ArrayList<String> sceneType = new ArrayList<>();
+            String packageName = null;
+            String windowTitle = null;
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        // start parse xml
+                        break;
+                    case XmlPullParser.START_TAG:
+                        String name = parser.getName();
+                        if ("item".equals(parser.getName())) {
+                            sceneType.clear();
+                            packageName = null;
+                            windowTitle = null;
+                        }
+                        if ("window_type".equals(name)) {
+                            String st = parser.nextText();
+                            if (st != null) {
+                                sceneType.add(parser.nextText());
+                            }
+                        }
+                        if ("package_name".equals(name)) {
+                            packageName = parser.nextText();
+                        }
+                        if ("title".equals(name)) {
+                            windowTitle = parser.nextText();
+                        }
+                        break;
+                    case XmlPullParser.END_TAG:
+                        if ("item".equals(parser.getName()) && packageName != null) {
+                            //添加结果
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                eventType = parser.next();
+            }
+        } catch (Exception exp) {
+            L.e("parseSceneInfos failed!", exp);
+            results = null;
+        } finally {
+//            IoUtils.closeQuietly(in);
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return results;
     }
 }

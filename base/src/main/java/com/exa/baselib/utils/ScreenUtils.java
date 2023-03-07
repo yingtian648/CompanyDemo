@@ -25,13 +25,13 @@ public class ScreenUtils {
             if (controller != null) {
                 // 手机自动隐藏状态栏导航栏
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
-                    @Override
-                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-//                        L.d("onControllableInsetsChanged：setFullScreen");
-                    }
-                });
                 controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+//                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+//                    @Override
+//                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+//                        L.d("onControllableInsetsChanged：setFullScreen");
+//                    }
+//                });
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -48,13 +48,13 @@ public class ScreenUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
             if (controller != null) {
-                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
-                    @Override
-                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-//                        L.d("onControllableInsetsChanged：showStatusBars");
-                    }
-                });
                 controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+//                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+//                    @Override
+//                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+//                        L.d("onControllableInsetsChanged：showStatusBars");
+//                    }
+//                });
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_VISIBLE;

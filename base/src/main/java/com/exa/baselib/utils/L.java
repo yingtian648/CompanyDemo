@@ -2,6 +2,12 @@ package com.exa.baselib.utils;
 
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
+
 /**
  * 日志规则：
  * 循环日志尽量使用VERBOSE级别
@@ -14,17 +20,17 @@ import android.util.Log;
 public class L {
     public static String TAG = "CompanyDemo";
     /**
-     *  使用下面adb命令使 DEBUG=true,设置后重启APP【设置级别等于/低于DEBUG的都生效】
-     *  adb shell setprop log.tag.CompanyDemo DEBUG
-     *  adb shell setprop log.tag.CompanyDemo D
-     *  adb shell setprop log.tag.CompanyDemo V
-     *  adb shell setprop log.tag.CompanyDemo VERBOSE
+     * 使用下面adb命令使 DEBUG=true,设置后重启APP【设置级别等于/低于DEBUG的都生效】
+     * adb shell setprop log.tag.CompanyDemo DEBUG
+     * adb shell setprop log.tag.CompanyDemo D
+     * adb shell setprop log.tag.CompanyDemo V
+     * adb shell setprop log.tag.CompanyDemo VERBOSE
      */
-    private static boolean DEBUG = Log.isLoggable(TAG,Log.DEBUG);
-    private static boolean VERBOSE = Log.isLoggable(TAG,Log.VERBOSE);
     private static boolean isLog = true;
+    private static boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG) | isLog;
+    private static boolean VERBOSE = Log.isLoggable(TAG, Log.VERBOSE) | isLog;
     public static String msg = null;
-    private static final String TAG_DIVIDER = "@";
+    private static final String TAG_DIVIDER = ">>";
     // 空格占位符 xml中使用 &#32; 占位半角空格宽度
     private static final String SPACE = "\u3000";
 
@@ -35,8 +41,8 @@ public class L {
 
     public static void d(String msg) {
         L.msg = msg;
-        if (isLog) {
-            Log.d(TAG, "" + msg);
+        if (DEBUG) {
+            Log.e(TAG, "" + msg);
         }
     }
 
@@ -47,9 +53,16 @@ public class L {
         }
     }
 
-    public static void v(String msg) {
+    public static void w(String msg) {
         L.msg = msg;
         if (isLog) {
+            Log.w(TAG, "" + msg);
+        }
+    }
+
+    public static void v(String msg) {
+        L.msg = msg;
+        if (VERBOSE) {
             Log.v(TAG, "" + msg);
         }
     }
@@ -68,30 +81,38 @@ public class L {
         }
     }
 
+    public static void w(String TAG, String msg) {
+        L.msg = msg;
+        if (isLog) {
+            Log.w(L.TAG + TAG_DIVIDER + TAG, "" + msg);
+        }
+    }
+
+
     public static void e(String TAG, String msg) {
         L.msg = msg;
-        if (isLog){
+        if (isLog) {
             Log.e(L.TAG + TAG_DIVIDER + TAG, "" + msg);
         }
     }
 
     public static void v(String TAG, String msg) {
         L.msg = msg;
-        if (isLog){
-            Log.v(L.TAG+ TAG_DIVIDER  + TAG, "" + msg);
+        if (VERBOSE) {
+            Log.v(L.TAG + TAG_DIVIDER + TAG, "" + msg);
         }
     }
 
     public static void d(String TAG, String msg) {
         L.msg = msg;
-        if (isLog){
-            Log.d(L.TAG+ TAG_DIVIDER  + TAG, "" + msg);
+        if (DEBUG) {
+            Log.e(L.TAG + TAG_DIVIDER + TAG, "" + msg);
         }
     }
 
     public static void e(String msg, Throwable throwable) {
         L.msg = msg;
-        if (isLog){
+        if (isLog) {
             Log.e(TAG, "" + msg + getThrowableLineNum(throwable));
         }
     }
@@ -99,7 +120,7 @@ public class L {
     public static void e(String TAG, String msg, Throwable throwable) {
         L.msg = msg;
         if (isLog) {
-            Log.d(L.TAG + TAG_DIVIDER + TAG, "" + msg + getThrowableLineNum(throwable));
+            Log.e(L.TAG + TAG_DIVIDER + TAG, "" + msg + getThrowableLineNum(throwable));
         }
     }
 
@@ -153,6 +174,15 @@ public class L {
     /**
      * 获取调用方法名
      */
+    public static void de(String msg) {
+        StackTraceElement[] s = Thread.currentThread().getStackTrace();
+        String methodName = s[3].getMethodName();
+        e(methodName + SPACE + msg);
+    }
+
+    /**
+     * 获取调用方法名
+     */
     public static void dd(int msg) {
         StackTraceElement[] s = Thread.currentThread().getStackTrace();
         String methodName = s[3].getMethodName();
@@ -166,5 +196,32 @@ public class L {
         StackTraceElement[] s = Thread.currentThread().getStackTrace();
         String methodName = s[3].getMethodName();
         d(methodName + SPACE + state);
+    }
+
+    /**
+     * 打印json字符串
+     *
+     * @param jsonContent
+     */
+    public static void json(String jsonContent) {
+        final String separator = System.getProperty("line.separator");
+        String message = jsonContent;
+        try {
+            if (jsonContent.startsWith("{")) {
+                JSONObject jsonObject = new JSONObject(jsonContent);
+                message = jsonObject.toString(4);//最重要的方法，就一行，返回格式化的json字符串，其中的数字4是缩进字符数
+            } else if (jsonContent.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(jsonContent);
+                message = jsonArray.toString(4);
+            } else {
+                message = jsonContent;
+            }
+        } catch (JSONException e) {
+            e("log json err", e);
+        }
+        String[] lines = message.split(separator);
+        for (String line : lines) {
+            e(line);
+        }
     }
 }

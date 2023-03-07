@@ -51,6 +51,7 @@ import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -59,6 +60,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.InetAddress;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
@@ -1005,5 +1007,25 @@ public class Tools {
             result[i] = string2UnsignedByte(b[i]);
         }
         return result;
+    }
+
+    /**
+     * 试探 IP 地址是否可达
+     * 注：在子线程使用
+     * @param ip
+     * @param timeoutMillis
+     * @return
+     */
+    public boolean isIpArrived(String ip, int timeoutMillis) {
+        try {
+            InetAddress inetAddress = InetAddress.getByName(ip);
+            boolean isArrived = inetAddress.isReachable(timeoutMillis);
+            L.w(ip + "\u3000arrive status:" + isArrived);
+            return isArrived;
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.w(ip + "\u3000isIpArrived err" + e.getMessage());
+        }
+        return false;
     }
 }

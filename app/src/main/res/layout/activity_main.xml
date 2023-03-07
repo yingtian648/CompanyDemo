@@ -49,12 +49,12 @@
             android:id="@+id/tBox2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/toast_nor"
+                android:background="@drawable/toast_night"
                 android:gravity="center"
                 android:paddingStart="@dimen/toast_text_marginHorizontal"
                 android:paddingEnd="@dimen/toast_text_marginHorizontal"
@@ -62,8 +62,8 @@
                 android:paddingBottom="@dimen/toast_text_marginVertical"
                 android:minHeight="@dimen/toast_line_min_height"
                 android:maxWidth="@dimen/toast_max_width"
-                android:text="一二三四五六七八一二三四五六七八一二三四五六七八"
-                android:textColor="#0A1532"
+                android:text="一二三四五六七八一二三四五六七八一二三四五六七八1"
+                android:textColor="#ffffff"
                 android:textSize="@dimen/toast_text_size" />
         </FrameLayout>
 

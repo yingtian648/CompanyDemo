@@ -9,6 +9,8 @@
 
 package com.exa.baselib.utils;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -25,7 +27,7 @@ public class GpsConvertUtil {
         if (res != 0) {
             int wdd = (int) (res / 100);
             double wmm = res % 100 / 60;
-            return getDoubleAcc(wdd + wmm,7);
+            return getDoubleAcc(wdd + wmm, 7);
         } else {
             return res;
         }
@@ -33,11 +35,12 @@ public class GpsConvertUtil {
 
     /**
      * Get the corresponding precision value
+     *
      * @param value
      * @param newScale target digits
      * @return
      */
-    public static double getDoubleAcc(double value,int newScale) {
+    public static double getDoubleAcc(double value, int newScale) {
         return BigDecimal.valueOf(value).setScale(newScale, RoundingMode.HALF_UP).doubleValue();
     }
 
@@ -71,7 +74,7 @@ public class GpsConvertUtil {
                 result = calendar.getTimeInMillis();
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtil.warn("getCurrentTimeZoneTimeMillis time parse err!!!");
+                L.w("getCurrentTimeZoneTimeMillis time parse err!!!");
             }
         }
         return result;

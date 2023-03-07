@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  Copyright (C) 2022 SYNCORE AUTOTECH
+
+  All Rights Reserved by SYNCORE AUTOTECH Co., Ltd and its affiliates.
+  You may not use, copy, distribute, modify, transmit in any form this file
+  except in compliance with SYNCORE AUTOTECH in writing by applicable law.
+
+  @file    scene_package_info.xml
+  @brief   scene_package_info.xml
+  @details scene_package_info.xml
+  @version 1.0
+  @author
+  @date    2023-03-01
+
+  Edit History
+
+  DATE                     NAME               DESCRIPTION
+  2023-01-01                                  Create it.
+-->
+
+<scene_package_info>
+    <item>
+        <package_name>com.gxatek.cockpit.shortcut</package_name>
+        <scene_type>SCENE_EDIT_CARD</scene_type>
+        <window_title>[com.gxatek.cockpit.shortcut|SCENE_EDIT_CARD]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.shortcut</package_name>
+        <scene_type>SCENE_MESSAGE_PUSH</scene_type>
+        <window_title>[com.gxatek.cockpit.shortcut|SCENE_MESSAGE_PUSH]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.shortcut</package_name>
+        <scene_type>SCENE_ALL_MENU</scene_type>
+        <window_title>[com.gxatek.cockpit.shortcut|SCENE_ALL_MENU]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.shortcut</package_name>
+        <scene_type>SCENE_BT_CALLING_DIALOG</scene_type>
+        <window_title>[com.gxatek.cockpit.shortcut|SCENE_BT_CALLING_DIALOG]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.car.settings</package_name>
+        <scene_type>SCENE_TYPE_ACCOUNT</scene_type>
+        <window_title>[com.gxatek.cockpit.car.settings|SCENE_TYPE_ACCOUNT]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.car.settings</package_name>
+        <scene_type>SCENE_TYPE_ACCOUNT_ACTIVE</scene_type>
+        <window_title>[com.gxatek.cockpit.car.settings|SCENE_TYPE_ACCOUNT_ACTIVE</window_title>
+    </item>
+    <item>
+        <package_name>com.gxa.service.systemui</package_name>
+        <scene_type>SCENE_MESSAGE_CARD</scene_type>
+        <window_title>[com.gxa.service.systemui|SCENE_MESSAGE_CARD]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.dvr</package_name>
+        <scene_type>SCENE_DVR</scene_type>
+        <window_title>[com.gxatek.cockpit.dvr|SCENE_DVR]</window_title>
+    </item>
+    <item>
+        <package_name>space.syncore.cockpit.soundeffect</package_name>
+        <scene_type>SCENE_PANEL_MENU</scene_type>
+        <window_title>[space.syncore.cockpit.soundeffect|SCENE_PANEL_MENU]</window_title>
+    </item>
+    <item>
+        <package_name>com.iflytek.cutefly.speechclient.hmi</package_name>
+        <scene_type>SCENE_EDIT_CARD</scene_type>
+        <window_title>[com.iflytek.cutefly.speechclient.hmi|SCENE_EDIT_CARD]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.btcall</package_name>
+        <scene_type>SCENE_BT_CALLING_DIALOG</scene_type>
+        <window_title>[com.gxatek.cockpit.btcall|SCENE_BT_CALLING_DIALOG]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxatek.cockpit.upgrade</package_name>
+        <scene_type>SCENE_TYPE_OTA</scene_type>
+        <window_title>[com.gxatek.cockpit.upgrade|SCENE_TYPE_OTA]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxa.service.ebcall</package_name>
+        <scene_type>SCENE_EB_CALL</scene_type>
+        <window_title>[com.gxa.service.ebcall|SCENE_EB_CALL]</window_title>
+    </item>
+    <item>
+        <package_name>com.gxa.car.display</package_name>
+        <scene_type>SCENE_SCREEN_OFF</scene_type>
+        <window_title>[com.gxa.car.display|SCENE_SCREEN_OFF]</window_title>
+    </item>
+    <!-- need add package -->
+    <item>
+        <package_name>com.gxa.service.systemui</package_name>
+        <scene_type>SCENE_HVAC</scene_type>
+        <window_title>[com.gxa.service.systemui|SCENE_HVAC]</window_title>
+    </item>
+</scene_package_info>

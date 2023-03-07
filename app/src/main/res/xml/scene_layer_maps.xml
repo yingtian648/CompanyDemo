@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+ Copyright (C) 2021 Galaxy Auto Technology
+
+ All Rights Reserved by Galaxy Auto Technology Co., Ltd and its affiliates.
+ You may not use, copy, distribute, modify, transmit in any form this file
+ except in compliance with Galaxy Auto Technology in writing by applicable law.
+
+
+  @file    scene_layer_maps.xml
+  @brief   scene_layer_maps.xml
+  @details scene_layer_maps.xml
+  @version 1.0
+  @author  yongdai
+  @date    2021-06-30
+
+  Edit History
+
+  DATE                     NAME               DESCRIPTION
+  2021-06-30               yongdai            Create it.
+  2023-03-02                                  add package config.
+-->
+
+<scene_layer_map>
+    <item>
+        <!--SCENE_TYPE_OTA-->
+        <scene_type>SCENE_TYPE_OTA</scene_type>
+        <window_type>2511</window_type>
+        <window_layer>27</window_layer>
+        <package_names>
+            <package>com.lsh.cock.upgrade</package>
+        </package_names>
+    </item>
+    <item>
+        <!--SCENE_DISCLAIMER-->
+        <scene_type>SCENE_DISCLAIMER</scene_type>
+        <window_type>2512</window_type>
+        <window_layer>31</window_layer>
+        <package_names>
+        </package_names>
+    </item>
+    <item>
+        <!--SCENE_EDIT_CARD-->
+        <scene_type>SCENE_EDIT_CARD</scene_type>
+        <window_type>2513</window_type>
+        <window_layer>3</window_layer>
+        <package_names>
+            <package>com.lsh.cock.shortcut</package>
+            <package>com.lsh.cute.speechclient.hmi</package>
+        </package_names>
+    </item>
+</scene_layer_map>

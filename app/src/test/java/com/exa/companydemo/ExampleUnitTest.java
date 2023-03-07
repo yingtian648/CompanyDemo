@@ -1,5 +1,10 @@
 package com.exa.companydemo;
 
+import android.location.Location;
+import android.util.SparseArray;
+
+import com.exa.companydemo.test.SonC;
+
 import org.junit.Test;
 
 import java.io.DataOutputStream;
@@ -13,31 +18,10 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+    private SparseArray<String> dumpList = new SparseArray<>();
     @Test
     public void addition_isCorrect() {
-        for (int i = 0; i < 100; i++) {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("doCommand: " + i);
-            doCommand("am broadcast -a android.intent.action.MEDIA_MOUNTED");
-        }
-    }
-
-    private void doCommand(String command) {
-        try {
-            Process process = Runtime.getRuntime().exec("adb shell");
-            DataOutputStream os = new DataOutputStream(process.getOutputStream());
-            os.writeBytes(command + "\n");
-            os.writeBytes("exit\n");
-            os.flush();
-            os.close();
-            process.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            System.out.println("doCommand.IOException");
-        }
+        SonC sonC = new SonC();
+        System.out.println(sonC.getName());
     }
 }
