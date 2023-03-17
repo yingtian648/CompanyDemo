@@ -6,12 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.hardware.display.DisplayManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -81,10 +83,10 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
         });
         bind.btn2.setOnClickListener(view -> {
 //            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
-            // ExeHelper.getInstance().exeGetSystemMediaProviderData();
-            if (checkStoragePermission(true)) {
-                testCreateFile();
-            }
+             ExeHelper.getInstance().exeGetSystemMediaProviderData();
+//            if (checkStoragePermission(true)) {
+//                testCreateFile();
+//            }
         });
         bind.aImage.setOnClickListener(new OnClickViewListener() {
             @Override
@@ -115,7 +117,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                 return true;
             }
         });
-        loadData();
     }
 
     private void log2Text(Object message) {
@@ -152,26 +153,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     @Override
     protected void initData() {
         L.d("Android OS:" + Build.VERSION.RELEASE);
-//        L.d("Environment root:" + Environment.getStorageDirectory());
-//        Intent intent = new Intent("com.exa.companydemo.ExtLocationAidlService");
-//        intent.setPackage("com.exa.companydemo");
-//        bindService(intent, connection, Context.BIND_AUTO_CREATE);
 
-        //多屏显示时使用
-//        Display mDisplay = getWindowManager().getDefaultDisplay();
-//        setText("默认显示器：" + mDisplay.getDisplayId() + ", " + mDisplay.getName() + ", " + mDisplay.isValid());
-//        DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
-//        Display[] displays = displayManager.getDisplays(null);
-//        if (displays != null) {
-//            for (int i = 0; i < displays.length; i++) {
-//                setText("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
-//            }
-//        }
-//        Utils.startActivityByDisplayId(this, getClass(), 5);//启动在第二块屏上
-    }
-
-    private void loadData() {
-//        intentExt.setClassName("com.exa.companydemo", "com.exa.companydemo.aidlservice.ExtLocationService");
     }
 
     private static final String[] STORAGE_PERMISSION = {
@@ -190,33 +172,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                 return "PERMISSION_DENIED_APP_OP";
             default:
                 return "unknown:" + permissionResult;
-        }
-    }
-
-    private void testCreateFile() {
-        final int permissionResult1 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[0]);
-        final int permissionResult2 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[1]);
-//        final int permissionResult3 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[2]);
-        log2Text("testCreateFile start permissionResult1:" + permissionResultToString(permissionResult1)
-                + ", permissionResult2:" + permissionResultToString(permissionResult2)
-//                + ", permissionResult3:" + permissionResultToString(permissionResult3)
-        );
-
-        // String path = getExternalFilesDir(null).getAbsolutePath();
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        // String path = "/storage/usb1";
-        log2Text("path:" + path);
-        File file = new File(path, "SubDir1");
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            fos.write("test code\n".getBytes(StandardCharsets.UTF_8));
-            fos.close();
-            log2Text("last modify: " + file.lastModified() + ", file:" + file);
-            Toast.makeText(this, "创建目录成功：" + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            log2Text("创建失败：" + e.getMessage());
-            Toast.makeText(this, "创建目录失败", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -240,25 +195,25 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
                     audios.clear();
                     audioThumbs.clear();
                     BaseConstants.getHandler().postDelayed(() -> {
-                        audios.addAll(bean.datas);
-                        for (int i = 0; i < bean.datas.size(); i++) {
-                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
-                                playAudio(bean.datas.get(i).path);
-                                return;
-                            }
-                        }
-                        checkSdkToLoadThumb();
-                    }, 3000);
-                    break;
-                case 3:
-                    BaseConstants.getHandler().postDelayed(() -> {
-//                        List<String> list = new ArrayList<>();
+//                        audios.addAll(bean.datas);
 //                        for (int i = 0; i < bean.datas.size(); i++) {
-//                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp4")) {
-//                                list.add(bean.datas.get(i).path);
+//                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
+//                                playAudio(bean.datas.get(i).path);
+//                                return;
 //                            }
 //                        }
-//                        playVideo(list);
+//                        checkSdkToLoadThumb();
+                    }, 3000);
+                    break;
+                case 3://视频
+                    BaseConstants.getHandler().postDelayed(() -> {
+                        List<String> list = new ArrayList<>();
+                        for (int i = 0; i < bean.datas.size(); i++) {
+                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith("068.avi")) {
+                                list.add(bean.datas.get(i).path);
+                            }
+                        }
+                        playVideo(list);
                     }, 1000);
                     break;
                 case 4://歌曲封面
@@ -424,13 +379,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == REQUEST_PERMISSION_STORAGE) {
-
             log2Text("grantResults:" + Arrays.stream(grantResults).mapToObj(MainActivity::permissionResultToString).collect(Collectors.joining()));
-            if (checkStoragePermission(false)) {
-                testCreateFile();
-            }
         }
     }
 

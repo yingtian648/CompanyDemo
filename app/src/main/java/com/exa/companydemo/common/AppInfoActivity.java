@@ -27,7 +27,7 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
     @Override
     protected void initData() {
         Constants.getSinglePool().execute(() -> {
-            List<AppInfo> infos = Tools.getMobileAppsInfo(this);
+            List<AppInfo> infos = Tools.getMobileAppsInfo(this, true);
             setText(infos);
         });
     }

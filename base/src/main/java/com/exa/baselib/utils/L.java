@@ -24,7 +24,7 @@ public class L {
      * adb shell setprop log.tag.CompanyDemo DEBUG
      * adb shell setprop log.tag.CompanyDemo D
      * adb shell setprop log.tag.CompanyDemo V
-     * adb shell setprop log.tag.CompanyDemo VERBOSE
+     * adb shell setprop log.tag.CarLocationService VERBOSE
      */
     private static boolean isLog = true;
     private static boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG) | isLog;
@@ -43,6 +43,13 @@ public class L {
         L.msg = msg;
         if (DEBUG) {
             Log.e(TAG, "" + msg);
+        }
+    }
+
+    public static void fd(String args, Object... obj) {
+        L.msg = String.format(args, obj);
+        if (DEBUG) {
+            Log.e(TAG, String.format(args, obj));
         }
     }
 

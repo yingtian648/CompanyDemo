@@ -23,26 +23,38 @@
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/drawable/toast_customer_normal_xml.xml" value="0.2545" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/drawable/toast_customer_normal_xx.xml" value="0.1505" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/drawable/toast_shadow.xml" value="0.2535" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout-v28/activity_main.xml" value="0.17916666666666667" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout-v28/transient_notification_customer.xml" value="0.13958333333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_app_info.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_helthy.xml" value="0.33" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_input_method_setting.xml" value="0.36614583333333334" />
-        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_location.xml" value="0.34708392603129445" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_location.xml" value="0.25806451612903225" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_main.xml" value="0.11770833333333333" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_pms.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_second.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/activity_test.xml" value="0.20969202898550723" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/dialog_layout.xml" value="0.3494791666666667" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/dialog_layout_mycar.xml" value="0.16744791666666667" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/input_layout.xml" value="0.3515625" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/item_music_load.xml" value="0.36614583333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/layout.xml" value="0.33489583333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/layout_test.xml" value="0.12708333333333333" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/layout_toast.xml" value="0.3494791666666667" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/system_ui_navigationbar.xml" value="0.17473958333333334" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/system_ui_statusbar.xml" value="0.1" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/transient_notification.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/transient_notification_customer.xml" value="0.3494791666666667" />
+        <entry key="..\:/workspace/CompanyDemo/base/src/main/res/drawable/arrow_back_black.xml" value="0.2375" />
         <entry key="..\:/workspace/CompanyDemo/base/src/main/res/drawable/fullscreen_exit_white.xml" value="0.2705" />
         <entry key="..\:/workspace/CompanyDemo/base/src/main/res/drawable/fullscreen_white.xml" value="0.2705" />
         <entry key="..\:/workspace/CompanyDemo/companyclient/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
+        <entry key="..\:/workspace/CompanyDemo/companyclient/src/main/res/layout/activity_main2.xml" value="0.16744791666666667" />
+        <entry key="..\:/workspace/CompanyDemo/companyclient/src/main/res/layout/activity_test.xml" value="0.16744791666666667" />
+        <entry key="..\:/workspace/CompanyDemo/mtestapp/src/main/res/layout/activity_test.xml" value="0.17473958333333334" />
+        <entry key="..\:/workspace/CompanyDemo/mtestapp/src/main/res/layout/dialog_layout_mycar.xml" value="0.17473958333333334" />
+        <entry key="..\:/workspace/CompanyDemo/systemui/src/main/res/layout/activity_main.xml" value="0.16692708333333334" />
+        <entry key="..\:/workspace/CompanyDemo/systemui/src/main/res/layout/system_ui_navigationbar.xml" value="0.17473958333333334" />
+        <entry key="..\:/workspace/CompanyDemo/systemui/src/main/res/layout/system_ui_statusbar.xml" value="0.17473958333333334" />
         <entry key="..\:/wrokspace/CompanyDemo/app/src/main/res/layout/activity_location.xml" value="0.36614583333333334" />
         <entry key="..\:/wrokspace/CompanyDemo/app/src/main/res/layout/activity_main.xml" value="0.24954710144927536" />
         <entry key="..\:/wrokspace/CompanyDemo/app/src/main/res/layout/activity_music_load.xml" value="0.36231884057971014" />

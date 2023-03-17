@@ -51,5 +51,14 @@
                 android:textSize="30px" />
         </LinearLayout>
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/arrow_back_black"
+            app:titleTextColor="@color/black33"
+            app:title="返回"
+            />
+
     </RelativeLayout>
 </layout>

@@ -2,86 +2,67 @@ package com.exa.companydemo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.pm.InstrumentationInfo;
-import android.content.pm.PackageManager;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
-import android.database.ContentObserver;
-import android.location.Location;
-import android.net.LinkProperties;
-import android.net.RouteInfo;
-import android.net.Uri;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.RemoteException;
-import android.os.UserHandle;
-import android.provider.Settings;
-import android.text.TextUtils;
-import android.text.format.DateUtils;
-import android.util.ArrayMap;
-import android.util.Log;
-import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
+import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.common.AppInfoActivity;
 import com.exa.companydemo.location.LocationActivity;
-import com.exa.companydemo.service.MAidlService;
-import com.exa.companydemo.utils.PhoneManagerServiceTemp;
+import com.exa.companydemo.test.BuildTestToast;
+import com.gxa.car.scene.SceneInfo;
+import com.gxa.car.scene.SceneManager;
+import com.gxa.car.scene.SceneStateListener;
+import com.gxa.car.scene.ServiceStateListener;
+import com.gxa.car.scene.WindowChangeListener;
 import com.gxatek.cockpit.screensaver.aidl.IScreenSaverViewAidl;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.InetAddress;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 import static com.exa.companydemo.TestUtil.isRegisterBroadCast;
 import static com.exa.companydemo.TestUtil.mReceiver;
-import static java.text.DateFormat.FULL;
-import static java.util.TimeZone.LONG;
 
 /**
  * @author Administrator
  */
 public class MainActivity extends BaseActivity {
-    private TextView topT;
+    private TextView msgT;
     private Button btn1, btn2, btn3, btn4;
     private EditText editText;
     private boolean isFullScreen;
     private Activity mContext;
 
     private final String PLATFORM_CONFIG_PATH = "/vendor/etc/data/avm_package_info.json";
+    private View toastView;
+    private WindowManager windowManager;
+    private TextView tv;
 
     @Override
     protected void initData() {
@@ -91,10 +72,10 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        L.d("onConfigurationChanged:" + newConfig.uiMode);
+        L.d("MainActivity onConfigurationChanged:" + newConfig.uiMode);
     }
 
-    @SuppressLint("ResourceType")
+    @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
     protected void initView() {
         mContext = this;
@@ -105,16 +86,8 @@ public class MainActivity extends BaseActivity {
 //        TestUtil.registerBroadcast(this);
 
         editText = findViewById(R.id.edt);
-        topT = findViewById(R.id.topT);
+        msgT = findViewById(R.id.msgT);
         btn4 = findViewById(R.id.btn4);
-        topT.setOnClickListener(v -> {
-//            topT.setText(DateUtil.getNowTime() + " 点击了");
-            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            L.w("白天模式？" + (currentNightMode == Configuration.UI_MODE_NIGHT_NO));
-            topT.setText("白天模式？" + (currentNightMode == Configuration.UI_MODE_NIGHT_NO));
-            getResources().getConfiguration().uiMode = UI_MODE_NIGHT_YES;
-//            getDelegate().setLocalNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_NO ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-        });
         findViewById(R.id.btnApp).setOnClickListener(view -> {
             L.w("点击Location Test");
             startActivity(new Intent(this, LocationActivity.class));
@@ -133,20 +106,25 @@ public class MainActivity extends BaseActivity {
             L.w("点击跳转  到第二个页面");
             startActivity(new Intent(this, AppInfoActivity.class));
         });
+        findViewById(R.id.btnMode).setOnClickListener(v -> {//am start com.android.engmode
+            Utils.openApp(this, "com.android.engmode");
+        });
         btn4.setOnClickListener(view -> {
             L.w("测试按钮");
             test();
         });
-        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                Tools.hideKeyboard(editText);
-                return false;
-            }
+        editText.setOnEditorActionListener((v, actionId, event) -> {
+            Tools.hideKeyboard(editText);
+            return false;
         });
-        editText.setOnSystemUiVisibilityChangeListener(visibility -> {
-            L.e("OnSystemUiVisibilityChanged: " + visibility);
-        });
+//        editText.setOnSystemUiVisibilityChangeListener(visibility -> {
+//            L.e("OnSystemUiVisibilityChanged: " + visibility);
+//        });
+
+//        BaseConstants.getHandler().postDelayed(() -> {
+//            test();
+//        }, 5000);
+
     }
 
     private void bindScreenSaver() {
@@ -175,11 +153,24 @@ public class MainActivity extends BaseActivity {
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
+//        StatubarUtil.setNavigationBarColor(this, R.color.yellow);
+        Utils.openApp(this,"com.desaysv.ivi.vds.upgrade");
+//        BaseConstants.getFixPool().execute(() -> {
+//            for (int i = 0; i < 10; i++) {
+//                L.dd("index:" + i);
+//                int winType = SceneManager.getInstance(mContext).getWindowType(SceneManager.SCENE_SYSTEM_CONTROL_WINDOW);
+//                L.dd(winType);
+//                setText("winType = " + winType);
+//            }
+//        });
+//        StatubarUtil.setNavigationBarColorSingle(this, R.color.yellow);
 
-//        TestUtil.testDialog(this);
-//        new PhoneManagerServiceTemp();
+//        TestUtil.testFonts(this);
 
+//        BuildTestToast.makeMyToast(this);
 //        TestUtil.showToast(MainActivity.this);
+//        TestUtil.testDialog(this, "111111");
+
 //        L.d("IBinder.FLAG_ONEWAY=" + IBinder.FLAG_ONEWAY);
 //        TestUtil.usbPermission(this);
 //        ScreenUtils.setFullScreen(this);
@@ -196,19 +187,20 @@ public class MainActivity extends BaseActivity {
 //            }
 //        }, filter);
 
-        Intent intent = new Intent();
-        intent.setClassName("com.android.server.statusbar","com.android.server.statusbar.StatusBarManagerService");
-        bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                L.d("onServiceConnected");
-            }
+//        Intent intent = new Intent();
+//        intent.setClassName("com.android.server.statusbar","com.android.server.statusbar.StatusBarManagerService");
+//        bindService(intent, new ServiceConnection() {
+//            @Override
+//            public void onServiceConnected(ComponentName name, IBinder service) {
+//                L.d("onServiceConnected");
+//            }
+//
+//            @Override
+//            public void onServiceDisconnected(ComponentName name) {
+//                L.d("onServiceConnected");
+//            }
+//        },Context.BIND_AUTO_CREATE);
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                L.d("onServiceConnected");
-            }
-        },Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -242,6 +234,15 @@ public class MainActivity extends BaseActivity {
 //        PermissionUtil.requestPermission(this, () -> {
 //            L.d("已授权读写权限");
 //        }, ps);
+    }
+
+    private void setText(String msg) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        String date = format.format(new Date());
+        runOnUiThread(() -> {
+            String n = date + "\t" + msg + "\n" + msgT.getText().toString();
+            msgT.setText(n);
+        });
     }
 
     @Override

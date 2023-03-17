@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
+
 /**
  * 沉侵式
  * 用法： 1. setStatusBarInvasion 2.setStatusBar
@@ -21,7 +24,7 @@ public class StatubarUtil {
         Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
     }
 
@@ -33,6 +36,8 @@ public class StatubarUtil {
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         window.getDecorView().setFitsSystemWindows(isFitsSystemWindows);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //半透明导航栏，APP的Layout会扩充至屏幕最小端，导航栏绘制到APP的Layout前面
+//        window.addFlags(FLAG_TRANSLUCENT_NAVIGATION);
         window.setStatusBarColor(Color.TRANSPARENT);
     }
 
@@ -41,16 +46,14 @@ public class StatubarUtil {
      */
     public static void setStatusBar(Activity activity, boolean showLightBar) {
         if (activity == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            View decorView = activity.getWindow().getDecorView();
-            int vis = decorView.getSystemUiVisibility();
-            if (showLightBar) {
-                vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            } else {
-                vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            }
-            decorView.setSystemUiVisibility(vis);
+        View decorView = activity.getWindow().getDecorView();
+        int vis = decorView.getSystemUiVisibility();
+        if (showLightBar) {
+            vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        } else {
+            vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         }
+        decorView.setSystemUiVisibility(vis);
     }
 
     //设置沉侵式
@@ -58,7 +61,7 @@ public class StatubarUtil {
         if (activity == null) return;
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
     }
 
@@ -67,27 +70,25 @@ public class StatubarUtil {
      */
     public static void setStatusBar(Activity activity, Window window, boolean showLightBar) {
         if (activity == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            View decorView = window.getDecorView();
-            int vis = decorView.getSystemUiVisibility();
-            if (showLightBar) {
-                vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            } else {
-                vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            }
-            decorView.setSystemUiVisibility(vis);
+        View decorView = window.getDecorView();
+        int vis = decorView.getSystemUiVisibility();
+        if (showLightBar) {
+            vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+        } else {
+            vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         }
+        decorView.setSystemUiVisibility(vis);
     }
 
     /**
      * 设置状态栏颜色
      *
      * @param activity
-     * @param colorResouceId
+     * @param colorResourceId
      */
-    public static void setStatusBarBgColor(Activity activity, int colorResouceId) {
+    public static void setStatusBarBgColor(Activity activity, int colorResourceId) {
         if (activity == null) return;
-        activity.getWindow().setStatusBarColor(activity.getResources().getColor(colorResouceId));
+        activity.getWindow().setStatusBarColor(activity.getResources().getColor(colorResourceId, activity.getTheme()));
     }
 
     /**
@@ -95,9 +96,29 @@ public class StatubarUtil {
      *
      * @param activity
      */
-    public static void setNavigatebarBlack(Activity activity, int colorResouceId) {
+    public static void setNavigationBarColorSingle(Activity activity, int colorId) {
         if (activity == null) return;
-        activity.getWindow().setNavigationBarColor(activity.getResources().getColor(colorResouceId));
+        activity.getWindow().setNavigationBarColor(activity.getResources().getColor(colorId, activity.getTheme()));
+    }
+
+    /**
+     * 设置导航栏颜色
+     *
+     * @param activity
+     */
+    public static void setNavigationBarColor(Activity activity, int colorId) {
+        if (activity == null) return;
+        L.dd("color:" + activity.getResources().getColor(colorId, activity.getTheme()));
+        Window window = activity.getWindow();
+        L.dd("window.FLAG_TRANSLUCENT_NAVIGATION:" + ((window.getAttributes().flags & FLAG_TRANSLUCENT_NAVIGATION) != 0));
+        L.dd("window.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS:" + ((window.getAttributes().flags & FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS) == 0));
+
+        if (Build.VERSION.SDK_INT >= 29) {
+            window.setNavigationBarContrastEnforced(false);
+            L.dd("isNavigationBarContrastEnforced:" + window.isNavigationBarContrastEnforced());
+            L.dd("----" + (window.isNavigationBarContrastEnforced() && Color.alpha(activity.getResources().getColor(colorId, activity.getTheme())) == 0));
+        }
+        window.setNavigationBarColor(activity.getResources().getColor(colorId, activity.getTheme()));
     }
 
     /**

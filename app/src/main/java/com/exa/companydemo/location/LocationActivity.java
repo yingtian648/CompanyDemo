@@ -1,6 +1,8 @@
 package com.exa.companydemo.location;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.Application;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Address;
@@ -42,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
@@ -58,7 +61,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     @Override
     protected void initView() {
-        L.TAG = "CarLocationService-client";
+        setToolbarId(R.id.toolbar);
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override

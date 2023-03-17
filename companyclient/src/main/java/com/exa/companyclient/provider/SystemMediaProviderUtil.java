@@ -45,10 +45,10 @@ public class SystemMediaProviderUtil {
                 public void onChange(boolean selfChange, @Nullable Uri uri) {//搜到uri变化回调
                     L.d("ContentObserver.onChange:" + uri);
                     EventBus.getDefault().post(new EventBean("ContentObserver.onChange:" + uri));
-                    if (System.currentTimeMillis() - last > 1000) {
-                        last = System.currentTimeMillis();
-                        ExeHelper.getInstance().exeGetSystemMediaProviderData();
-                    }
+//                    if (System.currentTimeMillis() - last > 1000) {
+//                        last = System.currentTimeMillis();
+//                        ExeHelper.getInstance().exeGetSystemMediaProviderData();
+//                    }
                 }
             };
         }

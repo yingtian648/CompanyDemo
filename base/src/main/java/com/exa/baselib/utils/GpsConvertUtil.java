@@ -9,11 +9,9 @@
 
 package com.exa.baselib.utils;
 
-import android.util.Log;
-
-import java.util.Calendar;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Calendar;
 import java.util.TimeZone;
 
 public class GpsConvertUtil {

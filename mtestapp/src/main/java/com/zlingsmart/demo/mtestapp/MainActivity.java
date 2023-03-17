@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.ScreenUtils;
 import com.zlingsmart.demo.mtestapp.util.OnClickItemListener;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     private void initData() {
         dataList = new ArrayList<>();
         dataList.add(new Pair<>("广播测试", new Pair<>(OptionActivity.class.getName(), Constants.OptionType.BROADCAST)));
+        dataList.add(new Pair<>("输入法弹出", new Pair<>(TestActivity.class.getName(), Constants.OptionType.BROADCAST)));
     }
 
     private void initListView() {

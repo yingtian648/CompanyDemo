@@ -1,0 +1,93 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.exa.systemui"
+        minSdk 28
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
+//            storeFile file('../signatures/a9e_6125_platform.keystore')
+//            storeFile file('../signatures/a8e_8155_platform.keystore')
+        }
+        release {
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
+        }
+    }
+
+    //高版本的不用配，默认会使用signingConfigs的签名配置
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+    buildFeatures{
+        dataBinding = true
+        // for view binding
+        // viewBinding = true  //for id 'kotlin-parcelize'
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java-gen','src/main/aidl']
+            jniLibs.srcDirs = ['libs']
+            aidl.srcDirs = ['src/main/aidl']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = "shihuademo.apk"
+        }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(path: ':base')
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    compileOnly files('libs/framework.jar')
+}

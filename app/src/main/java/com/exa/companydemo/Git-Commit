@@ -1,29 +1,11 @@
-fix[SystemU]:fix local SystemUI.
-    rootcause:refactor test chore
-    solution:rootcause
-Product:A02/T60Y
-Build:mpass
-Test:upass
-BugID:noid
 
-
-feat[location]:add dump info
-rootcause:need more gps status info
-solution:add dump info
+feat[CarLocationService]:update soalib version to 1.2.7.
+rootcause:update soalib version to 1.2.7.
+solution:update soalib version to 1.2.7.
 Product:A02
 Build:mpass
 Test:upass
 BugID:noid
-
-
-feat:[caradapter] update SOA jar to version 1.2.6
-     reason: update SOA jar to version 1.2.6
-     solution：fix some param change and function change
-     Product:A02
-     Build:mpass
-     Test:no test
-     BugID:noid
-     rootcause:update SOA jar to version 1.2.6
 
 feat[CarLocationService]:Adjust log and timeout policies
 rootcause:Adjust log and timeout policies
@@ -35,9 +17,9 @@ Build:mpass
 Test:upass
 BugID:noid
 
-feat[CarLocationService]:add versionName and versionCode
-rootcause:add versionName and versionCode
-solution:add versionName and versionCode
+feat[CarLocationService]:speed need convert to m/s.
+rootcause:speed need convert to m/s.
+solution:speed need convert to m/s.
 Product:A02
 Build:mpass
 Test:upass
@@ -70,20 +52,26 @@ Build:mpass
 Test:upass
 BugID:TAPD-ID1075758
 
-fix[CarTransition]:fix scene layer err.
-rootcause:scene layer config err.
-solution: update scene_layer_maps file.
+feat[CarTransition]:add package config in scene_layere_maps.
+rootcause:add package config in scene_layere_maps.
+solution: add package config in scene_layere_maps.
 Product:A02
 Build:mpass
 Test:upass
-BugID:ID1100192
+BugID:noid
+
+feat[PhoneWindowManager]:Add conditions for using hierarchy restrictions.
+rootcause:Add conditions for using hierarchy restrictions.
+solution:Add conditions for using hierarchy restrictions.
+Product:A02
+Build:mpass
+Test:upass
+BugID:noid
 
 
-fix[CarSystemUI]:Fix the USB permission window cannot be show
-    rootcause:refactor
-    solution:
-    1.include product CarSystemUI.
-    2.Mask native SystemUI.
-Build:pass
-Test:pass
-BugId:ID1070697
+feat[SystemUI]:modify default status bar semi transparent color.
+rootcause:The default status bar translucent color needs to be fully transparent.
+solution:modify default status bar semi transparent color.
+Build:mpass
+Test:upass
+BugId:noid

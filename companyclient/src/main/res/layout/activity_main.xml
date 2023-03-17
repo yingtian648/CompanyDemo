@@ -79,7 +79,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
-                android:text="获取数据"
+                android:text="获取U盘数据"
                 android:textSize="30px" />
         </LinearLayout>
 
@@ -87,7 +87,7 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/linear"
+            app:layout_constraintTop_toTopOf="parent"
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="30px"
@@ -96,7 +96,7 @@
             android:background="@null"
             android:text="返回"
             android:drawableLeft="@drawable/arrow_back_black"
-            android:layout_marginStart="150px"
+            android:layout_marginStart="20px"
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

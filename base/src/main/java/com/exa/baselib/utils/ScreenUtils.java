@@ -55,6 +55,26 @@ public class ScreenUtils {
 //                        L.d("onControllableInsetsChanged：showStatusBars");
 //                    }
 //                });
+                controller.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+            }
+        } else {
+            int option = View.SYSTEM_UI_FLAG_VISIBLE;
+            activity.getWindow().getDecorView().setSystemUiVisibility(option);
+        }
+    }
+
+    public static void showLightStatusBars(Activity activity, boolean showLightBars) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+            if (controller != null) {
+                controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+                if (showLightBars) {
+                    controller.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+                    controller.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS, WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+                } else {
+                    controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+                    controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS);
+                }
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_VISIBLE;

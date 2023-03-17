@@ -784,7 +784,7 @@ public class Tools {
     }
 
     //获取所有包名和对应的App名称
-    public static List<AppInfo> getMobileAppsInfo(Context context) {
+    public static List<AppInfo> getMobileAppsInfo(Context context, boolean isLog) {
         List<AppInfo> infos = new ArrayList<>();
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -805,7 +805,9 @@ public class Tools {
                 e.printStackTrace();
             }
             CharSequence name = info.activityInfo.loadLabel(context.getPackageManager());//app名称
-            L.e(name + "    " + packageName);
+            if (isLog) {
+                L.e(name + "    " + packageName);
+            }
             if (name != null && packageName != null)
                 infos.add(new AppInfo(name.toString(), packageName, versionCode, versionName, apkSourceDir));
         }
@@ -1012,6 +1014,7 @@ public class Tools {
     /**
      * 试探 IP 地址是否可达
      * 注：在子线程使用
+     *
      * @param ip
      * @param timeoutMillis
      * @return
@@ -1027,5 +1030,22 @@ public class Tools {
             L.w(ip + "\u3000isIpArrived err" + e.getMessage());
         }
         return false;
+    }
+
+    public static void openApp(Context mContext,String packageName) {
+        if (packageName != null) {
+            try {
+                PackageManager packageManager = mContext.getPackageManager();
+                Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+                if (intent != null) {
+                    mContext.startActivity(intent);
+                } else {
+                    L.e(String.format("openApp err: has not found %s launcher activity", packageName));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                L.e("openApp err",e);
+            }
+        }
     }
 }

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/base" />
             <option value="$PROJECT_DIR$/companyclient" />
             <option value="$PROJECT_DIR$/mtestapp" />
+            <option value="$PROJECT_DIR$/systemui" />
           </set>
         </option>
       </GradleProjectSettings>

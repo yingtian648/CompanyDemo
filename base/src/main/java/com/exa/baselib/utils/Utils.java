@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.hardware.display.DisplayManager;
@@ -39,6 +40,23 @@ import androidx.annotation.NonNull;
 import static com.exa.baselib.utils.L.TAG;
 
 public class Utils {
+    public static void openApp(Context mContext,String packageName) {
+        if (packageName != null) {
+            try {
+                PackageManager packageManager = mContext.getPackageManager();
+                Intent intent = packageManager.getLaunchIntentForPackage(packageName);
+                if (intent != null) {
+                    mContext.startActivity(intent);
+                } else {
+                    L.e(String.format("openApp err: has not found %s launcher activity", packageName));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                L.e("openApp err",e);
+            }
+        }
+    }
+
     public static Bitmap loadVideoThumbnail(Context context, String path) {
         long start = System.currentTimeMillis();
         MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), 1, MediaStore.Video.Thumbnails.MICRO_KIND, null);

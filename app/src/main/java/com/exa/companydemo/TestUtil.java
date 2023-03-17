@@ -1,5 +1,6 @@
 package com.exa.companydemo;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -65,6 +66,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.PermissionChecker;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static com.exa.baselib.utils.L.TAG;
@@ -81,13 +83,13 @@ public class TestUtil {
         String msg = "一二三四五六七八一二三四五六七八一二三四五六七八";
 //        msg = "一二三四五六七";
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-        BaseConstants.getHandler().postDelayed(() -> {
-            CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
-        }, 6000);
-        BaseConstants.getHandler().postDelayed(() -> {
-            String smsg = "好了";
-            Toast.makeText(context, smsg, Toast.LENGTH_LONG).show();
-        }, 12000);
+//        BaseConstants.getHandler().postDelayed(() -> {
+//            CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
+//        }, 6000);
+//        BaseConstants.getHandler().postDelayed(() -> {
+//            String smsg = "好了";
+//            CarToast.makeText(context, smsg, Toast.LENGTH_LONG).show();
+//        }, 12000);
 
 //        CarToast carToast = CarToast.makeText(context,msg,CarToast.LENGTH_SHORT);
 //        carToast.setType(CarToast.TYPE_WARNING);
@@ -134,13 +136,13 @@ public class TestUtil {
 //        }, 3000);
     }
 
-    public static void testDialog(Activity activity) {
+    public static void testDialog(Activity activity, String title) {
         final MyDialog dialog = new MyDialog(activity);
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_layout, null, false);
         Button sureBtn = view.findViewById(R.id.sure_button);
         Button cancelBtn = view.findViewById(R.id.cancel_button);
         TextView titleT = view.findViewById(R.id.titleT);
-        titleT.setText("00000000000000000000");
+        titleT.setText(title);
         dialog.setContentView(view);
         sureBtn.setOnClickListener(v -> {
             TestUtil.showToast(activity);
@@ -228,15 +230,15 @@ public class TestUtil {
             attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.dimAmount = 0f;
-            attributes.flags = attributes.flags | WindowManager.LayoutParams.FLAG_FULLSCREEN
-                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
-                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-            attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
+            attributes.flags = attributes.flags | WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+//                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+//                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
+//                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+//                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+            attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
+//                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
             attributes.setTitle("MainActivity_Dialog");
-            attributes.type = 2518;//对应windowType=SCENE_LOW_POWER
+            attributes.type = 2501;//对应windowType=SCENE_LOW_POWER
             window.setAttributes(attributes);
             return window;
         }
@@ -507,6 +509,7 @@ public class TestUtil {
      * 调试字体
      */
     public static void testFonts(Activity activity) {
+        activity.findViewById(R.id.fontsBox).setVisibility(View.VISIBLE);
         final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
         TextView text0 = activity.findViewById(R.id.text);
         TextView text1 = activity.findViewById(R.id.text1);
@@ -515,27 +518,29 @@ public class TestUtil {
         TextView text4 = activity.findViewById(R.id.text4);
         TextView text5 = activity.findViewById(R.id.text5);
         TextView text6 = activity.findViewById(R.id.text6);
+        TextView text7 = activity.findViewById(R.id.text7);
+        TextView text8 = activity.findViewById(R.id.text8);
 
         text0.setText(fontTestWords + "   Default");
         text1.setText(fontTestWords + "   SourceHanSansCN");
         text2.setText(fontTestWords + "   sans-serif");
         text3.setText(fontTestWords + "   serif");
-        text4.setText(fontTestWords + "   monospace");
         text5.setText(fontTestWords + "   GacFont");
-        text6.setText(fontTestWords + "   多行end省略");
+        text4.setText(fontTestWords + "   xml-500");
+        text6.setText(fontTestWords + "   xml-gacfont-500");
+        text7.setText(fontTestWords + "   xml-normal-500");
+        text8.setText(fontTestWords + "   xml-normal-700");
 
         Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
         Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.BOLD);
         Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
         Typeface serif = Typeface.create("serif", Typeface.BOLD);
-        Typeface monospace = Typeface.create("monospace", Typeface.BOLD);
         Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
 
         text0.setTypeface(aDefault);
         text1.setTypeface(SourceHanSansCN);
         text2.setTypeface(sans_serif);
         text3.setTypeface(serif);
-        text4.setTypeface(monospace);
         text5.setTypeface(GacFont);
 
 //        L.d("SourceHanSansCN is Default ? " + (SourceHanSansCN.equals(aDefault)));
@@ -585,5 +590,48 @@ public class TestUtil {
                 L.e("registerFullScreenListener onChange4:" + selfChange + ",flags:" + flags);
             }
         });
+    }
+
+    private static final String[] STORAGE_PERMISSION = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+    };
+
+    public static void testCreateFile(Context context) {
+        final int permissionResult1 = PermissionChecker.checkCallingOrSelfPermission(context, STORAGE_PERMISSION[0]);
+        final int permissionResult2 = PermissionChecker.checkCallingOrSelfPermission(context, STORAGE_PERMISSION[1]);
+//        final int permissionResult3 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[2]);
+        L.d("testCreateFile start permissionResult1:" + permissionResultToString(permissionResult1)
+                        + ", permissionResult2:" + permissionResultToString(permissionResult2)
+//                + ", permissionResult3:" + permissionResultToString(permissionResult3)
+        );
+
+        // String path = getExternalFilesDir(null).getAbsolutePath();
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+        // String path = "/storage/usb1";
+        File file = new File(path, "SubDir1");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write("test code\n".getBytes(StandardCharsets.UTF_8));
+            fos.close();
+            Toast.makeText(context, "创建目录成功：" + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "创建目录失败", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private static String permissionResultToString(int permissionResult) {
+        switch (permissionResult) {
+            case PermissionChecker.PERMISSION_DENIED:
+                return "PERMISSION_DENIED";
+            case PermissionChecker.PERMISSION_GRANTED:
+                return "PERMISSION_GRANTED";
+            case PermissionChecker.PERMISSION_DENIED_APP_OP:
+                return "PERMISSION_DENIED_APP_OP";
+            default:
+                return "unknown:" + permissionResult;
+        }
     }
 }

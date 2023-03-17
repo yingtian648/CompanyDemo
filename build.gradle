@@ -2,13 +2,7 @@
 plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false
-}
-
-//添加  其中app 根据你的module的名称进行替换， 后面的路径文件名都可以根据实际情况进行替换，但是开头的-Xbootclasspath/p:  这个是关键字
-gradle.projectsEvaluated {
-    tasks.withType(JavaCompile) {
-        options.compilerArgs.add('-Xbootclasspath/p:app\\libs\\javalib.jar')
-    }
+    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }
 
 task clean(type: Delete) {

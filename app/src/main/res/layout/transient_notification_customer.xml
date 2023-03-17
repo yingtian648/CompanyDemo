@@ -7,14 +7,16 @@
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:focusableInTouchMode="true"
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@android:id/message"
+        android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:ellipsize="end"
+        android:background="@color/yellow"
         android:gravity="center"
         android:lineHeight="@dimen/toast_line_height"
         android:maxWidth="@dimen/toast_max_width"

@@ -2,7 +2,6 @@ package com.exa.companydemo.utils;
 
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.util.Slog;
 import android.util.SparseArray;
 import android.util.Xml;
 
@@ -10,6 +9,7 @@ import com.exa.baselib.utils.L;
 import com.exa.companydemo.mediaprovider.FilesDao;
 import com.exa.companydemo.mediaprovider.entity.Files;
 import com.exa.companydemo.musicload.MediaInfo;
+import com.exa.companydemo.test.PhoneManagerServiceTemp;
 
 import org.xmlpull.v1.XmlPullParser;
 

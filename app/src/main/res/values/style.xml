@@ -13,5 +13,10 @@
         <item name="fontFamily">GacFont</item>
         <item name="android:textSize">@dimen/toast_text_size</item>
     </style>
-
+    <style name="DialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>

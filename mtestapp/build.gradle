@@ -5,8 +5,10 @@ plugins {
 android {
     compileSdk 32
 
+//    "com.zlingsmart.demo.mtestapp"
+//    "com.gxatek.cockpit.car.settings"//我的车-设置
     defaultConfig {
-        applicationId "com.zlingsmart.demo.mtestapp"
+        applicationId "com.gxatek.cockpit.car.settings"
         minSdk 26
         targetSdk 30
         versionCode 1
@@ -15,11 +17,35 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debug {
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/a8e_8155_platform.keystore')
+        }
+        release {
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+
+    buildFeatures {
+        dataBinding = true
+        // for view binding
+        // viewBinding = true  //for id 'kotlin-parcelize'
     }
 
     compileOptions {
@@ -40,6 +66,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
+    implementation project(path: ':base')
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
