@@ -13,10 +13,11 @@ import java.util.Locale;
  */
 public class DateUtil {
     public static final String PATTERN_FULL_MS = "yyyy-MM-dd HH:mm:ss.SSS";
-    public static final String PATTERN_FULL = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String PATTERN_FULL = "yyyy-MM-dd HH:mm:ss";
     public static final String PATTERN_DATE = "yyyy-MM-dd";
     public static final String PATTERN_FULL_NUM = "yyyyMMddHHmmss";
     public static final String PATTERN_TIME = "HH:mm:ss";
+    public static final String PATTERN_TIME_HM = "HH:mm";
 
     public static String getNowDate(){
         @SuppressLint("SimpleDateFormat")
@@ -27,6 +28,12 @@ public class DateUtil {
     public static String getNowDateFull(){
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL);
+        return simpleDateFormat.format(new Date());
+    }
+
+    public static String getNowDateHM(){
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_TIME_HM);
         return simpleDateFormat.format(new Date());
     }
 

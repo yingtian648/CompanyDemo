@@ -59,16 +59,30 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/btn"
+            android:id="@+id/btnSystemUI"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="全屏测试按钮"
+            android:text="SystemUi测试"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="30px"
             app:layout_constraintBottom_toTopOf="@id/btnApp" />
+
+        <Button
+            android:id="@+id/btnPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:background="@color/btn_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="视频播放"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color"
+            android:textSize="30px" />
 
         <Button
             android:id="@+id/btnMode"

@@ -1,6 +1,7 @@
 package com.exa.systemui;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Service;
 import android.app.UiModeManager;
 import android.app.WallpaperColors;
@@ -75,10 +76,11 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
             super.handleMessage(msg);
         }
     };
-    private NavigationBarView mNnavibar;
-    private NavigationBarView mNavigationBarView;
+    private StatusBarView mStatusbar;
+    private NavigationBarView mNavibar;
     private boolean mWallpaperVisible = false;
     private UiModeManager mUiModeManager;
+    private int mDisplayId;
 
     public static SystemUiMain getInstance(Context context) {
         MainHolder.main.init(context);
@@ -92,7 +94,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
     }
 
     private static class MainHolder {
-        private static SystemUiMain main = new SystemUiMain();
+        private static final SystemUiMain main = new SystemUiMain();
     }
 
     private SystemUiMain() {
@@ -110,7 +112,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         mDisplayManager = (DisplayManager) mContext.getSystemService(Context.DISPLAY_SERVICE);
         mCommandQueue = new MCommandQueue(mContext);
         mUiModeManager = mContext.getSystemService(UiModeManager.class);
-
+        mDisplayId = mDisplayManager.getDisplay(Display.DEFAULT_DISPLAY).getDisplayId();
         registerCallback();
         registerMessageQueue();
 
@@ -141,9 +143,8 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
     }
 
     private void registerCallback() {
-        Display display = mDisplayManager.getDisplay(Display.DEFAULT_DISPLAY);
         try {
-            if (!mWindowManagerService.hasNavigationBar(display.getDisplayId())) {
+            if (!mWindowManagerService.hasNavigationBar(mDisplayId)) {
                 L.e("hasNavigationBar = false");
             }
         } catch (Exception e) {
@@ -151,7 +152,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
             return;
         }
         try {// 注册寄存器堆栈监听
-            mWindowManagerService.registerPinnedStackListener(display.getDisplayId(), new IPinnedStackListener.Stub() {
+            mWindowManagerService.registerPinnedStackListener(mDisplayId, new IPinnedStackListener.Stub() {
                 @Override
                 public void onListenerRegistered(IPinnedStackController iPinnedStackController) throws RemoteException {
                     L.dd();
@@ -204,7 +205,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
                     mWallpaperVisible = newVisibility;
                     L.dd(newVisibility + "," + displayId);
                 }
-            }, display.getDisplayId());
+            }, mDisplayId);
         } catch (Exception e) {
             e.printStackTrace();
             L.e("registerWallpaperVisibilityListener err", e);
@@ -241,8 +242,8 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         // X轴偏移45px
         mStatusBarParams.x = 45;
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.system_ui_statusbar, null, false);
-        mWindowManager.addView(view, mStatusBarParams);
+        mStatusbar = new StatusBarView(mContext, mUiModeManager, mCommandQueue, mDisplayId);
+        mWindowManager.addView(mStatusbar.getRootView(), mStatusBarParams);
     }
 
     @SuppressLint("WrongConstant")
@@ -261,8 +262,8 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         mNavigationBarParams.height = NAVIGATION_BAR_HEIGHT;
         mNavigationBarParams.gravity = Gravity.BOTTOM;
 
-        mNnavibar = new NavigationBarView(mContext, mUiModeManager, mCommandQueue);
-        mWindowManager.addView(mNnavibar.getRootView(), mNavigationBarParams);
+        mNavibar = new NavigationBarView(mContext, mUiModeManager, mCommandQueue, mDisplayId);
+        mWindowManager.addView(mNavibar.getRootView(), mNavigationBarParams);
 
         WallpaperManager wallpaperManager = mContext.getSystemService(WallpaperManager.class);
         wallpaperManager.addOnColorsChangedListener((WallpaperManager.OnColorsChangedListener) (colors, which) -> {

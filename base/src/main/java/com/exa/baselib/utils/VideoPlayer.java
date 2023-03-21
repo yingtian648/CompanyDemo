@@ -40,7 +40,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * @描述 视频播放器 TextureView+MediaPlayer
- * @备注 播放网络视频需要添加权限 Manifest.permission.INTERNET
+ * @备注
+ * 1.播放网络视频需要添加权限 Manifest.permission.INTERNET
+ * 2.need android:hardwareAccelerated="true" config in AndroidManifest
  */
 public class VideoPlayer implements TextureView.SurfaceTextureListener {
     @SuppressLint("StaticFieldLeak")
@@ -360,6 +362,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {// 初始化完成
+        L.dd();
         //按比例缩放视频
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         Uri uri = null;

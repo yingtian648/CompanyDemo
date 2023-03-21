@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity {
 
         TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
-
+        setToolbarId(R.id.toolbar);
         editText = findViewById(R.id.edt);
         msgT = findViewById(R.id.msgT);
         btn4 = findViewById(R.id.btn4);
@@ -92,15 +92,13 @@ public class MainActivity extends BaseActivity {
             L.w("点击Location Test");
             startActivity(new Intent(this, LocationActivity.class));
         });
-        findViewById(R.id.btn).setOnClickListener(view -> {
+        findViewById(R.id.btnSystemUI).setOnClickListener(view -> {
             L.w("全屏按钮");
-//            startActivity(new Intent(this, VideoPlayerActivity.class));
-            if (isFullScreen) {
-                ScreenUtils.showStatusBars(this);
-            } else {
-                ScreenUtils.setFullScreen(this);
-            }
-            isFullScreen = !isFullScreen;
+            startActivity(new Intent(this, SystemUITestActivity.class));
+        });
+        findViewById(R.id.btnPlay).setOnClickListener(view -> {
+            L.w("视频播放");
+            startActivity(new Intent(this, VideoPlayerActivity.class));
         });
         findViewById(R.id.btn2).setOnClickListener(view -> {
             L.w("点击跳转  到第二个页面");

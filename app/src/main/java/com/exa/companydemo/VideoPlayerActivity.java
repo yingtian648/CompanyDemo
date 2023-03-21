@@ -2,9 +2,6 @@ package com.exa.companydemo;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetFileDescriptor;
-import android.graphics.Insets;
-import android.view.View;
-import android.view.WindowManager;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -12,14 +9,9 @@ import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.ScreenUtils;
+import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companydemo.databinding.ActivitySecondBinding;
-
-import androidx.annotation.Nullable;
-
-import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
-import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 
 public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding> {
 
@@ -31,13 +23,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     @SuppressLint("WrongConstant")
     @Override
     protected void initData() {
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        layoutParams.format = -3;
-        layoutParams.flags |= -2138832824;
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        layoutParams.height = 76;
-
+        // use TextureView, need set android:hardwareAccelerated="true"
         player = VideoPlayer.getInstance();
         player.setLoop(true);
         player.setCallback(new VideoPlayer.Callback() {
@@ -104,6 +90,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
 
     @Override
     protected void initView() {
+        StatubarUtil.setStatusBarInvasion(this);
         bind.text.setOnClickListener(v -> finish());
         bind.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -140,7 +127,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
 //                bind.fullBtn.setSystemUiVisibility(SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
                 // getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             } else {
-                ScreenUtils.setFullScreen(this);
+                ScreenUtils.hideStatusBars(this);
                 bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_exit_white);
 //                bind.fullBtn.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|SYSTEM_UI_FLAG_HIDE_NAVIGATION|SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 //                getWindow().getDecorView().setSystemUiVisibility(

@@ -19,7 +19,7 @@ public class ScreenUtils {
      *
      * @param activity
      */
-    public static void setFullScreen(Activity activity) {
+    public static void hideStatusBars(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
             if (controller != null) {
@@ -55,7 +55,6 @@ public class ScreenUtils {
 //                        L.d("onControllableInsetsChanged：showStatusBars");
 //                    }
 //                });
-                controller.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_VISIBLE;

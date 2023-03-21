@@ -147,7 +147,6 @@ public class CrashHandle implements UncaughtExceptionHandler {
          * 我没在这里发生错误日志【在项目启动页开启service来发送错误日志】
          */
         saveCrashInfoToFile(ex);
-        L.d("CrashHandle重启app");
         return true;
     }
 

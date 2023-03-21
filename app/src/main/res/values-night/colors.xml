@@ -12,4 +12,5 @@
     <color name="text_color">#ffffff</color>
     <color name="btn_bg">#E1E1E1</color>
     <color name="window_bg">#666666</color>
+    <color name="blue">#3EC6FB</color>
 </resources>

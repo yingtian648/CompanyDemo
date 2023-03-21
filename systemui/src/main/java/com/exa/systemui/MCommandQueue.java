@@ -149,7 +149,13 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
 
     @Override
     public void topAppWindowChanged(int displayId, boolean isFullscreen, boolean isImmersive) throws RemoteException {
-
+        synchronized (mLock) {
+            SomeArgs args = SomeArgs.obtain();
+            args.argi1 = displayId;
+            args.argi2 = isFullscreen ? 1 : 0;
+            args.argi3 = isImmersive ? 1 : 0;
+            mHandler.obtainMessage(MSG_TOP_APP_WINDOW_CHANGED, args).sendToTarget();
+        }
         L.dd();
     }
 
@@ -336,11 +342,10 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
     }
 
     /**
-     *
-     * @param displayId the ID of the display to notify
-     * @param appearance @see android.view.WindowInsetsController.Appearance ,the appearance of the focused window.
-     * @param appearanceRegions a set of appearances which will be only applied in their own bounds.
-     *                         This is for system bars which across multiple stack
+     * @param displayId               the ID of the display to notify
+     * @param appearance              @see android.view.WindowInsetsController.Appearance ,the appearance of the focused window.
+     * @param appearanceRegions       a set of appearances which will be only applied in their own bounds.
+     *                                This is for system bars which across multiple stack
      * @param navbarColorManagedByIme if navigation bar color is managed by IME
      * @throws RemoteException
      */
@@ -361,7 +366,9 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
 
     @Override
     public void showTransient(int displayId, int[] types) throws RemoteException {//显示瞬态--临时显示systemui
-        mHandler.obtainMessage(MSG_SHOW_TRANSIENT, displayId, 0, types).sendToTarget();
+        synchronized (mLock) {
+            mHandler.obtainMessage(MSG_SHOW_TRANSIENT, displayId, 0, types).sendToTarget();
+        }
         L.dd();
     }
 
@@ -429,6 +436,7 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
+            SomeArgs args;
             L.d(TAG, "handleMessage:" + msg.what);
             switch (msg.what) {
                 case MSG_SHOW_TRANSIENT:
@@ -436,14 +444,24 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
                         mCallbacks.get(i).showTransient(msg.arg1, (int[]) msg.obj);
                     }
                     break;
-                case MSG_SYSTEM_BAR_APPEARANCE_CHANGED:
-                    SomeArgs args = (SomeArgs) msg.obj;
+                case MSG_SYSTEM_BAR_APPEARANCE_CHANGED: {
+                    args = (SomeArgs) msg.obj;
                     for (int i = 0; i < mCallbacks.size(); i++) {
                         mCallbacks.get(i).onSystemBarAppearanceChanged(args.argi1, args.argi2,
                                 (AppearanceRegion[]) args.arg1, args.argi3 == 1);
                     }
                     args.recycle();
                     break;
+                }
+                case MSG_TOP_APP_WINDOW_CHANGED: {
+                    args = (SomeArgs) msg.obj;
+                    for (int i = 0; i < mCallbacks.size(); i++) {
+                        mCallbacks.get(i).topAppWindowChanged(
+                                args.argi1, args.argi2 != 0, args.argi3 != 0);
+                    }
+                    args.recycle();
+                    break;
+                }
             }
         }
     }

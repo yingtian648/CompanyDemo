@@ -8,27 +8,27 @@
         android:paddingEnd="80px">
 
         <Button
-            android:id="@+id/BtnHome"
+            android:id="@+id/btnHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Home" />
 
         <Button
-            android:id="@+id/BtnMyCar"
+            android:id="@+id/btnMyCar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30px"
             android:text="我的车" />
 
         <Button
-            android:id="@+id/BtnEngine"
+            android:id="@+id/btnEngine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30px"
             android:text="工程模式" />
 
         <Button
-            android:id="@+id/BtnUpgrade"
+            android:id="@+id/btnUpgrade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30px"

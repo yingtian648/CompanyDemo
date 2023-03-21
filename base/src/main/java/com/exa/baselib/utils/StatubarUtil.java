@@ -17,7 +17,6 @@ import static android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATIO
  * 用法： 1. setStatusBarInvasion 2.setStatusBar
  */
 public class StatubarUtil {
-
     //设置沉侵式
     public static void setStatusBarInvasion(Activity activity) {
         if (activity == null) return;
@@ -39,6 +38,19 @@ public class StatubarUtil {
         //半透明导航栏，APP的Layout会扩充至屏幕最小端，导航栏绘制到APP的Layout前面
 //        window.addFlags(FLAG_TRANSLUCENT_NAVIGATION);
         window.setStatusBarColor(Color.TRANSPARENT);
+    }
+
+    //设置沉侵式
+    public static void setUnInvasion(Activity activity) {
+        if (activity == null) return;
+        Window window = activity.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_IMMERSIVE);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //半透明导航栏，APP的Layout会扩充至屏幕最小端，导航栏绘制到APP的Layout前面
+//        window.addFlags(FLAG_TRANSLUCENT_NAVIGATION);
+        window.setStatusBarColor(Color.WHITE);
+        window.setNavigationBarColor(Color.WHITE);
     }
 
     /**

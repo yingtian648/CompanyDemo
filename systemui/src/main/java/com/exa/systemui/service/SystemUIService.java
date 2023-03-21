@@ -3,6 +3,9 @@ package com.exa.systemui.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.providers.settings.GlobalSettingsProto;
+
+import com.exa.systemui.SystemUIApplication;
 
 import androidx.annotation.Nullable;
 
@@ -18,5 +21,14 @@ public class SystemUIService extends Service {
         return null;
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((SystemUIApplication) getApplication()).startSystemUIMain();
+    }
 }

@@ -5,8 +5,12 @@ import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.widget.Button;
 
 import com.android.internal.view.AppearanceRegion;
@@ -28,21 +32,25 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
     private int mNightMode;
     private MCommandQueue mCommandQueue;
     protected SystemUiNavigationbarBinding mBind;
+    private int mDisplayId;
+    private int mAppearance = 0;
     private final int[] ids = {
-            R.id.BtnHome,
-            R.id.BtnMyCar,
-            R.id.BtnEngine,
-            R.id.BtnUpgrade,
+            R.id.btnHome,
+            R.id.btnMyCar,
+            R.id.btnEngine,
+            R.id.btnUpgrade,
     };
 
     public View getRootView() {
         return mRootView;
     }
 
-    public NavigationBarView(Context context, UiModeManager modeManager, MCommandQueue commandQueue) {
+    public NavigationBarView(Context context, UiModeManager modeManager,
+                             MCommandQueue commandQueue, int displayId) {
         mContext = context;
         mUiModeManager = modeManager;
         mCommandQueue = commandQueue;
+        mDisplayId = displayId;
         mNightMode = modeManager.getNightMode();
         commandQueue.registerCallback(this);
         mBind = DataBindingUtil.inflate(LayoutInflater.from(context),
@@ -55,10 +63,10 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
         for (int id : ids) {
             mRootView.findViewById(id).setOnClickListener(this);
         }
-        setBackgroundColor();
+        updateBackgroundColor();
     }
 
-    private void setBackgroundColor() {
+    private void updateBackgroundColor() {
         if (isNightMode()) {
             mBind.getRoot().setBackgroundColor(mContext.getColor(R.color.nav_bg_night));
         } else {
@@ -69,29 +77,50 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
     @Override
     public void onSystemBarAppearanceChanged(int displayId, int appearance, AppearanceRegion[] appearanceRegions, boolean navbarColorManagedByIme) {
         // 设置白天黑夜模式对应的背景色
+        if (displayId != mDisplayId) return;
+        mNightMode = mUiModeManager.getNightMode();
         if (mNightMode != mUiModeManager.getNightMode()) {
-            mNightMode = mUiModeManager.getNightMode();
-            setBackgroundColor();
+            updateBackgroundColor();
         }
         // 响应沉浸式-亮色状态栏-亮色导航栏 8=亮色，0=非亮色
-        L.dd("appearance:" + appearance);
-        
+        if (mAppearance != appearance) {
+            mAppearance = appearance;
+            updateAppearance();
+        }
+    }
+
+    private void updateAppearance() {
+        boolean showLight = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            showLight = mAppearance == WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+        }
+        if (showLight) {
+            mBind.btnHome.setTextColor(Color.WHITE);
+            mBind.btnEngine.setTextColor(Color.WHITE);
+            mBind.btnMyCar.setTextColor(Color.WHITE);
+            mBind.btnUpgrade.setTextColor(Color.WHITE);
+        } else {
+            mBind.btnHome.setTextColor(Color.BLACK);
+            mBind.btnEngine.setTextColor(Color.BLACK);
+            mBind.btnMyCar.setTextColor(Color.BLACK);
+            mBind.btnUpgrade.setTextColor(Color.BLACK);
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.BtnHome:
-                openApp("com.exa.systemui");
+            case R.id.btnHome:
+                openApp("com.exa.companydemo");
                 break;
-            case R.id.BtnMyCar:
+            case R.id.btnMyCar:
                 openApp("com.gxatek.cockpit.car.settings");
                 break;
-            case R.id.BtnEngine:
+            case R.id.btnEngine:
                 openApp("com.android.engmode");
                 break;
-            case R.id.BtnUpgrade:
+            case R.id.btnUpgrade:
                 openApp("com.desaysv.ivi.vds.upgrade");
                 break;
             default:

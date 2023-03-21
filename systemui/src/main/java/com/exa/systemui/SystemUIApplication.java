@@ -1,6 +1,7 @@
 package com.exa.systemui;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Configuration;
 
 import com.exa.baselib.utils.CrashHandle;
@@ -14,20 +15,22 @@ import androidx.annotation.NonNull;
  * @Description
  */
 public class SystemUIApplication extends Application {
-    private static SystemUiMain mSystemUiMain;
+    private SystemUiMain mSystemUiMain;
+    private static Application mContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         L.init("systemui-lsh", true);
         CrashHandle.getInstance().init(this);
 
-        startMain(this);
+//        startSystemUIMain(mContext);
     }
 
-    public static void startMain(Application context) {
+    public void startSystemUIMain() {
         if (mSystemUiMain == null){
-            mSystemUiMain = SystemUiMain.getInstance(context);
+            mSystemUiMain = SystemUiMain.getInstance(mContext);
         }
         mSystemUiMain.start();
     }
