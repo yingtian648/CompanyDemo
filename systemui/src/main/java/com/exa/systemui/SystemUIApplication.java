@@ -38,6 +38,7 @@ public class SystemUIApplication extends Application {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        L.dd();
         mSystemUiMain.onConfigurationChanged(newConfig);
     }
 }

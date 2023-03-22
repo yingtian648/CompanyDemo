@@ -59,7 +59,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
     private Context mContext;
 
     private final int STATUS_BAR_WIDTH = 776;
-    private final int STATUS_BAR_HEIGHT = 76;
+    private final int STATUS_BAR_HEIGHT = 84;
     private final int NAVIGATION_BAR_HEIGHT = 100;
 
     private WindowManager.LayoutParams mStatusBarParams;
@@ -91,6 +91,8 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
     public void onConfigurationChanged(@NonNull Configuration configuration) {
         // 获取当前语言，与之前记录语言对比，可用于响应语言改变
         // Locale locale = mContext.getResources().getConfiguration().getLocales().get(0);
+        mNavibar.onConfigurationChanged(configuration);
+        mStatusbar.onConfigurationChanged(configuration);
     }
 
     private static class MainHolder {
@@ -236,7 +238,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
                 | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
                 | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
         mStatusBarParams.flags &= ~WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-        mStatusBarParams.width = STATUS_BAR_WIDTH;
+        mStatusBarParams.width = WindowManager.LayoutParams.MATCH_PARENT;//STATUS_BAR_WIDTH;
         mStatusBarParams.height = STATUS_BAR_HEIGHT;
         mStatusBarParams.gravity = Gravity.TOP | Gravity.RIGHT;
         // X轴偏移45px
@@ -269,6 +271,12 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         wallpaperManager.addOnColorsChangedListener((WallpaperManager.OnColorsChangedListener) (colors, which) -> {
             L.dd("colors = " + colors + ", witch = " + which);
         }, null);
+    }
+
+    @Override
+    public void abortTransient(int displayId, int[] types) {
+        // 移除——延时隐藏瞬态systemui
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     @Override

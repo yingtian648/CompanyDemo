@@ -5,19 +5,19 @@ import android.app.UiModeManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowInsets;
 import android.view.WindowInsetsController;
-import android.widget.Button;
 
 import com.android.internal.view.AppearanceRegion;
 import com.exa.baselib.utils.L;
-import com.exa.systemui.R;
 import com.exa.systemui.databinding.SystemUiNavigationbarBinding;
+import com.exa.systemui.minterface.IConfigChangedListener;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 /**
@@ -25,14 +25,13 @@ import androidx.databinding.DataBindingUtil;
  * @Date 2023/3/14 13:38
  * @Description
  */
-public class NavigationBarView implements View.OnClickListener, MCommandQueue.Callback {
+public class NavigationBarView implements View.OnClickListener, MCommandQueue.Callback, IConfigChangedListener {
     private final Context mContext;
     private final View mRootView;
     private UiModeManager mUiModeManager;
-    private int mNightMode;
-    private MCommandQueue mCommandQueue;
+    private int mNightMode = -1;
     protected SystemUiNavigationbarBinding mBind;
-    private int mDisplayId;
+    private final int mDisplayId;
     private int mAppearance = 0;
     private final int[] ids = {
             R.id.btnHome,
@@ -49,9 +48,7 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
                              MCommandQueue commandQueue, int displayId) {
         mContext = context;
         mUiModeManager = modeManager;
-        mCommandQueue = commandQueue;
         mDisplayId = displayId;
-        mNightMode = modeManager.getNightMode();
         commandQueue.registerCallback(this);
         mBind = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.system_ui_navigationbar, null, false);
@@ -63,48 +60,38 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
         for (int id : ids) {
             mRootView.findViewById(id).setOnClickListener(this);
         }
-        updateBackgroundColor();
-    }
-
-    private void updateBackgroundColor() {
-        if (isNightMode()) {
-            mBind.getRoot().setBackgroundColor(mContext.getColor(R.color.nav_bg_night));
-        } else {
-            mBind.getRoot().setBackgroundColor(mContext.getColor(R.color.nav_bg));
-        }
+        updateIconColor();
     }
 
     @Override
     public void onSystemBarAppearanceChanged(int displayId, int appearance, AppearanceRegion[] appearanceRegions, boolean navbarColorManagedByIme) {
         // 设置白天黑夜模式对应的背景色
         if (displayId != mDisplayId) return;
-        mNightMode = mUiModeManager.getNightMode();
-        if (mNightMode != mUiModeManager.getNightMode()) {
-            updateBackgroundColor();
-        }
         // 响应沉浸式-亮色状态栏-亮色导航栏 8=亮色，0=非亮色
         if (mAppearance != appearance) {
             mAppearance = appearance;
-            updateAppearance();
+            updateIconColor();
         }
     }
 
-    private void updateAppearance() {
+    private void updateIconColor() {
         boolean showLight = false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             showLight = mAppearance == WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
         }
-        if (showLight) {
-            mBind.btnHome.setTextColor(Color.WHITE);
-            mBind.btnEngine.setTextColor(Color.WHITE);
-            mBind.btnMyCar.setTextColor(Color.WHITE);
-            mBind.btnUpgrade.setTextColor(Color.WHITE);
-        } else {
-            mBind.btnHome.setTextColor(Color.BLACK);
-            mBind.btnEngine.setTextColor(Color.BLACK);
-            mBind.btnMyCar.setTextColor(Color.BLACK);
-            mBind.btnUpgrade.setTextColor(Color.BLACK);
-        }
+        int bgColor = showLight ? R.color.icon_bg_light :
+                (isNightMode() ? R.color.icon_bg_night : R.color.icon_bg);
+        int textColor = showLight ? R.color.black :
+                (isNightMode() ? R.color.black : R.color.white);
+        mBind.btnHome.setBackgroundColor(mContext.getColor(bgColor));
+        mBind.btnEngine.setBackgroundColor(mContext.getColor(bgColor));
+        mBind.btnMyCar.setBackgroundColor(mContext.getColor(bgColor));
+        mBind.btnUpgrade.setBackgroundColor(mContext.getColor(bgColor));
+
+        mBind.btnHome.setTextColor(mContext.getColor(textColor));
+        mBind.btnEngine.setTextColor(mContext.getColor(textColor));
+        mBind.btnMyCar.setTextColor(mContext.getColor(textColor));
+        mBind.btnUpgrade.setTextColor(mContext.getColor(textColor));
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -158,5 +145,10 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
                 L.e("openApp err", e);
             }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration configuration) {
+        updateIconColor();
     }
 }

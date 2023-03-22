@@ -15,6 +15,8 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
     private var isShowLightBar = false
     private var isShowInvasion = false
     private lateinit var mUiModeManager: UiModeManager
+    private var statusColor = R.color.white
+    private var naviColor = R.color.white
     override fun setContentViewLayoutId(): Int = R.layout.activity_systemui_test
 
     override fun initView() {
@@ -23,23 +25,38 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
         bind.btnUIMode.text = if (nightMode == UiModeManager.MODE_NIGHT_YES) "白天模式" else "黑夜模式"
         bind.btnStatusBarColor.setOnClickListener {
             L.d("状态栏颜色")
-            StatubarUtil.setStatusBarBgColor(this, R.color.blue)
+            bind.tv.text = L.msg
+            statusColor = if(statusColor!=R.color.blue){
+                R.color.blue
+            }else{
+                R.color.yellow
+            }
+            StatubarUtil.setStatusBarBgColor(this, statusColor)
         }
         bind.btnStart.setOnClickListener {
             L.d("启动SystemUI")
+            bind.tv.text = L.msg
             startSystemUI()
         }
         bind.btnNavColor.setOnClickListener {
             L.d("导航栏颜色")
-            StatubarUtil.setNavigationBarColor(this, R.color.yellow)
+            bind.tv.text = L.msg
+            naviColor = if(naviColor!=R.color.blue){
+                R.color.blue
+            }else{
+                R.color.yellow
+            }
+            StatubarUtil.setNavigationBarColor(this, naviColor)
         }
         bind.btnAppearance.setOnClickListener {
             L.d("亮色SystemUI")
+            bind.tv.text = L.msg
             isShowLightBar = !isShowLightBar
             ScreenUtils.showLightStatusBars(this, isShowLightBar)
         }
         bind.btnCJ.setOnClickListener {
             L.d("沉浸式")
+            bind.tv.text = L.msg
             isShowInvasion = !isShowInvasion
             if (isShowInvasion) {
                 StatubarUtil.setStatusBarInvasion(this)
@@ -58,6 +75,7 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
         }
         bind.btnFull.setOnClickListener {
             L.w("全屏测试")
+            bind.tv.text = L.msg
             if (isFullScreen) {
                 ScreenUtils.showStatusBars(this)
             } else {

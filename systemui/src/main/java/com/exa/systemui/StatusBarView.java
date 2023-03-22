@@ -1,12 +1,14 @@
 package com.exa.systemui;
 
-import android.app.AlarmManager;
+import android.annotation.SuppressLint;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowInsetsController;
@@ -15,7 +17,9 @@ import com.android.internal.view.AppearanceRegion;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.systemui.databinding.SystemUiStatusbarBinding;
+import com.exa.systemui.minterface.IConfigChangedListener;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 
 /**
@@ -23,18 +27,21 @@ import androidx.databinding.DataBindingUtil;
  * @Date 2023/3/20 17:02
  * @Description
  */
-public class StatusBarView implements View.OnClickListener, MCommandQueue.Callback {
+public class StatusBarView implements View.OnClickListener, MCommandQueue.Callback, IConfigChangedListener {
+    private final String TAG = "StatusBarView";
     private final Context mContext;
     private final View mRootView;
-    private UiModeManager mUiModeManager;
-    private int mNightMode;
-    private MCommandQueue mCommandQueue;
+    private final UiModeManager mUiModeManager;
+    private int mNightMode = -1;
     protected SystemUiStatusbarBinding mBind;
-    private final int mStatusBarBgColor = 0xFFB2B2B2;
+    // 是否亮色状态栏
+    private boolean isAppearance = false;
+    // 是否沉浸式
+    private boolean isImmersive = false;
     private final int[] ids = {
-            R.id.BtnUser,
-            R.id.BtnMail,
-            R.id.BtnWifi,
+            R.id.btnUser,
+            R.id.btnMail,
+            R.id.btnWifi,
     };
     private int mDisplayId;
 
@@ -45,40 +52,54 @@ public class StatusBarView implements View.OnClickListener, MCommandQueue.Callba
     public StatusBarView(Context context, UiModeManager modeManager, MCommandQueue commandQueue, int displayId) {
         mContext = context;
         mUiModeManager = modeManager;
-        mCommandQueue = commandQueue;
         mDisplayId = displayId;
-        mNightMode = modeManager.getNightMode();
         commandQueue.registerCallback(this);
         mBind = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.system_ui_statusbar, null, false);
         mRootView = mBind.getRoot();
         initView();
         registerTimeUpdateReceiver();
+        updateIconColor();
     }
 
     @Override
     public void onSystemBarAppearanceChanged(int displayId, int appearance, AppearanceRegion[]
             appearanceRegions, boolean navbarColorManagedByIme) {
-        if (displayId == mDisplayId &&
-                appearance == WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS) {
-            mBind.tvTime.setTextColor(Color.BLUE);
-        } else {
-            mBind.tvTime.setTextColor(Color.WHITE);
+        L.d(TAG, "onSystemBarAppearanceChanged appearance = " + appearance);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            isAppearance = displayId == mDisplayId && (appearance & WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS) != 0;
         }
     }
 
     @Override
     public void topAppWindowChanged(int displayId, boolean isFullscreen, boolean isImmersive) {
-        L.dd("displayId=" + displayId + ", isFullscreen=" + isFullscreen + ", isImmersive=" + isImmersive);
-        L.dd(mDisplayId);
+        L.d(TAG, "topAppWindowChanged displayId=" + displayId + ", isFullscreen=" + isFullscreen + ", isImmersive=" + isImmersive);
         if (displayId == mDisplayId) {
-            // 是沉浸式且非全屏
-            if (isImmersive && !isFullscreen) {
-                mBind.naviView.setBackgroundColor(Color.TRANSPARENT);
-            } else {
-                mBind.naviView.setBackgroundColor(mStatusBarBgColor);
-            }
+            this.isImmersive = (!isImmersive && !isFullscreen);
         }
+        updateIconColor();
+    }
+
+    private boolean isNightMode() {
+        return UiModeManager.MODE_NIGHT_YES == mNightMode;
+    }
+
+    @SuppressLint("WrongConstant")
+    private void updateIconColor() {
+        L.d(TAG, "updateIconColor " + isNightMode());
+        if (isNightMode()) {
+            mBind.btnMail.setImageResource(R.drawable.mail_white);
+            mBind.btnUser.setImageResource(R.drawable.user_white);
+            mBind.btnWifi.setImageResource(R.drawable.wifi_white);
+            mBind.tvTime.setTextColor(mContext.getColor(R.color.white));
+        } else {
+            mBind.btnMail.setImageResource(R.drawable.mail_black);
+            mBind.btnUser.setImageResource(R.drawable.user_black);
+            mBind.btnWifi.setImageResource(R.drawable.wifi_black);
+            mBind.tvTime.setTextColor(mContext.getColor(R.color.black));
+        }
+        mNightMode = mUiModeManager.getNightMode();
+
     }
 
     private void initView() {
@@ -94,17 +115,16 @@ public class StatusBarView implements View.OnClickListener, MCommandQueue.Callba
     }
 
     private void registerTimeUpdateReceiver() {
-        L.dd();
+        L.d(TAG, L.getCurrentMethodName());
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_TIME_TICK);
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         mContext.registerReceiver(mTimeUpdateReceiver, filter);
     }
 
-    private BroadcastReceiver mTimeUpdateReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mTimeUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            L.dd();
             if (intent == null) return;
             String action = intent.getAction();
             if (action == null || action.isEmpty()) return;
@@ -120,5 +140,10 @@ public class StatusBarView implements View.OnClickListener, MCommandQueue.Callba
 
     private void updateTimeUi() {
         mBind.tvTime.setText(DateUtil.getNowDateHM());
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration configuration) {
+        updateIconColor();
     }
 }

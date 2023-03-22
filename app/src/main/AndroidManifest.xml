@@ -26,10 +26,10 @@
         <activity
             android:name=".TestActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".inputmethod.InputMethodSettingActivity"
@@ -77,11 +77,11 @@
             |fontScale"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!--
         这里主要的字段为 authorities ，他是ContentProvider的唯一标识。
@@ -120,11 +120,6 @@
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
             </intent-filter>
         </receiver>
-
-        <service
-            android:name="com.exa.systemui.MSystemUiService"
-            android:enabled="true"
-            android:exported="true" />
         <service
             android:name=".mediaprovider.MediaScannerService"
             android:exported="false"

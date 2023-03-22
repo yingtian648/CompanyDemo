@@ -6,20 +6,19 @@
         android:layout_height="76px"
         android:id="@+id/naviView"
         android:layout_marginTop="10px"
-        android:background="#B2B2B2"
-        android:gravity="center_vertical"
+        android:gravity="center_vertical|end"
         android:paddingStart="20px"
         android:paddingEnd="20px">
 
         <ImageButton
-            android:id="@+id/BtnUser"
+            android:id="@+id/btnUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@drawable/user_white" />
 
         <ImageButton
-            android:id="@+id/BtnMail"
+            android:id="@+id/btnMail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50px"
@@ -27,7 +26,7 @@
             android:src="@drawable/mail_white" />
 
         <ImageButton
-            android:id="@+id/BtnWifi"
+            android:id="@+id/btnWifi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="50px"
@@ -36,11 +35,11 @@
 
         <TextView
             android:id="@+id/tvTime"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:gravity="end"
             android:layout_height="wrap_content"
             android:layout_marginStart="50px"
-            android:text="00:00:00"
+            android:text="00:00"
             android:textColor="@color/white"
             android:textSize="30px" />
     </LinearLayout>

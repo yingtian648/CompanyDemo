@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -19,7 +18,7 @@ import androidx.annotation.NonNull;
  * @Date 2023/3/20 19:23
  * @Description
  */
-public class MySurfaceView extends GLSurfaceView implements SurfaceHolder.Callback, Runnable {
+public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     private SurfaceHolder mSurfaceHolder;
     //绘图的Canvas
     private Canvas mCanvas;
@@ -38,8 +37,7 @@ public class MySurfaceView extends GLSurfaceView implements SurfaceHolder.Callba
     }
 
     public MySurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
-        // super(context, attrs, defStyleAttr);
-        super(context, attrs);
+        super(context, attrs, defStyleAttr);
         mPaint = new Paint();
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);

@@ -1,5 +1,6 @@
 package com.exa.companydemo;
 
+import android.app.UiModeManager;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.exa.companydemo.widget.MySurfaceView;
 public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
     private MySurfaceView surfaceView;
+    private int nightMode = 0;
+    private UiModeManager mUiModeManager;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -34,10 +37,13 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
     @Override
     protected void initData() {
+        mUiModeManager = getSystemService(UiModeManager.class);
+        nightMode = mUiModeManager.getNightMode();
+
         bind.showCar.setOnClickListener(new OnClickViewListener() {
             @Override
             public void onClickView(View v) {
-                bind.mapBox.setVisibility(View.VISIBLE);
+                bind.mapBox.setVisibility(View.GONE);
                 bind.carFragment.setVisibility(View.VISIBLE);
             }
         });
@@ -46,6 +52,18 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
             public void onClickView(View v) {
                 bind.mapBox.setVisibility(View.VISIBLE);
                 bind.carFragment.setVisibility(View.GONE);
+            }
+        });
+        bind.btnUIMode.setOnClickListener(new OnClickViewListener() {
+            @Override
+            public void onClickView(View v) {
+                if (nightMode == UiModeManager.MODE_NIGHT_NO) {
+                    mUiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
+                } else {
+                    mUiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
+                }
+                nightMode = mUiModeManager.getNightMode();
+                bind.btnUIMode.setText((nightMode == UiModeManager.MODE_NIGHT_YES) ? "白天模式" : "黑夜模式");
             }
         });
     }

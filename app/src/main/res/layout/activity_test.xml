@@ -36,20 +36,101 @@
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom">
 
-            <Button
-                android:id="@+id/showCar"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="显示车模"
-                android:textAllCaps="false" />
+                android:padding="10dp"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/showMap"
-                android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/showCar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="25sp"
+                    android:text="显示车模"
+                    android:textAllCaps="false" />
+
+                <Button
+                    android:id="@+id/showMap"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="25sp"
+                    android:text="显示地图"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:text="显示地图"
-                android:textAllCaps="false" />
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/btnFull"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="全屏测试"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/btnStatusBarColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="状态栏颜色"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/btnNavColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="导航栏颜色"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/btnUIMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="夜间模式"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/btnCJ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="沉浸式"
+                    android:textSize="25sp" />
+
+                <Button
+                    android:id="@+id/btnAppearance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="亮色SystemUI"
+                    android:textAllCaps="false"
+                    android:textSize="25sp" />
+            </LinearLayout>
         </LinearLayout>
     </merge>
 </layout>

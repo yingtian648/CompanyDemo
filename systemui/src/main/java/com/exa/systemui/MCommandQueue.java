@@ -149,6 +149,7 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
 
     @Override
     public void topAppWindowChanged(int displayId, boolean isFullscreen, boolean isImmersive) throws RemoteException {
+        L.dd();
         synchronized (mLock) {
             SomeArgs args = SomeArgs.obtain();
             args.argi1 = displayId;
@@ -156,7 +157,6 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
             args.argi3 = isImmersive ? 1 : 0;
             mHandler.obtainMessage(MSG_TOP_APP_WINDOW_CHANGED, args).sendToTarget();
         }
-        L.dd();
     }
 
     @Override
@@ -353,6 +353,7 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
     public void onSystemBarAppearanceChanged(int displayId, int appearance,
                                              AppearanceRegion[] appearanceRegions,
                                              boolean navbarColorManagedByIme) throws RemoteException {
+        L.dd();
         synchronized (mLock) {
             SomeArgs args = SomeArgs.obtain();
             args.argi1 = displayId;
@@ -361,15 +362,14 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
             args.arg1 = appearanceRegions;
             mHandler.obtainMessage(MSG_SYSTEM_BAR_APPEARANCE_CHANGED, args).sendToTarget();
         }
-        L.dd();
     }
 
     @Override
     public void showTransient(int displayId, int[] types) throws RemoteException {//显示瞬态--临时显示systemui
+        L.dd();
         synchronized (mLock) {
             mHandler.obtainMessage(MSG_SHOW_TRANSIENT, displayId, 0, types).sendToTarget();
         }
-        L.dd();
     }
 
     @Override
@@ -437,7 +437,6 @@ public class MCommandQueue extends IStatusBar.Stub implements DisplayManager.Dis
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             SomeArgs args;
-            L.d(TAG, "handleMessage:" + msg.what);
             switch (msg.what) {
                 case MSG_SHOW_TRANSIENT:
                     for (int i = 0; i < mCallbacks.size(); i++) {

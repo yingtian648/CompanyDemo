@@ -15,6 +15,7 @@
             android:layout_gravity="bottom"
             android:orientation="vertical"
             android:padding="10dp">
+
             <Button
                 android:id="@+id/btnStart"
                 android:layout_width="wrap_content"
@@ -22,9 +23,10 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:padding="15dp"
-                android:textAllCaps="false"
                 android:text="启动SystemUI"
+                android:textAllCaps="false"
                 android:textSize="25sp" />
+
             <Button
                 android:id="@+id/btnFull"
                 android:layout_width="wrap_content"
@@ -82,12 +84,13 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:padding="15dp"
-                android:textAllCaps="false"
                 android:text="亮色SystemUI"
+                android:textAllCaps="false"
                 android:textSize="25sp" />
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
