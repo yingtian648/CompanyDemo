@@ -20,6 +20,7 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
+import com.exa.baselib.utils.FileUtils;
 import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
@@ -56,8 +58,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -136,8 +140,23 @@ public class TestUtil {
 //        }, 3000);
     }
 
-    public static void testDialog(Activity activity, String title) {
-        final MyDialog dialog = new MyDialog(activity);
+    public static void copyAssetsFonts(Context context) {
+        // storage/emulated/0/Fonts
+        String root = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Fonts";
+        root = "storage/emulated/0/Fonts";
+        final String target = root + "/etc/fonts_personal.xml";
+        final String targetDir = root + "/fonts";
+        final String assetsFileName = "fonts_personal.xml";
+        final String assetsDirName = "fonts";
+
+        BaseConstants.getFixPool().execute(() -> {
+            FileUtils.copyAssetsFile(context, assetsFileName, target, false);
+            FileUtils.copyAssetsDir(context, assetsDirName, targetDir, false);
+        });
+    }
+
+    public static void testDialog(Activity activity, String title, int windowType) {
+        final MyDialog dialog = new MyDialog(activity, 0, windowType);
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_layout, null, false);
         Button sureBtn = view.findViewById(R.id.sure_button);
         Button cancelBtn = view.findViewById(R.id.cancel_button);
@@ -187,13 +206,16 @@ public class TestUtil {
     }
 
     private static class MyDialog extends Dialog {
+        private int windowType;
+
         public MyDialog(@NonNull Context context) {
             super(context);
             // setWindowAttrs();
         }
 
-        public MyDialog(@NonNull Context context, int themeResId) {
+        public MyDialog(@NonNull Context context, int themeResId, int windowType) {
             super(context, themeResId);
+            this.windowType = windowType;
             // setWindowAttrs();
         }
 
@@ -238,7 +260,10 @@ public class TestUtil {
             attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
 //                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
             attributes.setTitle("MainActivity_Dialog");
-            attributes.type = 2501;//对应windowType=SCENE_LOW_POWER
+            attributes.type = 2501;
+            if (windowType > 2500) {
+                attributes.type = windowType;//对应windowType
+            }
             window.setAttributes(attributes);
             return window;
         }
@@ -468,6 +493,8 @@ public class TestUtil {
 //        filter.addDataScheme("file");//for MediaProvider
         context.registerReceiver(mReceiver, filter);
         isRegisterBroadCast = true;
+
+
     }
 
 
@@ -509,6 +536,7 @@ public class TestUtil {
      * 调试字体
      */
     public static void testFonts(Activity activity) {
+        L.dd();
         activity.findViewById(R.id.fontsBox).setVisibility(View.VISIBLE);
         final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
         TextView text0 = activity.findViewById(R.id.text);

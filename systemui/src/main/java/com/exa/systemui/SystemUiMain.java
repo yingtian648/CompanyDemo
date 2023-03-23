@@ -112,7 +112,6 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         mWindowManagerService = WindowManagerGlobal.getWindowManagerService();
         mDisplayManager = (DisplayManager) mContext.getSystemService(Context.DISPLAY_SERVICE);
-        mCommandQueue = new MCommandQueue(mContext);
         mUiModeManager = mContext.getSystemService(UiModeManager.class);
         mDisplayId = mDisplayManager.getDisplay(Display.DEFAULT_DISPLAY).getDisplayId();
         registerCallback();
@@ -127,6 +126,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
     }
 
     private void registerMessageQueue() {
+        mCommandQueue = new MCommandQueue(mContext);
         mCommandQueue.registerCallback(this);
         mBarService = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService("statusbar"));//Context.STATUS_BAR_SERVICE
@@ -273,12 +273,14 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         }, null);
     }
 
+    // MCommandQueue 回调-打断瞬态
     @Override
     public void abortTransient(int displayId, int[] types) {
         // 移除——延时隐藏瞬态systemui
         mHandler.removeCallbacksAndMessages(null);
     }
 
+    // MCommandQueue 回调-显示瞬态
     @Override
     public void showTransient(int displayId, int[] types) {
         // 延时隐藏瞬态systemui

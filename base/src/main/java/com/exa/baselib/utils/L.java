@@ -46,7 +46,7 @@ public class L {
         }
     }
 
-    public static void fd(String args, Object... obj) {
+    public static void df(String args, Object... obj) {
         L.msg = String.format(args, obj);
         if (DEBUG) {
             Log.e(TAG, String.format(args, obj));
@@ -120,14 +120,14 @@ public class L {
     public static void e(String msg, Throwable throwable) {
         L.msg = msg;
         if (isLog) {
-            Log.e(TAG, "" + msg + getThrowableLineNum(throwable));
+            Log.e(TAG, msg + "," + getThrowableLineNum(throwable));
         }
     }
 
     public static void e(String TAG, String msg, Throwable throwable) {
         L.msg = msg;
         if (isLog) {
-            Log.e(L.TAG + TAG_DIVIDER + TAG, "" + msg + getThrowableLineNum(throwable));
+            Log.e(L.TAG + TAG_DIVIDER + TAG, msg + "," + getThrowableLineNum(throwable));
         }
     }
 

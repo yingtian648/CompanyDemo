@@ -51,12 +51,14 @@
 
     <LinearLayout
         android:id="@+id/btnBox"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
 
         <Button
             android:id="@+id/btnSystemUI"
@@ -66,10 +68,11 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="SystemUi测试"
+            android:layout_margin="20dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="30px"
-            app:layout_constraintBottom_toTopOf="@id/btnApp" />
+            />
 
         <Button
             android:id="@+id/btnPlay"
@@ -79,6 +82,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:layout_margin="20dp"
             android:text="视频播放"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -89,6 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
+            android:layout_margin="20dp"
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -105,6 +110,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:layout_margin="20dp"
             android:text="LocationTest"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -118,6 +124,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:layout_margin="20dp"
             android:text="AppInfos"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -131,6 +138,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:layout_margin="20dp"
             android:text="测试按钮"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -143,7 +151,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="180dp"
         android:orientation="vertical"
-        android:padding="20px"
+        android:padding="20dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">

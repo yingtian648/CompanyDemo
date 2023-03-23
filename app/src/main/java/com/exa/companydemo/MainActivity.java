@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.storage.StorageManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -38,9 +39,13 @@ import com.gxa.car.scene.ServiceStateListener;
 import com.gxa.car.scene.WindowChangeListener;
 import com.gxatek.cockpit.screensaver.aidl.IScreenSaverViewAidl;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -122,8 +127,42 @@ public class MainActivity extends BaseActivity {
 //        BaseConstants.getHandler().postDelayed(() -> {
 //            test();
 //        }, 5000);
-
+        List<String> list = new ArrayList<>();
+        String data = "www.www.wwxxsda";
+        list.add(data);
+        L.d("contains:" + list.contains(data));
     }
+
+    public long getCurrentTimeZoneTimeMillis(int utcDate, double utcTime) {
+        String time;
+        long result = System.currentTimeMillis();
+        if (utcDate <= 0 || utcTime < 0.0d) {
+            return result;
+        }
+        String date = String.valueOf(utcDate);
+        String time2 = String.valueOf(utcTime);
+        if (time2.contains(".")) {
+            time = time2.substring(0, time2.indexOf("."));
+        } else {
+            time = time2;
+        }
+        try {
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+            calendar.set(Integer.parseInt(date.substring(date.length() - 2)) + 2000,
+                    Integer.parseInt(date.substring(date.length() - 4,
+                            date.length() - 2)) - 1,
+                    Integer.parseInt(date.substring(0, date.length() - 4)),
+                    Integer.parseInt(time.substring(0, time.length() - 4)),
+                    Integer.parseInt(time.substring(time.length() - 4, time.length() - 2)),
+                    Integer.parseInt(time.substring(time.length() - 2)));
+            return calendar.getTimeInMillis();
+        } catch (Exception e) {
+            e.printStackTrace();
+            L.w("getCurrentTimeZoneTimeMillis time parse err!!!");
+            return result;
+        }
+    }
+
 
     private void bindScreenSaver() {
         Intent intent = new Intent("com.gxatek.cockpit.screensaver");
@@ -151,54 +190,20 @@ public class MainActivity extends BaseActivity {
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
-//        StatubarUtil.setNavigationBarColor(this, R.color.yellow);
-        Utils.openApp(this,"com.desaysv.ivi.vds.upgrade");
-//        BaseConstants.getFixPool().execute(() -> {
-//            for (int i = 0; i < 10; i++) {
-//                L.dd("index:" + i);
-//                int winType = SceneManager.getInstance(mContext).getWindowType(SceneManager.SCENE_SYSTEM_CONTROL_WINDOW);
-//                L.dd(winType);
-//                setText("winType = " + winType);
-//            }
-//        });
-//        StatubarUtil.setNavigationBarColorSingle(this, R.color.yellow);
+//        TestUtil.copyAssetsFonts(this);
 
-//        TestUtil.testFonts(this);
+        TestUtil.testFonts(this);
+        String personalPath = "/storage/emulated/0/Fonts/etc/fonts_personal.xml";
+        File file = new File(personalPath);
+        L.d("file:" + file.exists());
 
 //        BuildTestToast.makeMyToast(this);
 //        TestUtil.showToast(MainActivity.this);
-//        TestUtil.testDialog(this, "111111");
-
-//        L.d("IBinder.FLAG_ONEWAY=" + IBinder.FLAG_ONEWAY);
+//        TestUtil.testDialog(this, "111111",2529);
 //        TestUtil.usbPermission(this);
 //        ScreenUtils.setFullScreen(this);
 
 //        TestUtil.sendBroadcast(this, "com_exa_companydemo_action", null);
-
-//        IntentFilter filter = new IntentFilter();
-//        filter.addAction("com_exa_companydemo_action");
-//        L.dd("registerReceiver");
-//        registerReceiver(new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                L.dd(intent.getAction());
-//            }
-//        }, filter);
-
-//        Intent intent = new Intent();
-//        intent.setClassName("com.android.server.statusbar","com.android.server.statusbar.StatusBarManagerService");
-//        bindService(intent, new ServiceConnection() {
-//            @Override
-//            public void onServiceConnected(ComponentName name, IBinder service) {
-//                L.d("onServiceConnected");
-//            }
-//
-//            @Override
-//            public void onServiceDisconnected(ComponentName name) {
-//                L.d("onServiceConnected");
-//            }
-//        },Context.BIND_AUTO_CREATE);
-
     }
 
     @Override
