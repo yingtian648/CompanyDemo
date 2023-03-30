@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.hardware.display.DisplayManager;
 import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
@@ -34,13 +35,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import androidx.annotation.NonNull;
 
 import static com.exa.baselib.utils.L.TAG;
 
 public class Utils {
-    public static void openApp(Context mContext,String packageName) {
+    public static void openApp(Context mContext, String packageName) {
         if (packageName != null) {
             try {
                 PackageManager packageManager = mContext.getPackageManager();
@@ -52,7 +55,7 @@ public class Utils {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                L.e("openApp err",e);
+                L.e("openApp err", e);
             }
         }
     }
@@ -63,6 +66,33 @@ public class Utils {
         Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.MICRO_KIND);
         L.d("解析缩略图：" + (System.currentTimeMillis() - start) + " " + ((bitmap == null ? 0 : bitmap.getByteCount())));
         return (bitmap == null || bitmap.getByteCount() == 0) ? null : bitmap;
+    }
+
+    public static <T> T reflexClass(T t, String clsName, Object... objects) {
+        try {
+            // 获取类
+            Class clazz = Class.forName(clsName);
+            // 获取只有一个Context参数的构造函数
+            Constructor constructor = clazz.getConstructor(Context.class);
+            T result = (T) constructor.newInstance(objects);
+            return result;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            L.e("reflexClass NoSuchMethodException,", e);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            L.e("reflexClass ClassNotFoundException,", e);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            L.e("reflexClass IllegalAccessException,", e);
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            L.e("reflexClass InstantiationException,", e);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+            L.e("reflexClass InvocationTargetException,", e);
+        }
+        return null;
     }
 
     /**
@@ -320,11 +350,12 @@ public class Utils {
 
     /**
      * 在指定屏幕上启动Activity
+     *
      * @param context
      * @param clazz
      * @param displayId
      */
-    public static void startActivityByDisplayId(Activity context,Class clazz, int displayId) {
+    public static void startActivityByDisplayId(Activity context, Class clazz, int displayId) {
         Display mDisplay = context.getWindowManager().getDefaultDisplay();//默认显示器id 0
         DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
         Display[] displays = displayManager.getDisplays(null);

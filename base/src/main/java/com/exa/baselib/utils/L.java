@@ -190,6 +190,15 @@ public class L {
     /**
      * 获取调用方法名
      */
+    public static void de(Throwable e) {
+        StackTraceElement[] s = Thread.currentThread().getStackTrace();
+        String methodName = s[3].getMethodName();
+        e(methodName + "," + getThrowableLineNum(e));
+    }
+
+    /**
+     * 获取调用方法名
+     */
     public static void dd(int msg) {
         StackTraceElement[] s = Thread.currentThread().getStackTrace();
         String methodName = s[3].getMethodName();
