@@ -49,9 +49,22 @@ public class ScreenUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = window.getDecorView().getWindowInsetsController();
             if (controller != null) {
-                // 手机自动隐藏状态栏导航栏
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                /**
+                 * setSystemBarsBehavior 设置状态栏与Window的关系，覆盖在Window上/挤压Window大小来显示SystemUI
+                 * 全屏——粘性沉浸模式——上拉下滑显示出半透明SystemUI,SystemUI覆盖在Activity上面，Activity大小不变
+                 * SystemUI 会延时隐藏 setOnSystemUiVisibilityChangeListener不回调状态改变
+                 * BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                 * 全屏——沉浸模式——上拉下滑显示出SystemUI,SystemUI会挤压Activity高度
+                 * BEHAVIOR_SHOW_BARS_BY_TOUCH
+                 * 全屏——沉浸模式——上拉下滑显示出SystemUI,SystemUI会挤压Activity高度
+                 * BEHAVIOR_SHOW_BARS_BY_SWIPE
+                 */
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE);
                 controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+                // 亮色状态栏
+                controller.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+                // 非亮色状态栏
+                controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE

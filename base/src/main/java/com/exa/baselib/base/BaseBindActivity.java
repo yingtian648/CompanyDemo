@@ -2,6 +2,7 @@ package com.exa.baselib.base;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.exa.baselib.utils.OnClickViewListener;
 

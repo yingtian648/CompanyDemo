@@ -24,6 +24,7 @@ import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.EventBean;
 import com.exa.baselib.bean.Files;
 import com.exa.baselib.utils.AudioPlayerUtil;
+import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.Utils;

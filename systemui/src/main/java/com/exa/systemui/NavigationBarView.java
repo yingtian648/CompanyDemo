@@ -76,6 +76,7 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
 
     private void updateIconColor() {
         boolean showLight = false;
+        mNightMode = mUiModeManager.getNightMode();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             showLight = mAppearance == WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
         }

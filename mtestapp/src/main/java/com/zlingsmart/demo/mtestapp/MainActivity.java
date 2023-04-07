@@ -23,8 +23,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.ScreenUtils;
+import com.gxa.car.scene.SceneInfo;
+import com.gxa.car.scene.SceneManager;
+import com.gxa.car.scene.ServiceStateListener;
+import com.gxa.car.scene.WindowChangeListener;
 import com.zlingsmart.demo.mtestapp.util.OnClickItemListener;
 
 import java.util.ArrayList;
@@ -35,11 +40,13 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements OnClickItemListener {
     private RecyclerView listView;
+    private Context mContext;
     private List<Pair<String, Pair<String, Integer>>> dataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_main);
         initData();
         initListView();
@@ -47,7 +54,41 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     }
 
     private void test() {
+        listenWindowChangeStatus();
+    }
 
+    private void registerWindowChangedListener() {
+        L.dd();
+        SceneManager.getInstance(mContext).registerServiceStateListener(new ServiceStateListener() {
+            @Override
+            public void onServiceStarted() {
+                L.dd();
+                BaseConstants.getHandler().postDelayed(()->{
+                    listenWindowChangeStatus();
+                },3000);
+
+            }
+
+            @Override
+            public void onServiceDied() {
+                L.dd();
+            }
+        });
+
+    }
+
+    private void listenWindowChangeStatus(){
+        SceneManager.getInstance(mContext).addWindowChangeListener(new WindowChangeListener() {
+            @Override
+            public void onWindowsChanged(SceneInfo sceneInfo, int i) {
+                L.d("onWindowsChanged : " + sceneInfo.getPackageName() + ", windowType = " + sceneInfo.getWindowType());
+            }
+
+            @Override
+            public void onFocusChanged(SceneInfo sceneInfo, SceneInfo sceneInfo1) {
+                L.d("onFocusChanged : " + sceneInfo.getPackageName() + ", windowType = " + sceneInfo1.getWindowType());
+            }
+        });
     }
 
     /**

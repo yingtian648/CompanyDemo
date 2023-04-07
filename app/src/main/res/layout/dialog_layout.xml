@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="500dp"
-    android:layout_height="400dp"
-    android:focusableInTouchMode="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/titleT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30dp"
+        android:layout_width="500px"
+        android:layout_height="120px"
+        android:textSize="30px"
+        android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:text="MyDialogTitle" />
 
-    <EditText
+    <TextView
         android:id="@+id/edt"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="180px"
         android:paddingHorizontal="30dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"

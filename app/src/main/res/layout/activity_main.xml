@@ -58,6 +58,7 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         >
 
         <Button
@@ -101,6 +102,21 @@
             android:textAllCaps="false"
             android:textColor="@color/text_color"
             android:textSize="30px" />
+
+        <Button
+            android:id="@+id/btnNightMode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_margin="20dp"
+            android:background="@color/btn_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="白天黑夜"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color"
+            android:textSize="30px" />
+
 
         <Button
             android:id="@+id/btnApp"

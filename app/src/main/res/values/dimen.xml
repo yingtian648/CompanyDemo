@@ -4,10 +4,13 @@
 
 
     <dimen name="toast_max_width">780dp</dimen>
+    <dimen name="toast_min_width">492dp</dimen>
     <dimen name="toast_line_min_height">60dp</dimen>
     <dimen name="toast_text_size">27sp</dimen>
     <dimen name="toast_line_height">42dp</dimen>
     <dimen name="toast_text_marginHorizontal">66dp</dimen>
     <dimen name="toast_text_marginVertical">9dp</dimen>
     <dimen name="toast_bg_corners_radius">15dp</dimen>
+
+    <dimen name="toast_h">60dp</dimen>
 </resources>

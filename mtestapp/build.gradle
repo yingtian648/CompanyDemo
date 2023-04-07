@@ -8,7 +8,7 @@ android {
 //    "com.zlingsmart.demo.mtestapp"
 //    "com.gxatek.cockpit.car.settings"//我的车-设置
     defaultConfig {
-        applicationId "com.gxatek.cockpit.car.settings"
+        applicationId "com.zlingsmart.demo.mtestapp"
         minSdk 26
         targetSdk 30
         versionCode 1
@@ -48,6 +48,14 @@ android {
         // viewBinding = true  //for id 'kotlin-parcelize'
     }
 
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', 'src/main/java-gen','src/main/aidl']
+            jniLibs.srcDirs = ['libs']
+            aidl.srcDirs = ['src/main/aidl']
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -65,6 +73,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation files('libs\\scenemanager.jar')
     testImplementation 'junit:junit:4.13.2'
     implementation project(path: ':base')
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

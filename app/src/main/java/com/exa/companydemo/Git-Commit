@@ -17,14 +17,21 @@ Build:mpass
 Test:upass
 BugID:noid
 
-feat[CarLocationService]:speed need convert to m/s.
-rootcause:speed need convert to m/s.
-solution:speed need convert to m/s.
+feat[framework]:Adapt the fonts set by the user.
+rootcause:Adapt the fonts set by the user.
+solution:Adapt the fonts set by the user.
 Product:A02
 Build:mpass
 Test:upass
 BugID:noid
 
+fix[framework]:add Toast min width.
+rootcause:Toast min-width mismatch.
+solution:add Toast min width.
+Product:A02
+Build:mpass
+Test:upass
+BugID:ID1097288
 
 feat[CarPhoneWindowManager]:add customer scene layer policy.
 rootcause:add customer scene layer policy.
@@ -52,17 +59,33 @@ Build:mpass
 Test:upass
 BugID:TAPD-ID1075758
 
-feat[CarTransition]:add package config in scene_layere_maps.
-rootcause:add package config in scene_layere_maps.
-solution: add package config in scene_layere_maps.
+fix[framework]:fix toast display position problem.
+rootcause:not adapted User-defined Toast.
+solution:add User-defined Toast show flag.
+Product:A02
+Build:mpass
+Test:upass
+BugID:ID1098668
+
+fix[car_product]:Add start title overlay.
+rootcause:Add start title overlay.
+solution:Add start title overlay.
 Product:A02
 Build:mpass
 Test:upass
 BugID:noid
 
-feat[PhoneWindowManager]:Add conditions for using hierarchy restrictions.
-rootcause:Add conditions for using hierarchy restrictions.
-solution:Add conditions for using hierarchy restrictions.
+feat[WMS]:Cancel full-screen hint dialog.
+rootcause:full-screen hint dialog display err.
+solution:Cancel full-screen hint dialog.
+Product:A02
+Build:mpass
+Test:upass
+BugID:ID1111417
+
+fix[location]:fix GnssLocationExtHelper null err.
+rootcause:GnssLocationProviderExt Invoking process issues.
+solution:Add Logical Judgment.
 Product:A02
 Build:mpass
 Test:upass

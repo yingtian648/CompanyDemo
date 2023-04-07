@@ -23,6 +23,7 @@ public class App extends Application {
         super.onCreate();
         Constants.init();
         BaseConstants.init();
+
         L.init("CompanyDemo", true);
         app = this;
         String screen = "屏幕宽高px：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);

@@ -74,9 +74,9 @@ import androidx.core.content.PermissionChecker;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static com.exa.baselib.utils.L.TAG;
+import static com.exa.baselib.utils.L.v;
 
 public class TestUtil {
-
     /**
      * 测试 Toast
      *
@@ -86,28 +86,23 @@ public class TestUtil {
         L.d("showToast");
         String msg = "一二三四五六七八一二三四五六七八一二三四五六七八";
 //        msg = "一二三四五六七";
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 //        BaseConstants.getHandler().postDelayed(() -> {
 //            CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
-//        }, 6000);
+//        }, 7000);
 //        BaseConstants.getHandler().postDelayed(() -> {
-//            String smsg = "好了";
-//            CarToast.makeText(context, smsg, Toast.LENGTH_LONG).show();
+//            CarToast.makeText(context, "好了", Toast.LENGTH_LONG).show();
 //        }, 12000);
 
-//        CarToast carToast = CarToast.makeText(context,msg,CarToast.LENGTH_SHORT);
-//        carToast.setType(CarToast.TYPE_WARNING);
-//        carToast.show();
-
-//        Toast toast = new Toast(context);
-//        View view = LayoutInflater.from(context).inflate(R.layout.layout, null, false);
-//        toast.setView(view);
-//        toast.show();
-
-//        CarToast carToast = new CarToast(context);
-//        View viewc = LayoutInflater.from(context).inflate(R.layout.layout, null, false);
-//        carToast.setView(viewc);
-//        carToast.show();
+        Toast toast = new Toast(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.transient_notification_customer, null, false);
+//        view = LayoutInflater.from(context).inflate(R.layout.transient_notification_new, null, false);
+        view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
+        TextView tv = view.findViewById(R.id.message);
+        tv.setText("自定义非全屏宽View");
+        toast.setGravity(Gravity.TOP, 0, -5);
+        toast.setView(view);
+        toast.show();
 
 //        final WindowManager manager = getSystemService(WindowManager.class);
 //        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
@@ -140,10 +135,11 @@ public class TestUtil {
 //        }, 3000);
     }
 
+    // 关联 SystemFonts,TypeFace
     public static void copyAssetsFonts(Context context) {
         // storage/emulated/0/Fonts
         String root = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Fonts";
-        root = "storage/emulated/0/Fonts";
+        root = "/data/personal_fonts";
         final String target = root + "/etc/fonts_personal.xml";
         final String targetDir = root + "/fonts";
         final String assetsFileName = "fonts_personal.xml";
@@ -247,20 +243,21 @@ public class TestUtil {
             if (attributes == null) {
                 return window;
             }
-            attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
-            attributes.height = WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.width = 600; //WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.height = 500;// WindowManager.LayoutParams.MATCH_PARENT;
             attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.dimAmount = 0f;
-            attributes.flags = attributes.flags | WindowManager.LayoutParams.FLAG_DIM_BEHIND;
-//                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-//                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
+            attributes.flags = attributes.flags
+                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE //弹出后不会抢window焦点
 //                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-//                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+//                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+            ;
             attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
 //                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
             attributes.setTitle("MainActivity_Dialog");
-            attributes.type = 2501;
+//            attributes.type = 2501;
             if (windowType > 2500) {
                 attributes.type = windowType;//对应windowType
             }

@@ -284,7 +284,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
     @Override
     public void showTransient(int displayId, int[] types) {
         // 延时隐藏瞬态systemui
-        mHandler.postDelayed(() -> hideTransient(displayId), 2500);
+//        mHandler.postDelayed(() -> hideTransient(displayId), 2500);
     }
 
     // 隐藏瞬态systemui
