@@ -205,7 +205,6 @@ public class MainActivity extends BaseActivity {
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
-
 //        registerWindowChangedListener();
 //        Object fontManager = getSystemService("font");
 //        if(fontManager!=null){

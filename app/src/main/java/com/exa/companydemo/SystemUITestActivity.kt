@@ -26,29 +26,7 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
     private fun initOperateBtn() {
         // 显示弹框 - 全屏弹框
         bind.showDialog.setOnClickListener {
-            // 全屏——向后倾斜——上拉下滑显示出SystemUI,SystemUI会挤压Activity高度
-//            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
-//                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            // 全屏——沉浸模式——上拉下滑显示出SystemUI,SystemUI会挤压Activity高度
-//            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
-//                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-//                    View.SYSTEM_UI_FLAG_IMMERSIVE
-            // 全屏——粘性沉浸模式——上拉下滑显示出半透明SystemUI,SystemUI覆盖在Activity上面，Activity大小不变
-            // SystemUI 会延时隐藏 setOnSystemUiVisibilityChangeListener不回调状态改变
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            // 全屏————粘性沉浸模式——上拉下滑显示出SystemUI,SystemUI覆盖在Activity上面，Activity大小不变
-            // SystemUI 不会延时隐藏
-//            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE
-//                    // Set the content to appear under the system bars so that the
-//                    // content doesn't resize when the system bars hide and show.
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                    // Hide the nav bar and status bar
-//                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-//                    or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
         }
     }
 
