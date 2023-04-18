@@ -21,10 +21,9 @@ public class AppInfo {
     @Override
     public String toString() {
         return "" + name +
-                "\t package='" + packageName + '\'' +
+                "\t\r package='" + packageName + '\'' +
                 ", apkDir='" + apkSourceDir + '\'' +
                 ", vName='" + versionName + '\'' +
-                ", vCode=" + versionCode +
-                '}';
+                ", vCode=" + versionCode;
     }
 }

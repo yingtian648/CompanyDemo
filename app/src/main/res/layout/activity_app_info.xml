@@ -13,7 +13,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textIsSelectable="true"
-            android:textSize="20px" />
+            android:background="@null"
+            android:textCursorDrawable="@null"
+            android:inputType="none"
+            android:textSize="25px" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

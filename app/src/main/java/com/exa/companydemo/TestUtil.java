@@ -30,11 +30,18 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Pair;
+import android.view.ActionMode;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.SearchEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
 import android.widget.CarToast;
 import android.widget.TextView;
@@ -168,6 +175,7 @@ public class TestUtil {
                 dialog.cancel();
             }
         });
+        dialog.setCancelable(false);
         dialog.show();
     }
 
@@ -232,13 +240,19 @@ public class TestUtil {
             super.onCreate(savedInstanceState);
         }
 
+        @Override
+        public boolean onTouchEvent(@NonNull MotionEvent event) {
+//            L.dd(event.getAction());
+            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                L.dd("点击去弹框之外区域");
+            }
+            return super.onTouchEvent(event);
+        }
+
         /* access modifiers changed from: protected */
         @SuppressLint("WrongConstant")
         private Window setWindowAttrs() {
             Window window = getWindow();
-            if (window == null) {
-                return null;
-            }
             WindowManager.LayoutParams attributes = window.getAttributes();
             if (attributes == null) {
                 return window;
@@ -249,15 +263,18 @@ public class TestUtil {
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.dimAmount = 0f;
             attributes.flags = attributes.flags
-                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
-                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE //弹出后不会抢window焦点
+                    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+//                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE //弹出后不会抢window焦点
+//                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
 //                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
 //                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+            // 未设置FLAG_NOT_FOCUSABLE时，次标志可防止此窗口成为输入法的目标
+            // 设置了FLAG_NOT_FOCUSABLE时，即使窗口不可聚焦，设置此标志也会请求将窗口作为输入法目标
             ;
             attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
 //                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
             attributes.setTitle("MainActivity_Dialog");
-//            attributes.type = 2501;
+            attributes.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
             if (windowType > 2500) {
                 attributes.type = windowType;//对应windowType
             }
@@ -594,25 +611,25 @@ public class TestUtil {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
-                L.e("registerFullScreenListener onChange1:" + selfChange);
+//                L.e("registerFullScreenListener onChange1:" + selfChange);
             }
 
             @Override
             public void onChange(boolean selfChange, @Nullable Uri uri) {
                 super.onChange(selfChange, uri);
-                L.e("registerFullScreenListener onChange2:" + selfChange);
+//                L.e("registerFullScreenListener onChange2:" + selfChange);
             }
 
             @Override
             public void onChange(boolean selfChange, @Nullable Uri uri, int flags) {
                 super.onChange(selfChange, uri, flags);
-                L.e("registerFullScreenListener onChange3:" + selfChange + ",flags:" + flags);
+//                L.e("registerFullScreenListener onChange3:" + selfChange + ",flags:" + flags);
             }
 
             @Override
             public void onChange(boolean selfChange, @NonNull Collection<Uri> uris, int flags) {
                 super.onChange(selfChange, uris, flags);
-                L.e("registerFullScreenListener onChange4:" + selfChange + ",flags:" + flags);
+//                L.e("registerFullScreenListener onChange4:" + selfChange + ",flags:" + flags);
             }
         });
     }

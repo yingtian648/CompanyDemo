@@ -39,13 +39,15 @@
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/dialog_layout_mycar.xml" value="0.16744791666666667" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/input_layout.xml" value="0.3515625" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/item_music_load.xml" value="0.36614583333333334" />
-        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/layout.xml" value="0.33489583333333334" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/layout.xml" value="0.1" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/layout_test.xml" value="0.12708333333333333" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/layout_toast.xml" value="0.3494791666666667" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/system_ui_navigationbar.xml" value="0.17473958333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/system_ui_statusbar.xml" value="0.1" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/toast_test.xml" value="0.17473958333333334" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/transient_notification.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/transient_notification_customer.xml" value="0.3494791666666667" />
+        <entry key="..\:/workspace/CompanyDemo/app/src/main/res/layout/transient_notification_new.xml" value="0.17473958333333334" />
         <entry key="..\:/workspace/CompanyDemo/base/src/main/res/drawable/arrow_back_black.xml" value="0.2375" />
         <entry key="..\:/workspace/CompanyDemo/base/src/main/res/drawable/fullscreen_exit_white.xml" value="0.2705" />
         <entry key="..\:/workspace/CompanyDemo/base/src/main/res/drawable/fullscreen_white.xml" value="0.2705" />
@@ -75,7 +77,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

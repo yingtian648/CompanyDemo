@@ -18,28 +18,25 @@ public class ScreenUtils {
      * @param activity
      */
     public static void hideStatusBars(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
-            if (controller != null) {
-                // 手机自动隐藏状态栏导航栏
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
-//                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
-//                    @Override
-//                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-//                        L.d("onControllableInsetsChanged：setFullScreen");
-//                    }
-//                });
-            }
-        } else {
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+//            if (controller != null) {
+//                // 手机自动隐藏状态栏导航栏
+//                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+//                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+////                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+////                    @Override
+////                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+////                        L.d("onControllableInsetsChanged：setFullScreen");
+////                    }
+////                });
+//            }
+//        } else {
+            int option = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             activity.getWindow().getDecorView().setSystemUiVisibility(option);
-        }
+//        }
     }
 
     /**
@@ -59,12 +56,12 @@ public class ScreenUtils {
                  * 全屏——沉浸模式——上拉下滑显示出SystemUI,SystemUI会挤压Activity高度
                  * BEHAVIOR_SHOW_BARS_BY_SWIPE
                  */
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_SWIPE);
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                 controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
                 // 亮色状态栏
-                controller.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+                // controller.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
                 // 非亮色状态栏
-                controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
+                // controller.setSystemBarsAppearance(0, WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS);
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE

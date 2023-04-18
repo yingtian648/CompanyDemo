@@ -75,13 +75,13 @@ Build:mpass
 Test:upass
 BugID:noid
 
-feat[WMS]:Cancel full-screen hint dialog.
-rootcause:full-screen hint dialog display err.
-solution:Cancel full-screen hint dialog.
+feat[WMS]:add click full-screen operation to show/hide SystemUI.
+rootcause:add click full-screen operation to show/hide SystemUI.
+solution:add click full-screen operation to show/hide SystemUI.
 Product:A02
 Build:mpass
 Test:upass
-BugID:ID1111417
+BugID:noid
 
 fix[location]:fix GnssLocationExtHelper null err.
 rootcause:GnssLocationProviderExt Invoking process issues.

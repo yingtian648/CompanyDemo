@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
-
+    android:sharedUserId="android.uid.system"
     >
 
     <!-- android:sharedUserId="android.uid.system" -->
@@ -26,10 +26,10 @@
         <activity
             android:name=".TestActivity"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".inputmethod.InputMethodSettingActivity"
@@ -45,11 +45,11 @@
             android:exported="false" />
         <activity
             android:name=".SystemUITestActivity"
-            android:exported="true" >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".common.AppInfoActivity"
@@ -65,12 +65,12 @@
         <activity
             android:name=".VideoPlayerActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="landscape">
-<!--             <intent-filter>-->
-<!--             <action android:name="android.intent.action.MAIN" />-->
-<!--             <category android:name="android.intent.category.LAUNCHER" />-->
-<!--             </intent-filter>-->
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustResize">
+            <!--             <intent-filter>-->
+            <!--             <action android:name="android.intent.action.MAIN" />-->
+            <!--             <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--             </intent-filter>-->
         </activity>
         <activity
             android:name=".musicload.MediaLoadActivity"
@@ -117,13 +117,15 @@
                 android:resource="@xml/pathlist" />
         </provider>
 
-        <receiver android:name=".mediaprovider.MediaScannerReceiver"
+        <receiver
+            android:name=".mediaprovider.MediaScannerReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
             </intent-filter>
         </receiver>
+
         <service
             android:name=".mediaprovider.MediaScannerService"
             android:exported="false"
@@ -132,6 +134,18 @@
             android:name=".common.MyService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".accessibility.MyAccessibilityService"
+            android:exported="true"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessible_service_config" />
+        </service>
         <service
             android:name=".service.MAidlService"
             android:enabled="true"
@@ -142,8 +156,8 @@
         </service>
         <service
             android:name=".inputmethod.MInputMethodService"
-            android:label="@string/app_name"
             android:exported="true"
+            android:label="@string/app_name"
             android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter android:priority="1">
                 <action android:name="android.view.InputMethod" />
@@ -186,5 +200,9 @@
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 </manifest>

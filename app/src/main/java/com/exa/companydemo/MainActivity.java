@@ -1,8 +1,11 @@
 package com.exa.companydemo;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Instrumentation;
+import android.app.NotificationManager;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -19,12 +22,16 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.RemoteException;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
+import android.view.accessibility.AccessibilityNodeInfo;
+import android.view.accessibility.AccessibilityWindowInfo;
 import android.widget.Button;
+import android.widget.CarToast;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +40,11 @@ import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.baselib.utils.Utils;
+import com.exa.companydemo.accessibility.AccessibilityHelper;
+import com.exa.companydemo.accessibility.MyAccessibilityService;
 import com.exa.companydemo.common.AppInfoActivity;
 import com.exa.companydemo.location.LocationActivity;
 import com.gxa.car.scene.SceneInfo;
@@ -45,6 +55,7 @@ import com.gxatek.cockpit.screensaver.aidl.IScreenSaverViewAidl;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
@@ -69,6 +80,7 @@ public class MainActivity extends BaseActivity {
     private View toastView;
     private WindowManager windowManager;
     private TextView tv;
+    private UiModeManager modeManager;
 
     @Override
     protected void initData() {
@@ -86,7 +98,10 @@ public class MainActivity extends BaseActivity {
     protected void initView() {
         mContext = this;
         Tools.setScreenBrightness(this, 50);
-        checkPermission();
+        modeManager = getSystemService(UiModeManager.class);
+        boolean night = modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES;
+        L.d("黑夜模式：" + night);
+//        checkPermission();
 
         TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
@@ -112,7 +127,6 @@ public class MainActivity extends BaseActivity {
         });
         findViewById(R.id.btnNightMode).setOnClickListener(v -> {//am start com.android.engmode
             L.w("白天黑夜模式");
-            UiModeManager modeManager = getSystemService(UiModeManager.class);
             if (modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES) {
                 modeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
             } else {
@@ -131,81 +145,15 @@ public class MainActivity extends BaseActivity {
             Tools.hideKeyboard(editText);
             return false;
         });
-//        editText.setOnSystemUiVisibilityChangeListener(visibility -> {
-//            L.e("OnSystemUiVisibilityChanged: " + visibility);
-//        });
-    }
-
-    private void bindScreenSaver() {
-        Intent intent = new Intent("com.gxatek.cockpit.screensaver");
-        intent.setClassName("com.gxatek.cockpit.screensaver", "com.gxatek.cockpit.screensaver.ScreenSaverService");
-        bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                IScreenSaverViewAidl aidl = IScreenSaverViewAidl.Stub.asInterface(service);
-                try {
-                    aidl.startScreenViews();
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                    L.e("err:" + e.getMessage());
-                } finally {
-                    finish();
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        }, Context.BIND_AUTO_CREATE);
-    }
-
-    @SuppressLint("WrongConstant")
-    private void testFlag() {
-        L.d("------------------------------------------------------------");
-        Window window = getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        L.d("start SystemUiVisibility:" + window.getDecorView().getSystemUiVisibility());
-
-        int[] systemUiFlags = {
-                View.SYSTEM_UI_FLAG_VISIBLE,
-                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR,
-                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR,
-                View.SYSTEM_UI_FLAG_LOW_PROFILE,
-                View.SYSTEM_UI_FLAG_IMMERSIVE,
-                SYSTEM_UI_FLAG_LAYOUT_STABLE,
-                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION,
-                SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN,
-                SYSTEM_UI_FLAG_HIDE_NAVIGATION,
-                View.SYSTEM_UI_FLAG_FULLSCREEN,
-                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        };
-        int option = SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        window.getDecorView().setVisibility(option);
-
-        L.d("start SystemUiVisibility:" + window.getDecorView().getSystemUiVisibility());
-        params.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            params.setFitInsetsTypes(0);
-            params.setFitInsetsSides(0);
-            WindowInsetsController controller = window.getDecorView().getWindowInsetsController();
-            controller.hide(WindowInsets.Type.navigationBars());
-        }
-        L.d("new flags 222:" + params.flags);
-
-        window.setAttributes(params);
-        L.d("------------------------------------------------------------");
-        registerTimeUpdateReceiver();
     }
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
-
+//        BaseConstants.getHandler().postDelayed(() -> {
+//            Toast.makeText(this,"121212",Toast.LENGTH_SHORT).show();
+//            manager.cancelAll();
+//        }, 3000);
+//        checkPermission();
 //        registerWindowChangedListener();
 //        Object fontManager = getSystemService("font");
 //        if(fontManager!=null){
@@ -221,6 +169,11 @@ public class MainActivity extends BaseActivity {
 
 //        testFlag();
 //        Toast.makeText(this, "一二三四五六七八一二三四五六七八一二三四五六七八", Toast.LENGTH_LONG).show();
+//        final Toast toast = Toast.makeText(this, "一二三四五六七八一二三四五六七八一二三四五六七八", Toast.LENGTH_LONG);
+//        toast.show();
+//        btn4.postDelayed(()->{
+//            toast.cancel();
+//        },1500);
 //        TestUtil.showToast(this);
 
 //        TestUtil.copyAssetsFonts(this);
@@ -231,12 +184,11 @@ public class MainActivity extends BaseActivity {
 
 //        BuildTestToast.makeMyToast(this);
 //        TestUtil.showToast(MainActivity.this);
-//        TestUtil.testDialog(this, "111111",2000);
+//        TestUtil.testDialog(this, "111111", 2000);
 //        TestUtil.usbPermission(this);
 //        ScreenUtils.setFullScreen(this);
 
 //        TestUtil.sendBroadcast(this, "com_exa_companydemo_action", null);
-
     }
 
     private void registerTimeUpdateReceiver() {
@@ -304,14 +256,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void checkPermission() {
-//        requestPermissions(new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},1);
-//        String[] ps = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            ps = new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE};
-//        }
-//        PermissionUtil.requestPermission(this, () -> {
-//            L.d("已授权读写权限");
-//        }, ps);
+        String[] ps = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION};
+//        requestPermissions(ps,1);
+        PermissionUtil.requestPermission(this, () -> {
+            L.d("已授权读写权限");
+        }, ps);
     }
 
     private void setText(String msg) {
@@ -321,17 +271,6 @@ public class MainActivity extends BaseActivity {
             String n = date + "\t" + msg + "\n" + msgT.getText().toString();
             msgT.setText(n);
         });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override

@@ -6,6 +6,6 @@
     <!--    <string name="app_name">健康通</string>-->
 
     <string name="app_name">shihuademo</string>
-
+    <string name="accessibility_label">shihuademo</string>
     <string name="gac_font">GacFont</string>
 </resources>

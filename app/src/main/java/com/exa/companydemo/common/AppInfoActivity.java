@@ -1,6 +1,8 @@
 package com.exa.companydemo.common;
 
+import android.content.ClipboardManager;
 import android.text.method.ScrollingMovementMethod;
+import android.view.View;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.AppInfo;
@@ -22,6 +24,14 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
     protected void initView() {
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.text.setText("获取app列表...");
+        bind.text.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+//                ClipboardManager cm =(ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+//                cm.setText(orderDetailsTvOrderNumber.getText().toString());
+                return false;
+            }
+        });
     }
 
     @Override

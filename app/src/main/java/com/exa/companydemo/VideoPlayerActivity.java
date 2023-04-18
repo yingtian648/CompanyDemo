@@ -58,8 +58,8 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
             }
 
         });
-//        AssetFileDescriptor afd = getResources().openRawResourceFd(R.raw.test);
-//        player.play(this, bind.frame, afd);
+        AssetFileDescriptor afd = getResources().openRawResourceFd(R.raw.test);
+        player.play(this, bind.frame, afd);
     }
 
     private boolean isShowController = true;

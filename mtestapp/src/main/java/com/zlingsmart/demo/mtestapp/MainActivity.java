@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     }
 
     private void test() {
-        listenWindowChangeStatus();
+
     }
 
     private void registerWindowChangedListener() {

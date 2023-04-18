@@ -37,27 +37,27 @@ public class App extends Application {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-                L.dd("----------" + activity.getLocalClassName());
+//                L.dd("----------" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityStarted(@NonNull Activity activity) {
-                L.dd("----------" + activity.getLocalClassName());
+//                L.dd("----------" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
-                L.dd("----------" + activity.getLocalClassName());
+//                L.dd("----------" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityPaused(@NonNull Activity activity) {
-                L.dd("----------" + activity.getLocalClassName());
+//                L.dd("----------" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityStopped(@NonNull Activity activity) {
-                L.dd("----------" + activity.getLocalClassName());
+//                L.dd("----------" + activity.getLocalClassName());
             }
 
             @Override
@@ -66,7 +66,7 @@ public class App extends Application {
 
             @Override
             public void onActivityDestroyed(@NonNull Activity activity) {
-                L.dd("----------" + activity.getLocalClassName());
+//                L.dd("----------" + activity.getLocalClassName());
             }
         });
     }
