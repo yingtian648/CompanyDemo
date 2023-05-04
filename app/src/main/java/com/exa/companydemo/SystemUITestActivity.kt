@@ -21,7 +21,10 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
     private lateinit var mUiModeManager: UiModeManager
     private var statusColor = R.color.white
     private var naviColor = R.color.white
-    override fun setContentViewLayoutId(): Int = R.layout.activity_systemui_test
+    override fun setContentViewLayoutId(): Int {
+//        overridePendingTransition(R.anim.task_open_enter,R.anim.task_open_exit)
+        return R.layout.activity_systemui_test
+    }
 
     private fun initOperateBtn() {
         // 显示弹框 - 全屏弹框

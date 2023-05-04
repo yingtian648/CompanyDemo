@@ -3,38 +3,22 @@ package com.exa.companydemo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.Instrumentation;
-import android.app.NotificationManager;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.res.Configuration;
-import android.graphics.Point;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.RemoteException;
-import android.view.Display;
-import android.view.KeyEvent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.graphics.Typeface;
+import android.os.LocaleList;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
 import android.view.WindowManager;
-import android.view.accessibility.AccessibilityNodeInfo;
-import android.view.accessibility.AccessibilityWindowInfo;
 import android.widget.Button;
-import android.widget.CarToast;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+import androidx.appcompat.widget.Toolbar;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
@@ -43,26 +27,15 @@ import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.baselib.utils.Utils;
-import com.exa.companydemo.accessibility.AccessibilityHelper;
-import com.exa.companydemo.accessibility.MyAccessibilityService;
 import com.exa.companydemo.common.AppInfoActivity;
 import com.exa.companydemo.location.LocationActivity;
 import com.gxa.car.scene.SceneInfo;
 import com.gxa.car.scene.SceneManager;
 import com.gxa.car.scene.WindowChangeListener;
-import com.gxatek.cockpit.screensaver.aidl.IScreenSaverViewAidl;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 
-import androidx.annotation.NonNull;
-
-import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 import static com.exa.companydemo.TestUtil.isRegisterBroadCast;
 import static com.exa.companydemo.TestUtil.mReceiver;
 
@@ -87,25 +60,24 @@ public class MainActivity extends BaseActivity {
         L.d("initData");
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        L.d("MainActivity onConfigurationChanged:" + newConfig.uiMode);
-    }
-
     @SuppressLint({"ResourceType", "SetTextI18n"})
     @Override
     protected void initView() {
         mContext = this;
+        windowManager = App.getContext().getSystemService(WindowManager.class);
         Tools.setScreenBrightness(this, 50);
         modeManager = getSystemService(UiModeManager.class);
         boolean night = modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES;
         L.d("黑夜模式：" + night);
 //        checkPermission();
-
         TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
-        setToolbarId(R.id.toolbar);
+//        setToolbarId(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+            overridePendingTransition(R.anim.task_close_enter,R.anim.task_close_exit);
+        });
         editText = findViewById(R.id.edt);
         msgT = findViewById(R.id.msgT);
         btn4 = findViewById(R.id.btn4);
@@ -115,6 +87,12 @@ public class MainActivity extends BaseActivity {
         });
         findViewById(R.id.btnSystemUI).setOnClickListener(view -> {
             L.w("全屏按钮");
+            isFullScreen = !isFullScreen;
+//            if (isFullScreen) {
+//                ScreenUtils.hideStatusBars(this);
+//            } else {
+//                ScreenUtils.showStatusBars(this);
+//            }
             startActivity(new Intent(this, SystemUITestActivity.class));
         });
         findViewById(R.id.btnPlay).setOnClickListener(view -> {
@@ -149,6 +127,10 @@ public class MainActivity extends BaseActivity {
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
+        TestUtil.testFonts(this);
+
+//        TestUtil.showToast(this);
+//        startService(new Intent(this, DemoService.class));
 //        BaseConstants.getHandler().postDelayed(() -> {
 //            Toast.makeText(this,"121212",Toast.LENGTH_SHORT).show();
 //            manager.cancelAll();
@@ -167,14 +149,7 @@ public class MainActivity extends BaseActivity {
 //            L.d("FontManagerService","fontManager is null");
 //        }
 
-//        testFlag();
-//        Toast.makeText(this, "一二三四五六七八一二三四五六七八一二三四五六七八", Toast.LENGTH_LONG).show();
-//        final Toast toast = Toast.makeText(this, "一二三四五六七八一二三四五六七八一二三四五六七八", Toast.LENGTH_LONG);
-//        toast.show();
-//        btn4.postDelayed(()->{
-//            toast.cancel();
-//        },1500);
-//        TestUtil.showToast(this);
+//        TestUtil.testDialog(this,"1111111",0);
 
 //        TestUtil.copyAssetsFonts(this);
 //        TestUtil.testFonts(this);
@@ -246,6 +221,9 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         L.dd();
+        BaseConstants.getHandler().postDelayed(() -> {
+            test();
+        }, 10000);
     }
 
     @Override

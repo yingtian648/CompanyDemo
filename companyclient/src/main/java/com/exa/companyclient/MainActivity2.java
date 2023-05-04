@@ -12,21 +12,20 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.StatubarUtil;
+import com.exa.baselib.utils.Tools;
 import com.exa.baselib.utils.Utils;
 import com.exa.companyclient.databinding.ActivityMain2Binding;
-import com.gxatek.cockpit.vicelauncher.IRemoteStatusCallback;
-import com.gxatek.cockpit.vicelauncher.ViceLauncherRemoteInterface;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implements View.OnClickListener {
-
-    private ViceLauncherRemoteInterface remoteInterface;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -35,6 +34,8 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
 
     @Override
     protected void initView() {
+        L.dd("屏幕高度：" + Tools.getScreenH(this)
+                + ",DisplayId=" + getWindowManager().getDefaultDisplay().getDisplayId());
         StatubarUtil.setStatusBarInvasion(this);
         logScreenInfo();
     }
@@ -42,81 +43,37 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
     @Override
     protected void initData() {
         bind.startOnSubScreen.setOnClickListener(this);
+        bind.startOnMainScreen.setOnClickListener(this);
         bind.bindService.setOnClickListener(this);
         bind.showSystemUi.setOnClickListener(this);
         bind.hideSystemUi.setOnClickListener(this);
-
+        bind.backBtn.setOnClickListener(this);
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.startOnSubScreen:
-                startActivityByDisplayId(MainActivity2.this, getClass(), 5);//启动在第二块屏上
+            case R.id.startOnMainScreen://启动在主屏上
+                startActivityByDisplayId(MainActivity2.this, MainActivity2.class, 0);
+                break;
+            case R.id.startOnSubScreen://启动在副屏上
+                startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 5);
                 break;
             case R.id.bindService:
-                bindService();
                 break;
             case R.id.showSystemUi:
-                try {
-                    remoteInterface.setStatusBarVisibility(View.VISIBLE);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                ScreenUtils.showStatusBars(this);
                 break;
             case R.id.hideSystemUi:
-                try {
-                    remoteInterface.setStatusBarVisibility(View.GONE);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
+                ScreenUtils.hideStatusBars(this);
+                break;
+            case R.id.backBtn:
+                finish();
                 break;
             default:
                 break;
         }
-    }
-
-    private void bindService() {
-        Intent intent = new Intent();
-        bindService(intent, new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                remoteInterface = ViceLauncherRemoteInterface.Stub.asInterface(service);
-                try {
-                    remoteInterface.registerCallback(new IRemoteStatusCallback.Stub() {
-                        @Override
-                        public void onNavigationStatusChange(int i) throws RemoteException {
-                            L.dd(i);
-                        }
-
-                        @Override
-                        public void onScreenSaverStatusChange(int i) throws RemoteException {
-                            L.dd(i);
-                        }
-
-                        @Override
-                        public void onStatusBarStatusChange(int i) throws RemoteException {
-                            L.dd(i);
-                        }
-
-                        @Override
-                        public IBinder asBinder() {
-                            return null;
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    L.e("registerCallback err", e);
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                remoteInterface = null;
-                L.dd();
-            }
-        }, Context.BIND_AUTO_CREATE);
     }
 
     private void logScreenInfo() {

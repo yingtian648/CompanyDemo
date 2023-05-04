@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Client"
+            android:text="Main3"
             android:textSize="35sp" />
 
         <LinearLayout
@@ -24,29 +24,6 @@
             android:layout_centerHorizontal="true"
             android:paddingStart="20dp"
             android:paddingEnd="20dp">
-
-            <Button
-                android:id="@+id/startOnMainScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="主屏显示"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/startOnSubScreen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="副屏显示"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/bindService"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="绑定服务"
-                android:textSize="30sp" />
 
             <Button
                 android:id="@+id/showSystemUi"
@@ -64,14 +41,6 @@
                 android:layout_marginStart="10dp"
                 android:text="隐藏stattusBar"
                 android:textAllCaps="false"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/backBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="回退"
                 android:textSize="30sp" />
         </LinearLayout>
 

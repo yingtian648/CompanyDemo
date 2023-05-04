@@ -66,6 +66,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
     @Override
     protected int setContentViewLayoutId() {
         EventBus.getDefault().register(this);
+
         return R.layout.activity_main;
     }
 

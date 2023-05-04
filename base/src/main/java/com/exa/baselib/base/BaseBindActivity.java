@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.exa.baselib.R;
 import com.exa.baselib.utils.OnClickViewListener;
 
 import androidx.annotation.Nullable;
@@ -20,8 +21,8 @@ public abstract class BaseBindActivity<T extends ViewDataBinding> extends AppCom
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        getWindow().addFlags(FLAG_KEEP_SCREEN_ON);//保持屏幕常亮
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(FLAG_KEEP_SCREEN_ON);//保持屏幕常亮
         activity = this;
         bind = DataBindingUtil.setContentView(this, setContentViewLayoutId());
         initView();

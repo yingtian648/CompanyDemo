@@ -27,8 +27,8 @@ public class App extends Application {
         L.init("CompanyDemo", true);
         app = this;
         String screen = "屏幕宽高px：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
-        String screenDp = "屏幕宽高dp：" + (int)(Tools.getScreenW(this)/Tools.getScreenDensity(this))
-                + "," + (int)(Tools.getScreenH(this)/Tools.getScreenDensity(this));
+        String screenDp = "屏幕宽高dp：" + (int) (Tools.getScreenW(this) / Tools.getScreenDensity(this))
+                + "," + (int) (Tools.getScreenH(this) / Tools.getScreenDensity(this));
         L.w(screen);
         L.w("屏幕密度：" + Tools.getScreenDensity(this));
         L.w(screenDp);
@@ -69,6 +69,12 @@ public class App extends Application {
 //                L.dd("----------" + activity.getLocalClassName());
             }
         });
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        L.dd();
     }
 
     public static Context getContext() {

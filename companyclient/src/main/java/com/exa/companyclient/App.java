@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.exa.baselib.BaseConstants;
@@ -21,9 +22,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         app = this;
-        L.init("CompanyClient", true);
+        L.init("companyclient1", true);
         BaseConstants.init();
         CrashHandle.getInstance().init(this);
+        L.w("Android OS is " + Build.VERSION.RELEASE + " , SDK_INT= " + Build.VERSION.SDK_INT);
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override

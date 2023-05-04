@@ -38,15 +38,6 @@
             android:hint="输入框..."
             android:paddingHorizontal="30dp"
             android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/desc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="100dp"
-            android:text="描述"
-            android:textFontWeight="500"
-            android:textSize="30sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -176,71 +167,88 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp" />
+            android:background="@null"
+            android:hint="text"
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textSize="30sp" />
-
-        <TextView
-            android:id="@+id/text5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="30sp" />
+            android:background="@null"
+            android:fontFamily="sans-serif"
+            android:hint="text1"
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textSize="30sp" />
+            android:background="@null"
+            android:hint="text2"
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/text3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textSize="30sp" />
+            android:background="@null"
+            android:hint="text3"
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/text4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="serif"
-            android:textFontWeight="500"
-            android:textSize="30sp" />
+            android:background="@null"
+            android:hint="text4"
+            android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/text5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@null"
+            android:hint="text5"
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/text6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:background="@null"
             android:fontFamily="@string/gac_font"
+            android:hint="text6"
             android:textFontWeight="500"
-            android:textSize="30sp" />
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/text7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:background="@null"
+            android:hint="text7"
             android:fontFamily="normal"
             android:textFontWeight="500"
-            android:textSize="30sp" />
+            android:textSize="35sp" />
 
         <TextView
             android:id="@+id/text8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:fontFamily="normal"
-            android:textFontWeight="700"
-            android:textSize="30sp" />
+            android:background="@null"
+            android:fontFamily="sans-serif"
+            android:hint="text8"
+            android:textFontWeight="500"
+            android:textSize="35sp" />
     </LinearLayout>
 
 

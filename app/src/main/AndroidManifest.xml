@@ -5,8 +5,7 @@
     android:sharedUserId="android.uid.system"
     >
 
-    <!-- android:sharedUserId="android.uid.system" -->
-    <!-- android:persistent="true" 开机自启动 -->
+<!--    android:sharedUserId="android.uid.system"-->
 
     <application
         android:name=".App"
@@ -26,11 +25,13 @@
         <activity
             android:name=".TestActivity"
             android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
+
         <activity
             android:name=".inputmethod.InputMethodSettingActivity"
             android:exported="true">
@@ -46,10 +47,11 @@
         <activity
             android:name=".SystemUITestActivity"
             android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".common.AppInfoActivity"
@@ -57,20 +59,22 @@
         <activity
             android:name=".location.LocationActivity"
             android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".VideoPlayerActivity"
             android:exported="true"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustResize">
-            <!--             <intent-filter>-->
-            <!--             <action android:name="android.intent.action.MAIN" />-->
-            <!--             <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--             </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".musicload.MediaLoadActivity"
@@ -86,15 +90,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--
-        这里主要的字段为 authorities ，他是ContentProvider的唯一标识。
-        permission，它分为 读权限，和写权限 对应为 android:readpermission 和
-        android:writepermission 。 multiprocess如果设置为true标识每个调用进程都拥有一个示例，负责只有所有进程只有一个示例。process字段使得它运行在一个名为com.blueberry.process1的进程中
-
-        grant-uri-permission标明可被授权的一个或多个数据子集的路径部分。 path 属性指定完整路径，只能对该路径指定部分的数据子集进行授权。 pathPrefix属性指定路径的起始部分，只能对那些以此为路径前缀的数据进行授权。 pathPattern属性也指定完整路径，只是可包含以下通配符：
-        星号（'*'）匹配紧随其前字符的0次或多次出现。
-        句点加星号（“.*”）匹配任何字符的0次或多次出现
-        -->
         <provider
             android:name=".mediaprovider.MMediaProvider"
             android:authorities="com.media.my"
@@ -107,6 +102,15 @@
                 android:readPermission="android.permission.READ_EXTERNAL_STORAGE"
                 android:writePermission="android.permission.WRITE_EXTERNAL_STORAGE" />
         </provider>
+        <!--
+        这里主要的字段为 authorities ，他是ContentProvider的唯一标识。
+        permission，它分为 读权限，和写权限 对应为 android:readpermission 和
+        android:writepermission 。 multiprocess如果设置为true标识每个调用进程都拥有一个示例，负责只有所有进程只有一个示例。process字段使得它运行在一个名为com.blueberry.process1的进程中
+
+        grant-uri-permission标明可被授权的一个或多个数据子集的路径部分。 path 属性指定完整路径，只能对该路径指定部分的数据子集进行授权。 pathPrefix属性指定路径的起始部分，只能对那些以此为路径前缀的数据进行授权。 pathPattern属性也指定完整路径，只是可包含以下通配符：
+        星号（'*'）匹配紧随其前字符的0次或多次出现。
+        句点加星号（“.*”）匹配任何字符的0次或多次出现
+        -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -116,7 +120,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/pathlist" />
         </provider>
-
         <receiver
             android:name=".mediaprovider.MediaScannerReceiver"
             android:exported="true">
@@ -125,6 +128,12 @@
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".service.DemoService"
+            android:enabled="true"
+            android:process="com.exa.companydemo.demoservice"
+            android:exported="true"/>
 
         <service
             android:name=".mediaprovider.MediaScannerService"
@@ -168,19 +177,17 @@
                 android:resource="@xml/method" />
         </service>
     </application>
+
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="true" />
-
     <uses-permission
         android:name="android.permission.SET_TIME"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission
         android:name="android.hardware.usb.host"
         android:required="false" />
-
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -188,21 +195,21 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 系统权限 -->
+        tools:ignore="ScopedStorage" /> <!-- 系统权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
     <uses-permission
         android:name="android.permission.WRITE_SECURE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
-
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"
         tools:ignore="ProtectedPermissions" />
+
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 </manifest>

@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
@@ -21,8 +22,8 @@ android {
             storePassword 'Aa123456'
             keyPassword 'Aa123456'
             keyAlias 'platform'
-            storeFile file('../signatures/a02_desay_platform.keystore')
-//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/a02_desay_platform.keystore')
+            storeFile file('../signatures/a02_boshi_platform.keystore')
 //            storeFile file('../signatures/a8e_8155_platform.keystore')
         }
         release {

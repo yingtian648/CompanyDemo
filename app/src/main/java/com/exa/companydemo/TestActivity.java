@@ -13,6 +13,8 @@ import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.companydemo.databinding.ActivityTestBinding;
 import com.exa.companydemo.widget.MySurfaceView;
 
+import androidx.core.widget.TextViewKt;
+
 public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
     private MySurfaceView surfaceView;
@@ -28,7 +30,6 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
     protected void initView() {
         surfaceView = new MySurfaceView(TestActivity.this);
         bind.mapContainer.addView(surfaceView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
         ImageView imageView = new ImageView(this);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         bind.carFragment.addView(imageView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));

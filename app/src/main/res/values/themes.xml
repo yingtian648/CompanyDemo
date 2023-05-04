@@ -1,4 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Window_Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/task_open_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/task_open_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/task_close_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/task_close_exit</item>
+        <item name="android:taskOpenEnterAnimation">@anim/task_open_enter</item>
+        <item name="android:taskOpenExitAnimation">@anim/task_open_exit</item>
+        <item name="android:taskCloseEnterAnimation">@anim/task_close_enter</item>
+        <item name="android:taskCloseExitAnimation">@anim/task_close_exit</item>
+        <item name="android:taskToFrontEnterAnimation">@anim/task_open_enter</item>
+        <item name="android:taskToFrontExitAnimation">@anim/task_open_exit</item>
+        <item name="android:taskToBackEnterAnimation">@anim/task_close_enter</item>
+        <item name="android:taskToBackExitAnimation">@anim/task_close_exit</item>
+        <item name="android:inAnimation">@anim/task_close_enter</item>
+        <item name="android:outAnimation">@anim/task_open_exit</item>
+    </style>
     <!-- Base application theme. -->
     <style name="Theme.CompanyDemo" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -9,6 +25,7 @@
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
+        <item name="android:windowAnimationStyle">@style/Window_Animation</item>
         <!-- Status bar color. -->
 <!--        <item name="android:statusBarColor" >@android:color/white</item>-->
 <!--        <item name="android:navigationBarColor">@android:color/white</item>-->

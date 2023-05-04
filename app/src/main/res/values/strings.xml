@@ -8,4 +8,10 @@
     <string name="app_name">shihuademo</string>
     <string name="accessibility_label">shihuademo</string>
     <string name="gac_font">GacFont</string>
+    <string-array name="whitelist_pulblic_app_hide_statusbar" translatable="true">
+        <item></item>
+        <item>item2</item>
+        <item>item3</item>
+        <item>item4</item>
+    </string-array>
 </resources>

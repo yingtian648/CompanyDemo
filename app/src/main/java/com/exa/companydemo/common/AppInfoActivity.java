@@ -17,6 +17,7 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
 
     @Override
     protected int setContentViewLayoutId() {
+        overridePendingTransition(R.anim.task_open_enter,R.anim.task_open_enter);
         return R.layout.activity_app_info;
     }
 

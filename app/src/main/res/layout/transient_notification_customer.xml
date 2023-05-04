@@ -7,8 +7,7 @@
   except in compliance with SYNCORE AUTOTECH in writing by applicable law.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:focusableInTouchMode="true"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <TextView

@@ -52,6 +52,7 @@ import com.exa.baselib.utils.FileUtils;
 import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
+import com.exa.companydemo.utils.LogTools;
 import com.github.mjdev.libaums.UsbMassStorageDevice;
 import com.github.mjdev.libaums.fs.FileSystem;
 import com.github.mjdev.libaums.fs.UsbFile;
@@ -84,6 +85,9 @@ import static com.exa.baselib.utils.L.TAG;
 import static com.exa.baselib.utils.L.v;
 
 public class TestUtil {
+
+    private static Toast toast;
+
     /**
      * 测试 Toast
      *
@@ -100,17 +104,25 @@ public class TestUtil {
 //        BaseConstants.getHandler().postDelayed(() -> {
 //            CarToast.makeText(context, "好了", Toast.LENGTH_LONG).show();
 //        }, 12000);
-
-        Toast toast = new Toast(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.transient_notification_customer, null, false);
-//        view = LayoutInflater.from(context).inflate(R.layout.transient_notification_new, null, false);
-        view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
+        toast = new Toast(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
         TextView tv = view.findViewById(R.id.message);
-        tv.setText("自定义非全屏宽View");
-        toast.setGravity(Gravity.TOP, 0, -5);
+        tv.setText("一二三四五六七八一二三四五六1111111");
         toast.setView(view);
-        toast.show();
-
+//        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+        /**
+         * app-build.grable中指定 targetSdk>=30
+         * 设置Toast显示位置 offset 为偏移量
+         * @param gravity Gravity.TOP,Gravity.CENTER,Gravity.BOTTOM
+         * 不设置gravity，Toast显示在屏幕顶部中间
+         */
+        toast.setGravity(Gravity.BOTTOM, 300, 200);
+        BaseConstants.getHandler().postDelayed(() -> {
+            if (toast != null) {
+                L.d("NotificationService", "toast.show");
+                toast.show();
+            }
+        }, 1);
 //        final WindowManager manager = getSystemService(WindowManager.class);
 //        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
 //        params.gravity = Gravity.TOP;
@@ -257,8 +269,8 @@ public class TestUtil {
             if (attributes == null) {
                 return window;
             }
-            attributes.width = 600; //WindowManager.LayoutParams.MATCH_PARENT;
-            attributes.height = 500;// WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.width = WindowManager.LayoutParams.WRAP_CONTENT;//WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
             attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.dimAmount = 0f;
@@ -550,46 +562,47 @@ public class TestUtil {
      * 调试字体
      */
     public static void testFonts(Activity activity) {
+        TextView text0, text1, text2, text3, text4, text5, text6, text7, text8;
         L.dd();
         activity.findViewById(R.id.fontsBox).setVisibility(View.VISIBLE);
         final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
-        TextView text0 = activity.findViewById(R.id.text);
-        TextView text1 = activity.findViewById(R.id.text1);
-        TextView text2 = activity.findViewById(R.id.text2);
-        TextView text3 = activity.findViewById(R.id.text3);
-        TextView text4 = activity.findViewById(R.id.text4);
-        TextView text5 = activity.findViewById(R.id.text5);
-        TextView text6 = activity.findViewById(R.id.text6);
-        TextView text7 = activity.findViewById(R.id.text7);
-        TextView text8 = activity.findViewById(R.id.text8);
+        text0 = activity.findViewById(R.id.text);
+        text1 = activity.findViewById(R.id.text1);
+        text2 = activity.findViewById(R.id.text2);
+        text3 = activity.findViewById(R.id.text3);
+        text4 = activity.findViewById(R.id.text4);
+        text5 = activity.findViewById(R.id.text5);
+        text6 = activity.findViewById(R.id.text6);
+        text7 = activity.findViewById(R.id.text7);
+        text8 = activity.findViewById(R.id.text8);
 
-        text0.setText(fontTestWords + "   Default");
-        text1.setText(fontTestWords + "   SourceHanSansCN");
-        text2.setText(fontTestWords + "   sans-serif");
-        text3.setText(fontTestWords + "   serif");
-        text5.setText(fontTestWords + "   GacFont");
-        text4.setText(fontTestWords + "   xml-500");
+        text0.setText(fontTestWords + "   ");
+        text1.setText(fontTestWords + "   sans-serif");
+        text2.setText(fontTestWords + "   default");
+        text3.setText(fontTestWords + "   GacFont");
+        text4.setText(fontTestWords + "   serif");
+        text5.setText(fontTestWords + "   SourceHanSansCN");
         text6.setText(fontTestWords + "   xml-gacfont-500");
         text7.setText(fontTestWords + "   xml-normal-500");
-        text8.setText(fontTestWords + "   xml-normal-700");
+        text8.setText(fontTestWords + "   xml-sans-serif-500");
 
-        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.BOLD);
-        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.BOLD);
-        Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
-        Typeface serif = Typeface.create("serif", Typeface.BOLD);
-        Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
+        Typeface sans_serif = Typeface.create("sans-serif", Typeface.NORMAL);
+        Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
+        Typeface GacFont = Typeface.create("GacFont", Typeface.NORMAL);
+        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.NORMAL);
+        Typeface serif = Typeface.create("serif", Typeface.NORMAL);
 
-        text0.setTypeface(aDefault);
-        text1.setTypeface(SourceHanSansCN);
-        text2.setTypeface(sans_serif);
-        text3.setTypeface(serif);
-        text5.setTypeface(GacFont);
+//        text1.setTypeface(sans_serif);
+        text2.setTypeface(aDefault);
+        text3.setTypeface(GacFont);
+        text4.setTypeface(serif);
+        text5.setTypeface(SourceHanSansCN);
 
 //        L.d("SourceHanSansCN is Default ? " + (SourceHanSansCN.equals(aDefault)));
-//        L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
+        L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
 //        L.d("serif is Default ? " + (serif.equals(aDefault)));
 //        L.d("monospace is Default ? " + (monospace.equals(aDefault)));
-//        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
 //
 //        LogTools.logSystemFonts();
     }

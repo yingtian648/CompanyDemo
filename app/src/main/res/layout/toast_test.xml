@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:textColor="@color/black33"
-            android:text="111111111111"
+            tools:text="111111111111"
             android:textSize="30sp" />
     </LinearLayout>
 </FrameLayout>
