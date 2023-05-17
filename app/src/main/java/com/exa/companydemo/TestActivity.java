@@ -41,31 +41,5 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
         mUiModeManager = getSystemService(UiModeManager.class);
         nightMode = mUiModeManager.getNightMode();
 
-        bind.showCar.setOnClickListener(new OnClickViewListener() {
-            @Override
-            public void onClickView(View v) {
-                bind.mapBox.setVisibility(View.GONE);
-                bind.carFragment.setVisibility(View.VISIBLE);
-            }
-        });
-        bind.showMap.setOnClickListener(new OnClickViewListener() {
-            @Override
-            public void onClickView(View v) {
-                bind.mapBox.setVisibility(View.VISIBLE);
-                bind.carFragment.setVisibility(View.GONE);
-            }
-        });
-        bind.btnUIMode.setOnClickListener(new OnClickViewListener() {
-            @Override
-            public void onClickView(View v) {
-                if (nightMode == UiModeManager.MODE_NIGHT_NO) {
-                    mUiModeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
-                } else {
-                    mUiModeManager.setNightMode(UiModeManager.MODE_NIGHT_NO);
-                }
-                nightMode = mUiModeManager.getNightMode();
-                bind.btnUIMode.setText((nightMode == UiModeManager.MODE_NIGHT_YES) ? "白天模式" : "黑夜模式");
-            }
-        });
     }
 }

@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
+import com.exa.companydemo.OtaStatusManager;
 import com.exa.companydemo.R;
 
 /**

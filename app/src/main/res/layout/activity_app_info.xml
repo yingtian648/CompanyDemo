@@ -13,9 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textIsSelectable="true"
-            android:background="@null"
-            android:textCursorDrawable="@null"
-            android:inputType="none"
+            android:background="@color/gray"
             android:textSize="25px" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

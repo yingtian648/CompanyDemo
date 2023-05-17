@@ -37,12 +37,29 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.net.InetAddress;
 
 import androidx.annotation.NonNull;
 
 import static com.exa.baselib.utils.L.TAG;
 
 public class Utils {
+
+    private void logIpArrivedStatus(String GNSS_SERVER_IP,String TEST_IP) {
+        BaseConstants.getHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    InetAddress inet = InetAddress.getByName(GNSS_SERVER_IP);
+                    L.w("GpsIpArrived=" + inet.isReachable(1000));
+                    inet = InetAddress.getByName(TEST_IP);
+                    L.w("TestIpArrived=" + inet.isReachable(1000));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
     public static void openApp(Context mContext, String packageName) {
         if (packageName != null) {
             try {

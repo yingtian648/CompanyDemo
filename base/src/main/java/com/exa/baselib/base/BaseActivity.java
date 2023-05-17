@@ -15,6 +15,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.translate_y_enter,R.anim.translate_y_exit);
         super.onCreate(savedInstanceState);
         L.dd();
         setContentView(getLayoutId());

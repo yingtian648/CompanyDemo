@@ -2,7 +2,6 @@ package com.exa.baselib.base;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.exa.baselib.R;
 import com.exa.baselib.utils.OnClickViewListener;
@@ -21,6 +20,7 @@ public abstract class BaseBindActivity<T extends ViewDataBinding> extends AppCom
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.translate_y_enter,R.anim.translate_y_exit);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);//保持屏幕常亮
         activity = this;

@@ -8,23 +8,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.Typeface;
-import android.os.LocaleList;
-import android.text.TextUtils;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.SystemProperties;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import androidx.appcompat.widget.Toolbar;
 
-import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.PermissionUtil;
+import com.exa.baselib.utils.ScreenUtils;
+import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.common.AppInfoActivity;
@@ -56,6 +56,13 @@ public class MainActivity extends BaseActivity {
     private UiModeManager modeManager;
 
     @Override
+    protected int getLayoutId() {
+//        ScreenUtils.setFullScreen(this);
+        StatubarUtil.setStatusBarInvasion(this, false);
+        return R.layout.activity_main;
+    }
+
+    @Override
     protected void initData() {
         L.d("initData");
     }
@@ -76,7 +83,6 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(v -> {
             finish();
-            overridePendingTransition(R.anim.task_close_enter,R.anim.task_close_exit);
         });
         editText = findViewById(R.id.edt);
         msgT = findViewById(R.id.msgT);
@@ -88,12 +94,12 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btnSystemUI).setOnClickListener(view -> {
             L.w("全屏按钮");
             isFullScreen = !isFullScreen;
-//            if (isFullScreen) {
-//                ScreenUtils.hideStatusBars(this);
-//            } else {
-//                ScreenUtils.showStatusBars(this);
-//            }
-            startActivity(new Intent(this, SystemUITestActivity.class));
+            if (isFullScreen) {
+                ScreenUtils.hideStatusBars(this);
+            } else {
+                ScreenUtils.showStatusBars(this);
+            }
+//            startActivity(new Intent(this, SystemUITestActivity.class));
         });
         findViewById(R.id.btnPlay).setOnClickListener(view -> {
             L.w("视频播放");
@@ -123,10 +129,21 @@ public class MainActivity extends BaseActivity {
             Tools.hideKeyboard(editText);
             return false;
         });
+
+        String cameraConfig = SystemProperties.get("ro.sys.ivi.eol.camera.supported");
+        if (cameraConfig != null && cameraConfig.length() > 0) {
+            try {
+                L.dd("cameraConfig=" + Integer.parseInt(cameraConfig));
+            } catch (NumberFormatException e) {
+                L.de(e);
+            }
+        }
+        L.dd("cameraConfig=" + cameraConfig);
     }
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
+//        checkPermission();
         TestUtil.testFonts(this);
 
 //        TestUtil.showToast(this);
@@ -149,7 +166,7 @@ public class MainActivity extends BaseActivity {
 //            L.d("FontManagerService","fontManager is null");
 //        }
 
-//        TestUtil.testDialog(this,"1111111",0);
+//        TestUtil.testDialog(this,"1111111",2501);
 
 //        TestUtil.copyAssetsFonts(this);
 //        TestUtil.testFonts(this);
@@ -212,7 +229,7 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         L.dd();
-
+//        checkPermission();
 //        bindScreenSaver();
 //        finish();
     }
@@ -221,16 +238,6 @@ public class MainActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         L.dd();
-        BaseConstants.getHandler().postDelayed(() -> {
-            test();
-        }, 10000);
-    }
-
-    @Override
-    protected int getLayoutId() {
-//        ScreenUtils.setFullScreen(this);
-//        StatubarUtil.setStatusBarInvasion(this, false);
-        return R.layout.activity_main;
     }
 
     private void checkPermission() {

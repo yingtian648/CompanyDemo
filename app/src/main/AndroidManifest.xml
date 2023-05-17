@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
-    android:sharedUserId="android.uid.system"
+
     >
 
 <!--    android:sharedUserId="android.uid.system"-->
@@ -81,8 +81,10 @@
             android:exported="true" />
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleInstance"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
             android:exported="true"
+            android:theme="@style/MainActivity"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -185,6 +187,8 @@
         android:name="android.permission.SET_TIME"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+<!--    <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW"-->
+<!--        tools:ignore="ProtectedPermissions" />-->
     <uses-permission
         android:name="android.hardware.usb.host"
         android:required="false" />

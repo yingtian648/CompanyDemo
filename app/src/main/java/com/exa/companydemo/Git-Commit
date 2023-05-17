@@ -7,11 +7,9 @@ Build:mpass
 Test:upass
 BugID:noid
 
-feat[CarLocationService]:Adjust log and timeout policies
-rootcause:Adjust log and timeout policies
-solution:
-1.Adjust log and timeout policies.
-2.Adjust the location conversion class.
+feat[CarLocationService]:Use startfindservice method to listen service status.
+rootcause:Use startfindservice method to listen service status.
+solution:Use startfindservice method to listen service status.
 Product:A02
 Build:mpass
 Test:upass
@@ -59,25 +57,41 @@ Build:mpass
 Test:upass
 BugID:TAPD-ID1075758
 
-fix[framework-res]:remove app start animation.
-rootcause:app start animation err.
-solution:remove app start animation.
+fix[WMS]:Adjusting APP start Animation.
+rootcause:Adjusting APP start Animation.
+solution:Adjust the APP startup animation to alpha animation.
 Product:A02
 Build:mpass
 Test:upass
-BugID:ID1132312
+BugID:ID1135198
 
-fix[CarPackageManagerService]:Adaptive intelligent driving strategy.
-rootcause:Adaptive intelligent driving strategy.
-solution:Adaptive intelligent driving strategy.
+fix[CarPackageManagerService]:read camera config from SystemProperties.
+rootcause:read camera config from SystemProperties.
+solution:read camera config from SystemProperties.
 Product:A02
 Build:mpass
 Test:upass
 BugID:noid
 
-feat[WMS]:add click full-screen operation to show/hide SystemUI.
-rootcause:add click full-screen operation to show/hide SystemUI.
-solution:add click full-screen operation to show/hide SystemUI.
+fix[CarPackageManagerService]:remove holopilotparking.td config.
+rootcause:remove holopilotparking.td config.
+solution:remove holopilotparking.td config.
+Product:A02
+Build:mpass
+Test:upass
+BugID:noid
+
+fix[CarPackageManagerService]:update dependencies and fix read flow add.
+rootcause:update dependencies and fix read flow add.
+solution:update dependencies and fix read flow add.
+Product:A02
+Build:mpass
+Test:upass
+BugID:noid
+
+feat[fonts]:Add GacFont alias.
+rootcause:Use GacFont err.
+solution:Add GacFont alias
 Product:A02
 Build:mpass
 Test:upass

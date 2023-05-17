@@ -86,7 +86,7 @@ import static com.exa.baselib.utils.L.v;
 
 public class TestUtil {
 
-    private static Toast toast;
+    private static CarToast toast;
 
     /**
      * 测试 Toast
@@ -99,12 +99,12 @@ public class TestUtil {
 //        msg = "一二三四五六七";
 //        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 //        BaseConstants.getHandler().postDelayed(() -> {
-//            CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
+            CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
 //        }, 7000);
 //        BaseConstants.getHandler().postDelayed(() -> {
 //            CarToast.makeText(context, "好了", Toast.LENGTH_LONG).show();
 //        }, 12000);
-        toast = new Toast(context);
+        toast = new CarToast(context);
         View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
         TextView tv = view.findViewById(R.id.message);
         tv.setText("一二三四五六七八一二三四五六1111111");
@@ -117,6 +117,7 @@ public class TestUtil {
          * 不设置gravity，Toast显示在屏幕顶部中间
          */
         toast.setGravity(Gravity.BOTTOM, 300, 200);
+        toast.getYOffset();
         BaseConstants.getHandler().postDelayed(() -> {
             if (toast != null) {
                 L.d("NotificationService", "toast.show");
@@ -566,7 +567,7 @@ public class TestUtil {
         L.dd();
         activity.findViewById(R.id.fontsBox).setVisibility(View.VISIBLE);
         final String fontTestWords = "Innovation in China 中国制造，惠及全球 0123456789";
-        text0 = activity.findViewById(R.id.text);
+        text0 = activity.findViewById(R.id.text0);
         text1 = activity.findViewById(R.id.text1);
         text2 = activity.findViewById(R.id.text2);
         text3 = activity.findViewById(R.id.text3);
@@ -582,17 +583,17 @@ public class TestUtil {
         text3.setText(fontTestWords + "   GacFont");
         text4.setText(fontTestWords + "   serif");
         text5.setText(fontTestWords + "   SourceHanSansCN");
-        text6.setText(fontTestWords + "   xml-gacfont-500");
-        text7.setText(fontTestWords + "   xml-normal-500");
+        text6.setText(fontTestWords + "   xml-GacFont-Medium");
+        text7.setText(fontTestWords + "   xml-GacFont-500");
         text8.setText(fontTestWords + "   xml-sans-serif-500");
 
-        Typeface sans_serif = Typeface.create("sans-serif", Typeface.NORMAL);
+        Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
         Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
-        Typeface GacFont = Typeface.create("GacFont", Typeface.NORMAL);
-        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.NORMAL);
-        Typeface serif = Typeface.create("serif", Typeface.NORMAL);
+        Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
+        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.BOLD);
+        Typeface serif = Typeface.create("serif", Typeface.BOLD);
 
-//        text1.setTypeface(sans_serif);
+        text1.setTypeface(sans_serif);
         text2.setTypeface(aDefault);
         text3.setTypeface(GacFont);
         text4.setTypeface(serif);

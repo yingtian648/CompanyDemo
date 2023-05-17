@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/win_bg"
+    android:background="@color/window_bg"
     android:focusableInTouchMode="true"
     tools:context=".MainActivity">
 
@@ -12,10 +12,10 @@
         android:id="@+id/msgT"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="36dp"
+        android:padding="20dp"
         android:hint="desc..."
-        android:textColor="@color/text_color"
-        android:textSize="30sp"
+        android:textSize="36dp"
+        android:typeface="monospace"
         app:layout_constraintBottom_toTopOf="@id/btnBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,7 +159,7 @@
         android:layout_marginTop="180dp"
         android:orientation="vertical"
         android:padding="20dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -167,9 +167,21 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/font_words"
+            android:textSize="36dp" />
+
+        <TextView
+            android:id="@+id/text0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:background="@null"
-            android:hint="text"
-            android:textSize="35sp" />
+            android:fontFamily="normal"
+            android:textFontWeight="700"
+            android:hint="text0"
+            android:text="@string/font_words"
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text1"
@@ -177,9 +189,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@string/gac_font_bold"
+            android:text="@string/font_words"
             android:hint="text1"
-            android:textSize="35sp" />
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text2"
@@ -187,8 +200,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
+            android:fontFamily="@string/gac_font"
+            android:textFontWeight="700"
             android:hint="text2"
-            android:textSize="35sp" />
+            android:text="@string/font_words"
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text3"
@@ -196,8 +212,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
+            android:fontFamily="@string/gac_font"
+            android:text="@string/font_words"
             android:hint="text3"
-            android:textSize="35sp" />
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text4"
@@ -206,7 +224,7 @@
             android:layout_marginTop="10dp"
             android:background="@null"
             android:hint="text4"
-            android:textSize="35sp" />
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text5"
@@ -214,8 +232,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
+            android:text="@string/font_words"
             android:hint="text5"
-            android:textSize="35sp" />
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text6"
@@ -223,10 +242,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="@string/gac_font"
+            android:fontFamily="@string/gac_font_medium"
+            android:text="@string/font_words"
             android:hint="text6"
-            android:textFontWeight="500"
-            android:textSize="35sp" />
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text7"
@@ -235,9 +254,10 @@
             android:layout_marginTop="10dp"
             android:background="@null"
             android:hint="text7"
-            android:fontFamily="normal"
+            android:text="@string/font_words"
+            android:fontFamily="@string/gac_font"
             android:textFontWeight="500"
-            android:textSize="35sp" />
+            android:textSize="36dp" />
 
         <TextView
             android:id="@+id/text8"
@@ -245,10 +265,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
+            android:text="@string/font_words"
             android:fontFamily="sans-serif"
             android:hint="text8"
             android:textFontWeight="500"
-            android:textSize="35sp" />
+            android:textSize="36dp" />
     </LinearLayout>
 
 

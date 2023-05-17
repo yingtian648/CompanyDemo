@@ -22,7 +22,6 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
     private var statusColor = R.color.white
     private var naviColor = R.color.white
     override fun setContentViewLayoutId(): Int {
-//        overridePendingTransition(R.anim.task_open_enter,R.anim.task_open_exit)
         return R.layout.activity_systemui_test
     }
 

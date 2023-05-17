@@ -1,6 +1,5 @@
 package com.exa.companydemo.common;
 
-import android.content.ClipboardManager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
@@ -17,7 +16,6 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
 
     @Override
     protected int setContentViewLayoutId() {
-        overridePendingTransition(R.anim.task_open_enter,R.anim.task_open_enter);
         return R.layout.activity_app_info;
     }
 

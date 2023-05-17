@@ -1,6 +1,5 @@
 <resources>
     <style name="myToast">
-        <item name="fontFamily">sans-serif</item>
         <item name="android:textSize">14sp</item>
     </style>
     <!--    <string name="app_name">健康通</string>-->
@@ -8,10 +7,13 @@
     <string name="app_name">shihuademo</string>
     <string name="accessibility_label">shihuademo</string>
     <string name="gac_font">GacFont</string>
+    <string name="gac_font_medium">GacFont-Medium</string>
+    <string name="gac_font_bold">GacFont-Bold</string>
     <string-array name="whitelist_pulblic_app_hide_statusbar" translatable="true">
         <item></item>
         <item>item2</item>
         <item>item3</item>
         <item>item4</item>
     </string-array>
+    <string name="font_words">Innovation in China 中国制造，惠及全球 0123456789</string>
 </resources>
