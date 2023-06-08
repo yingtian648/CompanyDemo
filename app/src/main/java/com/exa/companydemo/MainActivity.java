@@ -3,25 +3,36 @@ package com.exa.companydemo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.SystemProperties;
+import android.util.ArraySet;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.Logs;
 import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.StatubarUtil;
@@ -32,9 +43,15 @@ import com.exa.companydemo.location.LocationActivity;
 import com.gxa.car.scene.SceneInfo;
 import com.gxa.car.scene.SceneManager;
 import com.gxa.car.scene.WindowChangeListener;
+import com.gxa.carupdater.sdk.CarUpdaterCallback;
+import com.gxa.carupdater.sdk.CarUpdaterManager;
 
+import org.json.JSONObject;
+
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static com.exa.companydemo.TestUtil.isRegisterBroadCast;
 import static com.exa.companydemo.TestUtil.mReceiver;
@@ -74,8 +91,7 @@ public class MainActivity extends BaseActivity {
         windowManager = App.getContext().getSystemService(WindowManager.class);
         Tools.setScreenBrightness(this, 50);
         modeManager = getSystemService(UiModeManager.class);
-        boolean night = modeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES;
-        L.d("黑夜模式：" + night);
+        L.d("黑夜模式：" + TestUtil.getUiModeStr(modeManager));
 //        checkPermission();
         TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
@@ -94,12 +110,12 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btnSystemUI).setOnClickListener(view -> {
             L.w("全屏按钮");
             isFullScreen = !isFullScreen;
-            if (isFullScreen) {
-                ScreenUtils.hideStatusBars(this);
-            } else {
-                ScreenUtils.showStatusBars(this);
-            }
-//            startActivity(new Intent(this, SystemUITestActivity.class));
+//            if (isFullScreen) {
+//                ScreenUtils.hideStatusBars(this);
+//            } else {
+//                ScreenUtils.showStatusBars(this);
+//            }
+            startActivity(new Intent(this, SystemUITestActivity.class));
         });
         findViewById(R.id.btnPlay).setOnClickListener(view -> {
             L.w("视频播放");
@@ -116,6 +132,8 @@ public class MainActivity extends BaseActivity {
             } else {
                 modeManager.setNightMode(UiModeManager.MODE_NIGHT_YES);
             }
+            BaseConstants.getHandler().postDelayed(() ->
+                    L.w("白天黑夜模式:" + TestUtil.getUiModeStr(modeManager)), 2000);
         });
         findViewById(R.id.btnMode).setOnClickListener(v -> {//am start com.android.engmode
             Utils.openApp(this, "com.android.engmode");
@@ -130,22 +148,48 @@ public class MainActivity extends BaseActivity {
             return false;
         });
 
-        String cameraConfig = SystemProperties.get("ro.sys.ivi.eol.camera.supported");
-        if (cameraConfig != null && cameraConfig.length() > 0) {
-            try {
-                L.dd("cameraConfig=" + Integer.parseInt(cameraConfig));
-            } catch (NumberFormatException e) {
-                L.de(e);
-            }
-        }
-        L.dd("cameraConfig=" + cameraConfig);
+//        CarUpdaterManager.getInstance(this).registerCallback(new CarUpdaterCallback() {
+//            @Override
+//            public void connect() {
+//                L.dd();
+//            }
+//
+//            @Override
+//            public void disconnect() {
+//                L.dd();
+//            }
+//
+//            @Override
+//            public void onUpdateStatus(int i, int i1, int i2) {
+//                L.dd();
+//            }
+//
+//            @Override
+//            public void onUpdateError(int i, int i1) {
+//                L.dd();
+//            }
+//
+//            @Override
+//            public void onTips(int i) {
+//                L.dd();
+//            }
+//
+//            @Override
+//            public void onUpdateFinish(int i, String s) {
+//                L.dd();
+//            }
+//        });
+//        CarUpdaterManager.getInstance(this).connect();
     }
 
     @SuppressLint({"RestrictedApi", "WrongConstant"})
     private void test() {
-//        checkPermission();
-        TestUtil.testFonts(this);
+        L.dd();
+//        TestUtil.getSensorData(mContext);
 
+//        checkPermission();
+//        TestUtil.testDialog(this, "ahahh", 0);
+//        TestUtil.testFonts(this);
 //        TestUtil.showToast(this);
 //        startService(new Intent(this, DemoService.class));
 //        BaseConstants.getHandler().postDelayed(() -> {
@@ -183,6 +227,14 @@ public class MainActivity extends BaseActivity {
 //        TestUtil.sendBroadcast(this, "com_exa_companydemo_action", null);
     }
 
+    private void registerReceiver() {
+        L.dd("registerTimeUpdateReceiver");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.gxatek.cockpit.datacenter.action.UPLOAD");
+        registerReceiver(mTimeUpdateReceiver, filter);
+        setText(DateUtil.getNowDateHM());
+    }
+
     private void registerTimeUpdateReceiver() {
         L.dd("registerTimeUpdateReceiver");
         IntentFilter filter = new IntentFilter();
@@ -197,6 +249,7 @@ public class MainActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
             if (intent == null) return;
             String action = intent.getAction();
+            L.d("收到广播：" + action);
             if (action == null || action.isEmpty()) return;
             if (action.equals(Intent.ACTION_TIME_TICK)) {
                 //系统每1分钟发送一次广播

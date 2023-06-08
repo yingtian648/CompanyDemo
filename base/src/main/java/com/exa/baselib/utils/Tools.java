@@ -800,9 +800,9 @@ public class Tools {
             String apkSourceDir = null;
             String packageName = info.activityInfo.packageName;//包名
             try {
-                versionCode = pkgm.getPackageInfo(packageName, 0).versionCode;//包名
-                versionName = pkgm.getPackageInfo(packageName, 0).versionName;//包名
-                apkSourceDir = pkgm.getApplicationInfo(packageName, 0).sourceDir;//包名
+                versionCode = pkgm.getPackageInfo(packageName, 0).versionCode;//版本号
+                versionName = pkgm.getPackageInfo(packageName, 0).versionName;//版本名称
+                apkSourceDir = pkgm.getApplicationInfo(packageName, 0).sourceDir;//APK源文件路径
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }

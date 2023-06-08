@@ -44,6 +44,7 @@ public class BuildTestToast {
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.format = PixelFormat.TRANSLUCENT;
         params.gravity = Gravity.TOP;
+        params.windowAnimations = 0;
         windowManager.addView(toastView, params);
     }
 

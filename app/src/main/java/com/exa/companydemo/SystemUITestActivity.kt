@@ -11,6 +11,7 @@ import com.exa.baselib.utils.L
 import com.exa.baselib.utils.ScreenUtils
 import com.exa.baselib.utils.StatubarUtil
 import com.exa.companydemo.databinding.ActivitySystemuiTestBinding
+import org.json.JSONObject
 import kotlin.properties.Delegates
 
 class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
@@ -33,7 +34,25 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
     }
 
     private fun clickTestBtn() {
+        val json =  JSONObject()
+        json.put("name","123")
+        L.d("generateJson:" + generateJson(json.toString()))
+    }
 
+    fun generateJson(json:String): String? {
+        return json.runCatching { JSONObject(this) }.getOrNull()?.run {
+            JSONObject().apply {
+                put("appId", "mAppId")
+                put("appName", "mAppName")
+                put("appVersion", "mAppVersion")
+                put("event", "event")
+                put("page", "page")
+                put("local", "local")
+                put("action", "action")
+                put("ets", System.currentTimeMillis())
+                put("property", this@run)
+            }
+        }?.toString()
     }
 
     private fun initListener() {

@@ -65,13 +65,13 @@ Build:mpass
 Test:upass
 BugID:ID1135198
 
-fix[CarPackageManagerService]:read camera config from SystemProperties.
-rootcause:read camera config from SystemProperties.
-solution:read camera config from SystemProperties.
+fix[Toast]:Add statistics broadcast.
+rootcause:Add statistics broadcast.
+solution:Add statistics broadcast.
 Product:A02
 Build:mpass
 Test:upass
-BugID:noid
+BugID:ID1143798
 
 fix[CarPackageManagerService]:remove holopilotparking.td config.
 rootcause:remove holopilotparking.td config.
@@ -81,13 +81,21 @@ Build:mpass
 Test:upass
 BugID:noid
 
-fix[CarPackageManagerService]:update dependencies and fix read flow add.
-rootcause:update dependencies and fix read flow add.
-solution:update dependencies and fix read flow add.
+fix[CarLocationService]:update soalib to 1.2.9.
+rootcause:update soalib to 1.2.9.
+solution:update soalib to 1.2.9.
 Product:A02
 Build:mpass
 Test:upass
 BugID:noid
+
+fix[WMS-animation]:fix startOffset of app exit anim.
+rootcause:fix startOffset of app exit anim.
+solution:fix startOffset of app exit anim.
+Product:A02
+Build:mpass
+Test:upass
+BugID:ID1149838
 
 feat[fonts]:Add GacFont alias.
 rootcause:Use GacFont err.
@@ -97,9 +105,9 @@ Build:mpass
 Test:upass
 BugID:noid
 
-fix[Toast]:adjust customer toast xOffset.
-rootcause:adjust customer toast xOffset.
-solution:adjust customer toast xOffset.
+fix[location]:remove the log of sv list.
+rootcause:remove the log of sv list.
+solution:remove the log of sv list.
 Product:A02
 Build:mpass
 Test:upass

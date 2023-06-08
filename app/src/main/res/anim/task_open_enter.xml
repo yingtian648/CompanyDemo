@@ -40,30 +40,4 @@
         android:startOffset="50"
         android:duration="500"/>
 
-<!--    <scale-->
-<!--        android:fromXScale="1.0526"-->
-<!--        android:toXScale="1"-->
-<!--        android:fromYScale="1.0526"-->
-<!--        android:toYScale="1"-->
-<!--        android:pivotX="50%"-->
-<!--        android:pivotY="50%"-->
-<!--        android:fillEnabled="true"-->
-<!--        android:fillBefore="true"-->
-<!--        android:fillAfter="true"-->
-<!--        android:interpolator="@interpolator/fast_out_slow_in"-->
-<!--        android:duration="283"/>-->
-
-<!--    <scale-->
-<!--        android:fromXScale="0.95"-->
-<!--        android:toXScale="1"-->
-<!--        android:fromYScale="0.95"-->
-<!--        android:toYScale="1"-->
-<!--        android:pivotX="50%"-->
-<!--        android:pivotY="50%"-->
-<!--        android:fillEnabled="true"-->
-<!--        android:fillBefore="true"-->
-<!--        android:fillAfter="true"-->
-<!--        android:interpolator="@interpolator/fast_out_slow_in"-->
-<!--        android:startOffset="283"-->
-<!--        android:duration="317"/>-->
 </set>

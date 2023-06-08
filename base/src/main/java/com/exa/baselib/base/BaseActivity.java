@@ -29,6 +29,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onClickView(View v) {
                 onBackPressed();
+                if(getClass().getSimpleName().contains("MainActivity")){
+                    System.exit(0);
+                }
             }
         });
     }

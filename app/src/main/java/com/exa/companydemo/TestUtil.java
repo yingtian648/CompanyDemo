@@ -5,10 +5,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
@@ -82,11 +85,12 @@ import androidx.core.content.PermissionChecker;
 
 import static android.content.Context.SENSOR_SERVICE;
 import static com.exa.baselib.utils.L.TAG;
+import static com.exa.baselib.utils.L.e;
 import static com.exa.baselib.utils.L.v;
 
 public class TestUtil {
 
-    private static CarToast toast;
+    private static Toast toast;
 
     /**
      * 测试 Toast
@@ -97,14 +101,14 @@ public class TestUtil {
         L.d("showToast");
         String msg = "一二三四五六七八一二三四五六七八一二三四五六七八";
 //        msg = "一二三四五六七";
-//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 //        BaseConstants.getHandler().postDelayed(() -> {
-            CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
+//        CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
 //        }, 7000);
-//        BaseConstants.getHandler().postDelayed(() -> {
-//            CarToast.makeText(context, "好了", Toast.LENGTH_LONG).show();
-//        }, 12000);
-        toast = new CarToast(context);
+        BaseConstants.getHandler().postDelayed(() -> {
+            CarToast.makeText(context, "好了", Toast.LENGTH_LONG).show();
+        }, 7000);
+        toast = new Toast(context);
         View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
         TextView tv = view.findViewById(R.id.message);
         tv.setText("一二三四五六七八一二三四五六1111111");
@@ -116,14 +120,9 @@ public class TestUtil {
          * @param gravity Gravity.TOP,Gravity.CENTER,Gravity.BOTTOM
          * 不设置gravity，Toast显示在屏幕顶部中间
          */
-        toast.setGravity(Gravity.BOTTOM, 300, 200);
-        toast.getYOffset();
-        BaseConstants.getHandler().postDelayed(() -> {
-            if (toast != null) {
-                L.d("NotificationService", "toast.show");
-                toast.show();
-            }
-        }, 1);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+//        toast.show();
+
 //        final WindowManager manager = getSystemService(WindowManager.class);
 //        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
 //        params.gravity = Gravity.TOP;
@@ -386,21 +385,43 @@ public class TestUtil {
     public static void getSensorData(Context context) {
         L.d("getSensorData");
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
-        Sensor gyroscopeSensor = sensorManager.getDefaultSensor(4);
-        Sensor accelerometerSensor = sensorManager.getDefaultSensor(1);
-        sensorManager.registerListener(listener, gyroscopeSensor, 1);
-        sensorManager.registerListener(listener, accelerometerSensor, 1);
+        Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);//陀螺仪
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);//加速度
+        sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, 1);
+//        sensorManager.registerListener(accelerometerSensorListener, accelerometerSensor, 1);
     }
 
-    private static SensorEventListener listener = new SensorEventListener() {
+    private static SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
+        private long lastLogTime = 0;
+
         @Override
         public void onSensorChanged(SensorEvent event) {
-            L.d("onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+            long now = System.currentTimeMillis();
+            if (now - lastLogTime >= 1000) {
+                lastLogTime = now;
+                if (event.values[0] > 0 || event.values[1] > 0 || event.values[2] > 0) {
+                    L.d("gyroscopeSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+                } else {
+                    L.d("gyroscopeSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+                }
+            }
         }
 
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
-            L.d("onAccuracyChanged::" + accuracy);
+            L.d("gyroscopeSensor onAccuracyChanged::" + accuracy);
+        }
+    };
+
+    private static SensorEventListener accelerometerSensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            L.d("accelerometerSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            L.d("accelerometerSensor onAccuracyChanged::" + accuracy);
         }
     };
 
@@ -689,5 +710,73 @@ public class TestUtil {
             default:
                 return "unknown:" + permissionResult;
         }
+    }
+
+    /**
+     * Send buried broadcast use for Statistics.
+     */
+    private void sendStatisticsBroadcast(Context context, String pkg, PackageManager pm) {
+        String appId = "com.gxatek.cockpit.gxadataminingservice";
+        String appName = "";
+        String versionName = "";
+
+        try {
+            PackageInfo info = pm.getPackageInfo(appId, 0);
+            if (info != null) {
+                versionName = info.versionName;
+                CharSequence label = info.applicationInfo.loadLabel(pm);
+                if (label != null) {
+                    appName = label.toString();
+                }
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            Intent intent = new Intent("com.gxatek.cockpit.datacenter.action.UPLOAD");
+            intent.setData(new Uri.Builder()
+                    .authority("com.gxatek.cockpit.datacenter")
+                    .scheme("os")
+                    .path("/upload")
+                    .build());
+            intent.addFlags(0x01000000);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("appId", appId);
+            jsonObject.put("appName", appName);
+            jsonObject.put("appVersion", versionName);
+            jsonObject.put("event", "exposure");
+            jsonObject.put("page", "systemui");
+            jsonObject.put("local", "Toast");
+            jsonObject.put("action", "Toast_push");
+            jsonObject.put("ets", System.currentTimeMillis());
+            JSONObject property = new JSONObject();
+            property.put("module_source", pkg);
+            jsonObject.put("property", property);
+            intent.putExtra("extra", jsonObject.toString());
+            context.sendBroadcast(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getUiModeStr(UiModeManager modeManager){
+        String result = "" + modeManager.getNightMode();
+        switch (modeManager.getNightMode()){
+            case UiModeManager.MODE_NIGHT_YES:
+                result =  "黑夜";
+                break;
+            case UiModeManager.MODE_NIGHT_NO:
+                result =  "白天";
+                break;
+            case UiModeManager.MODE_NIGHT_AUTO:
+                result =  "auto";
+                break;
+            case UiModeManager.MODE_NIGHT_CUSTOM:
+                result =  "custom";
+                break;
+            default:
+                break;
+        }
+        return result;
     }
 }

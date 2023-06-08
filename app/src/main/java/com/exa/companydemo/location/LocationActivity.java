@@ -63,6 +63,13 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     @Override
     protected void initView() {
         setToolbarId(R.id.toolbar);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            L.e("缺少定位权限");
+            setText("缺少定位权限");
+            checkPermission();
+            return;
+        }
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override
@@ -72,13 +79,6 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 loadBaseLocationInfo();
             }
         });
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            L.e("缺少定位权限");
-            setText("缺少定位权限");
-            checkPermission();
-            return;
-        }
         bind.openBtn.setOnClickListener(v -> {
             L.d("打开定位功能");
             Settings.Secure.putInt(getContentResolver(), Settings.Secure.LOCATION_MODE,
@@ -168,13 +168,14 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             for (int i = 0; i < eProviders.size(); i++) {
                 L.d(eProviders.get(i) + " requestLocationUpdates");
                 locationManager.requestLocationUpdates(eProviders.get(i),
-                        800,//时间隔时间
+                        0,//时间隔时间
                         0.0F,//位置更新之间的最小距离米
                         new LocationListener() {
                             @Override
                             public void onLocationChanged(@NonNull Location location) {
                                 L.d(location.getProvider() + "  onLocationChanged:" + location);
 //                                locationUpdate(location, location.getProvider());
+                                setText(location.toString());
                             }
 
                             @Override
