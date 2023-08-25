@@ -19,19 +19,16 @@ android {
 
     signingConfigs {
         debug {
-            storePassword 'Aa123456'
-            keyPassword 'Aa123456'
-            keyAlias 'platform'
-//            storeFile file('../signatures/a02_desay_platform.keystore')
-            storeFile file('../signatures/a02_boshi_platform.keystore')
-//            storeFile file('../signatures/a8e_8155_platform.keystore')
+            storePassword 'android'
+            keyPassword 'android'
+            keyAlias 'android'
+            storeFile file(rootProject.ext.android.path)
         }
         release {
-            storePassword 'Aa123456'
-            keyPassword 'Aa123456'
-            keyAlias 'platform'
-            storeFile file('../signatures/a02_desay_platform.keystore')
-//            storeFile file('../signatures/a02_boshi_platform.keystore')
+            storePassword 'android'
+            keyPassword 'android'
+            keyAlias 'android'
+            storeFile file(rootProject.ext.android.path)
         }
     }
 
