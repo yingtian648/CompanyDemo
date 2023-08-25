@@ -20,12 +20,13 @@ public abstract class BaseBindActivity<T extends ViewDataBinding> extends AppCom
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        overridePendingTransition(R.anim.translate_y_enter,R.anim.translate_y_exit);
+//        overridePendingTransition(R.anim.translate_y_enter,R.anim.translate_y_exit);
         super.onCreate(savedInstanceState);
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);//保持屏幕常亮
         activity = this;
         bind = DataBindingUtil.setContentView(this, setContentViewLayoutId());
         initView();
+        onViewReady();
         initData();
     }
 
@@ -44,6 +45,8 @@ public abstract class BaseBindActivity<T extends ViewDataBinding> extends AppCom
     protected abstract void initView();
 
     protected abstract void initData();
+
+    protected void onViewReady(){}
 
 
     @Override

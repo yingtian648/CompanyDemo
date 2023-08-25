@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
 import android.net.ConnectivityManager;
 import android.net.LinkProperties;
@@ -164,7 +165,7 @@ public class Tools {
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
     public static int dip2px(Context context, float dpValue) {
-        return (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue,
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue,
                 context.getResources().getDisplayMetrics());
 
     }
@@ -790,8 +791,8 @@ public class Tools {
         List<AppInfo> infos = new ArrayList<>();
         Intent intent = new Intent(Intent.ACTION_MAIN, null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        PackageManager pkgm = context.getPackageManager();
-        List<ResolveInfo> apps = pkgm.queryIntentActivities(intent, 0);
+        PackageManager pm = context.getPackageManager();
+        List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
         //for循环遍历ResolveInfo对象获取包名和类名
         for (int i = 0; i < apps.size(); i++) {
             ResolveInfo info = apps.get(i);
@@ -799,10 +800,12 @@ public class Tools {
             String versionName = "";
             String apkSourceDir = null;
             String packageName = info.activityInfo.packageName;//包名
+            int icon = 0;
             try {
-                versionCode = pkgm.getPackageInfo(packageName, 0).versionCode;//版本号
-                versionName = pkgm.getPackageInfo(packageName, 0).versionName;//版本名称
-                apkSourceDir = pkgm.getApplicationInfo(packageName, 0).sourceDir;//APK源文件路径
+                versionCode = pm.getPackageInfo(packageName, 0).versionCode;//版本号
+                versionName = pm.getPackageInfo(packageName, 0).versionName;//版本名称
+                apkSourceDir = pm.getApplicationInfo(packageName, 0).sourceDir;//APK源文件路径
+                icon = pm.getApplicationInfo(packageName, 0).icon;
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -811,9 +814,33 @@ public class Tools {
                 L.e(name + "    " + packageName);
             }
             if (name != null && packageName != null)
-                infos.add(new AppInfo(name.toString(), packageName, versionCode, versionName, apkSourceDir));
+                infos.add(new AppInfo(name.toString(), packageName, versionCode, versionName, apkSourceDir, icon));
         }
         return infos;
+    }
+
+    public static List<AppInfo> getAppInfo(Context context) {
+        final List<AppInfo> list = new ArrayList<>();
+        final PackageManager pm = context.getPackageManager();
+        List<PackageInfo> packages = pm.getInstalledPackages(0);
+        int versionCode = 0;
+        String versionName = "";
+        String apkSourceDir = null;
+        String packageName = "";//包名
+        String name = "";//App名称
+        Drawable icon = null;
+        for (int i = 0; i < packages.size(); i++) {
+            icon = packages.get(i).applicationInfo.loadIcon(pm);
+            packageName = packages.get(i).packageName;
+            versionCode = packages.get(i).versionCode;
+            versionName = packages.get(i).versionName;
+            apkSourceDir = packages.get(i).applicationInfo.sourceDir;
+            name = packages.get(i).applicationInfo.name;
+            if (packageName != null){
+                list.add(new AppInfo(name, packageName, versionCode, versionName, apkSourceDir, icon));
+            }
+        }
+        return list;
     }
 
     public static String encryptToSHA(String info) {
@@ -829,18 +856,18 @@ public class Tools {
     }
 
     public static String byte2hex(byte[] b) {
-        String hs = "";
+        StringBuilder hs = new StringBuilder();
         String stmp = "";
         if (b != null && b.length > 0)
-            for (int n = 0; n < b.length; n++) {
-                stmp = (Integer.toHexString(b[n] & 0XFF));
+            for (byte value : b) {
+                stmp = (Integer.toHexString(value & 0XFF));
                 if (stmp.length() == 1) {
-                    hs = hs + "0" + stmp;
+                    hs.append("0").append(stmp);
                 } else {
-                    hs = hs + stmp;
+                    hs.append(stmp);
                 }
             }
-        return hs;
+        return hs.toString();
     }
 
     /**
@@ -1034,7 +1061,7 @@ public class Tools {
         return false;
     }
 
-    public static void openApp(Context mContext,String packageName) {
+    public static void openApp(Context mContext, String packageName) {
         if (packageName != null) {
             try {
                 PackageManager packageManager = mContext.getPackageManager();
@@ -1046,7 +1073,7 @@ public class Tools {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                L.e("openApp err",e);
+                L.e("openApp err", e);
             }
         }
     }

@@ -1,8 +1,6 @@
 package com.exa.companydemo.location;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Application;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Address;
@@ -10,42 +8,32 @@ import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.GnssCapabilities;
 import android.location.GnssStatus;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.location.OnNmeaMessageListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.DateUtil;
-import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.PermissionUtil;
-import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityLocationBinding;
-import com.exa.companydemo.service.FontManagerService;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
@@ -53,7 +41,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     private LocationManager locationManager;
     private int index = 0;
-    private Location lastLocation;
+    private List<String> eProviders;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -63,8 +51,10 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     @Override
     protected void initView() {
         setToolbarId(R.id.toolbar);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             L.e("缺少定位权限");
             setText("缺少定位权限");
             checkPermission();
@@ -74,8 +64,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override
             public void onClickView(View v) {
-                setText("\n");
-                getProviderSupportInfo(LocationManager.GPS_PROVIDER);
+                setText(DateUtil.getNowDateFull());
                 loadBaseLocationInfo();
             }
         });
@@ -89,29 +78,57 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             Settings.Secure.putInt(getContentResolver(), Settings.Secure.LOCATION_MODE,
                     Settings.Secure.LOCATION_MODE_OFF);
         });
-        //获取位置管理器
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        bind.removeRequest.setOnClickListener(v -> {
+            L.d("取消订阅Gps");
+            unSubscribeGpsUpdates();
+        });
+        bind.setRequest.setOnClickListener(v -> {
+            L.d("订阅Gps定位");
+            subscribeGpsUpdates();
+        });
+        bind.removeRequestNet.setOnClickListener(v -> {
+            L.d("取消订阅网络定位");
+            unSubscribeNetworkUpdates();
+        });
+        bind.requestNet.setOnClickListener(v -> {
+            L.d("订阅网络定位");
+            subscribeNetworkUpdates();
+        });
+        initLocationManager();
+//        BaseConstants.getHandler().postDelayed(this::recyclerGetNetworkLastLocation, 3000);
+    }
 
+    private void initLocationManager() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // 权限校验
+            return;
+        }
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             setText("定位功能是否开启：" + locationManager.isLocationEnabled());
         }
         setText("GPS是否开启：" + isOPenGPS());
         setText("");
         List<String> providers = locationManager.getAllProviders();
-        List<String> eProviders = locationManager.getProviders(true);
+        eProviders = locationManager.getProviders(true);
         getLocationManagerInfo();
         L.d("全部定位方式: " + (providers != null ? providers : "null"));
         setText(L.msg);
         L.d("可用的定位方式: " + (eProviders != null ? eProviders : "null"));
         setText(L.msg);
-
-        locationManager.addNmeaListener(new OnNmeaMessageListener() {
-            @Override
-            public void onNmeaMessage(String message, long timestamp) {
-//                L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
+        if (eProviders != null) {
+            for (int i = 0; i < eProviders.size(); i++) {
+                getProviderSupportInfo(eProviders.get(i));
             }
-        }, new Handler(Looper.myLooper()));
-
+        }
+        loadBaseLocationInfo();
+        getBestProvider();
+        // 注册协议监听
+        locationManager.addNmeaListener((message, timestamp) ->
+                        L.d("locationManager.onNmeaMessage:" + message + "," + timestamp),
+                new Handler(Looper.myLooper()));
+        // 注册卫星状态改变监听
         locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
             @Override
             public void onStarted() {
@@ -147,66 +164,141 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
                 index = index > (status.getSatelliteCount() - 1) ? 0 : index;
-                setText("onSatelliteStatusChanged:count=" + status.getSatelliteCount()
-                        + " index:" + index
-                        + "\t Svid=" + status.getSvid(index)
-                        + ", Cn0=" + status.getCn0DbHz(index)
-                        + ", ElevationDegrees=" + status.getElevationDegrees(index)
-                        + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
-                        + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
-                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
+                setText("收到卫星变化 count=" + status.getSatelliteCount()
+                                + " index:" + index
+                                + "\t Svid=" + status.getSvid(index)
+                                + ", Cn0=" + status.getCn0DbHz(index)
+                                + ", ElevationDegrees=" + status.getElevationDegrees(index)
+                                + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
+                                + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
+//                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
                 );
                 index++;
                 L.d("onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
             }
         }, new Handler(Looper.myLooper()));
 
-        if (eProviders != null) {
-            for (int i = 0; i < eProviders.size(); i++) {
-                getProviderSupportInfo(eProviders.get(i));
-            }
-            for (int i = 0; i < eProviders.size(); i++) {
-                L.d(eProviders.get(i) + " requestLocationUpdates");
-                locationManager.requestLocationUpdates(eProviders.get(i),
-                        0,//时间隔时间
-                        0.0F,//位置更新之间的最小距离米
-                        new LocationListener() {
-                            @Override
-                            public void onLocationChanged(@NonNull Location location) {
-                                L.d(location.getProvider() + "  onLocationChanged:" + location);
-//                                locationUpdate(location, location.getProvider());
-                                setText(location.toString());
-                            }
-
-                            @Override
-                            public void onProviderDisabled(@NonNull String provider) {
-                                L.d("onProviderDisabled:" + provider);
-                            }
-
-                            @Override
-                            public void onStatusChanged(String provider, int status, Bundle extras) {
-                                L.d("onStatusChanged:" + provider + "  " + status + "," + (extras == null ? "" : extras.keySet()));
-                            }
-                        });
-            }
-        }
-        loadBaseLocationInfo();
-        getBestProvider();
-//        BaseConstants.getHandler().postDelayed(this::recyclerGetNetworkLastLocation, 3000);
+        test();
     }
+
+    private void test() {
+//        bind.btn.postDelayed(() -> {
+//            subscribeGpsUpdates();
+//            unSubscribeGpsUpdates();
+//            test();
+//        }, 50);
+
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                setText("test Thread: " + Thread.currentThread().getName());
+                subscribeGpsUpdates();
+            }
+        };
+        bind.btn.postDelayed(thread::interrupt, 3000);
+    }
+
+    private void subscribeGpsUpdates() {
+        if (locationManager != null) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            setText("订阅Gps定位");
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    0 /* 时间隔时间 */,
+                    0.0F /* 位置更新的最小距离(单位：米) */,
+                    locationListener);
+        }
+    }
+
+    private void unSubscribeGpsUpdates() {
+        if (locationManager != null) {
+            setText("取消订阅Gps定位");
+            locationManager.removeUpdates(locationListener);
+        }
+    }
+
+    private void subscribeNetworkUpdates() {
+        if(!eProviders.contains(LocationManager.NETWORK_PROVIDER)){
+            setText("订阅Network定位失败：未提供网络定位能力");
+            return;
+        }
+        if (locationManager != null) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            setText("订阅Network定位");
+            locationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    0 /* 时间隔时间 */,
+                    0.0F /* 位置更新的最小距离(单位：米) */,
+                    networkListener);
+        }
+    }
+
+    private void unSubscribeNetworkUpdates() {
+        if(eProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager != null){
+            setText("取消订阅Network定位");
+            locationManager.removeUpdates(networkListener);
+        }
+    }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            L.d(location.getProvider() + "  onLocationChanged:" + location);
+            setText(location.toString());
+        }
+
+        @Override
+        public void onProviderDisabled(@NonNull String provider) {
+            L.d("onProviderDisabled:" + provider);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            L.d("onStatusChanged:" + provider + "  " + status + "," + (extras == null ? "" : extras.keySet()));
+        }
+    };
+
+    private final LocationListener networkListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            L.d(location.getProvider() + "  onLocationChanged:" + location);
+            setText(location.toString());
+        }
+
+        @Override
+        public void onProviderDisabled(@NonNull String provider) {
+            L.d("onProviderDisabled:" + provider);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            L.d("onStatusChanged:" + provider + "  " + status + "," + (extras == null ? "" : extras.keySet()));
+        }
+    };
 
     private void recyclerGetNetworkLastLocation() {
         BaseConstants.getHandler().postDelayed(() -> {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (location != null) {
-                setText("getLastKnownLocation gps:" + location.getTime() + "  " + location.getLatitude());
-                L.d("getLastKnownLocation gps:" + location.getTime() + "  " + location.getLatitude());
-            } else {
-//                L.d("getLastKnownLocation gps: null");
-//                setText("getLastKnownLocation gps: null");
+                setText("getLastKnownLocation gps:" + location.getTime() + "，" + location.getLatitude());
+                L.d("getLastKnownLocation gps:" + location.getTime() + "，" + location.getLatitude());
             }
             if (activity != null) {
                 recyclerGetNetworkLastLocation();
@@ -229,12 +321,18 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         String provider = locationManager.getBestProvider(criteria, true);
         L.e("获取最佳定位方式: " + getProviderStr(provider));
         setText("获取最佳定位方式: " + getProviderStr(provider));
-        setText(getProviderStr(provider) + " 是否可用: " + (provider == null ? "provider is null" : locationManager.isProviderEnabled(provider)));
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        setText(getProviderStr(provider) + " 是否可用: " + (provider == null ?
+                "provider is null" : locationManager.isProviderEnabled(provider)));
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-        setText(getProviderStr(LocationManager.NETWORK_PROVIDER) + " LastKnownLocation: " + (location == null ? "null" : (location.getLatitude() + "," + location.getLongitude())));
+        setText(getProviderStr(LocationManager.NETWORK_PROVIDER) + " LastKnownLocation: "
+                + (location == null ? "null" : (location.getLatitude()
+                + "," + location.getLongitude())));
     }
 
     private void getProviderSupportInfo(String ps) {
@@ -257,8 +355,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     private void getLocationManagerInfo() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             GnssCapabilities capabilities = locationManager.getGnssCapabilities();
-            L.d("getGnssCapabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
-            int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();//精确度
+            L.d("capabilities.hasGnssAntennaInfo: " + capabilities.hasGnssAntennaInfo());
+            int accuracy = locationManager.getProvider(LocationManager.GPS_PROVIDER).getAccuracy();
             L.d("精度accuracy: " + accuracy);
             setText("Gnss硬件模块名称:" + locationManager.getGnssHardwareModelName());
             L.d("getGnssHardwareModelName:" + locationManager.getGnssHardwareModelName());
@@ -266,8 +364,10 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void loadBaseLocationInfo() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             L.e("缺少定位权限");
             setText("缺少定位权限");
             return;
@@ -281,7 +381,9 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         locationUpdate(location, LocationManager.NETWORK_PROVIDER);
 
-        Gravity.apply(Gravity.BOTTOM, 500, 200, new Rect(0, 0, 100, 500), 100, 50, new Rect(0, 0, 100, 500));
+        Gravity.apply(Gravity.BOTTOM, 500, 200,
+                new Rect(0, 0, 100, 500), 100, 50,
+                new Rect(0, 0, 100, 500));
     }
 
     private void locationUpdate(Location location, String provider) {
@@ -336,15 +438,10 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         boolean gps = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         // 网络服务定位
         boolean network = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if (gps || network) {
-            return true;
-        }
-        return false;
+        return gps || network;
     }
 
     private void setText(final String msg) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = format.format(new Date());
         runOnUiThread(() -> {
             String n = msg + "\n" + bind.text.getText().toString();
             bind.text.setText(n);

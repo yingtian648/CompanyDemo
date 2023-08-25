@@ -1,25 +1,21 @@
 package com.exa.companydemo;
 
-import android.app.UiModeManager;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
 import com.exa.baselib.base.BaseBindActivity;
-import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.companydemo.databinding.ActivityTestBinding;
-import com.exa.companydemo.widget.MySurfaceView;
+import com.exa.companydemo.test.TabFm;
+import com.exa.companydemo.test.TabSurfaceViewFm;
 
-import androidx.core.widget.TextViewKt;
+import java.util.ArrayList;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
-    private MySurfaceView surfaceView;
-    private int nightMode = 0;
-    private UiModeManager mUiModeManager;
+    private ArrayList<Fragment> fragmentList = new ArrayList<>();
 
     @Override
     protected int setContentViewLayoutId() {
@@ -28,18 +24,52 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
     @Override
     protected void initView() {
-        surfaceView = new MySurfaceView(TestActivity.this);
-        bind.mapContainer.addView(surfaceView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        ImageView imageView = new ImageView(this);
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        bind.carFragment.addView(imageView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        Glide.with(this).load(R.drawable.win_bg).into(imageView);
+
     }
 
     @Override
     protected void initData() {
-        mUiModeManager = getSystemService(UiModeManager.class);
-        nightMode = mUiModeManager.getNightMode();
+        fragmentList.add(new TabFm("我是第1个Fm"));
+        fragmentList.add(new TabFm("我是第2个Fm"));
+        fragmentList.add(new TabFm("我是第3个Fm"));
+        fragmentList.add(new TabSurfaceViewFm());
+        bind.vp.setAdapter(new MAdapter(getSupportFragmentManager()));
+        bind.vp.setOffscreenPageLimit(4);
+        bind.btn1.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(0);
+        });
+        bind.btn2.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(1);
+        });
+        bind.btn3.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(2);
+        });
+        bind.btn4.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(3);
+        });
+    }
 
+    class MAdapter extends FragmentPagerAdapter {
+
+        public MAdapter(@NonNull FragmentManager fm) {
+            super(fm);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Fragment_" + position;
+        }
     }
 }

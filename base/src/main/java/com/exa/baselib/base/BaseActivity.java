@@ -1,5 +1,6 @@
 package com.exa.baselib.base;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
@@ -15,7 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        overridePendingTransition(R.anim.translate_y_enter,R.anim.translate_y_exit);
+//        overridePendingTransition(R.anim.translate_x_enter,R.anim.translate_x_exit);
         super.onCreate(savedInstanceState);
         L.dd();
         setContentView(getLayoutId());
@@ -23,6 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         initData();
     }
 
+    @SuppressLint("RestrictedApi")
     protected void setToolbarId(int id) {
         Toolbar toolbar = findViewById(id);
         toolbar.setNavigationOnClickListener(new OnClickViewListener() {

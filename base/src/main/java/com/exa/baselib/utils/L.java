@@ -6,8 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-
 /**
  * 日志规则：
  * 循环日志尽量使用VERBOSE级别

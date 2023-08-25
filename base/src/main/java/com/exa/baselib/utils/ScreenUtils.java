@@ -1,11 +1,17 @@
 package com.exa.baselib.utils;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.view.WindowManager;
+
+import androidx.annotation.NonNull;
+
+import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
 
 /**
  * @author Administrator
@@ -18,25 +24,46 @@ public class ScreenUtils {
      * @param activity
      */
     public static void hideStatusBars(Activity activity) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
-//            if (controller != null) {
-//                // 手机自动隐藏状态栏导航栏
-//                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-//                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
-////                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
-////                    @Override
-////                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-////                        L.d("onControllableInsetsChanged：setFullScreen");
-////                    }
-////                });
-//            }
-//        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+            if (controller != null) {
+                // 手机自动隐藏状态栏导航栏
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+                    @Override
+                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+                        L.d("onControllableInsetsChanged：setFullScreen");
+                    }
+                });
+            }
+        } else {
             int option = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE;
             activity.getWindow().getDecorView().setSystemUiVisibility(option);
-//        }
+        }
+    }
+
+    public static void hideStatusBar(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+            if (controller != null) {
+                // 手机自动隐藏状态栏导航栏
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                controller.hide(WindowInsets.Type.statusBars());
+                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
+                    @Override
+                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
+                        L.d("onControllableInsetsChanged：setFullScreen");
+                    }
+                });
+            }
+        } else {
+            int option = View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE;
+            activity.getWindow().getDecorView().setSystemUiVisibility(option);
+        }
     }
 
     /**
@@ -121,5 +148,13 @@ public class ScreenUtils {
             int option = View.SYSTEM_UI_FLAG_VISIBLE;
             activity.getWindow().getDecorView().setSystemUiVisibility(option);
         }
+    }
+
+    public static void setStatusBarInvasion(Activity activity) {
+        Window window = activity.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
     }
 }

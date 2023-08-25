@@ -2,38 +2,46 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <merge xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         tools:context=".TestActivity">
 
-        <FrameLayout
-            android:id="@+id/mapBox"
+        <LinearLayout
+            android:layout_width="400px"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/btn1"
+                android:text="第1个Fm"
+                android:layout_width="match_parent"
+                android:layout_height="100px"/>
+            <Button
+                android:id="@+id/btn2"
+                android:text="第2个Fm"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="100px"/>
+            <Button
+                android:id="@+id/btn3"
+                android:text="第3个Fm"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_height="100px"/>
+            <Button
+                android:id="@+id/btn4"
+                android:text="第4个Fm-SurfaceView"
+                android:layout_width="match_parent"
+                android:layout_marginTop="15dp"
+                android:layout_height="100px"/>
+        </LinearLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <FrameLayout
-                android:id="@+id/mapContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <FrameLayout
-                android:id="@+id/userContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/car_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true" >
-
-            <WebView
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </FrameLayout>
-    </merge>
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </layout>

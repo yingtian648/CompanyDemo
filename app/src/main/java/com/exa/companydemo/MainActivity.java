@@ -3,55 +3,34 @@ package com.exa.companydemo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.SystemProperties;
-import android.util.ArraySet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import androidx.appcompat.widget.Toolbar;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseActivity;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.Logs;
+
 import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.ScreenUtils;
-import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
 import com.exa.baselib.utils.Utils;
 import com.exa.companydemo.common.AppInfoActivity;
 import com.exa.companydemo.location.LocationActivity;
-import com.gxa.car.scene.SceneInfo;
-import com.gxa.car.scene.SceneManager;
-import com.gxa.car.scene.WindowChangeListener;
-import com.gxa.carupdater.sdk.CarUpdaterCallback;
-import com.gxa.carupdater.sdk.CarUpdaterManager;
+import com.exa.companydemo.utils.NetworkManager;
+import com.exa.companydemo.widget.Titlebar;
 
-import org.json.JSONObject;
-
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import static com.exa.companydemo.TestUtil.isRegisterBroadCast;
 import static com.exa.companydemo.TestUtil.mReceiver;
@@ -71,17 +50,25 @@ public class MainActivity extends BaseActivity {
     private WindowManager windowManager;
     private TextView tv;
     private UiModeManager modeManager;
+    private int index = 0;
+    private boolean isGome;
+    private NetworkManager networkManager;
 
     @Override
     protected int getLayoutId() {
 //        ScreenUtils.setFullScreen(this);
-        StatubarUtil.setStatusBarInvasion(this, false);
+//        StatubarUtil.setStatusBarInvasion(this, false);
         return R.layout.activity_main;
     }
 
     @Override
     protected void initData() {
         L.d("initData");
+    }
+
+    @Override
+    public void onWindowAttributesChanged(WindowManager.LayoutParams params) {
+        super.onWindowAttributesChanged(params);
     }
 
     @SuppressLint({"ResourceType", "SetTextI18n"})
@@ -96,10 +83,8 @@ public class MainActivity extends BaseActivity {
         TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
 //        setToolbarId(R.id.toolbar);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(v -> {
-            finish();
-        });
+        Titlebar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(v -> finish());
         editText = findViewById(R.id.edt);
         msgT = findViewById(R.id.msgT);
         btn4 = findViewById(R.id.btn4);
@@ -110,12 +95,12 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btnSystemUI).setOnClickListener(view -> {
             L.w("全屏按钮");
             isFullScreen = !isFullScreen;
-//            if (isFullScreen) {
-//                ScreenUtils.hideStatusBars(this);
-//            } else {
-//                ScreenUtils.showStatusBars(this);
-//            }
-            startActivity(new Intent(this, SystemUITestActivity.class));
+            if (isFullScreen) {
+                ScreenUtils.hideStatusBar(this);
+            } else {
+                ScreenUtils.showStatusBars(this);
+            }
+//            startActivity(new Intent(this, SystemUITestActivity.class));
         });
         findViewById(R.id.btnPlay).setOnClickListener(view -> {
             L.w("视频播放");
@@ -124,6 +109,10 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn2).setOnClickListener(view -> {
             L.w("点击跳转  到第二个页面");
             startActivity(new Intent(this, AppInfoActivity.class));
+        });
+        findViewById(R.id.btn3).setOnClickListener(view -> {
+            L.w("进入测试页");
+            startActivity(new Intent(this, TestActivity.class));
         });
         findViewById(R.id.btnNightMode).setOnClickListener(v -> {//am start com.android.engmode
             L.w("白天黑夜模式");
@@ -147,84 +136,33 @@ public class MainActivity extends BaseActivity {
             Tools.hideKeyboard(editText);
             return false;
         });
-
-//        CarUpdaterManager.getInstance(this).registerCallback(new CarUpdaterCallback() {
-//            @Override
-//            public void connect() {
-//                L.dd();
-//            }
-//
-//            @Override
-//            public void disconnect() {
-//                L.dd();
-//            }
-//
-//            @Override
-//            public void onUpdateStatus(int i, int i1, int i2) {
-//                L.dd();
-//            }
-//
-//            @Override
-//            public void onUpdateError(int i, int i1) {
-//                L.dd();
-//            }
-//
-//            @Override
-//            public void onTips(int i) {
-//                L.dd();
-//            }
-//
-//            @Override
-//            public void onUpdateFinish(int i, String s) {
-//                L.dd();
-//            }
-//        });
-//        CarUpdaterManager.getInstance(this).connect();
+        // 沉浸式
+//        ScreenUtils.setStatusBarInvasion(this);
+        networkManager = NetworkManager.Companion.getInstance(this);
     }
 
-    @SuppressLint({"RestrictedApi", "WrongConstant"})
+    @SuppressLint({"RestrictedApi", "WrongConstant", "Range"})
     private void test() {
-        L.dd();
+        index++;
+        L.dd(index);
 //        TestUtil.getSensorData(mContext);
+        L.dd("isTelephonyNetEnable:" + networkManager.isTelephonyDataEnable());
+
+        networkManager.switchTelephonyDataEnable();
+//        Toast.makeText(this, "测试Toast: " + index, Toast.LENGTH_SHORT).show();
 
 //        checkPermission();
 //        TestUtil.testDialog(this, "ahahh", 0);
 //        TestUtil.testFonts(this);
 //        TestUtil.showToast(this);
 //        startService(new Intent(this, DemoService.class));
-//        BaseConstants.getHandler().postDelayed(() -> {
-//            Toast.makeText(this,"121212",Toast.LENGTH_SHORT).show();
-//            manager.cancelAll();
-//        }, 3000);
-//        checkPermission();
-//        registerWindowChangedListener();
-//        Object fontManager = getSystemService("font");
-//        if(fontManager!=null){
-//            try {
-//                ((IFontManager.Stub)fontManager).updateDefaultFontFamily("SSSS");
-//            } catch (RemoteException e) {
-//                e.printStackTrace();
-//                L.d("updateDefaultFontFamily err");
-//            }
-//        }else {
-//            L.d("FontManagerService","fontManager is null");
-//        }
+//        checkSystemPropertiesReady();
 
-//        TestUtil.testDialog(this,"1111111",2501);
-
-//        TestUtil.copyAssetsFonts(this);
-//        TestUtil.testFonts(this);
-//        String personalPath = "/storage/emulated/0/Fonts/etc/fonts_personal.xml";
-//        File file = new File(personalPath);
-//        L.d("file:" + file.exists());
-
-//        BuildTestToast.makeMyToast(this);
-//        TestUtil.showToast(MainActivity.this);
-//        TestUtil.testDialog(this, "111111", 2000);
-//        TestUtil.usbPermission(this);
-//        ScreenUtils.setFullScreen(this);
-
-//        TestUtil.sendBroadcast(this, "com_exa_companydemo_action", null);
+//        Intent intent = new Intent();
+//        String pkg = "com.exa.companyclient";
+//        String clazz = "com.exa.companyclient.service.MService";
+//        intent.setComponent(new ComponentName(pkg,clazz));
+//        App.getContext().startService(intent);
     }
 
     private void registerReceiver() {
@@ -262,21 +200,6 @@ public class MainActivity extends BaseActivity {
             }
         }
     };
-
-
-    private void registerWindowChangedListener() {
-        SceneManager.getInstance(mContext).addWindowChangeListener(new WindowChangeListener() {
-            @Override
-            public void onWindowsChanged(SceneInfo sceneInfo, int i) {
-                L.d("onWindowsChanged : " + sceneInfo.getPackageName() + ", windowType = " + sceneInfo.getWindowType());
-            }
-
-            @Override
-            public void onFocusChanged(SceneInfo sceneInfo, SceneInfo sceneInfo1) {
-                L.d("onFocusChanged : " + sceneInfo.getPackageName() + ", windowType = " + sceneInfo1.getWindowType());
-            }
-        });
-    }
 
     @Override
     protected void onResume() {

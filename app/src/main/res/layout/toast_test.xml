@@ -11,7 +11,7 @@
         android:paddingHorizontal="@dimen/toast_text_marginHorizontal"
         android:paddingVertical="@dimen/toast_text_marginVertical"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/toast_nor"
+        android:background="@drawable/toast_customer_night"
         android:gravity="center_vertical">
 
         <ProgressBar
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:textColor="@color/black33"
+            android:textColor="@color/white"
             tools:text="111111111111"
             android:textSize="30sp" />
     </LinearLayout>

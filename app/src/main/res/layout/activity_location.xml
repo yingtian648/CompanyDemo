@@ -12,43 +12,91 @@
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:layout_above="@id/bottomLine"
             android:gravity="center_vertical"
             android:textSize="25px" />
 
         <LinearLayout
+            android:id="@+id/bottomLine"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100px"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn"
                 android:layout_width="0px"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_weight="1"
-                android:padding="20px"
                 android:text="获取定位信息"
+                android:textSize="30px" />
+
+            <Button
+                android:id="@+id/setRequest"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="20px"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="订阅Gps定位"
+                android:textSize="30px" />
+
+            <Button
+                android:id="@+id/removeRequest"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="20px"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="取消订阅Gps"
+                android:textSize="30px" />
+
+            <Button
+                android:id="@+id/requestNet"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="20px"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="订阅Network定位"
+                android:textSize="30px" />
+
+            <Button
+                android:id="@+id/removeRequestNet"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="20px"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="取消订阅Network"
                 android:textSize="30px" />
 
             <Button
                 android:id="@+id/openBtn"
                 android:layout_width="0px"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
                 android:layout_marginStart="20px"
-                android:layout_marginEnd="20px"
                 android:layout_weight="1"
                 android:enabled="false"
-                android:padding="20px"
                 android:text="打开定位功能"
                 android:textSize="30px" />
 
             <Button
                 android:id="@+id/closeBtn"
                 android:layout_width="0px"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="20px"
                 android:layout_weight="1"
                 android:enabled="false"
-                android:padding="20px"
                 android:text="关闭定位功能"
                 android:textSize="30px" />
         </LinearLayout>

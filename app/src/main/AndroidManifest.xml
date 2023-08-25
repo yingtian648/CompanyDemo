@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.exa.companydemo"
+    package="com.exa.companydemo">
 
-    >
-
-<!--    android:sharedUserId="android.uid.system"-->
+<!--    android:sharedUserId="@string/sharedUserId"-->
 
     <application
         android:name=".App"
@@ -23,15 +21,53 @@
         android:theme="@style/Theme.CompanyDemo"
         tools:targetApi="31">
         <activity
-            android:name=".TestActivity"
+            android:name=".DemoActivity"
+            android:exported="true" >
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".image.ImageUtilActivity"
             android:exported="true">
 
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
+            android:exported="true"
+            android:theme="@style/MainActivity"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".location.LocationActivity"
+            android:exported="true">
+<!--             <intent-filter>-->
+<!--             <action android:name="android.intent.action.MAIN" />-->
+<!--             <category android:name="android.intent.category.LAUNCHER" />-->
+<!--             </intent-filter>-->
+        </activity>
+        <activity
+            android:name=".TestActivity"
+            android:exported="true">
+<!--             <intent-filter>-->
+<!--             <action android:name="android.intent.action.MAIN" />-->
+<!--             <category android:name="android.intent.category.LAUNCHER" />-->
+<!--             </intent-filter>-->
+        </activity>
         <activity
             android:name=".inputmethod.InputMethodSettingActivity"
             android:exported="true">
@@ -55,42 +91,17 @@
         </activity>
         <activity
             android:name=".common.AppInfoActivity"
-            android:exported="false" />
-        <activity
-            android:name=".location.LocationActivity"
-            android:exported="true">
-
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-        </activity>
+            android:exported="false"
+            android:theme="@style/AppInfoActivity" />
         <activity
             android:name=".VideoPlayerActivity"
             android:exported="true"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustResize">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".musicload.MediaLoadActivity"
             android:exported="true" />
-        <activity
-            android:name=".MainActivity"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
-            android:exported="true"
-            android:theme="@style/MainActivity"
-            android:windowSoftInputMode="adjustPan">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
         <provider
             android:name=".mediaprovider.MMediaProvider"
             android:authorities="com.media.my"
@@ -121,6 +132,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/pathlist" />
         </provider>
+
         <receiver
             android:name=".mediaprovider.MediaScannerReceiver"
             android:exported="true">
@@ -129,13 +141,17 @@
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
             </intent-filter>
         </receiver>
-
+        <receiver android:name=".broadcast.BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         <service
             android:name=".service.DemoService"
             android:enabled="true"
-            android:process="com.exa.companydemo.demoservice"
-            android:exported="true"/>
-
+            android:exported="true"
+            android:process="com.exa.companydemo.demoservice" />
         <service
             android:name=".mediaprovider.MediaScannerService"
             android:exported="false"
@@ -181,13 +197,12 @@
 
     <uses-feature
         android:name="android.hardware.usb.host"
-        android:required="true" />
+        android:required="true" /> <!-- <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" -->
+    <!-- tools:ignore="ProtectedPermissions" /> -->
     <uses-permission
         android:name="android.permission.SET_TIME"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-<!--    <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW"-->
-<!--        tools:ignore="ProtectedPermissions" />-->
     <uses-permission
         android:name="android.hardware.usb.host"
         android:required="false" />
@@ -195,11 +210,11 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 系统权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        tools:ignore="ScopedStorage" /> <!-- 系统权限 -->
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
@@ -215,5 +230,9 @@
         tools:ignore="ProtectedPermissions" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
 </manifest>

@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
@@ -16,7 +18,7 @@ import androidx.annotation.Nullable;
 
 public class App extends Application {
     @SuppressLint("StaticFieldLeak")
-    private static Context app;
+    private static Application app;
 
     @Override
     public void onCreate() {
@@ -24,7 +26,7 @@ public class App extends Application {
         Constants.init();
         BaseConstants.init();
 
-        L.init("CompanyDemo", true);
+        L.init("MCompanyDemo", true);
         app = this;
         String screen = "屏幕宽高px：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
         String screenDp = "屏幕宽高dp：" + (int) (Tools.getScreenW(this) / Tools.getScreenDensity(this))
@@ -77,7 +79,12 @@ public class App extends Application {
         L.dd();
     }
 
-    public static Context getContext() {
+    public static Application getContext() {
         return app;
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }

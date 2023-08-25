@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.bean.AppInfo;
+import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.Constants;
 import com.exa.companydemo.R;
@@ -21,6 +22,7 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
 
     @Override
     protected void initView() {
+        setToolbarId(R.id.toolbar);
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.text.setText("获取app列表...");
         bind.text.setOnLongClickListener(new View.OnLongClickListener() {
@@ -31,6 +33,8 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
                 return false;
             }
         });
+        ScreenUtils.setStatusBarInvasion(this);
+        ScreenUtils.hideStatusBars(this);
     }
 
     @Override

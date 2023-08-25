@@ -40,7 +40,7 @@ public class StatubarUtil {
         window.setStatusBarColor(Color.TRANSPARENT);
     }
 
-    //设置沉侵式
+    //取消沉侵式
     public static void setUnInvasion(Activity activity) {
         if (activity == null) return;
         Window window = activity.getWindow();

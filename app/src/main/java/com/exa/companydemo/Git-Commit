@@ -1,45 +1,52 @@
 
-feat[CarLocationService]:update soalib version to 1.2.7.
-rootcause:update soalib version to 1.2.7.
-solution:update soalib version to 1.2.7.
+feat[CarLocationService]:update soalib version to 1.3.6.
+rootcause:update soalib version to 1.3.6.
+solution:update soalib version to 1.3.6.
 Product:A02
 Build:mpass
 Test:upass
 BugID:noid
 
-feat[CarLocationService]:Use startfindservice method to listen service status.
-rootcause:Use startfindservice method to listen service status.
-solution:Use startfindservice method to listen service status.
-Product:A02
+Description: add statusbar view
+JiraID: noid
+Module: SystemUI
+Bug or feature: feature
+Team: FW
+Test: pass
+
+feat[WMS]:Adjusting issues where non system users cannot drag.
+rootcause:cannot drag err.
+solution:remove system user judgment.
+Product:AH8
+Build:mpass
+Test:upass
+BugID:ID1170278
+
+fix[CarTransition]:add customer type SCENE_TRAILER_MODE.
+rootcause:need type SCENE_TRAILER_MODE config.
+solution:add customer type SCENE_TRAILER_MODE.
+Product:A29V
+Build:mpass
+Test:upass
+BugID:ID1168320
+
+fix[WMS]:Disable SystemUI transient.
+rootcause:Disable SystemUI transient.
+solution:Disable SystemUI transient.
+Product:A18V/A21
 Build:mpass
 Test:upass
 BugID:noid
 
-feat[framework]:Adapt the fonts set by the user.
-rootcause:Adapt the fonts set by the user.
-solution:Adapt the fonts set by the user.
-Product:A02
-Build:mpass
-Test:upass
-BugID:noid
-
-fix[framework]:add Toast min width.
-rootcause:Toast min-width mismatch.
-solution:add Toast min width.
-Product:A02
-Build:mpass
-Test:upass
-BugID:ID1097288
-
-feat[CarPhoneWindowManager]:add customer scene layer policy.
-rootcause:add customer scene layer policy.
+feat[Toast]:Fix Toast display error.
+rootcause:Toast display error.
 solution:
-1.add package config in scene_layer_maps.xml.
-2.add method checkExtLayerPermission.
-Product:A02
+1.Adjusting toast delay time.
+2.Use customer widow_type TYPE_CAR_TOAST.
+Product:AH8
 Build:mpass
 Test:upass
-BugID:noid
+BugID:ID1166681
 
 fix[PhoneWindowManager]:Scene layer policy not suitable for T60Y.
 rootcause:Scene layer policy is not adapted to T60Y.
@@ -57,14 +64,6 @@ Build:mpass
 Test:upass
 BugID:TAPD-ID1075758
 
-fix[WMS]:Adjusting APP start Animation.
-rootcause:Adjusting APP start Animation.
-solution:Adjust the APP startup animation to alpha animation.
-Product:A02
-Build:mpass
-Test:upass
-BugID:ID1135198
-
 fix[Toast]:Add statistics broadcast.
 rootcause:Add statistics broadcast.
 solution:Add statistics broadcast.
@@ -73,50 +72,93 @@ Build:mpass
 Test:upass
 BugID:ID1143798
 
-fix[CarPackageManagerService]:remove holopilotparking.td config.
-rootcause:remove holopilotparking.td config.
-solution:remove holopilotparking.td config.
-Product:A02
+fix[CarPackageManagerService]:add SystemProperties read check.
+rootcause:SystemProperties read err.
+solution:Read SystemProperties after SystemProperties ready.
+Product:A8E
 Build:mpass
 Test:upass
-BugID:noid
+BugID:JIRA-A58A88GOS2-40520
 
-fix[CarLocationService]:update soalib to 1.2.9.
-rootcause:update soalib to 1.2.9.
-solution:update soalib to 1.2.9.
-Product:A02
+
+
+fix[AOSP/SystemUI]:Remove NetworkPolicyLogger block log.
+rootcause:NetworkPolicyLogger log too many.
+solution:Remove NetworkPolicyLogger block log.
+Product:A18V/A21
+Span:<>
 Build:mpass
 Test:upass
-BugID:noid
+FID:ID1177846
+Level:S
 
-fix[WMS-animation]:fix startOffset of app exit anim.
-rootcause:fix startOffset of app exit anim.
-solution:fix startOffset of app exit anim.
-Product:A02
+
+fix[AOSP/SystemUI]:Skip full screen width judgment when currently in the status bar.
+rootcause:Can not hide StatusBar.
+solution:Skip full screen width judgment when currently in the StatusBar.
+Product:AH8
+Span:<>
 Build:mpass
 Test:upass
-BugID:ID1149838
+FID:ID1174956
+Level:A
 
-feat[fonts]:Add GacFont alias.
-rootcause:Use GacFont err.
-solution:Add GacFont alias
-Product:A02
+
+fix[AOSP/SurfaceView]:Adjust surfaceView log level.
+rootcause:There are too many SurfaceView logs.
+solution:Adjust surfaceView log level.
+Product:A21/A18V
+Span:<>
 Build:mpass
 Test:upass
-BugID:noid
+FID:ID1177843
+Level:A
 
-fix[location]:remove the log of sv list.
-rootcause:remove the log of sv list.
-solution:remove the log of sv list.
-Product:A02
+fix[AOSP/location]:Remove sv-list logs.
+rootcause:There are too many logs from GnssLocationProvider.
+solution:Remove sv-list logs.
+Product:A21/A18V
+Span:<>
 Build:mpass
 Test:upass
-BugID:noid
+FID:ID1177845
+Level:A
 
-
-feat[SystemUI]:modify default status bar semi transparent color.
-rootcause:The default status bar translucent color needs to be fully transparent.
-solution:modify default status bar semi transparent color.
+fix[AOSP/SystemUI]:Disable SystemUi transient.
+rootcause:SystemUi shouldn't display by swipe.
+solution:Disable SystemUi transient.
+Product:AH8
+Span:<>
 Build:mpass
 Test:upass
-BugId:noid
+FID:ID1187969
+Level:B
+
+fix[AOSP/Toast]:Show current Toast and discard cache toast.
+rootcause:Toast dispay error.
+solution:Show current Toast and discard cache toast.
+Product:AH8
+Span:<>
+Build:mpass
+Test:upass
+FID:ID1190212
+Level:B
+
+fix[fonts]:fix system fonts.
+rootcause:fonts display error.
+solution:
+1.Set Roboto as System default fonts.
+2.Introduce the fonts of SourceHanSansCN.
+Product:AS9
+Span:<>
+Build:mpass
+Test:upass
+FID:ID1160987
+Level:C
+
+Description: Fix connect state display error.
+JiraID: PD3568-676
+Module: SystemUI
+Bug or feature: Bug
+Team: FW
+Test: pass

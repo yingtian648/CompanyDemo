@@ -1,0 +1,77 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.gxatek.cockpit.launcher'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.gxatek.cockpit.launcher"
+        minSdk 25
+        targetSdk 33
+        versionCode 10000
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        debug {
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
+//            storeFile file('../signatures/a9e_6125_platform.keystore')
+//            storeFile file('../signatures/a8e_8155_platform.keystore')
+//            storeFile file('../signatures/zl3568.keystore')
+//            storeFile file('../signatures/as9_platform.keystore')
+        }
+        release {
+            storePassword 'Aa123456'
+            keyPassword 'Aa123456'
+            keyAlias 'platform'
+            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = "SYLauncher.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation project(path: ':base')
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}

@@ -69,7 +69,7 @@
         </receiver>
 
         <service
-            android:name=".common.MAidlClient"
+            android:name=".service.MService"
             android:exported="true"
             tools:ignore="Instantiatable" />
     </application>

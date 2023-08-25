@@ -2,7 +2,6 @@ package com.exa.companydemo.widget;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.fonts.FontFamilyUpdateRequest;
 import android.util.AttributeSet;
 import android.widget.TextView;
 

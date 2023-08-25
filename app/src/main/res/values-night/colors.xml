@@ -13,4 +13,8 @@
     <color name="btn_bg">#333333</color>
     <color name="window_bg">#666666</color>
     <color name="blue">#3EC6FB</color>
+
+    <color name="panel_seekbar_bg">#29000000</color>
+    <color name="panel_seekbar_progress_start">#43ACFF</color>
+    <color name="panel_seekbar_progress_end">#187BED</color>
 </resources>

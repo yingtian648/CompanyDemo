@@ -43,6 +43,8 @@ import android.view.MotionEvent;
 import android.view.SearchEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.Button;
@@ -56,10 +58,6 @@ import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.companydemo.utils.LogTools;
-import com.github.mjdev.libaums.UsbMassStorageDevice;
-import com.github.mjdev.libaums.fs.FileSystem;
-import com.github.mjdev.libaums.fs.UsbFile;
-import com.github.mjdev.libaums.partition.Partition;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,6 +89,7 @@ import static com.exa.baselib.utils.L.v;
 public class TestUtil {
 
     private static Toast toast;
+    private static int index = 0;
 
     /**
      * 测试 Toast
@@ -98,60 +97,35 @@ public class TestUtil {
      * @param context
      */
     public static void showToast(Activity context) {
-        L.d("showToast");
-        String msg = "一二三四五六七八一二三四五六七八一二三四五六七八";
-//        msg = "一二三四五六七";
+        index++;
+        L.d("showToast " + index);
+        if (toast == null) {
+            toast = Toast.makeText(context, "12121212", Toast.LENGTH_SHORT);
+            L.d("showToast makeText " + index);
+        }
+//        toast.show();
+        String msg = "一二三四五六七八一二三四五六七八一二三四五六七八111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
+        msg = "一二三四五六七Toast " + index;
         Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 //        BaseConstants.getHandler().postDelayed(() -> {
-//        CarToast.makeText(context, msg, CarToast.LENGTH_LONG).show();
+//            Toast.makeText(context, "CarToast好了", Toast.LENGTH_LONG).show();
 //        }, 7000);
-        BaseConstants.getHandler().postDelayed(() -> {
-            CarToast.makeText(context, "好了", Toast.LENGTH_LONG).show();
-        }, 7000);
-        toast = new Toast(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
-        TextView tv = view.findViewById(R.id.message);
-        tv.setText("一二三四五六七八一二三四五六1111111");
-        toast.setView(view);
-//        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
-        /**
-         * app-build.grable中指定 targetSdk>=30
-         * 设置Toast显示位置 offset 为偏移量
-         * @param gravity Gravity.TOP,Gravity.CENTER,Gravity.BOTTOM
-         * 不设置gravity，Toast显示在屏幕顶部中间
-         */
-        toast.setGravity(Gravity.CENTER, 0, 0);
+//        toast = new Toast(context);
+//        View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
+//        TextView tv = view.findViewById(R.id.message);
+//        tv.setText("一二三四五六七八一二三四五六:" + index);
+//        toast.setView(view);
+////        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+//        /**
+//         * app-build.grable中指定 targetSdk>=30
+//         * 设置Toast显示位置 offset 为偏移量
+//         * @param gravity Gravity.TOP,Gravity.CENTER,Gravity.BOTTOM
+//         * 不设置gravity，Toast显示在屏幕顶部中间
+//         */
+//        toast.setGravity(Gravity.CENTER, 0, 0);
+//        toast.setDuration(Toast.LENGTH_LONG);
 //        toast.show();
 
-//        final WindowManager manager = getSystemService(WindowManager.class);
-//        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-//        params.gravity = Gravity.TOP;
-//        params.y = 16;
-//        params.width = WindowManager.LayoutParams.MATCH_PARENT;
-//        params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//        params.packageName = getPackageName();
-//        params.setFitInsetsSides(0);
-//        params.setFitInsetsTypes(0);
-//        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-//                | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-//                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
-//        params.systemUiVisibility = SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
-//        params.format = PixelFormat.TRANSLUCENT;
-//        UiModeManager uiModeManager = (UiModeManager) mContext.getSystemService(Context.UI_MODE_SERVICE);
-//        if (uiModeManager.getNightMode() == UiModeManager.MODE_NIGHT_YES) {
-//            final Rect padding = savePadding(textView);
-//            textView.setBackgroundResource(R.drawable.toast_customer_night);
-//            restorePadding(textView, padding);
-//        } else {
-//            final Rect padding = savePadding(textView);
-//            textView.setBackgroundResource(R.drawable.toast_customer_normal);
-//            restorePadding(textView, padding);
-//        }
-//        manager.addView(view, params);
-//
-//        btn4.postDelayed(() -> {
-//            manager.removeView(view);
-//        }, 3000);
     }
 
     // 关联 SystemFonts,TypeFace
@@ -171,7 +145,7 @@ public class TestUtil {
     }
 
     public static void testDialog(Activity activity, String title, int windowType) {
-        final MyDialog dialog = new MyDialog(activity, 0, windowType);
+        final MyDialog dialog = new MyDialog(activity, R.style.Dialog, windowType);
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_layout, null, false);
         Button sureBtn = view.findViewById(R.id.sure_button);
         Button cancelBtn = view.findViewById(R.id.cancel_button);
@@ -187,7 +161,7 @@ public class TestUtil {
                 dialog.cancel();
             }
         });
-        dialog.setCancelable(false);
+        dialog.setCancelable(true);
         dialog.show();
     }
 
@@ -249,6 +223,10 @@ public class TestUtil {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             setWindowAttrs();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+                WindowInsetsController controller = getWindow().getInsetsController();
+                controller.hide(WindowInsets.Type.systemBars());
+            }
             super.onCreate(savedInstanceState);
         }
 
@@ -265,12 +243,15 @@ public class TestUtil {
         @SuppressLint("WrongConstant")
         private Window setWindowAttrs() {
             Window window = getWindow();
+            window.getDecorView().clearAnimation();
             WindowManager.LayoutParams attributes = window.getAttributes();
             if (attributes == null) {
                 return window;
             }
-            attributes.width = WindowManager.LayoutParams.WRAP_CONTENT;//WindowManager.LayoutParams.MATCH_PARENT;
-            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
+//            attributes.width = WindowManager.LayoutParams.WRAP_CONTENT;//WindowManager.LayoutParams.MATCH_PARENT;
+//            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
+            attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.height = WindowManager.LayoutParams.MATCH_PARENT;
             attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.dimAmount = 0f;
@@ -280,11 +261,11 @@ public class TestUtil {
 //                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
 //                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
 //                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+            ;
             // 未设置FLAG_NOT_FOCUSABLE时，次标志可防止此窗口成为输入法的目标
             // 设置了FLAG_NOT_FOCUSABLE时，即使窗口不可聚焦，设置此标志也会请求将窗口作为输入法目标
-            ;
-            attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
-//                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
+            attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
             attributes.setTitle("MainActivity_Dialog");
             attributes.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
             if (windowType > 2500) {
@@ -467,40 +448,6 @@ public class TestUtil {
      * @param usbDevice
      */
     private static void readUsbDevice(Context context, UsbDevice usbDevice) {
-        UsbMassStorageDevice[] storageDevices = UsbMassStorageDevice.getMassStorageDevices(context);
-        L.d("readUsbDevice::" + (storageDevices == null ? "null" : storageDevices.length));
-        for (int i = 0; i < storageDevices.length; i++) {
-            UsbMassStorageDevice device = storageDevices[i];
-            try {
-                //初始化
-                device.init();
-                if (device.getPartitions() != null && device.getPartitions().size() > 0) {
-                    //获取partition
-                    Partition partition = device.getPartitions().get(0);
-                    FileSystem currentFs = partition.getFileSystem();
-                    //获取根目录
-                    UsbFile root = currentFs.getRootDirectory();
-                    root.createFile("测试创建文件.txt");
-                    L.d("创建测试文件完成");
-                    String msg = "读取U盘文件列表：" + root.listFiles()[0].getName();
-                    if (root.listFiles() != null) {
-                        for (int j = 0; j < root.listFiles().length; j++) {
-                            L.d("U盘文件:" + root.listFiles()[i].getName());
-                            if (root.listFiles()[i].isDirectory()) {
-                                root.listFiles()[i].createFile("测试创建文件.txt");
-                            }
-                        }
-                    }
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                    L.d(msg);
-                } else {
-                    L.d("device.getPartitions() is empty");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                L.e("readUsbDevice Exception:" + e.getMessage());
-            }
-        }
 
     }
 
@@ -598,10 +545,22 @@ public class TestUtil {
         text7 = activity.findViewById(R.id.text7);
         text8 = activity.findViewById(R.id.text8);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            L.d("text0 字重：" + text0.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text1 字重：" + text1.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text2 字重：" + text2.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text3 字重：" + text3.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text4 字重：" + text4.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text5 字重：" + text5.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text6 字重：" + text6.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text7 字重：" + text7.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+            L.d("text8 字重：" + text8.getTypeface().getWeight() + ", style" + text0.getTypeface().getStyle());
+        }
+
         text0.setText(fontTestWords + "   ");
         text1.setText(fontTestWords + "   sans-serif");
         text2.setText(fontTestWords + "   default");
-        text3.setText(fontTestWords + "   GacFont");
+        text3.setText(fontTestWords + "   AIONType");
         text4.setText(fontTestWords + "   serif");
         text5.setText(fontTestWords + "   SourceHanSansCN");
         text6.setText(fontTestWords + "   xml-GacFont-Medium");
@@ -610,13 +569,15 @@ public class TestUtil {
 
         Typeface sans_serif = Typeface.create("sans-serif", Typeface.BOLD);
         Typeface aDefault = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
-        Typeface GacFont = Typeface.create("GacFont", Typeface.BOLD);
-        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN", Typeface.BOLD);
+        Typeface AIONType = Typeface.create("SourceHanSansCN-Normal", Typeface.BOLD);
+        Typeface SourceHanSansCN = Typeface.create("SourceHanSansCN-Bold", Typeface.BOLD);
         Typeface serif = Typeface.create("serif", Typeface.BOLD);
+        Typeface regular = Typeface.create("AIONType-regular", Typeface.NORMAL);
+
 
         text1.setTypeface(sans_serif);
         text2.setTypeface(aDefault);
-        text3.setTypeface(GacFont);
+        text3.setTypeface(AIONType);
         text4.setTypeface(serif);
         text5.setTypeface(SourceHanSansCN);
 
@@ -624,9 +585,10 @@ public class TestUtil {
         L.d("sans-serif is Default ? " + (sans_serif.equals(aDefault)));
 //        L.d("serif is Default ? " + (serif.equals(aDefault)));
 //        L.d("monospace is Default ? " + (monospace.equals(aDefault)));
-        L.d("GacFont is Default ? " + (GacFont.equals(aDefault)));
+        L.d("AIONType is Default ? " + (AIONType.equals(aDefault)));
+        L.d("FZVariable-YouHeiJ is Default ? " + (SourceHanSansCN.equals(aDefault)));
 //
-//        LogTools.logSystemFonts();
+        LogTools.logSystemFonts();
     }
 
     /**
@@ -759,20 +721,20 @@ public class TestUtil {
         }
     }
 
-    public static String getUiModeStr(UiModeManager modeManager){
+    public static String getUiModeStr(UiModeManager modeManager) {
         String result = "" + modeManager.getNightMode();
-        switch (modeManager.getNightMode()){
+        switch (modeManager.getNightMode()) {
             case UiModeManager.MODE_NIGHT_YES:
-                result =  "黑夜";
+                result = "黑夜";
                 break;
             case UiModeManager.MODE_NIGHT_NO:
-                result =  "白天";
+                result = "白天";
                 break;
             case UiModeManager.MODE_NIGHT_AUTO:
-                result =  "auto";
+                result = "auto";
                 break;
             case UiModeManager.MODE_NIGHT_CUSTOM:
-                result =  "custom";
+                result = "custom";
                 break;
             default:
                 break;

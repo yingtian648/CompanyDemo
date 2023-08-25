@@ -11,15 +11,15 @@
     <TextView
         android:id="@+id/msgT"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
+        android:layout_height="200px"
+        android:padding="10dp"
         android:hint="desc..."
         android:textSize="36dp"
         android:typeface="monospace"
-        app:layout_constraintBottom_toTopOf="@id/btnBox"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -117,7 +117,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="LocationTest"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -131,8 +131,22 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="AppInfos"
+            android:textAllCaps="false"
+            android:textColor="@color/text_color"
+            android:textSize="30px" />
+
+        <Button
+            android:id="@+id/btn3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:background="@color/btn_bg"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_margin="10dp"
+            android:text="TestActivity"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
             android:textSize="30px" />
@@ -145,7 +159,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="测试按钮"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -156,18 +170,17 @@
         android:id="@+id/fontsBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
+        android:layout_marginTop="100dp"
         android:orientation="vertical"
         android:padding="20dp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:text="@string/font_words"
             android:textSize="36dp" />
 
@@ -177,8 +190,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="normal"
-            android:textFontWeight="700"
+            android:textStyle="bold"
             android:hint="text0"
             android:text="@string/font_words"
             android:textSize="36dp" />
@@ -189,7 +201,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="@string/gac_font_bold"
+            android:textStyle="italic"
+            android:fontFamily="@string/FZVariable_YouHeiJ"
             android:text="@string/font_words"
             android:hint="text1"
             android:textSize="36dp" />
@@ -200,8 +213,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="@string/gac_font"
-            android:textFontWeight="700"
+            android:fontFamily="@string/AIONType"
             android:hint="text2"
             android:text="@string/font_words"
             android:textSize="36dp" />
@@ -212,7 +224,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="@string/gac_font"
+            android:fontFamily="@string/AIONType"
+            android:textFontWeight="600"
             android:text="@string/font_words"
             android:hint="text3"
             android:textSize="36dp" />
@@ -223,7 +236,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:hint="text4"
+            android:textStyle="italic"
+            android:text="@string/font_words"
             android:textSize="36dp" />
 
         <TextView
@@ -232,6 +246,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
+            android:fontFamily="@string/roboto_bold"
             android:text="@string/font_words"
             android:hint="text5"
             android:textSize="36dp" />
@@ -242,7 +257,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="@string/gac_font_medium"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif"
             android:text="@string/font_words"
             android:hint="text6"
             android:textSize="36dp" />
@@ -255,8 +271,8 @@
             android:background="@null"
             android:hint="text7"
             android:text="@string/font_words"
-            android:fontFamily="@string/gac_font"
-            android:textFontWeight="500"
+            android:fontFamily="@string/SourceHanSansCN"
+            android:textFontWeight="400"
             android:textSize="36dp" />
 
         <TextView
@@ -266,19 +282,42 @@
             android:layout_marginTop="10dp"
             android:background="@null"
             android:text="@string/font_words"
-            android:fontFamily="sans-serif"
+            android:fontFamily="@string/SourceHanSansCN_Regular"
             android:hint="text8"
-            android:textFontWeight="500"
             android:textSize="36dp" />
     </LinearLayout>
 
-
-    <androidx.appcompat.widget.Toolbar
+    <com.exa.companydemo.widget.Titlebar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/arrow_back_white"
-        app:title="返回"
+        app:title="退出"
+        android:gravity="center_vertical"
         app:titleTextColor="@color/white" />
+
+    <EditText
+        android:id="@+id/edit"
+        android:layout_width="match_parent"
+        android:background="@color/green"
+        android:text="@string/font_words_signal"
+        android:textSize="32px"
+        android:paddingStart="120px"
+        android:paddingEnd="120px"
+        android:layout_height="100px"
+        android:fontFamily="monospace"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        />
+
+<!--    android:fontFamily="monospace"-->
+
+    <com.exa.companydemo.widget.MySurfaceView
+        android:id="@+id/sv"
+        android:layout_width="500px"
+        android:layout_height="500px"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

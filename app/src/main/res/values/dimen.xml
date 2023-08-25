@@ -13,4 +13,13 @@
     <dimen name="toast_bg_corners_radius">15dp</dimen>
 
     <dimen name="toast_h">60dp</dimen>
+
+
+    <dimen name="dp480">640px</dimen>
+    <dimen name="dp64">85.4px</dimen>
+    <dimen name="dp6">8px</dimen>
+
+    <dimen name="panel_seekbar_width">@dimen/dp480</dimen>
+    <dimen name="panel_seekbar_height">@dimen/dp64</dimen>
+    <dimen name="panel_seekbar_radius">@dimen/dp6</dimen>
 </resources>

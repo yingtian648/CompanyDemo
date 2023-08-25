@@ -18,7 +18,7 @@
         android:ellipsize="end"
         android:gravity="center"
         android:lineHeight="@dimen/toast_line_height"
-        android:background="@drawable/toast_nor"
+        android:background="@color/gray"
         android:maxWidth="@dimen/toast_max_width"
         android:minWidth="@dimen/toast_min_width"
         android:maxLines="2"
