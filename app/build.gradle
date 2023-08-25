@@ -16,6 +16,26 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storePassword 'android'
+            keyPassword 'android'
+            keyAlias 'android'
+//            storePassword 'Aa123456'
+//            keyPassword 'Aa123456'
+//            keyAlias 'platform'
+//            storeFile file('../signatures/a02_desay_platform.keystore')
+//            storeFile file('../signatures/a02_boshi_platform.keystore')
+//            storeFile file('../signatures/t60y_platform.keystore')
+//            storeFile file('../signatures/a9e_6125_platform.keystore')
+//            storeFile file('../signatures/a8e_8155_platform.keystore')
+            storeFile file('../signatures/platform3568.keystore')
+//            storeFile file('../signatures/as9_platform.keystore')
+//            storeFile file('../signatures/ah8_platform.keystore')
+//            storeFile file('../signatures/platform3588.keystore')
+        }
+    }
+
     //高版本的不用配，默认会使用signingConfigs的签名配置
     buildTypes {
         debug {
