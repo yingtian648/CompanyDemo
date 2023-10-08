@@ -1,9 +1,17 @@
 package com.exa.companydemo.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.media.MediaMetadataRetriever;
+import android.os.UserHandle;
+import android.util.Base64;
 import android.util.SparseArray;
 import android.util.Xml;
+import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 
 import com.exa.baselib.utils.L;
 import com.exa.companydemo.mediaprovider.FilesDao;
@@ -13,13 +21,75 @@ import com.exa.companydemo.test.PhoneManagerServiceTemp;
 
 import org.xmlpull.v1.XmlPullParser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class Tools {
+
+    // Window截屏
+    public static void screenshotView(Window window, ImageView imageView) {
+        // ⬇⬇⬇ 可直接放入点击事件中 ⬇⬇⬇
+        View view = window.getDecorView(); // view可以替换成你需要截图的控件，如父控件 RelativeLayout，LinearLayout
+        // view.setDrawingCacheEnabled(true); // 设置缓存，可用于实时截图
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        // view.setDrawingCacheEnabled(false); // 清空缓存，可用于实时截图
+
+        String bitmapString = getBitmapString(bitmap); // 位图转 Base64 String
+        byte[] drawByte = getBitmapByte(bitmap); // 位图转为 Byted
+        imageView.setImageBitmap(bitmap); // ImageView控件直接图片展示截好的图片
+    }
+
+    // 位图转 Base64 String
+    private static String getBitmapString(Bitmap bitmap) {
+        String result = null;
+        ByteArrayOutputStream out = null;
+        try {
+            if (bitmap != null) {
+                out = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+                out.flush();
+                out.close();
+
+                byte[] bitmapBytes = out.toByteArray();
+                result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT); // Base64.DEFAULT会自动换行，传给前端会报错，所以要用Base64.NO_WRAP
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.flush();
+                    out.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    // 位图转 Byte
+    private static byte[] getBitmapByte(Bitmap bitmap) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // 参数1转换类型，参数2压缩质量，参数3字节流资源
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
+
 
     public static Runnable insertRunnable(Context context) {
         return () -> {

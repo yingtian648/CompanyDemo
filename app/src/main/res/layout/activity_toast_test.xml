@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="5dp"
+        tools:context=".toasttest.ToastTestActivity">
+
+        <EditText
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:gravity="center_vertical"
+            android:hint="请输入要显示的文字..."
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="显示时长："/>
+
+            <RadioButton
+                android:id="@+id/rbShort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textAllCaps="false"
+                android:text="short"/>
+
+            <RadioButton
+                android:id="@+id/rbLong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textAllCaps="false"
+                android:textSize="30dp"
+                android:text="long"/>
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnTNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示常规文字Toast"
+            android:padding="15dp"
+            android:textAllCaps="false"
+            android:layout_marginTop="20dp"
+            android:textSize="30dp"/>
+
+        <Button
+            android:id="@+id/btnCTNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示常规文字CarToast"
+            android:padding="15dp"
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp"
+            android:textSize="30dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="@color/gray"
+            android:layout_height="3dp"/>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="显示位置："/>
+
+            <RadioButton
+                android:id="@+id/rbLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textAllCaps="false"
+                android:text="Left"/>
+
+            <RadioButton
+                android:id="@+id/rbTop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textAllCaps="false"
+                android:textSize="30dp"
+                android:text="Top"/>
+
+            <RadioButton
+                android:id="@+id/rbCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textAllCaps="false"
+                android:layout_marginStart="20dp"
+                android:text="Center"/>
+
+            <RadioButton
+                android:id="@+id/rbRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textAllCaps="false"
+                android:layout_marginStart="20dp"
+                android:text="Right"/>
+
+            <RadioButton
+                android:id="@+id/rbBottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textAllCaps="false"
+                android:textSize="30dp"
+                android:text="Bottom"/>
+        </RadioGroup>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="xOffset："/>
+
+            <RadioButton
+                android:id="@+id/rbx0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textAllCaps="false"
+                android:text="0px"/>
+
+            <RadioButton
+                android:id="@+id/rbx50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textAllCaps="false"
+                android:textSize="30dp"
+                android:text="50px"/>
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:text="yOffset："/>
+
+            <RadioButton
+                android:id="@+id/rby0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="30dp"
+                android:textAllCaps="false"
+                android:text="0px"/>
+
+            <RadioButton
+                android:id="@+id/rby50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textAllCaps="false"
+                android:textSize="30dp"
+                android:text="50px"/>
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnTDIY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示自定义Toast"
+            android:padding="15dp"
+            android:textAllCaps="false"
+            android:layout_marginTop="20dp"
+            android:textSize="30dp"/>
+
+        <Button
+            android:id="@+id/btnCTDIY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="显示自定义CarToast"
+            android:padding="15dp"
+            android:textAllCaps="false"
+            android:layout_marginTop="10dp"
+            android:textSize="30dp"/>
+    </LinearLayout>
+</layout>

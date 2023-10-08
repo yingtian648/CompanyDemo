@@ -29,11 +29,12 @@ public class ScreenUtils {
             if (controller != null) {
                 // 手机自动隐藏状态栏导航栏
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+//                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+                controller.hide(WindowInsets.Type.systemBars());
                 controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
                     @Override
                     public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-                        L.d("onControllableInsetsChanged：setFullScreen");
+                        L.d("onControllableInsetsChanged：" + typeMask);
                     }
                 });
             }
@@ -55,7 +56,7 @@ public class ScreenUtils {
                 controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
                     @Override
                     public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-                        L.d("onControllableInsetsChanged：setFullScreen");
+                        L.d("onControllableInsetsChanged：" + typeMask);
                     }
                 });
             }
@@ -105,7 +106,8 @@ public class ScreenUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
             if (controller != null) {
-                controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+//                controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+                controller.show(WindowInsets.Type.systemBars());
 //                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
 //                    @Override
 //                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {

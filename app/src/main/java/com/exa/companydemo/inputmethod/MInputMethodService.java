@@ -7,6 +7,8 @@ import android.os.Build;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.inputmethod.BaseInputConnection;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -46,6 +48,10 @@ public class MInputMethodService extends InputMethodService implements View.OnCl
     public View onCreateInputView() {//当IME第一次显示，系统会调用 onCreateInputView() 回调。在你实现的这个方法中，你创建你想要的IME窗口的布局并返回给系统
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             getWindow().getWindow().setDecorFitsSystemWindows(true);
+            WindowInsetsController insetsController = getWindow().getWindow().getInsetsController();
+            if (insetsController != null) {
+                insetsController.hide(WindowInsets.Type.navigationBars());
+            }
         }
         inputView = getLayoutInflater().inflate(R.layout.input_layout, null);
         initView();
@@ -160,7 +166,7 @@ public class MInputMethodService extends InputMethodService implements View.OnCl
                 mInput.commitText("9", 1);
                 break;
             case R.id.btnEnter:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     mInput.closeConnection();
                 }
                 break;

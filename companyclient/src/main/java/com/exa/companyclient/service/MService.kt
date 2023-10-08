@@ -14,9 +14,10 @@ import com.exa.baselib.utils.L
  */
 class MService : Service() {
     private val thread = HandlerThread("MService")
-    private lateinit var handler:Handler
+    private lateinit var handler: Handler
     private val tag = "MService"
     private var index = 1
+    private var indexInner = 1
     override fun onBind(intent: Intent?): IBinder? {
         L.d(tag, "onBind")
         return null
@@ -40,8 +41,9 @@ class MService : Service() {
     private fun doBackground(index: Int) {
         handler.post {
             while (true) {
+                indexInner++
                 Thread.sleep(1000)
-                L.d("MService doBackground:$index")
+                L.d("MService doBackground:$index $indexInner")
             }
         }
     }

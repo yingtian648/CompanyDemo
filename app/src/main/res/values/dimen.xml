@@ -22,4 +22,6 @@
     <dimen name="panel_seekbar_width">@dimen/dp480</dimen>
     <dimen name="panel_seekbar_height">@dimen/dp64</dimen>
     <dimen name="panel_seekbar_radius">@dimen/dp6</dimen>
+
+    <dimen name="test_height">50dp</dimen>
 </resources>

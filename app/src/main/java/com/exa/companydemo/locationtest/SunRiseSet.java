@@ -1,4 +1,4 @@
-package com.exa.companydemo.location;
+package com.exa.companydemo.locationtest;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;

@@ -40,14 +40,14 @@ public class L {
     public static void d(String msg) {
         L.msg = msg;
         if (DEBUG) {
-            Log.e(TAG, "" + msg);
+            Log.w(TAG, "" + msg);
         }
     }
 
     public static void df(String args, Object... obj) {
         L.msg = String.format(args, obj);
         if (DEBUG) {
-            Log.e(TAG, String.format(args, obj));
+            Log.w(TAG, String.format(args, obj));
         }
     }
 

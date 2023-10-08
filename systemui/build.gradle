@@ -66,7 +66,7 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            output.outputFileName = "shihuademo.apk"
+            output.outputFileName = "systemui.apk"
         }
     }
     kotlinOptions {

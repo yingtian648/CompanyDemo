@@ -150,6 +150,35 @@ public class Tools {
         return point.y;
     }
 
+    public static void logScreenWH(Context context) {
+        DisplayManager manager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+        Display[] displays = manager.getDisplays();
+        StringBuilder buffer = new StringBuilder();
+        for (Display display : displays) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getRealMetrics(metrics);
+            Point point = new Point();
+            display.getRealSize(point);
+            buffer.append("Display: ").append(display.getDisplayId());
+            buffer.append(" (w,h)=(")
+                    .append(metrics.widthPixels)
+                    .append(",")
+                    .append(metrics.heightPixels)
+                    .append(")");
+            buffer.append(" (wdp,hdp)=(")
+                    .append(metrics.widthPixels / metrics.density)
+                    .append(",")
+                    .append(metrics.heightPixels / metrics.density)
+                    .append(")");
+            buffer.append(", density=")
+                    .append(metrics.density)
+                    .append(", densityDpi=")
+                    .append(metrics.densityDpi);
+            buffer.append("\n");
+        }
+        L.w(buffer.toString());
+    }
+
     /**
      * 获取double对应精度得值
      *
@@ -800,12 +829,12 @@ public class Tools {
             String versionName = "";
             String apkSourceDir = null;
             String packageName = info.activityInfo.packageName;//包名
-            int icon = 0;
+            Drawable icon = null;
             try {
                 versionCode = pm.getPackageInfo(packageName, 0).versionCode;//版本号
                 versionName = pm.getPackageInfo(packageName, 0).versionName;//版本名称
                 apkSourceDir = pm.getApplicationInfo(packageName, 0).sourceDir;//APK源文件路径
-                icon = pm.getApplicationInfo(packageName, 0).icon;
+                icon = pm.getApplicationIcon(packageName);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }
@@ -836,7 +865,7 @@ public class Tools {
             versionName = packages.get(i).versionName;
             apkSourceDir = packages.get(i).applicationInfo.sourceDir;
             name = packages.get(i).applicationInfo.name;
-            if (packageName != null){
+            if (packageName != null) {
                 list.add(new AppInfo(name, packageName, versionCode, versionName, apkSourceDir, icon));
             }
         }

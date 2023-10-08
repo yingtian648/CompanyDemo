@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
@@ -28,47 +29,46 @@ public class App extends Application {
 
         L.init("MCompanyDemo", true);
         app = this;
-        String screen = "屏幕宽高px：" + Tools.getScreenW(this) + "," + Tools.getScreenH(this);
-        String screenDp = "屏幕宽高dp：" + (int) (Tools.getScreenW(this) / Tools.getScreenDensity(this))
-                + "," + (int) (Tools.getScreenH(this) / Tools.getScreenDensity(this));
-        L.w(screen);
-        L.w("屏幕密度：" + Tools.getScreenDensity(this));
-        L.w(screenDp);
+        Tools.logScreenWH(this);
         L.w("Android OS is " + Build.VERSION.RELEASE + " , SDK_INT= " + Build.VERSION.SDK_INT);
 
+    }
+
+    private void listenActivityLife(){
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-//                L.dd("----------" + activity.getLocalClassName());
+                L.dd("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityStarted(@NonNull Activity activity) {
-//                L.dd("----------" + activity.getLocalClassName());
+                L.dd("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
-//                L.dd("----------" + activity.getLocalClassName());
+                L.dd("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityPaused(@NonNull Activity activity) {
-//                L.dd("----------" + activity.getLocalClassName());
+                L.dd("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityStopped(@NonNull Activity activity) {
-//                L.dd("----------" + activity.getLocalClassName());
+                L.dd("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+                L.dd("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityDestroyed(@NonNull Activity activity) {
-//                L.dd("----------" + activity.getLocalClassName());
+                L.dd("---App---" + activity.getLocalClassName());
             }
         });
     }
@@ -86,5 +86,6 @@ public class App extends Application {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        L.dd("---App---");
     }
 }

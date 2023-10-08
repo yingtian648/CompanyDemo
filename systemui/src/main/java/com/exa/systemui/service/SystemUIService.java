@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
  * @Description
  */
 public class SystemUIService extends Service {
+    // adb shell am start-service com.exa.systemui/com.exa.systemui.service.SystemUIService
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

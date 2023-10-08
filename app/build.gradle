@@ -8,9 +8,12 @@ android {
 
     defaultConfig {
         applicationId "com.exa.companydemo"
+//        applicationId "com.exa.toasttest"
+//        applicationId "com.gxatek.cockpit.launcher"
+//        applicationId "space.syncore.cockpit.soundeffect"
         minSdk 26
         targetSdk 31
-        versionCode 1
+        versionCode 999999
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -39,15 +42,16 @@ android {
         }
     }
 
-    buildFeatures{
+    buildFeatures {
         dataBinding = true
         // for view binding
-        // viewBinding = true  //for id 'kotlin-parcelize'
+        // 根View tools:viewBindingIgnore="true" 禁用viewBinding
+        viewBinding = true  //for id 'kotlin-parcelize'
     }
 
     sourceSets {
         main {
-            java.srcDirs = ['src/main/java', 'src/main/java-gen','src/main/aidl']
+            java.srcDirs = ['src/main/java', 'src/main/java-gen', 'src/main/aidl']
             jniLibs.srcDirs = ['libs']
             aidl.srcDirs = ['src/main/aidl']
         }
@@ -76,7 +80,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation files('libs\\scenemanager.jar')
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation files('libs\\javalib.jar')
+    implementation files('libs\\framework.jar')
     implementation files('libs\\carlocalupdatesdk.jar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

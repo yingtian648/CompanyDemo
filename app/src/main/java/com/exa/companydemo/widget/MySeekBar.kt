@@ -106,7 +106,7 @@ class MySeekBar(context: Context, attr: AttributeSet?) : View(context, attr, 0) 
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
         event?.apply {
             when (action) {
                 MotionEvent.ACTION_DOWN -> {

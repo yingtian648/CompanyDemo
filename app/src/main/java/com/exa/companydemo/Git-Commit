@@ -124,41 +124,68 @@ Test:upass
 FID:ID1177845
 Level:A
 
-fix[AOSP/SystemUI]:Disable SystemUi transient.
-rootcause:SystemUi shouldn't display by swipe.
-solution:Disable SystemUi transient.
-Product:AH8
+fix[AOSP/framework-res]:Fix android start title err.
+rootcause:Android start title err.
+solution:modify android start title.
+Product:A02
 Span:<>
 Build:mpass
 Test:upass
 FID:ID1187969
 Level:B
 
-fix[AOSP/Toast]:Show current Toast and discard cache toast.
-rootcause:Toast dispay error.
-solution:Show current Toast and discard cache toast.
-Product:AH8
+fix[fonts]:Replace GacFont with ADiGO5.
+rootcause:GacFont更换成国标字体ADiGO5.
+solution:Replace GacFont with ADiGO5.
+Product:A02
 Span:<>
 Build:mpass
 Test:upass
-FID:ID1190212
-Level:B
-
-fix[fonts]:fix system fonts.
-rootcause:fonts display error.
-solution:
-1.Set Roboto as System default fonts.
-2.Introduce the fonts of SourceHanSansCN.
-Product:AS9
-Span:<>
-Build:mpass
-Test:upass
-FID:ID1160987
+FID:noid
 Level:C
 
-Description: Fix connect state display error.
-JiraID: PD3568-676
+fix[fonts]:Replace GacFont with ADiGO5.
+rootcause:GacFont更换成国标字体ADiGO5.
+solution:Replace GacFont with ADiGO5.
+Product:A19
+Span:<>
+Build:mpass
+Test:upass
+FID:noid
+Level:C
+
+fix[AOSP/Dimmer]:Remove FLAG_BLUR_BEHIND judgment.
+rootcause:Dialog has not Dim-layer.
+solution:Remove FLAG_BLUR_BEHIND judgment.
+product:AH8
+span:<>
+build:mpass
+test:upass
+fid:ID1210848
+level:C
+
+fix[AOSP/animation]:Modify default animation.
+rootcause:Animation err.
+solution:
+1.remove overlay style Animation.Activity.
+2.update default animation.
+Product:AH8
+Span:<A02,AH8>
+Build:mpass
+Test:upass
+FID:ID1199368
+Level:B
+
+Description: Use RaiteSystemUI.
+JiraID: CS-217
 Module: SystemUI
-Bug or feature: Bug
+Bug or feature: feature
+Team: FW
+Test: pass
+
+Description: fix local inputmethod display err.
+JiraID: RK3588-101
+Module: inputmethod
+Bug or feature: feature
 Team: FW
 Test: pass

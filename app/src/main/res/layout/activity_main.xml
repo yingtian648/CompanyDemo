@@ -8,6 +8,12 @@
     android:focusableInTouchMode="true"
     tools:context=".MainActivity">
 
+    <com.exa.companydemo.widget.EndLineView
+        android:id="@+id/elv"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <TextView
         android:id="@+id/msgT"
         android:layout_width="match_parent"
@@ -60,7 +66,6 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="SystemUi测试"
-            android:layout_margin="20dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="30px"
@@ -74,7 +79,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="10dp"
             android:text="视频播放"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -85,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -99,7 +104,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -117,7 +122,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
             android:text="LocationTest"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -131,7 +136,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
             android:text="AppInfos"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -145,7 +150,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
             android:text="TestActivity"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -159,7 +164,7 @@
             android:background="@color/btn_bg"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
             android:text="测试按钮"
             android:textAllCaps="false"
             android:textColor="@color/text_color"
@@ -192,7 +197,7 @@
             android:background="@null"
             android:textStyle="bold"
             android:hint="text0"
-            android:text="@string/font_words"
+            android:text="@string/font_style_words"
             android:textSize="36dp" />
 
         <TextView
@@ -201,9 +206,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:textStyle="italic"
-            android:fontFamily="@string/FZVariable_YouHeiJ"
-            android:text="@string/font_words"
+            android:fontFamily="@string/gac_font_regular"
+            android:text="@string/font_words_GacFont_Regular"
             android:hint="text1"
             android:textSize="36dp" />
 
@@ -213,9 +217,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="@string/AIONType"
+            android:fontFamily="@string/gac_font_medium"
+            android:text="@string/font_words_GacFont_Medium"
             android:hint="text2"
-            android:text="@string/font_words"
             android:textSize="36dp" />
 
         <TextView
@@ -224,9 +228,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:fontFamily="@string/AIONType"
-            android:textFontWeight="600"
-            android:text="@string/font_words"
+            android:fontFamily="@string/gac_font_bold"
+            android:text="@string/font_words_GacFont_Bold"
             android:hint="text3"
             android:textSize="36dp" />
 
@@ -236,8 +239,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:textStyle="italic"
-            android:text="@string/font_words"
+            android:fontFamily="sans-serif"
+            android:textStyle="bold"
+            android:text="@string/font_words_sans_serif_bold"
             android:textSize="36dp" />
 
         <TextView
@@ -247,7 +251,7 @@
             android:layout_marginTop="10dp"
             android:background="@null"
             android:fontFamily="@string/roboto_bold"
-            android:text="@string/font_words"
+            android:text="@string/font_words_roboto_bold"
             android:hint="text5"
             android:textSize="36dp" />
 
@@ -257,9 +261,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif"
-            android:text="@string/font_words"
+            android:fontFamily="@string/SourceHanSansCN_Bold"
+            android:text="@string/font_words_SourceHanSansCN_Bold"
             android:hint="text6"
             android:textSize="36dp" />
 
@@ -270,9 +273,8 @@
             android:layout_marginTop="10dp"
             android:background="@null"
             android:hint="text7"
-            android:text="@string/font_words"
-            android:fontFamily="@string/SourceHanSansCN"
-            android:textFontWeight="400"
+            android:text="@string/font_words_SourceHanSansCN_Normal"
+            android:fontFamily="@string/SourceHanSansCN_Normal"
             android:textSize="36dp" />
 
         <TextView
@@ -281,7 +283,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:text="@string/font_words"
+            android:text="@string/font_words_SourceHanSansCN_Regular"
             android:fontFamily="@string/SourceHanSansCN_Regular"
             android:hint="text8"
             android:textSize="36dp" />
@@ -311,11 +313,10 @@
 
 <!--    android:fontFamily="monospace"-->
 
-    <com.exa.companydemo.widget.MySurfaceView
-        android:id="@+id/sv"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="500px"
         android:layout_height="500px"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />

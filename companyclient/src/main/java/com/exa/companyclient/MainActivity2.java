@@ -13,9 +13,11 @@ import android.os.RemoteException;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.PermissionUtil;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.Tools;
@@ -23,10 +25,13 @@ import com.exa.baselib.utils.Utils;
 import com.exa.companyclient.databinding.ActivityMain2Binding;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implements View.OnClickListener {
+import androidx.activity.ComponentActivity;
 
+public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implements View.OnClickListener {
+    private int index = 0;
     @Override
     protected int setContentViewLayoutId() {
         return R.layout.activity_main2;
@@ -47,6 +52,7 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
         bind.bindService.setOnClickListener(this);
         bind.showSystemUi.setOnClickListener(this);
         bind.hideSystemUi.setOnClickListener(this);
+        bind.testBtn.setOnClickListener(this);
         bind.backBtn.setOnClickListener(this);
     }
 
@@ -58,7 +64,7 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
                 startActivityByDisplayId(MainActivity2.this, MainActivity2.class, 0);
                 break;
             case R.id.startOnSubScreen://启动在副屏上
-                startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 5);
+                startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 2);
                 break;
             case R.id.bindService:
                 break;
@@ -68,12 +74,26 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
             case R.id.hideSystemUi:
                 ScreenUtils.hideStatusBars(this);
                 break;
+            case R.id.testBtn:
+                test();
+                break;
             case R.id.backBtn:
                 finish();
                 break;
             default:
                 break;
         }
+    }
+
+    private void test() {
+        index++;
+//        Toast.makeText(this,"主屏测试Toast " + index,Toast.LENGTH_SHORT).show();
+        PermissionUtil.requestPermission(this, new PermissionUtil.PermissionListener() {
+            @Override
+            public void permissionGranted() {
+
+            }
+        },new String[]{"android.permission.RECORD_AUDIO"});
     }
 
     private void logScreenInfo() {

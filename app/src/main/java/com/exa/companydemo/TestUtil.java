@@ -3,6 +3,7 @@ package com.exa.companydemo;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.UiModeManager;
@@ -13,7 +14,10 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -99,32 +103,32 @@ public class TestUtil {
     public static void showToast(Activity context) {
         index++;
         L.d("showToast " + index);
-        if (toast == null) {
-            toast = Toast.makeText(context, "12121212", Toast.LENGTH_SHORT);
-            L.d("showToast makeText " + index);
-        }
+//        if (toast == null) {
+//            toast = Toast.makeText(context, "12121212", Toast.LENGTH_SHORT);
+//            L.d("showToast makeText " + index);
+//        }
 //        toast.show();
         String msg = "一二三四五六七八一二三四五六七八一二三四五六七八111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
         msg = "一二三四五六七Toast " + index;
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-//        BaseConstants.getHandler().postDelayed(() -> {
-//            Toast.makeText(context, "CarToast好了", Toast.LENGTH_LONG).show();
-//        }, 7000);
-//        toast = new Toast(context);
-//        View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
-//        TextView tv = view.findViewById(R.id.message);
-//        tv.setText("一二三四五六七八一二三四五六:" + index);
-//        toast.setView(view);
-////        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
-//        /**
-//         * app-build.grable中指定 targetSdk>=30
-//         * 设置Toast显示位置 offset 为偏移量
-//         * @param gravity Gravity.TOP,Gravity.CENTER,Gravity.BOTTOM
-//         * 不设置gravity，Toast显示在屏幕顶部中间
-//         */
-//        toast.setGravity(Gravity.CENTER, 0, 0);
-//        toast.setDuration(Toast.LENGTH_LONG);
-//        toast.show();
+//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        BaseConstants.getHandler().postDelayed(() -> {
+            Toast.makeText(context, "延时Toast", Toast.LENGTH_LONG).show();
+        }, 7000);
+        toast = new Toast(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
+        TextView tv = view.findViewById(R.id.message);
+        tv.setText("一二三四五六七八一二三四五六:" + index);
+        toast.setView(view);
+//        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+        /**
+         * app-build.grable中指定 targetSdk>=30
+         * 设置Toast显示位置 offset 为偏移量
+         * @param gravity Gravity.TOP,Gravity.CENTER,Gravity.BOTTOM
+         * 不设置gravity，Toast显示在屏幕顶部中间
+         */
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.show();
 
     }
 
@@ -142,6 +146,34 @@ public class TestUtil {
             FileUtils.copyAssetsFile(context, assetsFileName, target, false);
             FileUtils.copyAssetsDir(context, assetsDirName, targetDir, false);
         });
+    }
+
+    public static void showAlertDialog(Activity context) {
+        View decor = context.getWindow().getDecorView();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+//            decor.setRenderEffect(RenderEffect.createBlurEffect(25F, 25F, Shader.TileMode.CLAMP));
+//        }
+        /**
+         * 未加载style的时候——没有半透明背景
+         */
+        View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false);
+        Dialog dialog = new Dialog(context, R.style.DialogDefaultFullScreen);
+        dialog.setCancelable(true);
+        view.findViewById(R.id.sure_button).setOnClickListener(v -> {
+            dialog.dismiss();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                decor.setRenderEffect(null);
+            }
+        });
+        view.findViewById(R.id.cancel_button).setOnClickListener(v -> {
+            dialog.dismiss();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                decor.setRenderEffect(null);
+            }
+        });
+        dialog.setContentView(view);
+        dialog.setTitle("showAlertDialog");
+        dialog.show();
     }
 
     public static void testDialog(Activity activity, String title, int windowType) {
@@ -223,10 +255,6 @@ public class TestUtil {
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             setWindowAttrs();
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                WindowInsetsController controller = getWindow().getInsetsController();
-                controller.hide(WindowInsets.Type.systemBars());
-            }
             super.onCreate(savedInstanceState);
         }
 
@@ -243,22 +271,27 @@ public class TestUtil {
         @SuppressLint("WrongConstant")
         private Window setWindowAttrs() {
             Window window = getWindow();
+            window.setStatusBarColor(Color.BLUE);
+            window.setNavigationBarColor(Color.BLUE);
             window.getDecorView().clearAnimation();
             WindowManager.LayoutParams attributes = window.getAttributes();
             if (attributes == null) {
                 return window;
             }
-//            attributes.width = WindowManager.LayoutParams.WRAP_CONTENT;//WindowManager.LayoutParams.MATCH_PARENT;
-//            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
-            attributes.width = WindowManager.LayoutParams.MATCH_PARENT;
-            attributes.height = WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.width = WindowManager.LayoutParams.WRAP_CONTENT;//WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
             attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.dimAmount = 0f;
             attributes.flags = attributes.flags
-                    | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                    //有此Flag的dialog在AH8上会显示在shortcut上面
+//                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
+                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+                    | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
 //                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE //弹出后不会抢window焦点
-//                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
 //                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
 //                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
             ;
@@ -267,7 +300,8 @@ public class TestUtil {
             attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
                     | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
             attributes.setTitle("MainActivity_Dialog");
-            attributes.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
+//            attributes.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
+//            attributes.type = 2;
             if (windowType > 2500) {
                 attributes.type = windowType;//对应windowType
             }
@@ -363,7 +397,7 @@ public class TestUtil {
      *
      * @param context
      */
-    public static void getSensorData(Context context) {
+    public static void testSensorData(Context context) {
         L.d("getSensorData");
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);//陀螺仪

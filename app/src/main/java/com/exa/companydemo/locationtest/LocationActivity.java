@@ -1,4 +1,4 @@
-package com.exa.companydemo.location;
+package com.exa.companydemo.locationtest;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -41,6 +41,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     private LocationManager locationManager;
     private int index = 0;
+    private int locationIndex = 0;
     private List<String> eProviders;
 
     @Override
@@ -60,6 +61,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             checkPermission();
             return;
         }
+        setText("已授权定位权限\n");
         bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
         bind.btn.setOnClickListener(new OnClickViewListener() {
             @Override
@@ -164,39 +166,30 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
                 index = index > (status.getSatelliteCount() - 1) ? 0 : index;
-                setText("收到卫星变化 count=" + status.getSatelliteCount()
-                                + " index:" + index
-                                + "\t Svid=" + status.getSvid(index)
-                                + ", Cn0=" + status.getCn0DbHz(index)
-                                + ", ElevationDegrees=" + status.getElevationDegrees(index)
-                                + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
-                                + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
-//                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
-                );
-                index++;
+//                setText("收到卫星变化 count=" + status.getSatelliteCount()
+//                                + " index:" + index
+//                                + "\t Svid=" + status.getSvid(index)
+//                                + ", Cn0=" + status.getCn0DbHz(index)
+//                                + ", ElevationDegrees=" + status.getElevationDegrees(index)
+//                                + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
+//                                + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
+////                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
+//                );
+//                index++;
                 L.d("onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
             }
         }, new Handler(Looper.myLooper()));
 
-        test();
+        subscribeGpsUpdates();
     }
 
-    private void test() {
-//        bind.btn.postDelayed(() -> {
-//            subscribeGpsUpdates();
-//            unSubscribeGpsUpdates();
-//            test();
-//        }, 50);
-
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                setText("test Thread: " + Thread.currentThread().getName());
-                subscribeGpsUpdates();
-            }
-        };
-        bind.btn.postDelayed(thread::interrupt, 3000);
+    private void testExtra(){
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        Bundle bundle  = new Bundle();
+        bundle.putString("sdas","sdasad");
+        bundle.putInt("rrrr",2);
+        location.setExtras(bundle);
+        printLocation(location);
     }
 
     private void subscribeGpsUpdates() {
@@ -224,7 +217,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void subscribeNetworkUpdates() {
-        if(!eProviders.contains(LocationManager.NETWORK_PROVIDER)){
+        if (!eProviders.contains(LocationManager.NETWORK_PROVIDER)) {
             setText("订阅Network定位失败：未提供网络定位能力");
             return;
         }
@@ -245,7 +238,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void unSubscribeNetworkUpdates() {
-        if(eProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager != null){
+        if (eProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager != null) {
             setText("取消订阅Network定位");
             locationManager.removeUpdates(networkListener);
         }
@@ -255,7 +248,10 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         @Override
         public void onLocationChanged(@NonNull Location location) {
             L.d(location.getProvider() + "  onLocationChanged:" + location);
-            setText(location.toString());
+            locationIndex++;
+            if (locationIndex < 10) {
+                printLocation(location);
+            }
         }
 
         @Override
@@ -268,6 +264,19 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             L.d("onStatusChanged:" + provider + "  " + status + "," + (extras == null ? "" : extras.keySet()));
         }
     };
+
+    private void printLocation(Location location) {
+        setText(location.toString());
+        Bundle bundle = location.getExtras();
+        if (bundle != null && !bundle.isEmpty()) {
+            StringBuilder buffer = new StringBuilder();
+            for (String key : bundle.keySet()) {
+                buffer.append(key).append("=").append(bundle.get(key).toString()).append(",");
+            }
+            setText(buffer.toString());
+            L.d("LocationBundle=" + bundle + " , " + buffer);
+        }
+    }
 
     private final LocationListener networkListener = new LocationListener() {
         @Override
