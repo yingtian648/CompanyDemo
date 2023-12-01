@@ -1,6 +1,9 @@
 package com.exa.baselib.utils;
 
+import android.app.Application;
 import android.util.Log;
+
+import com.exa.baselib.BuildConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,19 +38,20 @@ public class L {
     public static void init(String tag, boolean isLog) {
         L.TAG = tag;
         L.isLog = isLog;
+        w("Application init Log");
     }
 
     public static void d(String msg) {
         L.msg = msg;
         if (DEBUG) {
-            Log.w(TAG, "" + msg);
+            Log.d(TAG, "" + msg);
         }
     }
 
     public static void df(String args, Object... obj) {
         L.msg = String.format(args, obj);
         if (DEBUG) {
-            Log.w(TAG, String.format(args, obj));
+            Log.d(TAG, String.format(args, obj));
         }
     }
 

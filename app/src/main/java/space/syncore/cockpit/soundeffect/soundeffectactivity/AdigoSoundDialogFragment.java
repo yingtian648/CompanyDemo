@@ -138,6 +138,7 @@ public class AdigoSoundDialogFragment extends DialogFragment {
         window.getAttributes().height = Tools.getScreenH(getContext());
         window.setType(WINDOW_TYPE);
         window.setGravity(Gravity.CENTER);
+        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         window.setDimAmount(AMBIGUITY_LEVEL);
 //        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 //        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

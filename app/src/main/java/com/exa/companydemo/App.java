@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.Tools;
+import com.exa.companydemo.utils.PathUtil;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +27,10 @@ public class App extends Application {
         super.onCreate();
         Constants.init();
         BaseConstants.init();
-
         L.init("MCompanyDemo", true);
+        PathUtil.INSTANCE.init(this);
         app = this;
         Tools.logScreenWH(this);
-        L.w("Android OS is " + Build.VERSION.RELEASE + " , SDK_INT= " + Build.VERSION.SDK_INT);
-
     }
 
     private void listenActivityLife(){
@@ -87,5 +86,10 @@ public class App extends Application {
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         L.dd("---App---");
+    }
+
+    public static void exit(){
+        L.d("App exit");
+        System.exit(0);
     }
 }

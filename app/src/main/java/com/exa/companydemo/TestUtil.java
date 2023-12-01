@@ -1,10 +1,8 @@
 package com.exa.companydemo;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
@@ -14,10 +12,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
-import android.graphics.Color;
-import android.graphics.PixelFormat;
-import android.graphics.RenderEffect;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -28,39 +22,25 @@ import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.util.Log;
-import android.util.Pair;
-import android.view.ActionMode;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.SearchEvent;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
-import android.view.WindowManager;
-import android.view.accessibility.AccessibilityEvent;
-import android.widget.Button;
-import android.widget.CarToast;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
+import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.FileUtils;
 import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.companydemo.utils.LogTools;
 
 import org.json.JSONException;
@@ -71,24 +51,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.PermissionChecker;
 
+import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.SENSOR_SERVICE;
 import static com.exa.baselib.utils.L.TAG;
-import static com.exa.baselib.utils.L.e;
-import static com.exa.baselib.utils.L.v;
 
 public class TestUtil {
 
@@ -132,6 +110,52 @@ public class TestUtil {
 
     }
 
+    public static void setFull(Window window,Context context,boolean isFull){
+        try {
+            Window.class.getDeclaredMethod("setFullScreen", Context.class, Boolean.TYPE).invoke(window, context, isFull);
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            L.dd("err");
+        }
+    }
+
+    /**
+     * 设置提醒
+     *
+     * @param context
+     * @param minute  几秒之后发送广播
+     */
+    public static void alarmAfterMinute(Context context, int minute) {
+        //注册广播
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AlarmReceiver.ALARM_ACTION);
+        context.registerReceiver(new AlarmReceiver(), filter);
+
+        //设置定时提醒
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis() + ((long) minute * 60 * 1000));
+//        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        Intent intent = new Intent(AlarmReceiver.ALARM_ACTION);
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, 1, intent,
+                PendingIntent.FLAG_IMMUTABLE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
+        long ert = SystemClock.elapsedRealtime();
+        long when = calendar.getTimeInMillis() - (System.currentTimeMillis() - ert);
+        L.d("alarm time: " + calendar.getTimeInMillis() + " -- "
+                + DateUtil.getFullTime(calendar.getTimeInMillis()) + ", " + pIntent
+                + ", when=" + when + " -- " + DateUtil.getFullTime(when));
+    }
+
+    private static class AlarmReceiver extends BroadcastReceiver {
+        public static final String ALARM_ACTION = "MCompanyDemo.TestUtil.AlarmReceiver";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.d("AlarmReceiver.onReceive: " + intent.getAction());
+        }
+    }
+
     // 关联 SystemFonts,TypeFace
     public static void copyAssetsFonts(Context context) {
         // storage/emulated/0/Fonts
@@ -146,55 +170,6 @@ public class TestUtil {
             FileUtils.copyAssetsFile(context, assetsFileName, target, false);
             FileUtils.copyAssetsDir(context, assetsDirName, targetDir, false);
         });
-    }
-
-    public static void showAlertDialog(Activity context) {
-        View decor = context.getWindow().getDecorView();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//            decor.setRenderEffect(RenderEffect.createBlurEffect(25F, 25F, Shader.TileMode.CLAMP));
-//        }
-        /**
-         * 未加载style的时候——没有半透明背景
-         */
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false);
-        Dialog dialog = new Dialog(context, R.style.DialogDefaultFullScreen);
-        dialog.setCancelable(true);
-        view.findViewById(R.id.sure_button).setOnClickListener(v -> {
-            dialog.dismiss();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                decor.setRenderEffect(null);
-            }
-        });
-        view.findViewById(R.id.cancel_button).setOnClickListener(v -> {
-            dialog.dismiss();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                decor.setRenderEffect(null);
-            }
-        });
-        dialog.setContentView(view);
-        dialog.setTitle("showAlertDialog");
-        dialog.show();
-    }
-
-    public static void testDialog(Activity activity, String title, int windowType) {
-        final MyDialog dialog = new MyDialog(activity, R.style.Dialog, windowType);
-        View view = LayoutInflater.from(activity).inflate(R.layout.dialog_layout, null, false);
-        Button sureBtn = view.findViewById(R.id.sure_button);
-        Button cancelBtn = view.findViewById(R.id.cancel_button);
-        TextView titleT = view.findViewById(R.id.titleT);
-        titleT.setText(title);
-        dialog.setContentView(view);
-        sureBtn.setOnClickListener(v -> {
-            TestUtil.showToast(activity);
-        });
-        cancelBtn.setOnClickListener(new OnClickViewListener() {
-            @Override
-            public void onClickView(View v) {
-                dialog.cancel();
-            }
-        });
-        dialog.setCancelable(true);
-        dialog.show();
     }
 
     public static void parsePlatformConfigFile(String PLATFORM_CONFIG_PATH) throws IOException, JSONException {
@@ -226,90 +201,6 @@ public class TestUtil {
         }
         Log.e(TAG, "parsePlatformConfigFile end");
     }
-
-    private static class MyDialog extends Dialog {
-        private int windowType;
-
-        public MyDialog(@NonNull Context context) {
-            super(context);
-            // setWindowAttrs();
-        }
-
-        public MyDialog(@NonNull Context context, int themeResId, int windowType) {
-            super(context, themeResId);
-            this.windowType = windowType;
-            // setWindowAttrs();
-        }
-
-        protected MyDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-            super(context, cancelable, cancelListener);
-            // setWindowAttrs();
-        }
-
-        @Override
-        public void setContentView(@NonNull View view) {
-            super.setContentView(view);
-            // setWindowAttrs();
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            setWindowAttrs();
-            super.onCreate(savedInstanceState);
-        }
-
-        @Override
-        public boolean onTouchEvent(@NonNull MotionEvent event) {
-//            L.dd(event.getAction());
-            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                L.dd("点击去弹框之外区域");
-            }
-            return super.onTouchEvent(event);
-        }
-
-        /* access modifiers changed from: protected */
-        @SuppressLint("WrongConstant")
-        private Window setWindowAttrs() {
-            Window window = getWindow();
-            window.setStatusBarColor(Color.BLUE);
-            window.setNavigationBarColor(Color.BLUE);
-            window.getDecorView().clearAnimation();
-            WindowManager.LayoutParams attributes = window.getAttributes();
-            if (attributes == null) {
-                return window;
-            }
-            attributes.width = WindowManager.LayoutParams.WRAP_CONTENT;//WindowManager.LayoutParams.MATCH_PARENT;
-            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
-            attributes.gravity = Gravity.CENTER;
-            attributes.format = PixelFormat.TRANSLUCENT;
-            attributes.dimAmount = 0f;
-            attributes.flags = attributes.flags
-                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
-                    //有此Flag的dialog在AH8上会显示在shortcut上面
-//                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                    | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
-                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
-                    | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
-//                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE //弹出后不会抢window焦点
-//                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-//                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-            ;
-            // 未设置FLAG_NOT_FOCUSABLE时，次标志可防止此窗口成为输入法的目标
-            // 设置了FLAG_NOT_FOCUSABLE时，即使窗口不可聚焦，设置此标志也会请求将窗口作为输入法目标
-            attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
-                    | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
-            attributes.setTitle("MainActivity_Dialog");
-//            attributes.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
-//            attributes.type = 2;
-            if (windowType > 2500) {
-                attributes.type = windowType;//对应windowType
-            }
-            window.setAttributes(attributes);
-            return window;
-        }
-    }
-
 
     /**
      * 测试 发送广播
@@ -404,9 +295,10 @@ public class TestUtil {
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);//加速度
         sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, 1);
 //        sensorManager.registerListener(accelerometerSensorListener, accelerometerSensor, 1);
+
     }
 
-    private static SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
+    private static final SensorEventListener gyroscopeSensorListener = new SensorEventListener() {
         private long lastLogTime = 0;
 
         @Override
@@ -428,7 +320,7 @@ public class TestUtil {
         }
     };
 
-    private static SensorEventListener accelerometerSensorListener = new SensorEventListener() {
+    private static final SensorEventListener accelerometerSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
             L.d("accelerometerSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/main_font_text"
+        android:text="@string/font_words" />
+
+    <TextView
+        android:id="@+id/textRoboto"
+        style="@style/main_font_text"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/font_words_medium" />
+
+    <TextView
+        android:id="@+id/text0"
+        style="@style/main_font_text"
+        android:hint="text0"
+        android:text="@string/font_style_words"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text1"
+        style="@style/main_font_text"
+        android:fontFamily="@string/gac_font_regular"
+        android:hint="text1"
+        android:text="@string/font_words_GacFont_Regular" />
+
+    <TextView
+        android:id="@+id/text2"
+        style="@style/main_font_text"
+        android:fontFamily="@string/gac_font_medium"
+        android:hint="text2"
+        android:text="@string/font_words_GacFont_Medium" />
+
+    <TextView
+        android:id="@+id/text3"
+        style="@style/main_font_text"
+        android:fontFamily="@string/gac_font_bold"
+        android:hint="text3"
+        android:text="@string/font_words_GacFont_Bold" />
+
+    <TextView
+        android:id="@+id/text4"
+        style="@style/main_font_text"
+        android:fontFamily="sans-serif"
+        android:text="@string/font_words_sans_serif_bold"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/text5"
+        style="@style/main_font_text"
+        android:fontFamily="@string/SourceHanSansCN"
+        android:hint="text5"
+        android:textStyle="bold"
+        android:text="@string/font_words_SourceHanSansCN_style_Bold" />
+
+    <TextView
+        android:id="@+id/text6"
+        style="@style/main_font_text"
+        android:fontFamily="@string/SourceHanSansCN_Bold"
+        android:hint="text6"
+        android:text="@string/font_words_SourceHanSansCN_Bold" />
+
+    <TextView
+        android:id="@+id/text7"
+        style="@style/main_font_text"
+        android:fontFamily="@string/SourceHanSansCN_Regular"
+        android:hint="text7"
+        android:text="@string/font_words_SourceHanSansCN_Regular" />
+
+    <TextView
+        android:id="@+id/text8"
+        style="@style/main_font_text"
+        android:fontFamily="@string/SourceHanSansCN_Medium"
+        android:hint="text8"
+        android:text="@string/font_words_SourceHanSansCN_Medium" />
+
+    <TextView
+        android:id="@+id/text9"
+        style="@style/main_font_text"
+        android:fontFamily="@string/ADiGO4_CH"
+        android:textStyle="bold"
+        android:hint="text9"
+        android:text="@string/font_words_ADiGO4_style_Bold" />
+
+    <TextView
+        android:id="@+id/text10"
+        style="@style/main_font_text"
+        android:fontFamily="@string/ADiGO4_CH_Bld"
+        android:hint="text10"
+        android:text="@string/font_words_ADiGO4_CH_Bld"
+        />
+</LinearLayout>

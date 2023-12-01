@@ -31,6 +31,15 @@ import java.util.ArrayList;
 
 public class Tools {
 
+    /**
+     * @param res
+     * @return 双精度的double字符串
+     */
+    public static double getDoubleFormatD(double res) {
+        java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
+        return Double.parseDouble(df.format(res));
+    }
+
     // Window截屏
     public static void screenshotView(Window window, ImageView imageView) {
         // ⬇⬇⬇ 可直接放入点击事件中 ⬇⬇⬇

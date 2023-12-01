@@ -9,7 +9,7 @@
         android:layout_height="500dp"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:background="@color/white"
+        android:background="@drawable/win_bg"
         android:padding="15dp">
 
         <TextView
@@ -51,6 +51,14 @@
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:text="确认" />
+
+            <Button
+                android:id="@+id/switch_button"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="开关" />
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

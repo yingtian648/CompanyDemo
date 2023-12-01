@@ -11,7 +11,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
-import com.exa.baselib.utils.L
 
 /**
  * @Author lsh
@@ -67,7 +66,7 @@ class EndLineView @JvmOverloads constructor(
                     setOrientation(getAttributeValue(i).toInt())
                 }
                 if (DEBUG) {
-                    L.d("attrs $i " + getAttributeName(i) + "=" + getAttributeValue(i))
+                    Log.d(TAG, "attrs $i ${getAttributeName(i)}=${getAttributeValue(i)}")
                 }
             }
         }
@@ -118,9 +117,7 @@ class EndLineView @JvmOverloads constructor(
                 if (mLastDrawTime == 0L || (System.currentTimeMillis() - mLastDrawTime) > 100) {
                     mLastDrawTime = System.currentTimeMillis()
                     invalidate()
-                    Log.i(
-                        TAG, "当前绘制点：(${x},${y}) " + "方向：${getDirection(mOrientation)}"
-                    )
+                    Log.i(TAG, "点击：(${x},${y}) " + "方向：${getDirection(mOrientation)}")
                 }
             }
         }

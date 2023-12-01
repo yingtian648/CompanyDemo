@@ -6,14 +6,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F9F9F9"
+        android:background="#D85C65E3"
         tools:context=".MainActivity2">
 
         <TextView
             android:id="@+id/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="Main3"
             android:textSize="35sp" />
 
@@ -22,8 +21,17 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_centerHorizontal="true"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp">
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp">
+
+            <Button
+                android:id="@+id/closeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="关闭"
+                android:textAllCaps="false"
+                android:textSize="30sp" />
 
             <Button
                 android:id="@+id/showSystemUi"
@@ -48,7 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="测试按钮"
+                android:text="测试"
                 android:textAllCaps="false"
                 android:textSize="30sp" />
         </LinearLayout>

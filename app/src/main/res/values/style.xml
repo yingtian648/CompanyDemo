@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="input_text">
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/black33</item>
@@ -9,13 +10,14 @@
         <item name="android:layout_height">35dp</item>
         <item name="android:layout_width">0dp</item>
     </style>
+
     <style name="DialogTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowSoftInputMode">adjustPan</item>
         <item name="android:statusBarColor">@color/blue</item>
@@ -46,21 +48,34 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
 
+    <style name="DialogActivity" parent="Theme.AppCompat">
+        <item name="windowNoTitle">true</item>
+<!--        <item name="android:padding">0dp</item>-->
+<!--        <item name="android:windowIsTranslucent">false</item>-->
+<!--        <item name="android:windowIsFloating">true</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:backgroundDimEnabled">false</item>-->
+        <!--        <item name="android:windowBackgroundBlurRadius" tools:targetApi="s">30dp</item>-->
+        <!--        <item name="android:windowBlurBehindEnabled" tools:targetApi="s">true</item>-->
+        <!--        <item name="android:windowBlurBehindRadius" tools:targetApi="s">30dp</item>-->
+    </style>
+
     <style name="DialogDefaultFullScreen">
         <item name="android:padding">0dp</item>
-<!--        <item name="android:windowFrame">@null</item>-->
+        <!--        <item name="android:windowFrame">@null</item>-->
         <item name="android:windowIsTranslucent">false</item>
         <item name="android:windowIsFloating">true</item>
         <!-- 背景透明必须设置 -->
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--底部activity变暗-->
         <item name="android:backgroundDimEnabled">true</item>
-<!--        <item name="android:windowBackgroundBlurRadius" tools:targetApi="s">30dp</item>-->
-<!--        <item name="android:windowBlurBehindEnabled" tools:targetApi="s">true</item>-->
-<!--        <item name="android:windowBlurBehindRadius" tools:targetApi="s">30dp</item>-->
+        <!--        <item name="android:windowBackgroundBlurRadius" tools:targetApi="s">30dp</item>-->
+        <!--        <item name="android:windowBlurBehindEnabled" tools:targetApi="s">true</item>-->
+        <!--        <item name="android:windowBlurBehindRadius" tools:targetApi="s">30dp</item>-->
         <!-- 弹窗左上角的标题-->
         <item name="windowNoTitle">true</item>
     </style>
@@ -73,24 +88,57 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
-    <style name="Dialog" parent="Theme.AppCompat.Light.Dialog">
-<!--        <item name="android:windowFrame">@null</item>-->
-<!--        <item name="android:windowIsFloating">true</item>-->
-<!--        <item name="android:windowIsTranslucent">true</item>-->
-<!--        <item name="android:windowNoTitle">true</item>-->
-<!--        <item name="android:background">@null</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:backgroundDimAmount">0.6</item>-->
-<!--        &lt;!&ndash; backgroundDimEnabled 赋值为true（默认为true）的时候，当dialog弹出的时候，其余地方变暗，赋值为false的时候其余地方正常显示 &ndash;&gt;-->
-<!--        <item name="android:backgroundDimEnabled">false</item>-->
-<!--&lt;!&ndash;        <item name="android:windowEnterAnimation">@null</item>&ndash;&gt;-->
-<!--&lt;!&ndash;        <item name="android:windowExitTransition">@null</item>&ndash;&gt;-->
+    <style name="MyAlertDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:padding">0dp</item>
+        <!-- 背景透明必须设置 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 背景透明必须设置 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--底部activity变暗-->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 弹窗左上角的标题-->
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
+
+    <style name="MyDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+        <!-- backgroundDimEnabled 赋值为true（默认为true）的时候，当dialog弹出的时候，其余地方变暗，赋值为false的时候其余地方正常显示 -->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--        <item name="android:windowEnterAnimation">@null</item>-->
+        <!--        <item name="android:windowExitTransition">@null</item>-->
+    </style>
+
 
     <style name="item_app_list_text">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_marginStart">20dp</item>
         <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="main_btn">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:background">@color/btn_bg</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+    <style name="main_font_text">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:maxHeight">90dp</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:layout_marginTop">5dp</item>
     </style>
 </resources>

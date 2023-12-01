@@ -8,12 +8,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.exa.baselib.utils.L;
+import com.exa.companydemo.BuildConfig;
 
 /**
  * 基本数据在MediaLoadActivity中插入
@@ -21,7 +23,7 @@ import com.exa.baselib.utils.L;
  */
 public class MMediaProvider extends ContentProvider {
     private final String TAG = MMediaProvider.class.getSimpleName();
-    private static final String AUTHORITY = "com.media.my";
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".media.provider";
     private static UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/customer");
     private FilesDao dao;

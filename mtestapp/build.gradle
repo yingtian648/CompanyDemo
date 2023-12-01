@@ -48,9 +48,12 @@ android {
 
     sourceSets {
         main {
-            java.srcDirs = ['src/main/java', 'src/main/java-gen','src/main/aidl']
+            java.srcDirs = ['src/main/java', 'src/main/java-gen', 'src/main/aidl']
             jniLibs.srcDirs = ['libs']
             aidl.srcDirs = ['src/main/aidl']
+            java {
+                filter.excludes = ["com/blankj/utilcode/util/UtilsFileProvider"]
+            }
         }
     }
 
@@ -71,9 +74,15 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation files('libs\\scenemanager.jar')
+    implementation files('libs/scenemanager.jar')
     testImplementation 'junit:junit:4.13.2'
     implementation project(path: ':base')
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation('com.blankj:utilcodex:1.31.0') {
+//        exclude group: 'com.blankj.utilcode.util.UtilsTransActivity',module:'utilcodex'
+//        exclude group: 'com.blankj.utilcode.util.UtilsTransActivity4MainProcess'
+        exclude group: 'com.blankj.utilcode.util.UtilsFileProvider.java', module: 'utilcodex'
+//        exclude group: 'com.blankj.utilcode.util.MessengerUtils$ServerService'
+    }
 }

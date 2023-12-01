@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 /**
  * @Author lsh
@@ -14,6 +15,26 @@ import java.io.OutputStream;
  * @Description
  */
 public class FileUtils {
+
+    /**
+     * 创建新文件
+     */
+    public static File createNewFile(String path) {
+        try {
+            File file = new File(path);
+            if (!file.exists()) {
+                Objects.requireNonNull(file.getParentFile()).mkdirs();
+            } else {
+                file.delete();
+            }
+            if (file.createNewFile()) {
+                return file;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      *

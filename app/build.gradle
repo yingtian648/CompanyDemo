@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
@@ -9,12 +11,15 @@ android {
     defaultConfig {
         applicationId "com.exa.companydemo"
 //        applicationId "com.exa.toasttest"
+//        applicationId "com.exa.locationtest"
+//        applicationId "com.android.companydemo"
 //        applicationId "com.gxatek.cockpit.launcher"
 //        applicationId "space.syncore.cockpit.soundeffect"
+
         minSdk 26
         targetSdk 31
         versionCode 999999
-        versionName "1.0"
+        versionName getDate()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -72,16 +77,24 @@ android {
     }
 }
 
+
+static String getDate() {
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss")
+    return df.format(new Date())
+}
+
 dependencies {
     implementation project(path: ':base')
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation files('libs\\scenemanager.jar')
+    implementation files('libs/scenemanager.jar')
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation files('libs\\framework.jar')
-    implementation files('libs\\carlocalupdatesdk.jar')
+    compileOnly files('libs/framework.jar')
+    implementation files('libs/carlocalupdatesdk.jar')
+    implementation files('libs/recorderlib.aar')
+    implementation files('libs/carotasdk.jar')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

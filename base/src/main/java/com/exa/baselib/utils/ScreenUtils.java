@@ -25,30 +25,27 @@ public class ScreenUtils {
      */
     public static void hideStatusBars(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+            WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
                 // 手机自动隐藏状态栏导航栏
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 //                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
                 controller.hide(WindowInsets.Type.systemBars());
-                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
-                    @Override
-                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-                        L.d("onControllableInsetsChanged：" + typeMask);
-                    }
-                });
             }
         } else {
-            int option = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE;
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             activity.getWindow().getDecorView().setSystemUiVisibility(option);
         }
     }
 
     public static void hideStatusBar(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+            WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
                 // 手机自动隐藏状态栏导航栏
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
@@ -72,7 +69,7 @@ public class ScreenUtils {
      */
     public static void hideStatusBars(Window window) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = window.getDecorView().getWindowInsetsController();
+            WindowInsetsController controller = window.getInsetsController();
             if (controller != null) {
                 /**
                  * setSystemBarsBehavior 设置状态栏与Window的关系，覆盖在Window上/挤压Window大小来显示SystemUI
@@ -102,18 +99,19 @@ public class ScreenUtils {
         }
     }
 
+    public static void hideOnlyStatusBars(Window window) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController controller = window.getInsetsController();
+            controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            controller.hide(WindowInsets.Type.statusBars());
+        }
+    }
+
     public static void showStatusBars(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+            WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
-//                controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
                 controller.show(WindowInsets.Type.systemBars());
-//                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
-//                    @Override
-//                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-//                        L.d("onControllableInsetsChanged：showStatusBars");
-//                    }
-//                });
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_VISIBLE;
@@ -123,7 +121,7 @@ public class ScreenUtils {
 
     public static void showStatusBars(Window window) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = window.getDecorView().getWindowInsetsController();
+            WindowInsetsController controller = window.getInsetsController();
             if (controller != null) {
                 controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
             }
@@ -135,7 +133,7 @@ public class ScreenUtils {
 
     public static void showLightStatusBars(Activity activity, boolean showLightBars) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowInsetsController controller = activity.getWindow().getDecorView().getWindowInsetsController();
+            WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
                 controller.show(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
                 if (showLightBars) {
@@ -152,10 +150,31 @@ public class ScreenUtils {
         }
     }
 
+    /**
+     * 侵入导航栏和状态栏
+     *
+     * @param activity
+     */
+    public static void setStatusBarAndNavigationBarInvasion(Activity activity) {
+        Window window = activity.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setNavigationBarContrastEnforced(false);
+        }
+        window.setNavigationBarColor(Color.TRANSPARENT);
+    }
+
     public static void setStatusBarInvasion(Activity activity) {
         Window window = activity.getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
         window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
     }

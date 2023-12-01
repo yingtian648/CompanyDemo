@@ -1,7 +1,11 @@
 package com.exa.companydemo.common;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.providers.settings.GlobalSettingsProto;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,6 +16,7 @@ import com.exa.baselib.bean.AppInfo;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.ScreenUtils;
 import com.exa.baselib.utils.Tools;
+import com.exa.companydemo.App;
 import com.exa.companydemo.Constants;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityAppInfoBinding;
@@ -26,7 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
 
-    private List<AppInfo> dataList = new ArrayList<>();
+    private final List<AppInfo> dataList = new ArrayList<>();
 
     @Override
     protected int setContentViewLayoutId() {
@@ -48,13 +53,17 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
 
             }
         }) {
+            @SuppressLint("SetTextI18n")
             @Override
             protected void onViewHolder(@NonNull View view, @NonNull AppInfo data, int position) {
                 ImageView iv = view.findViewById(R.id.iv);
                 TextView tvTitle = view.findViewById(R.id.tvTitle);
                 TextView tvVersion = view.findViewById(R.id.tvVersion);
                 TextView tvPkg = view.findViewById(R.id.tvPkg);
-
+                Button btn = view.findViewById(R.id.btn);
+                btn.setOnClickListener(v -> {
+                    Tools.startApp(AppInfoActivity.this, data.packageName);
+                });
                 try {
                     iv.setImageDrawable(data.iconDrawable);
                 } catch (Exception e) {

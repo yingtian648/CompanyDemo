@@ -3,14 +3,18 @@ package com.exa.companyclient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.hardware.display.DisplayManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.view.Display;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -29,9 +33,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import androidx.activity.ComponentActivity;
+import androidx.appcompat.app.AlertDialog;
 
 public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implements View.OnClickListener {
     private int index = 0;
+    private boolean mShowSystemUI = true;
+
     @Override
     protected int setContentViewLayoutId() {
         return R.layout.activity_main2;
@@ -39,23 +46,30 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
 
     @Override
     protected void initView() {
-        L.dd("屏幕高度：" + Tools.getScreenH(this)
-                + ",DisplayId=" + getWindowManager().getDefaultDisplay().getDisplayId());
-        StatubarUtil.setStatusBarInvasion(this);
         logScreenInfo();
     }
 
     @Override
     protected void initData() {
-        bind.startOnSubScreen.setOnClickListener(this);
+        bind.display1.setOnClickListener(this);
+        bind.display2.setOnClickListener(this);
+        bind.display3.setOnClickListener(this);
+        bind.display5.setOnClickListener(this);
         bind.startOnMainScreen.setOnClickListener(this);
-        bind.bindService.setOnClickListener(this);
-        bind.showSystemUi.setOnClickListener(this);
-        bind.hideSystemUi.setOnClickListener(this);
+        bind.switchSystemUI.setOnClickListener(this);
         bind.testBtn.setOnClickListener(this);
         bind.backBtn.setOnClickListener(this);
+
+//        bind.backBtn.postDelayed(() -> {
+//            startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 3);
+//        },5000);
     }
 
+    /**
+     * adb shell am start com.exa.companyclient/com.exa.companyclient.MainActivity3 --display 3
+     *
+     * @param v The view that was clicked.
+     */
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
@@ -63,16 +77,25 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
             case R.id.startOnMainScreen://启动在主屏上
                 startActivityByDisplayId(MainActivity2.this, MainActivity2.class, 0);
                 break;
-            case R.id.startOnSubScreen://启动在副屏上
+            case R.id.display1://启动在副屏上
+                startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 1);
+                break;
+            case R.id.display2://启动在副屏上
                 startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 2);
                 break;
-            case R.id.bindService:
+            case R.id.display3:
+                startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 3);
                 break;
-            case R.id.showSystemUi:
-                ScreenUtils.showStatusBars(this);
+            case R.id.display5:
+                startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 5);
                 break;
-            case R.id.hideSystemUi:
-                ScreenUtils.hideStatusBars(this);
+            case R.id.switchSystemUI:
+                mShowSystemUI = !mShowSystemUI;
+                if (mShowSystemUI) {
+                    ScreenUtils.showStatusBars(this);
+                } else {
+                    ScreenUtils.hideStatusBars(this);
+                }
                 break;
             case R.id.testBtn:
                 test();
@@ -86,14 +109,14 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
     }
 
     private void test() {
+        L.dd();
         index++;
-//        Toast.makeText(this,"主屏测试Toast " + index,Toast.LENGTH_SHORT).show();
-        PermissionUtil.requestPermission(this, new PermissionUtil.PermissionListener() {
-            @Override
-            public void permissionGranted() {
-
-            }
-        },new String[]{"android.permission.RECORD_AUDIO"});
+//        Toast.makeText(App.getContext(),"主屏测试Toast " + index,Toast.LENGTH_SHORT).show();
+        Dialog dialog = new Dialog(this);
+        dialog.setOwnerActivity(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
+        dialog.setContentView(view);
+        dialog.show();
     }
 
     private void logScreenInfo() {
@@ -103,8 +126,8 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
         DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
         Display[] displays = displayManager.getDisplays(null);
         if (displays != null) {
-            for (int i = 0; i < displays.length; i++) {
-                setText("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
+            for (Display display : displays) {
+                setText("更多显示器：" + display.getDisplayId() + ", " + display.getName() + ", " + display.isValid());
             }
         }
     }
@@ -117,6 +140,7 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
      * @param displayId
      */
     public static void startActivityByDisplayId(Activity context, Class clazz, int displayId) {
+        L.dd(displayId);
         Display mDisplay = context.getWindowManager().getDefaultDisplay();//默认显示器id 0
         DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
         Display[] displays = displayManager.getDisplays(null);

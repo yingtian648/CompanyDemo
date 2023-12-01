@@ -23,6 +23,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     @SuppressLint("WrongConstant")
     @Override
     protected void initData() {
+        switchFullScreen();
         // use TextureView, need set android:hardwareAccelerated="true"
         player = VideoPlayer.getInstance();
         player.setLoop(true);
@@ -62,6 +63,22 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
         player.play(this, bind.frame, afd);
     }
 
+    private void switchFullScreen() {
+        isFullScreen = !isFullScreen;
+        if (isFullScreen) {
+            ScreenUtils.hideStatusBars(this);
+            bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_white);
+        } else {
+            ScreenUtils.showStatusBars(this);
+            bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_exit_white);
+        }
+        wakeController = true;
+        BaseConstants.getHandler().postDelayed(() -> {
+            wakeController = false;
+            hideController();
+        }, 7000);
+    }
+
     private boolean isShowController = true;
 
     private void updateControllerStatus() {
@@ -91,7 +108,6 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
 
     @Override
     protected void initView() {
-        StatubarUtil.setStatusBarInvasion(this);
         bind.text.setOnClickListener(v -> finish());
         bind.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -122,25 +138,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
         });
         bind.progressBar.setEnabled(false);
         bind.fullBtn.setOnClickListener(v -> {
-            if (isFullScreen) {
-                ScreenUtils.showStatusBars(this);
-                bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_white);
-//                bind.fullBtn.setSystemUiVisibility(SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-                // getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-            } else {
-                ScreenUtils.hideStatusBars(this);
-                bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_exit_white);
-//                bind.fullBtn.setSystemUiVisibility(SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|SYSTEM_UI_FLAG_HIDE_NAVIGATION|SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-//                getWindow().getDecorView().setSystemUiVisibility(
-//                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-//                );
-            }
-            isFullScreen = !isFullScreen;
-            wakeController = true;
-            BaseConstants.getHandler().postDelayed(() -> {
-                wakeController = false;
-                hideController();
-            }, 7000);
+            switchFullScreen();
         });
 
     }

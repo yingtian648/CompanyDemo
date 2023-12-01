@@ -153,6 +153,10 @@ public class Titlebar extends FrameLayout {
         this.mNavigationClickListener = clickListener;
     }
 
+    public TextView getSubTitleTextView(){
+        return mSubTitleTv;
+    }
+
     public void setTitleSize(int mTitleSize) {
         this.mTitleSize = mTitleSize;
     }

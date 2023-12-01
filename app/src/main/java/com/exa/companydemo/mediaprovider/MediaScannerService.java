@@ -100,7 +100,7 @@ public class MediaScannerService extends JobIntentService {
                     L.d("end doScan:" + total.get() + "  payTime:" + (System.currentTimeMillis() - startTime));
                 }
                 sendFinishBroadCast();
-                getContentResolver().notifyChange(BaseConstants.CUSTOMER_URI, null);
+                getContentResolver().notifyChange(BaseConstants.CUSTOMER_URI(MMediaProvider.AUTHORITY), null);
             });
         } else {
             sendFinishBroadCast();

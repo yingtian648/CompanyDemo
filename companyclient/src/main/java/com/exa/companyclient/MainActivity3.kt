@@ -1,8 +1,11 @@
 package com.exa.companyclient
 
+import android.app.Dialog
 import android.content.Context
 import android.hardware.display.DisplayManager
-import android.view.WindowManager
+import android.os.Bundle
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.Toast
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.L
@@ -16,6 +19,7 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
     override fun setContentViewLayoutId(): Int = R.layout.activity_main3
 
     override fun initView() {
+//        ScreenUtils.setStatusBarInvasion(this)//沉浸式
         val displayManager = getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
         displayManager.displays.forEach {
             if (it.displayId == 2) {
@@ -34,17 +38,46 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
             L.d("测试按钮")
             test()
         }
+        bind.closeBtn.setOnClickListener {
+            L.d("关闭按钮")
+            finish()
+        }
     }
 
-    private fun test(){
+    private fun test() {
         index++
-//        display2Context?.apply {
-//            Toast.makeText(this,"Display2 显示Toast $index",Toast.LENGTH_SHORT).show()
-//        }
-        Toast.makeText(this,"Display2 显示Toast $index",Toast.LENGTH_SHORT).show()
+        L.dd("$index")
+        Toast.makeText(this, "副屏测试Toast $index", Toast.LENGTH_SHORT).show()
+//        showDialog()
     }
 
     override fun initData() {
+        ScreenUtils.hideStatusBars(this)
+    }
 
+    private fun showDialog() {
+        val dialog = MDialog(this, R.style.DialogTheme, R.layout.dialog_layout)
+        dialog.show()
+    }
+
+    class MDialog(
+        private val context: Context,
+        private val themeId: Int = 0,
+        private val layoutId: Int,
+    ) : Dialog(context, themeId) {
+        init {
+            setContentView(layoutId)
+        }
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            val surBtn = findViewById<Button>(R.id.sure_button)
+            val cancelBtn = findViewById<Button>(R.id.cancel_button)
+            val dialogBox = findViewById<LinearLayout>(R.id.dialogBox)
+            dialogBox.setBackgroundResource(R.drawable.dialog_bg)
+
+            cancelBtn.setOnClickListener { dismiss() }
+            surBtn.setOnClickListener { dismiss() }
+        }
     }
 }

@@ -46,19 +46,25 @@ public class GpsConvertUtil {
      * GMT date convert to current TimeZone date
      * <p>
      * GMT time
-     * int date = 150322; 20220315
+     * int date = 150322; 211123
      * double time = 3333.11;
      *
-     * @param utcDate GMT ddMMyyyy
+     * @param utcDate GMT ddMMyy
      * @param utcTime GMT hhmmss.SSS
      */
     public static long getCurrentTimeZoneTimeMillis(int utcDate, double utcTime) {
+        final String split = ".";
+        final String nor0 = "0";
+        final int timeMaxLength = 6;
         long result = System.currentTimeMillis();
         if (utcDate > 0 && utcTime >= 0) {
             String date = String.valueOf(utcDate);
-            String time = String.valueOf(utcTime);
-            if (time.contains(".")) {
-                time = time.substring(0, time.indexOf("."));
+            StringBuilder time = new StringBuilder(String.valueOf(utcTime));
+            if (time.toString().contains(split)) {
+                time = new StringBuilder(time.substring(0, time.indexOf(split)));
+            }
+            while (time.length() < timeMaxLength) {
+                time.insert(0, nor0);
             }
             try {
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
@@ -69,10 +75,12 @@ public class GpsConvertUtil {
                 int mm = Integer.parseInt(time.substring(time.length() - 4, time.length() - 2));
                 int ss = Integer.parseInt(time.substring(time.length() - 2));
                 calendar.set(year, mon - 1, day, hh, mm, ss);
+                L.d("hh=" + hh + ",mm=" + mm + ",ss=" + ss);
                 result = calendar.getTimeInMillis();
             } catch (Exception e) {
                 e.printStackTrace();
-                L.w("getCurrentTimeZoneTimeMillis time parse err!!!");
+                L.w("getCurrentTimeZoneTimeMillis time parse err!!! utcDate,utcTime="
+                        + utcDate + "," + utcTime);
             }
         }
         return result;

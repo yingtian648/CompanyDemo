@@ -10,6 +10,7 @@ import android.os.Bundle;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.CrashHandle;
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.Tools;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,8 +26,7 @@ public class App extends Application {
         L.init("MCompanyClient", true);
         BaseConstants.init();
         CrashHandle.getInstance().init(this);
-        L.w("Android OS is " + Build.VERSION.RELEASE + " , SDK_INT= " + Build.VERSION.SDK_INT);
-
+        Tools.logScreenWH(this);
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {

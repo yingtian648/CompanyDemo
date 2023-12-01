@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companyclient">
+<!--    android:sharedUserId="@string/sharedUserId"-->
 
     <application
         android:name=".App"
@@ -21,7 +22,7 @@
         <activity
             android:name=".MainActivity3"
             android:theme="@style/Activiy3Style"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".ActivityViewActivity"
             android:exported="true" >

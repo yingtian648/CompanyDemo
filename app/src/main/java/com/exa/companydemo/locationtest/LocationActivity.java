@@ -165,29 +165,32 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             @Override
             public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
                 super.onSatelliteStatusChanged(status);
-                index = index > (status.getSatelliteCount() - 1) ? 0 : index;
-//                setText("收到卫星变化 count=" + status.getSatelliteCount()
-//                                + " index:" + index
-//                                + "\t Svid=" + status.getSvid(index)
-//                                + ", Cn0=" + status.getCn0DbHz(index)
-//                                + ", ElevationDegrees=" + status.getElevationDegrees(index)
-//                                + ", AzimuthDegrees=" + status.getAzimuthDegrees(index)
-//                                + ", CarrierFrequencyHz=" + status.getCarrierFrequencyHz(index) /* android 8.0开始使用 */
-////                        + ", BasebandCn0DbHz=" + status.getBasebandCn0DbHz(index) /* android 11.0开始使用 */
-//                );
-//                index++;
-                L.d("onSatelliteStatusChanged:卫星数 = " + status.getSatelliteCount());
+                int usedInFixNum = 0;
+                StringBuilder builder = new StringBuilder();
+                StringBuilder snrSb = new StringBuilder();
+                for (int i = 0; i < status.getSatelliteCount(); i++) {
+                    if (status.usedInFix(i)) {
+                        usedInFixNum++;
+                    }
+                    builder.append(status.getSvid(i)).append(" ");
+                    snrSb.append((int)status.getCn0DbHz(i)).append(" ");
+                }
+                String msg = DateUtil.getNowTime() + "卫星列表 count=" + status.getSatelliteCount()
+                        + ", usedInFixNum=" + usedInFixNum + ", satIds=" + builder
+                        + ",snrs=" + snrSb;
+                L.d(msg);
+//                setText(msg);
             }
         }, new Handler(Looper.myLooper()));
 
         subscribeGpsUpdates();
     }
 
-    private void testExtra(){
+    private void testExtra() {
         Location location = new Location(LocationManager.GPS_PROVIDER);
-        Bundle bundle  = new Bundle();
-        bundle.putString("sdas","sdasad");
-        bundle.putInt("rrrr",2);
+        Bundle bundle = new Bundle();
+        bundle.putString("sdas", "sdasad");
+        bundle.putInt("rrrr", 2);
         location.setExtras(bundle);
         printLocation(location);
     }
@@ -203,8 +206,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             setText("订阅Gps定位");
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    0 /* 时间隔时间 */,
-                    0.0F /* 位置更新的最小距离(单位：米) */,
+                    3000 /* 时间隔时间 毫秒 */,
+                    0F /* 位置更新的最小距离(单位：米) */,
                     locationListener);
         }
     }
@@ -249,9 +252,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         public void onLocationChanged(@NonNull Location location) {
             L.d(location.getProvider() + "  onLocationChanged:" + location);
             locationIndex++;
-            if (locationIndex < 10) {
-                printLocation(location);
-            }
+            printLocation(location);
         }
 
         @Override
@@ -266,7 +267,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     };
 
     private void printLocation(Location location) {
-        setText(location.toString());
+        setText(location.toString() + ", " + DateUtil.getNowTime());
         Bundle bundle = location.getExtras();
         if (bundle != null && !bundle.isEmpty()) {
             StringBuilder buffer = new StringBuilder();
@@ -282,7 +283,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         @Override
         public void onLocationChanged(@NonNull Location location) {
             L.d(location.getProvider() + "  onLocationChanged:" + location);
-            setText(location.toString());
+            setText(location + DateUtil.getNowTime());
         }
 
         @Override

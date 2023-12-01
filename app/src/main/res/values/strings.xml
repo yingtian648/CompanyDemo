@@ -26,19 +26,30 @@
     <string name="SourceHanSansCN_Bold">SourceHanSansCN-Bold</string>
     <string name="SourceHanSansCN_Normal">SourceHanSansCN-Normal</string>
     <string name="SourceHanSansCN_Regular">SourceHanSansCN-Regular</string>
+    <string name="SourceHanSansCN_Medium">SourceHanSansCN-Medium</string>
+    <string name="ADiGO4_CH">ADiGO4_CH</string>
+    <string name="ADiGO4_CH_Bld">ADiGO4_CH_Bld</string>
+    <string name="ADiGO5">ADiGO5</string>
+    <string name="ADiGO5_Bold">ADiGO5-Bold</string>
     <string name="source_sans_pro">source-sans-pro</string>
     <string name="sans_serif_condensed">sans-serif-condensed</string>
     <string name="font_words">Innovation in China 中国制造，惠及全球 0123456789</string>
+    <string name="font_words_medium">Innovation in China 中国制造，惠及全球 0123456789 medium</string>
+    <string name="font_words_roboto">Innovation in China 中国制造，惠及全球 0123456789 Roboto</string>
     <string name="font_style_words">Innovation in China 中国制造，惠及全球 0123456789 style-bold</string>
     <string name="font_words_bold">Innovation in China 中国制造，惠及全球 0123456789</string>
     <string name="font_words_sans_serif_bold">Innovation in China 中国制造，惠及全球 0123456789 sans-serif-Bold</string>
-    <string name="font_words_roboto_bold">Innovation in China 中国制造，惠及全球 0123456789 Roboto-Bold</string>
+    <string name="font_words_SourceHanSansCN_style_Bold">Innovation in China 中国制造，惠及全球 0123456789 SourceHanSansCN-style-Bold</string>
     <string name="font_words_GacFont_Bold">Innovation in China 中国制造，惠及全球 0123456789 GacFont-Bold</string>
     <string name="font_words_GacFont_Medium">Innovation in China 中国制造，惠及全球 0123456789 GacFont-Medium</string>
     <string name="font_words_GacFont_Regular">Innovation in China 中国制造，惠及全球 0123456789 GacFont-Regular</string>
     <string name="font_words_SourceHanSansCN_Bold">Innovation in China 中国制造，惠及全球 0123456789 SourceHanSansCN-Bold</string>
     <string name="font_words_SourceHanSansCN_Normal">Innovation in China 中国制造，惠及全球 0123456789 SourceHanSansCN-Normal</string>
     <string name="font_words_SourceHanSansCN_Regular">Innovation in China 中国制造，惠及全球 0123456789 SourceHanSansCN-Regular</string>
+    <string name="font_words_SourceHanSansCN_Medium">Innovation in China 中国制造，惠及全球 0123456789 SourceHanSansCN-Medium</string>
+    <string name="font_words_ADiGO5_Bold">Innovation in China 中国制造，惠及全球 0123456789 ADiGO5-Bold</string>
+    <string name="font_words_ADiGO4_style_Bold">Innovation in China 中国制造，惠及全球 0123456789 ADiGO4_CH-style-Bold</string>
+    <string name="font_words_ADiGO4_CH_Bld">Innovation in China 中国制造，惠及全球 0123456789 ADiGO4_CH_Bld</string>
     <string name="font_words_signal">/ * - + ! @ # $ % ^ * ( ) / : " ; [ ] { } ~ = 你好中国</string>
     <string-array name="whitelist_pulblic_app_hide_statusbar" translatable="true">
         <item></item>

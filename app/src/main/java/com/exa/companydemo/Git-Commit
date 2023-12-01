@@ -14,178 +14,68 @@ Bug or feature: feature
 Team: FW
 Test: pass
 
-feat[WMS]:Adjusting issues where non system users cannot drag.
-rootcause:cannot drag err.
-solution:remove system user judgment.
-Product:AH8
-Build:mpass
-Test:upass
-BugID:ID1170278
-
-fix[CarTransition]:add customer type SCENE_TRAILER_MODE.
-rootcause:need type SCENE_TRAILER_MODE config.
-solution:add customer type SCENE_TRAILER_MODE.
-Product:A29V
-Build:mpass
-Test:upass
-BugID:ID1168320
-
-fix[WMS]:Disable SystemUI transient.
-rootcause:Disable SystemUI transient.
-solution:Disable SystemUI transient.
-Product:A18V/A21
-Build:mpass
-Test:upass
-BugID:noid
-
-feat[Toast]:Fix Toast display error.
-rootcause:Toast display error.
+feat[fonts]:Import ADiGO4_FONT.
+rootcause:Import ADiGO4_FONT.
 solution:
-1.Adjusting toast delay time.
-2.Use customer widow_type TYPE_CAR_TOAST.
-Product:AH8
-Build:mpass
-Test:upass
-BugID:ID1166681
-
-fix[PhoneWindowManager]:Scene layer policy not suitable for T60Y.
-rootcause:Scene layer policy is not adapted to T60Y.
-solution:add A02 use scene layer policy overlay config.
-Product:A02/T60Y
-Build:mpass
-Test:upass
-BugID:ID1101947
-
-fix[Toast]:Fix toast display problem.
-rootcause:Toast shape is incorrect.
-solution:Adjust the toast background.
-Product:A02
-Build:mpass
-Test:upass
-BugID:TAPD-ID1075758
-
-fix[Toast]:Add statistics broadcast.
-rootcause:Add statistics broadcast.
-solution:Add statistics broadcast.
-Product:A02
-Build:mpass
-Test:upass
-BugID:ID1143798
-
-fix[CarPackageManagerService]:add SystemProperties read check.
-rootcause:SystemProperties read err.
-solution:Read SystemProperties after SystemProperties ready.
-Product:A8E
-Build:mpass
-Test:upass
-BugID:JIRA-A58A88GOS2-40520
-
-
-
-fix[AOSP/SystemUI]:Remove NetworkPolicyLogger block log.
-rootcause:NetworkPolicyLogger log too many.
-solution:Remove NetworkPolicyLogger block log.
-Product:A18V/A21
-Span:<>
-Build:mpass
-Test:upass
-FID:ID1177846
-Level:S
-
-
-fix[AOSP/SystemUI]:Skip full screen width judgment when currently in the status bar.
-rootcause:Can not hide StatusBar.
-solution:Skip full screen width judgment when currently in the StatusBar.
-Product:AH8
-Span:<>
-Build:mpass
-Test:upass
-FID:ID1174956
-Level:A
-
-
-fix[AOSP/SurfaceView]:Adjust surfaceView log level.
-rootcause:There are too many SurfaceView logs.
-solution:Adjust surfaceView log level.
-Product:A21/A18V
-Span:<>
-Build:mpass
-Test:upass
-FID:ID1177843
-Level:A
-
-fix[AOSP/location]:Remove sv-list logs.
-rootcause:There are too many logs from GnssLocationProvider.
-solution:Remove sv-list logs.
-Product:A21/A18V
-Span:<>
-Build:mpass
-Test:upass
-FID:ID1177845
-Level:A
-
-fix[AOSP/framework-res]:Fix android start title err.
-rootcause:Android start title err.
-solution:modify android start title.
-Product:A02
-Span:<>
-Build:mpass
-Test:upass
-FID:ID1187969
-Level:B
-
-fix[fonts]:Replace GacFont with ADiGO5.
-rootcause:GacFont更换成国标字体ADiGO5.
-solution:Replace GacFont with ADiGO5.
-Product:A02
-Span:<>
-Build:mpass
-Test:upass
-FID:noid
-Level:C
-
-fix[fonts]:Replace GacFont with ADiGO5.
-rootcause:GacFont更换成国标字体ADiGO5.
-solution:Replace GacFont with ADiGO5.
-Product:A19
-Span:<>
-Build:mpass
-Test:upass
-FID:noid
-Level:C
-
-fix[AOSP/Dimmer]:Remove FLAG_BLUR_BEHIND judgment.
-rootcause:Dialog has not Dim-layer.
-solution:Remove FLAG_BLUR_BEHIND judgment.
-product:AH8
-span:<>
+1.Replace SourceHanSansCN with ADiGO4_CH.
+2.Replace Roboto with ADiGO4_EN.
+product:A18V/A21
+span:<T58X,A5X,AS9,A18V,A21>
 build:mpass
 test:upass
-fid:ID1210848
+fid:none
+level:none
+
+fix[CarLocationService]:Fix parse utc time err.
+rootcause:Parse utc time err.
+solution:parse utc time err.
+product:A02
+span:none
+build:mpass
+test:upass
+fid:none
+level:none
+
+feat[CarTransition]:Update ADiGO_SOUND window layer.
+rootcause:ADiGO_SOUND widow below NavigationBar.
+solution:Update ADiGO_SOUND window layer.
+product:AH8
+span:none
+build:mpass
+test:upass
+fid:ID1221421
 level:C
 
-fix[AOSP/animation]:Modify default animation.
-rootcause:Animation err.
-solution:
-1.remove overlay style Animation.Activity.
-2.update default animation.
-Product:AH8
-Span:<A02,AH8>
-Build:mpass
-Test:upass
-FID:ID1199368
-Level:B
+fix[AOSP/DialogSplitScreenExt]:Fix Dialog crash err.
+rootcause:App Crash by show dialog.
+solution:Add judgment of owner-activity is not null.
+product:A02
+span:none
+build:mpass
+test:upass
+fid:ID1237712
+level:A
 
-Description: Use RaiteSystemUI.
-JiraID: CS-217
-Module: SystemUI
-Bug or feature: feature
-Team: FW
-Test: pass
+fix[AOSP/DialogSplitScreenExt]:Fix SystemUI display error.
+rootcause:Dialog decorView invisible err.
+solution:Add calculation conditions of owner Activity is fullScreen-width.
+product:A19
+span:<A02,A19>
+build:mpass
+test:upass
+fid:ID1231601
+level:B
 
-Description: fix local inputmethod display err.
+Description: Remove FLatinIME.
 JiraID: RK3588-101
-Module: inputmethod
-Bug or feature: feature
+Module: AOSP
+Bug or feature: Bug
 Team: FW
 Test: pass
+
+Description:Modify SystemUI animation,use swipe animation only.
+JiraID:RK3588-104
+Module:AOSP
+Bug or feature:Bug
+Team:FW
+Test:pass

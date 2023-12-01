@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F9F9F9"
+        android:fitsSystemWindows="true"
         tools:context=".MainActivity2">
 
         <TextView
@@ -30,41 +31,52 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="主屏显示"
-                android:textSize="30sp" />
+                android:textSize="28sp" />
 
             <Button
-                android:id="@+id/startOnSubScreen"
+                android:id="@+id/display1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="副屏显示"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/bindService"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="绑定服务"
-                android:textSize="30sp" />
-
-            <Button
-                android:id="@+id/showSystemUi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="显示stattusBar"
                 android:textAllCaps="false"
-                android:textSize="30sp" />
+                android:text="Display1"
+                android:textSize="28sp" />
 
             <Button
-                android:id="@+id/hideSystemUi"
+                android:id="@+id/display2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="隐藏stattusBar"
                 android:textAllCaps="false"
-                android:textSize="30sp" />
+                android:text="Display2"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/display3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAllCaps="false"
+                android:text="Display3"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/display5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAllCaps="false"
+                android:text="Display5"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/switchSystemUI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="显示隐藏SystemBar"
+                android:textAllCaps="false"
+                android:textSize="28sp" />
 
             <Button
                 android:id="@+id/testBtn"
@@ -72,15 +84,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="测试按钮"
-                android:textSize="30sp" />
+                android:textSize="28sp" />
 
             <Button
                 android:id="@+id/backBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:text="回退"
-                android:textSize="30sp" />
+                android:text="关闭"
+                android:textSize="28sp" />
         </LinearLayout>
 
     </RelativeLayout>

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo">
+<!--    android:sharedUserId="@string/sharedUserId"-->
     <!-- <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" -->
     <!-- tools:ignore="ProtectedPermissions" /> -->
     <application
@@ -13,27 +14,42 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
-        android:persistent="true"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CompanyDemo"
         tools:targetApi="31">
         <activity
-            android:name=".toasttest.ToastTestActivity"
+            android:name=".carotatest.CarOtaTestActivity"
             android:exported="true">
             <!--            <intent-filter>-->
             <!--                <action android:name="android.intent.action.MAIN" />-->
-
             <!--                <category android:name="android.intent.category.LAUNCHER" />-->
             <!--            </intent-filter>-->
         </activity>
         <activity
+            android:name=".toasttest.ToastTestActivity"
+            android:exported="true">
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity android:name=".common.WifiActivity"
+            android:theme="@style/WifiActivity"
+            />
+
+        <activity
             android:name=".activityview.ActivityViewActivity"
             android:exported="false" />
+
         <activity
             android:name=".activityview.StartActivityViewActivity"
             android:exported="false" />
+        <activity
+            android:name=".MDialogActivity"
+            android:exported="true"
+            android:theme="@style/DialogActivity" />
         <activity
             android:name=".DemoActivity"
             android:exported="true">
@@ -51,14 +67,34 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:theme="@style/PermissionDialog">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-        </activity>
 
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
         <activity
             android:name=".image.ImageUtilActivity"
+            android:exported="true">
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale" -->
+        <activity
+            android:name=".locationtest.LocationActivity"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
             android:exported="true">
 
             <!-- <intent-filter> -->
@@ -67,28 +103,6 @@
 
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
-        </activity> <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale" -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:theme="@style/MainActivity"
-            android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".locationtest.LocationActivity"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
-            android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".TestActivity"
@@ -122,7 +136,7 @@
         </activity>
         <activity
             android:name=".common.AppInfoActivity"
-            android:exported="false"
+            android:exported="true"
             android:theme="@style/AppInfoActivity" />
         <activity
             android:name=".VideoPlayerActivity"
@@ -135,7 +149,7 @@
 
         <provider
             android:name=".mediaprovider.MMediaProvider"
-            android:authorities="com.media.my"
+            android:authorities="${applicationId}.media.provider"
             android:exported="true"
             android:multiprocess="false">
             <grant-uri-permission android:pathPrefix="/customer/" />
@@ -144,6 +158,16 @@
                 android:pathPrefix="/customer/"
                 android:readPermission="android.permission.READ_EXTERNAL_STORAGE"
                 android:writePermission="android.permission.WRITE_EXTERNAL_STORAGE" />
+        </provider>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/pathlist" />
         </provider>
         <!--
         这里主要的字段为 authorities ，他是ContentProvider的唯一标识。
@@ -154,16 +178,6 @@
         星号（'*'）匹配紧随其前字符的0次或多次出现。
         句点加星号（“.*”）匹配任何字符的0次或多次出现
         -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/pathlist" />
-        </provider>
-
         <receiver
             android:name=".mediaprovider.MediaScannerReceiver"
             android:exported="true">
@@ -172,19 +186,29 @@
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".broadcast.BootReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+
+<!--        <receiver-->
+<!--            android:name=".broadcast.BootReceiver"-->
+<!--            android:exported="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+
+        <service
+            android:name="com.zlw.main.recorderlib.recorder.RecordService"
+            android:exported="true" />
 
         <service
             android:name=".service.DemoService"
             android:enabled="true"
             android:exported="true"
             android:process="com.exa.companydemo.demoservice" />
+        <service
+            android:name=".service.MDialogService"
+            android:enabled="true"
+            android:exported="true"
+            android:process="com.exa.companydemo.MDialogService" />
         <service
             android:name=".mediaprovider.MediaScannerService"
             android:exported="false"
@@ -232,6 +256,7 @@
         android:name="android.hardware.usb.host"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
         android:name="android.permission.SET_TIME"
         tools:ignore="ProtectedPermissions" />
@@ -240,8 +265,8 @@
         android:name="android.hardware.usb.host"
         android:required="false" />
     <uses-permission android:name="com.gxatek.cockpit.datacenter.permission.DATA_CENTER" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 系统权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 系统权限 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -266,7 +291,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
     <uses-permission android:name="android.permission.MANAGE_ACTIVITY_STACKS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.LOCAL_MAC_ADDRESS" />
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
 </manifest>

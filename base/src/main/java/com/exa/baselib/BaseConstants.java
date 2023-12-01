@@ -11,10 +11,11 @@ import java.util.concurrent.Executors;
  * @author Administrator
  */
 public class BaseConstants {
-    public static String AUTHORITY = "com.media.my";
     public static final String ACTION_MY_PROVIDER_SCAN_FINISH = "com.media.mine.finish";
 
-    public static final Uri CUSTOMER_URI = Uri.parse("content://" + AUTHORITY + "/customer");
+    public static Uri CUSTOMER_URI(String authority){
+        return Uri.parse("content://" + authority + "/customer");
+    }
 
     public static final String FILE_DIR_MUSIC = "/storage/emulated/0/Music/Music";
     public static final String FILE_DIR_IMAGE = "/storage/emulated/0/Music/Image";

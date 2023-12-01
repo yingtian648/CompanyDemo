@@ -1,11 +1,11 @@
 package com.exa.companydemo.test;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
 import android.view.GestureDetector;
@@ -40,17 +40,25 @@ import androidx.annotation.Nullable;
  * @Date 2023/3/10 10:07
  * @Description
  */
-public class BuildTestToast implements Window.Callback, KeyEvent.Callback {
-    private static View dialogView;
-    private static TextView tv;
-    private static Context mContext;
+public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
+    private View dialogView;
+    private TextView tv;
+    private Context mContext;
     private static Window mWindow;
-    private static View mDecor;
-    private static WindowManager mWindowManager;
+    private View mDecor;
     private static boolean mShowing;
+    private static WindowManager mWindowManager;
     private static boolean showSystemBars = true;
+    @SuppressLint("StaticFieldLeak")
+    private static final BuildTestDialog testDialog = new BuildTestDialog();
 
-    public static void makeMyToast(Activity activity) {
+    public static BuildTestDialog getInstance() {
+        return testDialog;
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void makeMyToast(Activity activity) {
         mContext = activity;
         mWindowManager = activity.getWindowManager();
         dialogView = LayoutInflater.from(activity).inflate(R.layout.transient_notification_customer, null, false);
@@ -58,12 +66,7 @@ public class BuildTestToast implements Window.Callback, KeyEvent.Callback {
         tv.setBackgroundResource(R.drawable.toast_customer_normal);
         tv.setText("111111111111111111111111111111111111");
         initGestureDetector(activity);
-        tv.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
-            }
-        });
+        tv.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -73,7 +76,12 @@ public class BuildTestToast implements Window.Callback, KeyEvent.Callback {
         mWindowManager.addView(dialogView, params);
     }
 
-    public void addView(Activity context) {
+    public void addNoteView(Context context){
+        GuideRemindView remindView = new GuideRemindView(context);
+        remindView.showGuideView();
+    }
+
+    public void addView(Context context) {
         mContext = new ContextThemeWrapper(context, R.style.DialogTheme);
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mWindow = new PhoneWindow(mContext);
@@ -84,7 +92,7 @@ public class BuildTestToast implements Window.Callback, KeyEvent.Callback {
         Button cancelBtn = dialogView.findViewById(R.id.cancel_button);
         Button sureBtn = dialogView.findViewById(R.id.sure_button);
         cancelBtn.setOnClickListener(v -> {
-            switchSystemBar();
+            dismiss();
         });
         sureBtn.setOnClickListener(v -> {
             dismiss();
@@ -95,8 +103,8 @@ public class BuildTestToast implements Window.Callback, KeyEvent.Callback {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         }
-        mDecor.setPadding(0,0,0,0);
-        mWindow.setLayout(Tools.getScreenW(context),Tools.getScreenH(context));
+        mDecor.setPadding(0, 0, 0, 0);
+        mWindow.setLayout(Tools.getScreenW(context), Tools.getScreenH(context));
         mDecor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -156,10 +164,10 @@ public class BuildTestToast implements Window.Callback, KeyEvent.Callback {
      * Used to determine the minimum value of user's up-slip gesture
      * The height value of the upward slide is a negative number
      */
-    private static final float SCROLL_UP_HEIGHT = -150F;
-    private static GestureDetector mGestureDetector;
+    private final float SCROLL_UP_HEIGHT = -150F;
+    private GestureDetector mGestureDetector;
 
-    private static void initGestureDetector(Context context) {
+    private void initGestureDetector(Context context) {
         mGestureDetector = new GestureDetector(context, new GestureDetector.OnGestureListener() {
             float startY = 0;
 
@@ -200,14 +208,14 @@ public class BuildTestToast implements Window.Callback, KeyEvent.Callback {
         });
     }
 
-    private static void cancel() {
+    private void cancel() {
         startSlideTopAnimation(tv);
     }
 
     /**
      * slide-top animation
      */
-    private static void startSlideTopAnimation(View view) {
+    private void startSlideTopAnimation(View view) {
         Animation animation = new TranslateAnimation(0, 0, 0, -120);
         animation.setFillAfter(true);
         animation.setAnimationListener(new Animation.AnimationListener() {

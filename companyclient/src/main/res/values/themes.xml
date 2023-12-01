@@ -12,15 +12,16 @@
         <item name="android:windowAnimationStyle">@null</item><!--移除原生动画-->
         <!-- Status bar color. -->
         <!--        <item name="android:windowFullscreen">true</item>-->
-        <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
         <!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
         <!--        <item name="android:windowTranslucentNavigation">false</item>-->
-        <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
         <!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
         <!--        <item name="android:enforceNavigationBarContrast">false</item>-->
     </style>
 
     <style name="Activiy3Style" parent="Theme.CompanyDemo">
-        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 </resources>

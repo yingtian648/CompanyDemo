@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 
 public class MyProviderUtil {
     private static ContentObserver observer;
+    private static final String AUTHORITY = "com.exa.companydemo.media.provider";
 
     public static ContentObserver getObserver() {
         if (observer == null) {
@@ -54,7 +55,7 @@ public class MyProviderUtil {
     public static void registerObserver(Context context, ContentObserver observer) {
         L.dd();
         ContentResolver resolver = context.getContentResolver();
-        resolver.registerContentObserver(BaseConstants.CUSTOMER_URI, true, observer);
+        resolver.registerContentObserver(BaseConstants.CUSTOMER_URI(AUTHORITY), true, observer);
     }
 
     /**
@@ -72,7 +73,7 @@ public class MyProviderUtil {
     public static List<Files> getProviderData(Context context) {
         ContentResolver resolver = context.getContentResolver();
         String[] projection = new String[]{"id", "name", "path", "add_time", "size", "duration"};
-        Cursor cursor = resolver.query(BaseConstants.CUSTOMER_URI,
+        Cursor cursor = resolver.query(BaseConstants.CUSTOMER_URI(AUTHORITY),
                 projection, null, null, null);
         List<Files> dataList = new ArrayList<>();
         while (cursor.moveToNext()) {
@@ -92,7 +93,7 @@ public class MyProviderUtil {
 
     public static void deleteById(Context context, String id) {
         ContentResolver resolver = context.getContentResolver();
-        int result = resolver.delete(BaseConstants.CUSTOMER_URI, "id=" + id, null);
+        int result = resolver.delete(BaseConstants.CUSTOMER_URI(AUTHORITY), "id=" + id, null);
         L.d("deleteById: " + id + "  result:" + result);
     }
 
@@ -100,7 +101,7 @@ public class MyProviderUtil {
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
         values.put("name", "妈妈叫你回家吃饭");
-        int result = resolver.update(BaseConstants.CUSTOMER_URI, values, "id=" + files.id, null);
+        int result = resolver.update(BaseConstants.CUSTOMER_URI(AUTHORITY), values, "id=" + files.id, null);
         L.d("updateData result:" + result + " " + files);
     }
 
@@ -108,7 +109,7 @@ public class MyProviderUtil {
         ContentResolver resolver = context.getContentResolver();
         ContentValues values = new ContentValues();
         values.put("name", "客户端插入name");
-        Uri uri = resolver.insert(BaseConstants.CUSTOMER_URI, values);
+        Uri uri = resolver.insert(BaseConstants.CUSTOMER_URI(AUTHORITY), values);
         L.d("insert uri:" + uri + "  files:" + files);
     }
 }

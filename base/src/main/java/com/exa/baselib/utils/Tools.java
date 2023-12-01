@@ -45,6 +45,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.exa.baselib.BuildConfig;
 import com.exa.baselib.bean.AppInfo;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -175,6 +176,16 @@ public class Tools {
                     .append(", densityDpi=")
                     .append(metrics.densityDpi);
             buffer.append("\n");
+        }
+        PackageManager pm = context.getPackageManager();
+
+        L.w("Android OS is " + Build.VERSION.RELEASE + " , SDK_INT= " + Build.VERSION.SDK_INT);
+        try {
+            int versionCode = pm.getPackageInfo(context.getPackageName(), 0).versionCode;
+            String versionName = pm.getPackageInfo(context.getPackageName(), 0).versionName;
+            L.w("App versionCode=" + versionCode + ", versionName=" + versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
         }
         L.w(buffer.toString());
     }

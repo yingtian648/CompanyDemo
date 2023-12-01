@@ -1,7 +1,6 @@
 package com.exa.companydemo.activityview
 
 import android.annotation.SuppressLint
-import android.app.ActivityView
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle

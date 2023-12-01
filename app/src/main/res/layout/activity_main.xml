@@ -1,324 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/window_bg"
-    android:focusableInTouchMode="true"
-    tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.exa.companydemo.widget.EndLineView
-        android:id="@+id/elv"
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@drawable/win_bg"
+        android:focusableInTouchMode="true"
+        tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/msgT"
-        android:layout_width="match_parent"
-        android:layout_height="200px"
-        android:padding="10dp"
-        android:hint="desc..."
-        android:textSize="36dp"
-        android:typeface="monospace"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        <com.exa.companydemo.widget.EndLineView
+            android:id="@+id/elv"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="30dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <EditText
-            android:id="@+id/edt"
-            android:layout_width="700dp"
-            android:layout_height="200dp"
-            android:background="@color/purple_200"
-            android:hint="输入框..."
-            android:paddingHorizontal="30dp"
-            android:textSize="30sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/btnBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
-
-        <Button
-            android:id="@+id/btnSystemUI"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="SystemUi测试"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="30px"
+        <com.exa.companydemo.widget.Titlebar
+            android:id="@+id/toolbar"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
             />
 
-        <Button
-            android:id="@+id/btnPlay"
+        <EditText
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:ellipsize="end"
+            android:background="@color/green"
+            android:hint="@string/font_words_signal"
+            android:textSize="36sp"
+            android:paddingStart="120dp"
+            android:paddingEnd="120dp"
+            android:visibility="visible"
+            android:fontFamily="serif"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            />
+
+        <TextView
+            android:id="@+id/msgT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="200dp"
+            android:padding="10dp"
+            android:hint="desc..."
+            android:gravity="end"
+            android:textSize="20sp"
+            android:maxLines="3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <include
+            layout="@layout/layout_fonts"
+            android:id="@+id/fontsBox"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_margin="10dp"
-            android:text="视频播放"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="30px" />
-
-        <Button
-            android:id="@+id/btnMode"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="工程模式"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="30px" />
-
-        <Button
-            android:id="@+id/btnNightMode"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="白天黑夜"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="30px" />
-
-
-        <Button
-            android:id="@+id/btnApp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginTop="10dp"
-            android:text="LocationTest"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="30px" />
-
-        <Button
-            android:id="@+id/btn2"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginTop="10dp"
-            android:text="AppInfos"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="30px" />
-
-        <Button
-            android:id="@+id/btn3"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginTop="10dp"
-            android:text="TestActivity"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="30px" />
-
-        <Button
-            android:id="@+id/btn4"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            android:background="@color/btn_bg"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_marginTop="10dp"
-            android:text="测试按钮"
-            android:textAllCaps="false"
-            android:textColor="@color/text_color"
-            android:textSize="30px" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/fontsBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar">
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/font_words"
-            android:textSize="36dp" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/text0"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:textStyle="bold"
-            android:hint="text0"
-            android:text="@string/font_style_words"
-            android:textSize="36dp" />
+            <LinearLayout
+                android:id="@+id/btnBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:fontFamily="@string/gac_font_regular"
-            android:text="@string/font_words_GacFont_Regular"
-            android:hint="text1"
-            android:textSize="36dp" />
+                <Button
+                    android:id="@+id/btnSystemUI"
+                    android:text="SystemUi测试"
+                    style="@style/main_btn"
+                    />
 
-        <TextView
-            android:id="@+id/text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:fontFamily="@string/gac_font_medium"
-            android:text="@string/font_words_GacFont_Medium"
-            android:hint="text2"
-            android:textSize="36dp" />
+                <Button
+                    android:id="@+id/btnPlay"
+                    android:text="视频播放"
+                    style="@style/main_btn" />
 
-        <TextView
-            android:id="@+id/text3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:fontFamily="@string/gac_font_bold"
-            android:text="@string/font_words_GacFont_Bold"
-            android:hint="text3"
-            android:textSize="36dp" />
+                <Button
+                    android:id="@+id/btnEngineMode"
+                    android:text="工程模式"
+                    style="@style/main_btn" />
 
-        <TextView
-            android:id="@+id/text4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:fontFamily="sans-serif"
-            android:textStyle="bold"
-            android:text="@string/font_words_sans_serif_bold"
-            android:textSize="36dp" />
+                <Button
+                    android:id="@+id/btnNightMode"
+                    android:text="白天黑夜"
+                    style="@style/main_btn" />
 
-        <TextView
-            android:id="@+id/text5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:fontFamily="@string/roboto_bold"
-            android:text="@string/font_words_roboto_bold"
-            android:hint="text5"
-            android:textSize="36dp" />
 
-        <TextView
-            android:id="@+id/text6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:fontFamily="@string/SourceHanSansCN_Bold"
-            android:text="@string/font_words_SourceHanSansCN_Bold"
-            android:hint="text6"
-            android:textSize="36dp" />
+                <Button
+                    android:id="@+id/btnLocation"
+                    android:text="Location测试"
+                    style="@style/main_btn" />
 
-        <TextView
-            android:id="@+id/text7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:hint="text7"
-            android:text="@string/font_words_SourceHanSansCN_Normal"
-            android:fontFamily="@string/SourceHanSansCN_Normal"
-            android:textSize="36dp" />
+                <Button
+                    android:id="@+id/btnToast"
+                    android:text="Toast测试"
+                    style="@style/main_btn" />
 
-        <TextView
-            android:id="@+id/text8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@null"
-            android:text="@string/font_words_SourceHanSansCN_Regular"
-            android:fontFamily="@string/SourceHanSansCN_Regular"
-            android:hint="text8"
-            android:textSize="36dp" />
-    </LinearLayout>
+                <Button
+                    android:id="@+id/btnAppList"
+                    android:text="App列表"
+                    style="@style/main_btn" />
 
-    <com.exa.companydemo.widget.Titlebar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="退出"
-        android:gravity="center_vertical"
-        app:titleTextColor="@color/white" />
+                <Button
+                    android:id="@+id/btnTestActivity"
+                    android:text="TestActivity"
+                    style="@style/main_btn" />
 
-    <EditText
-        android:id="@+id/edit"
-        android:layout_width="match_parent"
-        android:background="@color/green"
-        android:text="@string/font_words_signal"
-        android:textSize="32px"
-        android:paddingStart="120px"
-        android:paddingEnd="120px"
-        android:layout_height="100px"
-        android:fontFamily="monospace"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
-        />
+                <Button
+                    android:id="@+id/btnTest"
+                    android:text="测试按钮"
+                    style="@style/main_btn" />
+            </LinearLayout>
 
-<!--    android:fontFamily="monospace"-->
+        </ScrollView>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="500px"
-        android:layout_height="500px"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="500px"
+            android:layout_height="500px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/tvel"
+            android:layout_width="500px"
+            android:layout_height="500px"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

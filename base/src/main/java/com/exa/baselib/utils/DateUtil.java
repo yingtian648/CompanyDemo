@@ -61,6 +61,12 @@ public class DateUtil {
         return simpleDateFormat.format(new Date(time));
     }
 
+    public static String getFullSTime(long time){
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL_MS);
+        return simpleDateFormat.format(new Date(time));
+    }
+
     public static long getFullTimeMillis(String fullTime){
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL);
