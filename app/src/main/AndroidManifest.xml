@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo">
-<!--    android:sharedUserId="@string/sharedUserId"-->
+    <!--    android:sharedUserId="@string/sharedUserId"-->
     <!-- <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" -->
     <!-- tools:ignore="ProtectedPermissions" /> -->
     <application
@@ -35,9 +35,9 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <activity android:name=".common.WifiActivity"
-            android:theme="@style/WifiActivity"
-            />
+        <activity
+            android:name=".common.WifiActivity"
+            android:theme="@style/WifiActivity" />
 
         <activity
             android:name=".activityview.ActivityViewActivity"
@@ -83,11 +83,13 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:exported="true"
-            android:theme="@style/MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize">
-            <intent-filter>
+            android:resizeableActivity="true"
+            android:theme="@style/MainActivity">
+            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
@@ -187,13 +189,13 @@
             </intent-filter>
         </receiver>
 
-<!--        <receiver-->
-<!--            android:name=".broadcast.BootReceiver"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+        <!--        <receiver-->
+        <!--            android:name=".broadcast.BootReceiver"-->
+        <!--            android:exported="true">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
 
         <service
             android:name="com.zlw.main.recorderlib.recorder.RecordService"

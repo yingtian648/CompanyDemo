@@ -1,7 +1,11 @@
 package com.exa.companyclient
 
 import android.app.Dialog
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.ACTION_PACKAGE_ADDED
+import android.content.IntentFilter
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.widget.Button
@@ -41,6 +45,16 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
         bind.closeBtn.setOnClickListener {
             L.d("关闭按钮")
             finish()
+        }
+        L.dd(javaClass.simpleName + "注册广播PACKAGE_ADDED")
+        val filter = IntentFilter()
+        filter.addAction(ACTION_PACKAGE_ADDED)
+        registerReceiver(PkgReceiver(), filter)
+    }
+
+    class PkgReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            L.dd(intent?.action)
         }
     }
 

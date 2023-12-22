@@ -2,19 +2,11 @@ package com.exa.companydemo
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.UiModeManager
 import android.content.*
-import android.graphics.Color
-import android.hardware.display.DisplayManager
-import android.net.wifi.WifiManager
+import android.content.Intent.*
 import android.os.*
-import android.view.Display
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import android.view.WindowManager
-import com.android.internal.policy.PhoneWindow
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.*
@@ -41,8 +33,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private val networkManager: NetworkManager? = null
 
     override fun setContentViewLayoutId(): Int {
-//        ScreenUtils.setFullScreen(this);
-//        StatubarUtil.setStatusBarInvasion(this, false);
         return R.layout.activity_main
     }
 
@@ -59,23 +49,27 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun initView() {
-        //设置屏幕亮度
-//        Tools.setScreenBrightness(this, 50)
-//        checkPermission()
         modeManager = getSystemService(UiModeManager::class.java)
         L.d("黑夜模式：" + TestUtil.getUiModeStr(modeManager))
-//        TestUtil.registerFullScreenListener(this);
-//        TestUtil.registerBroadcast(this);
+        bind.toolbar.setSubTitle("返回 (wifi:" + NetworkManager.getInstance(this).getWifiIp() + ")")
         bind.toolbar.setNavigationOnClickListener { v -> finish() }
         bind.toolbar.subTitleTextView?.setOnClickListener { v -> finish() }
         bind.edit.setOnEditorActionListener { v, actionId, event ->
             Tools.hideKeyboard(bind.edit)
             false
         }
-        // 沉浸式
-//        ScreenUtils.setStatusBarAndNavigationBarInvasion(this)
+        doAfterInitView()
+    }
 
-        L.dd("777")
+    private fun doAfterInitView(){
+        //设置屏幕亮度
+//        Tools.setScreenBrightness(this, 50)
+//        checkPermission()
+//        TestUtil.registerFullScreenListener(this);
+//        TestUtil.registerBroadcast(this);
+        // 沉浸式
+        ScreenUtils.setStatusBarInvasion(this)
+        L.dd("55")
     }
 
     @SuppressLint("RestrictedApi", "WrongConstant", "Range", "UnspecifiedImmutableFlag")
@@ -95,15 +89,14 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //            TestDialog.showLayout(this)
 //            window.navigationBarColor  = 0
 //        }, 3000)
-        TestDialog.showDialog(this)
+//        TestDialog.showDialog(this)
 //        TestDialog.showAlertDialog(this)
 //        TestDialog.showMyDialog(this,"121212",-1)
 //        TestDialog.showLayout(this)
-
 //        TestUtil.testSensorData(mContext);
 //        L.dd("isTelephonyNetEnable:" + networkManager.isTelephonyDataEnable());WifiActivity
 //        networkManager.switchTelephonyDataEnable();
-//        Toast.makeText(this, "测试Toast: " + index, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "测试Toast wifi: " + index, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -118,7 +111,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             if (sysUiVis and View.SYSTEM_UI_FLAG_HIDE_NAVIGATION != 0) {
                 L.dd("导航栏 已隐藏")
             }
-        }, 3000)
+        }, 2000)
     }
 
     @SuppressLint("WrongConstant")

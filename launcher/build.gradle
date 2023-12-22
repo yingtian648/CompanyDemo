@@ -11,7 +11,7 @@ android {
         applicationId "com.gxatek.cockpit.launcher"
         minSdk 25
         targetSdk 33
-        versionCode 10000
+        versionCode 9999
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

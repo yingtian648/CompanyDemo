@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
@@ -35,6 +37,8 @@ import java.util.Date;
 import androidx.activity.ComponentActivity;
 import androidx.appcompat.app.AlertDialog;
 
+import static android.content.Intent.ACTION_PACKAGE_ADDED;
+
 public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implements View.OnClickListener {
     private int index = 0;
     private boolean mShowSystemUI = true;
@@ -47,6 +51,17 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
     @Override
     protected void initView() {
         logScreenInfo();
+        L.dd(getClass().getSimpleName()+"注册广播PACKAGE_ADDED");
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_PACKAGE_ADDED);
+        registerReceiver(new PkgReceiver(), filter);
+    }
+
+    static class PkgReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.dd("onReceive:" + intent.getAction());
+        }
     }
 
     @Override

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.ScreenUtils;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        L.dd();
         mContext = this;
         setContentView(R.layout.activity_main);
         initData();
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     }
 
     private void test() {
-
+        getWindow().setSoftInputMode(3);
     }
 
     private void registerWindowChangedListener() {
@@ -150,5 +153,17 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
                 onClickItem(getLayoutPosition());
             });
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        L.dd();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        L.dd();
     }
 }

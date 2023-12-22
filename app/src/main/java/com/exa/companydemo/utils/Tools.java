@@ -2,6 +2,7 @@ package com.exa.companydemo.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.media.MediaMetadataRetriever;
@@ -29,6 +30,8 @@ import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class Tools {
 
     /**
@@ -38,6 +41,13 @@ public class Tools {
     public static double getDoubleFormatD(double res) {
         java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
         return Double.parseDouble(df.format(res));
+    }
+
+    public static void goHome(Context context) {
+        Intent homeIntent = new Intent("android.intent.action.MAIN");
+        homeIntent.addCategory("android.intent.category.HOME");
+        homeIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(homeIntent);
     }
 
     // Window截屏

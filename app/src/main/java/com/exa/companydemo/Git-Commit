@@ -14,13 +14,21 @@ Bug or feature: feature
 Team: FW
 Test: pass
 
+fix[fonts]:Update ADiGO5 fonts file.
+rootcause:替换新国标字体文件.
+solution:Update ADiGO5 fonts file.
+product:A02/A19
+span:<A02,A19>
+build:mpass
+test:upass
+fid:ID1240439
+level:B
+
 feat[fonts]:Import ADiGO4_FONT.
-rootcause:Import ADiGO4_FONT.
-solution:
-1.Replace SourceHanSansCN with ADiGO4_CH.
-2.Replace Roboto with ADiGO4_EN.
+rootcause:引入新国标字体ADiGO4.
+solution:Import ADiGO4_FONT.
 product:A18V/A21
-span:<T58X,A5X,AS9,A18V,A21>
+span:<AS9,T58X,A5X,A18V,A21>
 build:mpass
 test:upass
 fid:none
@@ -36,15 +44,15 @@ test:upass
 fid:none
 level:none
 
-feat[CarTransition]:Update ADiGO_SOUND window layer.
-rootcause:ADiGO_SOUND widow below NavigationBar.
-solution:Update ADiGO_SOUND window layer.
-product:AH8
+fix[ProcManager]:Add com.iflytek.autofly.mediax.second whitlist.
+rootcause:副屏聚合媒体被ProcManager杀死.
+solution:Add com.iflytek.autofly.mediax.second whitlist.
+product:A8E
 span:none
 build:mpass
 test:upass
-fid:ID1221421
-level:C
+fid:JARA-A58A88GOS2-44270
+level:B
 
 fix[AOSP/DialogSplitScreenExt]:Fix Dialog crash err.
 rootcause:App Crash by show dialog.
@@ -66,16 +74,16 @@ test:upass
 fid:ID1231601
 level:B
 
-Description: Remove FLatinIME.
-JiraID: RK3588-101
+Description: Add screenOff window title.
+JiraID: CS-237
 Module: AOSP
 Bug or feature: Bug
 Team: FW
 Test: pass
 
-Description:Modify SystemUI animation,use swipe animation only.
-JiraID:RK3588-104
+Description:Modify CarLatinIME ui.
+JiraID:NA.
 Module:AOSP
-Bug or feature:Bug
+Bug or feature:feature
 Team:FW
 Test:pass

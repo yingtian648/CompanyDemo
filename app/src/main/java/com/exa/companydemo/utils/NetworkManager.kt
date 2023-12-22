@@ -1,6 +1,7 @@
 package com.exa.companydemo.utils
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,6 +15,7 @@ import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
 import androidx.core.app.ActivityCompat
+import com.exa.baselib.utils.L
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
 
@@ -62,6 +64,8 @@ class NetworkManager private constructor(private val mContext: Context) {
         const val NETWORK_TYPE_WIFI = 1
         const val NETWORK_TYPE_MOBILE = 2
         const val NETWORK_TYPE_UNKNOWN = 3
+
+        @SuppressLint("StaticFieldLeak")
         private var mInstance: NetworkManager? = null
 
         fun getInstance(context: Context): NetworkManager {
@@ -113,6 +117,23 @@ class NetworkManager private constructor(private val mContext: Context) {
         } else {
             mTelephonyManager.isDataEnabled
         }
+    }
+
+    fun getWifiIp(): String {
+        mWifiManager.connectionInfo?.apply {
+            val ip = ipAddress
+            L.d("ip=$ip")
+            val split = "."
+            return try {
+                (ip and 0xFF).toString() + split +
+                        (ip shr 8 and 0xFF) + split +
+                        (ip shr 16 and 0xFF) + split +
+                        (ip shr 24 and 0xFF)
+            } catch (e: Exception) {
+                "err"
+            }
+        }
+        return "wifiInfo is null"
     }
 
     fun switchTelephonyDataEnable() {

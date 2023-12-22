@@ -38,7 +38,7 @@ public class L {
     public static void init(String tag, boolean isLog) {
         L.TAG = tag;
         L.isLog = isLog;
-        w("Application init Log");
+        w("init Log tag:" + tag);
     }
 
     public static void d(String msg) {
