@@ -46,15 +46,15 @@ test:upass
 fid:ID1221421
 level:C
 
-fix[AOSP/DialogSplitScreenExt]:Fix Dialog crash err.
-rootcause:App Crash by show dialog.
-solution:Add judgment of owner-activity is not null.
-product:A02
+fix[Toast]:Fix secondary screen Toast display err.
+rootcause:Toast display err on secondary screen.
+solution:Update secondary screen Toast resource file.
+product:AH8
 span:none
 build:mpass
 test:upass
-fid:ID1237712
-level:A
+fid:ID1252051
+level:C
 
 fix[AOSP/DialogSplitScreenExt]:Fix SystemUI display error.
 rootcause:Dialog decorView invisible err.

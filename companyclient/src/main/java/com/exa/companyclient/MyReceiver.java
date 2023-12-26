@@ -11,9 +11,18 @@ import com.exa.baselib.utils.Tools;
  * com.exa.companyclient.ACTION_OPEN_CLIENT
  */
 public class MyReceiver extends BroadcastReceiver {
+    private String TAG = "MyReceiver";
+
+    public MyReceiver() {
+    }
+
+    public MyReceiver(String tag) {
+        TAG = tag;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        L.d("MyReceiver#onReceive:" + intent.getAction());
+        L.w(TAG + "#onReceive:" + intent.getAction());
         Tools.startAppByClassName(context.getApplicationContext(), MainActivity.class.getName());
     }
 }

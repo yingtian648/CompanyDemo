@@ -1,57 +1,44 @@
 package com.exa.systemui;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
-import android.app.Service;
 import android.app.UiModeManager;
-import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ParceledListSlice;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.PatternMatcher;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.os.UserHandle;
 import android.util.Log;
 import android.view.Display;
-import android.view.DisplayInfo;
 import android.view.Gravity;
-import android.view.IDisplayFoldListener;
-import android.view.IDisplayWindowListener;
-import android.view.IPinnedStackController;
-import android.view.IPinnedStackListener;
-import android.view.ISystemGestureExclusionListener;
 import android.view.IWallpaperVisibilityListener;
 import android.view.IWindowManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewRootImpl;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 
-import com.android.internal.policy.IShortcutService;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.RegisterStatusBarResult;
 import com.exa.baselib.utils.L;
-
-import com.exa.systemui.common.Dependency;
 import com.exa.systemui.minterface.IConfigChangedListener;
 
-import java.util.Locale;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
+import static com.exa.systemui.common.BarTransitions.MODE_LIGHTS_OUT;
+import static com.exa.systemui.common.BarTransitions.MODE_LIGHTS_OUT_TRANSPARENT;
+import static com.exa.systemui.common.BarTransitions.MODE_OPAQUE;
+import static com.exa.systemui.common.BarTransitions.MODE_SEMI_TRANSPARENT;
+import static com.exa.systemui.common.BarTransitions.MODE_TRANSLUCENT;
+import static com.exa.systemui.common.BarTransitions.MODE_TRANSPARENT;
 
 public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListener {
 
@@ -70,6 +57,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
     private MCommandQueue mCommandQueue;
     private DisplayManager mDisplayManager;
     private int mNightMode;
+    private int mSystemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -153,52 +141,6 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
             L.e("Cannot get WindowManager.");
             return;
         }
-        try {// 注册寄存器堆栈监听
-            mWindowManagerService.registerPinnedStackListener(mDisplayId, new IPinnedStackListener.Stub() {
-                @Override
-                public void onListenerRegistered(IPinnedStackController iPinnedStackController) throws RemoteException {
-                    L.dd();
-                }
-
-                @Override
-                public void onMovementBoundsChanged(boolean b) throws RemoteException {
-                    L.dd();
-                }
-
-                @Override
-                public void onImeVisibilityChanged(boolean b, int i) throws RemoteException {
-                    L.dd();
-                }
-
-                @Override
-                public void onActionsChanged(ParceledListSlice parceledListSlice) throws RemoteException {
-                    L.dd();
-                }
-
-                @Override
-                public void onActivityHidden(ComponentName componentName) throws RemoteException {
-                    L.dd();
-                }
-
-                @Override
-                public void onDisplayInfoChanged(DisplayInfo displayInfo) throws RemoteException {
-                    L.dd();
-                }
-
-                @Override
-                public void onConfigurationChanged() throws RemoteException {
-                    L.dd();
-                }
-
-                @Override
-                public void onAspectRatioChanged(float v) throws RemoteException {
-                    L.dd();
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            L.e("registerPinnedStackListener err", e);
-        }
         try {
             // 墙纸可见性改变
             mWindowManagerService.registerWallpaperVisibilityListener(new IWallpaperVisibilityListener.Stub() {
@@ -273,26 +215,48 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         }, null);
     }
 
-    // MCommandQueue 回调-打断瞬态
     @Override
-    public void abortTransient(int displayId, int[] types) {
-        // 移除——延时隐藏瞬态systemui
-        mHandler.removeCallbacksAndMessages(null);
+    public void setSystemUiVisibility(int displayId, int vis, int fullscreenStackVis,
+                                      int dockedStackVis, int mask, Rect fullscreenStackBounds,
+                                      Rect dockedStackBounds, boolean navbarColorManagedByIme) {
+        final int oldVal = mSystemUiVisibility;
+        final int newVal = (oldVal & ~mask) | (vis & mask);
+        L.dd("oldVal=" + oldVal + ", newVal=" + newVal);
+        final int diff = newVal ^ oldVal;
+        boolean nbModeChanged = false;
+        if (diff != 0) {
+            mSystemUiVisibility = newVal;
+
+        }
     }
 
-    // MCommandQueue 回调-显示瞬态
-    @Override
-    public void showTransient(int displayId, int[] types) {
-        // 延时隐藏瞬态systemui
-//        mHandler.postDelayed(() -> hideTransient(displayId), 2500);
+    private int computeBarMode(int oldVis, int newVis) {
+        final int oldMode = barMode(oldVis);
+        final int newMode = barMode(newVis);
+        if (oldMode == newMode) {
+            return -1; // no mode change
+        }
+        return newMode;
     }
 
-    // 隐藏瞬态systemui
-    private void hideTransient(int displayId) {
-        try {
-            mWindowManagerService.hideTransientBars(displayId);
-        } catch (RemoteException ex) {
-            Log.w(TAG, "Cannot get WindowManager");
+    private int barMode(int vis) {
+        final int NAVIGATION_BAR_TRANSPARENT = 0x00008000;
+        final int NAVIGATION_BAR_TRANSLUCENT = 0x80000000;
+        final int NAVIGATION_BAR_TRANSIENT = 0x08000000;
+        final int lightsOutTransparent =
+                View.SYSTEM_UI_FLAG_LOW_PROFILE | NAVIGATION_BAR_TRANSIENT;
+        if ((vis & NAVIGATION_BAR_TRANSIENT) != 0) {
+            return MODE_SEMI_TRANSPARENT;
+        } else if ((vis & NAVIGATION_BAR_TRANSLUCENT) != 0) {
+            return MODE_TRANSLUCENT;
+        } else if ((vis & lightsOutTransparent) == lightsOutTransparent) {
+            return MODE_LIGHTS_OUT_TRANSPARENT;
+        } else if ((vis & NAVIGATION_BAR_TRANSPARENT) != 0) {
+            return MODE_TRANSPARENT;
+        } else if ((vis & View.SYSTEM_UI_FLAG_LOW_PROFILE) != 0) {
+            return MODE_LIGHTS_OUT;
+        } else {
+            return MODE_OPAQUE;
         }
     }
 }

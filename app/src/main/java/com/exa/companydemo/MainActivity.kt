@@ -35,18 +35,16 @@ import java.util.*
  */
 class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListener {
     private var isFullScreen = false
-
     private var modeManager: UiModeManager? = null
+    private var networkManager: NetworkManager? = null
     private var index = 0
-    private val networkManager: NetworkManager? = null
 
     override fun setContentViewLayoutId(): Int {
-//        ScreenUtils.setFullScreen(this);
-//        StatubarUtil.setStatusBarInvasion(this, false);
         return R.layout.activity_main
     }
 
-    override fun initData() {
+    @SuppressLint("ResourceType", "SetTextI18n")
+    override fun initView() {
         val clickIds = intArrayOf(
             R.id.btnLocation, R.id.btnSystemUI, R.id.btnPlay,
             R.id.btnAppList, R.id.btnTestActivity, R.id.btnToast,
@@ -55,23 +53,24 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         for (clickId in clickIds) {
             findViewById<View>(clickId).setOnClickListener(this)
         }
-    }
-
-    @SuppressLint("ResourceType", "SetTextI18n")
-    override fun initView() {
-        //设置屏幕亮度
-//        Tools.setScreenBrightness(this, 50)
-//        checkPermission()
+        networkManager = NetworkManager.getInstance(this)
         modeManager = getSystemService(UiModeManager::class.java)
         L.d("黑夜模式：" + TestUtil.getUiModeStr(modeManager))
-//        TestUtil.registerFullScreenListener(this);
-//        TestUtil.registerBroadcast(this);
         bind.toolbar.setNavigationOnClickListener { v -> finish() }
+        bind.toolbar.setSubTitle("返回 (wifi:${networkManager?.getWifiIp()})")
         bind.toolbar.subTitleTextView?.setOnClickListener { v -> finish() }
         bind.edit.setOnEditorActionListener { v, actionId, event ->
             Tools.hideKeyboard(bind.edit)
             false
         }
+    }
+
+    override fun initData() {
+        //设置屏幕亮度
+//        Tools.setScreenBrightness(this, 50)
+//        checkPermission()
+//        TestUtil.registerFullScreenListener(this);
+//        TestUtil.registerBroadcast(this);
         // 沉浸式
 //        ScreenUtils.setStatusBarAndNavigationBarInvasion(this)
 
@@ -95,7 +94,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //            TestDialog.showLayout(this)
 //            window.navigationBarColor  = 0
 //        }, 3000)
-        TestDialog.showDialog(this)
+//        TestDialog.showDialog(this)
 //        TestDialog.showAlertDialog(this)
 //        TestDialog.showMyDialog(this,"121212",-1)
 //        TestDialog.showLayout(this)
@@ -104,6 +103,12 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        L.dd("isTelephonyNetEnable:" + networkManager.isTelephonyDataEnable());WifiActivity
 //        networkManager.switchTelephonyDataEnable();
 //        Toast.makeText(this, "测试Toast: " + index, Toast.LENGTH_SHORT).show();
+
+        TestUtil.installPackage(
+            this,
+            "/mnt/user/0/emulated/0/Download/shihuademo.apk",
+            "com.exa.companydemo"
+        )
     }
 
 
@@ -225,7 +230,17 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                     )
                 }, 2000)
             }
-            R.id.btnEngineMode -> Utils.openApp(this, "com.android.engmode")
+            R.id.btnEngineMode -> {
+                val engineAppList = arrayListOf(
+                    "com.android.engmode",
+                    "com.gxatek.cockpit.diagnostic"
+                )
+                for (item in engineAppList) {
+                    if (Utils.openApp(this, item)) {
+                        break
+                    }
+                }
+            }
             R.id.btnTest -> try {
                 test()
             } catch (e: Exception) {

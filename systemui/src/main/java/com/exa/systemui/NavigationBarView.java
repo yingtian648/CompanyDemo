@@ -6,13 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowInsetsController;
 
-import com.android.internal.view.AppearanceRegion;
 import com.exa.baselib.utils.L;
 import com.exa.systemui.databinding.SystemUiNavigationbarBinding;
 import com.exa.systemui.minterface.IConfigChangedListener;
@@ -61,17 +59,6 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
             mRootView.findViewById(id).setOnClickListener(this);
         }
         updateIconColor();
-    }
-
-    @Override
-    public void onSystemBarAppearanceChanged(int displayId, int appearance, AppearanceRegion[] appearanceRegions, boolean navbarColorManagedByIme) {
-        // 设置白天黑夜模式对应的背景色
-        if (displayId != mDisplayId) return;
-        // 响应沉浸式-亮色状态栏-亮色导航栏 8=亮色，0=非亮色
-        if (mAppearance != appearance) {
-            mAppearance = appearance;
-            updateIconColor();
-        }
     }
 
     private void updateIconColor() {

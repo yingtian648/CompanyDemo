@@ -13,8 +13,10 @@
         <com.exa.companydemo.widget.EndLineView
             android:id="@+id/elv"
             android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="0dp"/>
 
         <com.exa.companydemo.widget.Titlebar
             android:id="@+id/toolbar"

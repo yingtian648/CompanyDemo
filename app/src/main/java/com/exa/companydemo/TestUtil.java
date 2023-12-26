@@ -1,6 +1,7 @@
 package com.exa.companydemo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageInstaller;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.graphics.Typeface;
@@ -51,8 +53,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -110,13 +115,59 @@ public class TestUtil {
 
     }
 
-    public static void setFull(Window window,Context context,boolean isFull){
+    /**
+     * need system sign
+     *
+     * @param context
+     * @param filePath
+     * @param packageName
+     */
+    @SuppressLint("WrongConstant")
+    public static void installPackage(Context context, String filePath, String packageName) {
+        L.dd();
         try {
-            Window.class.getDeclaredMethod("setFullScreen", Context.class, Boolean.TYPE).invoke(window, context, isFull);
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            L.dd("err");
+            PackageInstaller packageInstaller = context.getPackageManager().getPackageInstaller();
+            int createSession = packageInstaller.createSession(new PackageInstaller.SessionParams(1));
+            PackageInstaller.Session openSession = packageInstaller.openSession(createSession);
+            File file = new File(filePath);
+            BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            long length = fileAttributes.isDirectory() ? 0 : fileAttributes.size();
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+            OutputStream openWrite = openSession.openWrite("app_store_session", 0, length);
+            byte[] bArr = new byte[65536];
+            while (true) {
+                int read = fileInputStream.read(bArr);
+                if (read != -1) {
+                    openWrite.write(bArr, 0, read);
+                } else {
+                    openSession.fsync(openWrite);
+                    fileInputStream.close();
+                    openWrite.close();
+                    Intent intent = new Intent(context, InstallReceiver.class);
+                    intent.setAction(InstallReceiver.INSTALL_ACTION);
+                    intent.putExtra(InstallReceiver.PACKAGE_NAME, packageName);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, createSession,
+                            intent, 201326592);
+                    openSession.commit(pendingIntent.getIntentSender());
+                    openSession.close();
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            L.de("Exception:" + e.getMessage());
         }
     }
+
+    private static class InstallReceiver extends BroadcastReceiver {
+        public static final String INSTALL_ACTION = "cn.gaei.appstore.install";
+        public static final String PACKAGE_NAME = "package_name";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            L.d("InstallReceiver", "onReceive:" + intent.getAction());
+        }
+    }
+
 
     /**
      * 设置提醒

@@ -2,6 +2,7 @@ package com.exa.companyclient
 
 import android.app.Dialog
 import android.content.Context
+import android.content.IntentFilter
 import android.hardware.display.DisplayManager
 import android.os.Bundle
 import android.widget.Button
@@ -47,12 +48,18 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
     private fun test() {
         index++
         L.dd("$index")
-        Toast.makeText(this, "副屏测试Toast $index", Toast.LENGTH_SHORT).show()
+        var msg =
+            "副屏测试Toast $index toast_max_width=" + resources.getDimensionPixelSize(R.dimen.toast_max_width)
+        msg = "一二三四"
+        msg = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十"
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 //        showDialog()
     }
 
     override fun initData() {
         ScreenUtils.hideStatusBars(this)
+
+        TestReceiver("display1").registerReceiver(this)
     }
 
     private fun showDialog() {

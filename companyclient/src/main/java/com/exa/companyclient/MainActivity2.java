@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
@@ -60,9 +61,8 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
         bind.testBtn.setOnClickListener(this);
         bind.backBtn.setOnClickListener(this);
 
-//        bind.backBtn.postDelayed(() -> {
-//            startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 3);
-//        },5000);
+
+        new TestReceiver("display0").registerReceiver(this);
     }
 
     /**
@@ -111,12 +111,16 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
     private void test() {
         L.dd();
         index++;
-//        Toast.makeText(App.getContext(),"主屏测试Toast " + index,Toast.LENGTH_SHORT).show();
-        Dialog dialog = new Dialog(this);
-        dialog.setOwnerActivity(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
-        dialog.setContentView(view);
-        dialog.show();
+        String msg =
+                "副屏测试Toast $index toast_max_width=" + getResources().getDimensionPixelSize(R.dimen.toast_max_width);
+        msg = "一二三四";
+        msg = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+//        Dialog dialog = new Dialog(this);
+//        dialog.setOwnerActivity(this);
+//        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
+//        dialog.setContentView(view);
+//        dialog.show();
     }
 
     private void logScreenInfo() {

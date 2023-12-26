@@ -14,6 +14,7 @@ import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
 import androidx.core.app.ActivityCompat
+import com.exa.baselib.utils.L
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
 
@@ -131,6 +132,23 @@ class NetworkManager private constructor(private val mContext: Context) {
             mTelephonyManager.isDataEnabled = !mTelephonyManager.isDataEnabled
             LogUtil.w("switchTelephonyNetEnable: ${mTelephonyManager.isDataEnabled}")
         }
+    }
+
+    fun getWifiIp(): String {
+        mWifiManager.connectionInfo?.apply {
+            val ip = ipAddress
+            L.d("ip=$ip")
+            val split = "."
+            return try {
+                (ip and 0xFF).toString() + split +
+                        (ip shr 8 and 0xFF) + split +
+                        (ip shr 16 and 0xFF) + split +
+                        (ip shr 24 and 0xFF)
+            } catch (e: Exception) {
+                "err"
+            }
+        }
+        return "wifiInfo is null"
     }
 
     /**

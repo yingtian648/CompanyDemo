@@ -61,5 +61,32 @@
                 android:textSize="30sp" />
         </LinearLayout>
 
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            >
+
+            <TextView
+                android:id="@android:id/message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:lineHeight="@dimen/toast_line_height"
+                android:maxWidth="@dimen/toast_max_width"
+                android:minWidth="@dimen/toast_min_width"
+                android:maxLines="2"
+                android:textColor="@color/white"
+                android:text="一二三四五六七八一二三四五六七八一二三四五六七八一二三四五六七八一二三四五六七八一二三四五六七八一二三四五六七八"
+                android:minHeight="@dimen/toast_min_height"
+                android:paddingHorizontal="@dimen/toast_text_marginHorizontal"
+                android:paddingVertical="@dimen/toast_text_marginVertical"
+                android:background="@drawable/toast_customer_night"
+                android:textSize="@dimen/toast_text_size" />
+        </FrameLayout>
+
     </RelativeLayout>
 </layout>

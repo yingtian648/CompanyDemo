@@ -7,13 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowInsetsController;
 
-import com.android.internal.view.AppearanceRegion;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.systemui.databinding.SystemUiStatusbarBinding;
@@ -59,24 +55,6 @@ public class StatusBarView implements View.OnClickListener, MCommandQueue.Callba
         mRootView = mBind.getRoot();
         initView();
         registerTimeUpdateReceiver();
-        updateIconColor();
-    }
-
-    @Override
-    public void onSystemBarAppearanceChanged(int displayId, int appearance, AppearanceRegion[]
-            appearanceRegions, boolean navbarColorManagedByIme) {
-        L.d(TAG, "onSystemBarAppearanceChanged appearance = " + appearance);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            isAppearance = displayId == mDisplayId && (appearance & WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS) != 0;
-        }
-    }
-
-    @Override
-    public void topAppWindowChanged(int displayId, boolean isFullscreen, boolean isImmersive) {
-        L.d(TAG, "topAppWindowChanged displayId=" + displayId + ", isFullscreen=" + isFullscreen + ", isImmersive=" + isImmersive);
-        if (displayId == mDisplayId) {
-            this.isImmersive = (!isImmersive && !isFullscreen);
-        }
         updateIconColor();
     }
 
