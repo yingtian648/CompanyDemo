@@ -60,13 +60,14 @@ public class Utils {
             }
         });
     }
-    public static void openApp(Context mContext, String packageName) {
+    public static boolean openApp(Context mContext, String packageName) {
         if (packageName != null) {
             try {
                 PackageManager packageManager = mContext.getPackageManager();
                 Intent intent = packageManager.getLaunchIntentForPackage(packageName);
                 if (intent != null) {
                     mContext.startActivity(intent);
+                    return true;
                 } else {
                     L.e(String.format("openApp err: has not found %s launcher activity", packageName));
                 }
@@ -75,6 +76,7 @@ public class Utils {
                 L.e("openApp err", e);
             }
         }
+        return false;
     }
 
     public static Bitmap loadVideoThumbnail(Context context, String path) {

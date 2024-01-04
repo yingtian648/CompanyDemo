@@ -61,7 +61,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         doAfterInitView()
     }
 
-    private fun doAfterInitView(){
+    private fun doAfterInitView() {
         //设置屏幕亮度
 //        Tools.setScreenBrightness(this, 50)
 //        checkPermission()
@@ -211,14 +211,17 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                     modeManager!!.nightMode = UiModeManager.MODE_NIGHT_YES
                 }
                 BaseConstants.getHandler().postDelayed({
-                    L.w(
-                        "白天黑夜模式:" + TestUtil.getUiModeStr(
-                            modeManager
-                        )
-                    )
+                    L.w("白天黑夜模式:" + TestUtil.getUiModeStr(modeManager))
                 }, 2000)
             }
-            R.id.btnEngineMode -> Utils.openApp(this, "com.android.engmode")
+            R.id.btnEngineMode -> {
+                val apps = resources.getStringArray(com.exa.baselib.R.array.engine_mode_pkgs)
+                for (item in apps) {
+                    if (Utils.openApp(this, item)) {
+                        return
+                    }
+                }
+            }
             R.id.btnTest -> try {
                 test()
             } catch (e: Exception) {
