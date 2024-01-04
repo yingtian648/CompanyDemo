@@ -117,7 +117,7 @@ class EndLineView @JvmOverloads constructor(
                 if (mLastDrawTime == 0L || (System.currentTimeMillis() - mLastDrawTime) > 100) {
                     mLastDrawTime = System.currentTimeMillis()
                     invalidate()
-                    Log.i(TAG, "点击：(${x},${y}) " + "方向：${getDirection(mOrientation)}")
+                    Log.i(TAG, "点击：(${x},${y}) (${rawX},${rawX}) " + "方向：${getDirection(mOrientation)}")
                 }
             }
         }

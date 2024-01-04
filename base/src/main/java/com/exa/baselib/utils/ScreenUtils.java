@@ -43,6 +43,21 @@ public class ScreenUtils {
         }
     }
 
+    public static void hideStatusBars(View view) {
+        int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        view.setSystemUiVisibility(option);
+    }
+
+    public static void showStatusBars(View view) {
+        int option = View.SYSTEM_UI_FLAG_VISIBLE;
+        view.setSystemUiVisibility(option);
+    }
+
     public static void hideStatusBar(Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getInsetsController();

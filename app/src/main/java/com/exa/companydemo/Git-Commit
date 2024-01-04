@@ -1,11 +1,13 @@
 
-feat[CarLocationService]:update soalib version to 1.3.6.
-rootcause:update soalib version to 1.3.6.
-solution:update soalib version to 1.3.6.
-Product:A02
-Build:mpass
-Test:upass
-BugID:noid
+feat[CarLocationService]:update soalib version to 1.4.2.
+rootcause:update soalib version to 1.4.2.
+solution:update soalib version to 1.4.2.
+product:A02
+span:none
+build:mpass
+test:upass
+fid:none
+level:none
 
 Description: add statusbar view
 JiraID: noid
@@ -46,14 +48,14 @@ test:upass
 fid:ID1221421
 level:C
 
-fix[Toast]:Fix secondary screen Toast display err.
-rootcause:Toast display err on secondary screen.
-solution:Update secondary screen Toast resource file.
+fix[AOSP/WMS]:Block SystemUI display usb operation Activity.
+rootcause:Local UsbResolverActivity display.
+solution:Block SystemUI display usb operation Activity.
 product:AH8
-span:none
+span:<A02>
 build:mpass
 test:upass
-fid:ID1252051
+fid:ID1255455
 level:C
 
 fix[AOSP/DialogSplitScreenExt]:Fix SystemUI display error.

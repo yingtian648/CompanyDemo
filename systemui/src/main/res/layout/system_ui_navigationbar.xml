@@ -29,10 +29,11 @@
             android:text="工程模式" />
 
         <Button
-            android:id="@+id/btnUpgrade"
+            android:id="@+id/btnDemo"
             android:layout_width="wrap_content"
+            android:textAllCaps="false"
             android:layout_height="wrap_content"
             android:layout_marginStart="30px"
-            android:text="U盘升级" />
+            android:text="shihuademo" />
     </LinearLayout>
 </layout>

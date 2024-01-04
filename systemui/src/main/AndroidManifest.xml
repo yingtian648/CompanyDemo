@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CompanyDemo">
         <service
-            android:name=".service.SystemUIService"
+            android:name=".SystemUIService"
             android:exported="true" />
     </application>
 

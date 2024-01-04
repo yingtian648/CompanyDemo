@@ -88,13 +88,13 @@ public class TestDialog {
         dialog.show();
     }
 
-    public static void showAlertDialog(Context context){
+    public static void showAlertDialog(Context context) {
         L.dd("isActivity 111:" + (context instanceof Activity));
         AlertDialog dialog = new AlertDialog.Builder(context).setTitle("测试标题")
                 .setMessage("测试内容")
                 .create();
         dialog.show();
-        Context context1  = dialog.getContext();
+        Context context1 = dialog.getContext();
         L.dd("isActivity 222:" + (context1 instanceof Activity));
 
     }
@@ -138,6 +138,50 @@ public class TestDialog {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout_full, null);
         manager.addView(view, mCardListParams);
     }
+
+    public static void showBCallView(Context context) {
+        WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+        buildParams(params);
+        final WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        final View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false);
+        Button cancel_button = view.findViewById(R.id.cancel_button);
+        Button sure_button = view.findViewById(R.id.sure_button);
+        view.setLayoutParams(params);
+        cancel_button.setOnClickListener(v -> {
+            windowManager.removeView(view);
+        });
+        windowManager.addView(view, params);
+    }
+
+    @SuppressLint("WrongConstant")
+    private static void buildParams(WindowManager.LayoutParams mEcallLayoutParams) {
+        boolean isGQA79P6125Channel = false;
+        mEcallLayoutParams.setTitle("TestEBCall");
+        if (isGQA79P6125Channel) {
+            mEcallLayoutParams.type = 2021;
+            mEcallLayoutParams.flags = 8651584;
+        } else {
+            mEcallLayoutParams.type = 2502;
+            mEcallLayoutParams.flags = 2099232;
+        }
+        mEcallLayoutParams.width = -1;
+        mEcallLayoutParams.height = -1;
+        mEcallLayoutParams.gravity = 17;
+        mEcallLayoutParams.format = -3;
+
+        //2099232
+        int flags = WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN;
+
+        int flagNew = WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN
+                ;
+        mEcallLayoutParams.flags = flagNew;
+        L.d("flags=" + flags);
+    }
+
 
     public static void showMyDialog(Activity activity, String title, int windowType) {
         MyDialog dialog = new MyDialog(activity, R.style.MyDialog, windowType, title);

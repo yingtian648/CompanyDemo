@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.Tools;
 
 /**
  * @Author lsh
@@ -15,15 +16,15 @@ import com.exa.baselib.utils.L;
 public class TestReceiver extends BroadcastReceiver {
     private String tag;
 
-    public void registerReceiver(Context context){
+    public void registerReceiver(Context context) {
         L.dd(tag);
-        IntentFilter intentFilter  = new IntentFilter();
+        IntentFilter intentFilter = new IntentFilter();
         intentFilter.addDataScheme("package");
         intentFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         intentFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-        context.registerReceiver(this,intentFilter);
+        context.registerReceiver(this, intentFilter);
     }
 
     public TestReceiver() {
@@ -37,5 +38,6 @@ public class TestReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         L.w(tag + " onReceive:" + intent.getAction() + "," + intent);
+        Tools.getPackageList(App.getContext(), 10);
     }
 }

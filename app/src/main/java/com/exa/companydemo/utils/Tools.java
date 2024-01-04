@@ -2,6 +2,8 @@ package com.exa.companydemo.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.media.MediaMetadataRetriever;
@@ -28,6 +30,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Tools {
 
@@ -38,6 +41,20 @@ public class Tools {
     public static double getDoubleFormatD(double res) {
         java.text.DecimalFormat df = new java.text.DecimalFormat("#.00");
         return Double.parseDouble(df.format(res));
+    }
+
+    public static List<PackageInfo> getPackageList(PackageManager packageManager, int userId) {
+        try {
+            //packageManager.getInstalledPackagesAsUser(0,userId)
+            List<PackageInfo> list = packageManager.getInstalledPackages(0);
+            for (PackageInfo info : list) {
+                L.df("info:%s %d %s", info.packageName, info.versionCode, info.versionName);
+            }
+            return list;
+        } catch (Exception e) {
+            L.e("logPackageList err", e);
+        }
+        return null;
     }
 
     // Window截屏

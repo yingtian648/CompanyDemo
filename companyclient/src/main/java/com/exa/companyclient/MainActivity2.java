@@ -61,8 +61,7 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
         bind.testBtn.setOnClickListener(this);
         bind.backBtn.setOnClickListener(this);
 
-
-        new TestReceiver("display0").registerReceiver(this);
+        new TestReceiver("------").registerReceiver(this);
     }
 
     /**

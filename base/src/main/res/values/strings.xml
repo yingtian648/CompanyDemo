@@ -1,3 +1,8 @@
 <resources>
-
+    <!-- 系统签名 android:sharedUserId="android.uid.system" -->
+    <string name="sharedUserId">android.uid.system</string>
+    <string-array name="engine_mode_pkgs">
+        <item>com.android.engmode</item>
+        <item>com.gxatek.cockpit.diagnostic</item>
+    </string-array>
 </resources>

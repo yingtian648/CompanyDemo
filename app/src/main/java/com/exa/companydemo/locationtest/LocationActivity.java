@@ -267,7 +267,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     };
 
     private void printLocation(Location location) {
-        setText(location.toString() + ", " + DateUtil.getNowTime());
+        setText(location.toString() + ", " + DateUtil.getFullTime(location.getTime()) + "," + DateUtil.getNowTime());
         Bundle bundle = location.getExtras();
         if (bundle != null && !bundle.isEmpty()) {
             StringBuilder buffer = new StringBuilder();

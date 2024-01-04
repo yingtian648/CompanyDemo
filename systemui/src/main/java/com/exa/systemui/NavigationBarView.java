@@ -2,6 +2,7 @@ package com.exa.systemui;
 
 import android.annotation.SuppressLint;
 import android.app.UiModeManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,8 +13,12 @@ import android.view.View;
 import android.view.WindowInsetsController;
 
 import com.exa.baselib.utils.L;
+import com.exa.baselib.utils.Tools;
+import com.exa.baselib.utils.Utils;
 import com.exa.systemui.databinding.SystemUiNavigationbarBinding;
 import com.exa.systemui.minterface.IConfigChangedListener;
+
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -23,7 +28,7 @@ import androidx.databinding.DataBindingUtil;
  * @Date 2023/3/14 13:38
  * @Description
  */
-public class NavigationBarView implements View.OnClickListener, MCommandQueue.Callback, IConfigChangedListener {
+public class NavigationBarView implements View.OnClickListener, MCommandQueue.Callbacks, IConfigChangedListener {
     private final Context mContext;
     private final View mRootView;
     private UiModeManager mUiModeManager;
@@ -35,19 +40,17 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
             R.id.btnHome,
             R.id.btnMyCar,
             R.id.btnEngine,
-            R.id.btnUpgrade,
+            R.id.btnDemo,
     };
 
     public View getRootView() {
         return mRootView;
     }
 
-    public NavigationBarView(Context context, UiModeManager modeManager,
-                             MCommandQueue commandQueue, int displayId) {
+    public NavigationBarView(Context context, UiModeManager modeManager, int displayId) {
         mContext = context;
         mUiModeManager = modeManager;
         mDisplayId = displayId;
-        commandQueue.registerCallback(this);
         mBind = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.system_ui_navigationbar, null, false);
         mRootView = mBind.getRoot();
@@ -74,12 +77,12 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
         mBind.btnHome.setBackgroundColor(mContext.getColor(bgColor));
         mBind.btnEngine.setBackgroundColor(mContext.getColor(bgColor));
         mBind.btnMyCar.setBackgroundColor(mContext.getColor(bgColor));
-        mBind.btnUpgrade.setBackgroundColor(mContext.getColor(bgColor));
+        mBind.btnDemo.setBackgroundColor(mContext.getColor(bgColor));
 
         mBind.btnHome.setTextColor(mContext.getColor(textColor));
         mBind.btnEngine.setTextColor(mContext.getColor(textColor));
         mBind.btnMyCar.setTextColor(mContext.getColor(textColor));
-        mBind.btnUpgrade.setTextColor(mContext.getColor(textColor));
+        mBind.btnDemo.setTextColor(mContext.getColor(textColor));
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -87,16 +90,26 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnHome:
-                openApp("com.exa.companydemo");
+                goHome();
                 break;
             case R.id.btnMyCar:
-                openApp("com.gxatek.cockpit.car.settings");
+//                openApp("com.gxatek.cockpit.car.settings");
+                Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setComponent(new ComponentName("com.douyu.xl.douyucar","com.douyu.vehicle.splashpage.SplashActivity"));
+                mContext.startActivity(intent);
                 break;
             case R.id.btnEngine:
-                openApp("com.android.engmode");
+                String[] engines = mContext.getResources()
+                        .getStringArray(com.exa.baselib.R.array.engine_mode_pkgs);
+                for (String item : engines) {
+                    if (Utils.openApp(mContext, item)) {
+                        break;
+                    }
+                }
                 break;
-            case R.id.btnUpgrade:
-                openApp("com.desaysv.ivi.vds.upgrade");
+            case R.id.btnDemo:
+                openApp("com.exa.companydemo");
                 break;
             default:
                 break;
@@ -110,7 +123,9 @@ public class NavigationBarView implements View.OnClickListener, MCommandQueue.Ca
     private void goHome() {
         try {
             Intent mIntent = new Intent();
-            mIntent.setClassName("com.gxatek.cockpit.launcher", "com.gxatek.cockpit.launcher.CarLauncher");
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mIntent.setAction(Intent.ACTION_MAIN);
+            mIntent.addCategory(Intent.CATEGORY_HOME);
             mContext.startActivity(mIntent);
         } catch (Exception e) {
             e.printStackTrace();

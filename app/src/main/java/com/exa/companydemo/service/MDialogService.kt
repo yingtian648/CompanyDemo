@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.filterfw.core.Frame
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
@@ -12,11 +13,16 @@ import android.os.IBinder
 import android.view.*
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.Toast
 import com.android.internal.policy.PhoneWindow
+import com.exa.baselib.BaseConstants
 import com.exa.baselib.utils.L
 import com.exa.baselib.utils.Tools
+import com.exa.baselib.utils.VideoPlayer
 import com.exa.companydemo.R
-import com.gxa.car.scene.SceneManager
+import com.exa.companydemo.TestDialog
+import java.util.*
 
 /**
  * @Author lsh
@@ -27,10 +33,14 @@ class MDialogService : Service(), Window.Callback {
     private lateinit var mContext: Context
     private lateinit var mWindowManager: WindowManager
     private lateinit var dialogView: View
+    private lateinit var frame: FrameLayout
+    private lateinit var btn: Button
     private val mParams = WindowManager.LayoutParams()
+    private var bool = false
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//        TestDialog.showBCallView(mContext)
         showTipView()
         return super.onStartCommand(intent, flags, startId)
     }
@@ -38,20 +48,13 @@ class MDialogService : Service(), Window.Callback {
     @SuppressLint("WrongConstant")
     override fun onCreate() {
         super.onCreate()
-        mContext = this.applicationContext
+        mContext = this
         mWindowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         dialogView = LayoutInflater.from(mContext)
-            .inflate(R.layout.dialog_layout_full, null, false)
-        val cancelBtn = dialogView.findViewById<Button>(R.id.cancel_button)
-        val sureBtn = dialogView.findViewById<Button>(R.id.sure_button)
-        cancelBtn.setOnClickListener { v: View? ->
-            mWindowManager.removeViewImmediate(dialogView)
-        }
-        sureBtn.setOnClickListener { v: View? ->
-            mWindowManager.removeViewImmediate(dialogView)
-        }
-
-        mParams.type = 2512
+            .inflate(R.layout.mydialog_layout, null, false)
+        frame = dialogView.findViewById(R.id.frame)
+        btn = dialogView.findViewById(R.id.btn)
+        mParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG
         mParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         val flags = (WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING
                 or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
@@ -67,6 +70,46 @@ class MDialogService : Service(), Window.Callback {
 
     private fun showTipView() {
         mWindowManager.addView(dialogView, mParams)
+        playVideo()
+        startTimer()
+    }
+
+    private fun startTimer() {
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                bool = !bool
+                if (bool) {
+                    btn.alpha = 0f
+                } else {
+                    btn.alpha = 1f
+                }
+            }
+        }, 10000, 10000)
+    }
+
+    private fun playVideo() {
+        // use TextureView, need set android:hardwareAccelerated="true"
+        val player = VideoPlayer.getInstance()
+        player.setLoop(true)
+        player.setCallback(object : VideoPlayer.Callback {
+            override fun onError(msg: String) {
+                Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show()
+            }
+
+            override fun onStarted(duration: Int) {
+
+            }
+
+            override fun onComplete() {}
+            override fun onPlayTime(timeMillis: Int) {
+
+            }
+
+            override fun onScreenClick() {
+            }
+        })
+        val afd = resources.openRawResourceFd(R.raw.test)
+        player.play(this, frame, afd)
     }
 
     private fun showTipView1() {
@@ -80,15 +123,9 @@ class MDialogService : Service(), Window.Callback {
         mWindow.setWindowManager(mWindowManager, null, null)
         mWindow.setGravity(Gravity.CENTER)
         val dialogView = LayoutInflater.from(mContext)
-            .inflate(R.layout.dialog_layout, null, false)
-        val cancelBtn = dialogView.findViewById<Button>(R.id.cancel_button)
-        val sureBtn = dialogView.findViewById<Button>(R.id.sure_button)
-        cancelBtn.setOnClickListener { v: View? ->
+            .inflate(R.layout.activity_second, null, false)
+        val frame = dialogView.findViewById<Button>(R.id.frame)
 
-        }
-        sureBtn.setOnClickListener { v: View? ->
-            mWindowManager.removeViewImmediate(dialogView)
-        }
         mWindow.setContentView(dialogView)
         val mDecor = mWindow.decorView
         val lp = mWindow.attributes
@@ -101,14 +138,10 @@ class MDialogService : Service(), Window.Callback {
         mDecor.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION)
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        //        mWindow.setStatusBarColor(Color.TRANSPARENT);
-//        mWindow.setNavigationBarColor(Color.TRANSPARENT);
         mWindow.statusBarColor = Color.parseColor("#E3E3E3")
         mWindow.navigationBarColor = Color.parseColor("#E3E3E3")
         mWindowManager.addView(dialogView, lp)
 
-//        mWindow.setStatusBarColor(Color.YELLOW);
-//        mWindow.setNavigationBarColor(Color.YELLOW);
         L.dd("mShowing")
     }
 

@@ -2,19 +2,16 @@ package com.exa.companydemo
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.UiModeManager
+import android.app.WallpaperManager
 import android.content.*
-import android.graphics.Color
-import android.hardware.display.DisplayManager
-import android.net.wifi.WifiManager
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.*
-import android.view.Display
 import android.view.View
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import android.view.WindowManager
-import com.android.internal.policy.PhoneWindow
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.*
@@ -23,8 +20,10 @@ import com.exa.companydemo.TestUtil.mReceiver
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.service.MDialogService
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.NetworkManager
+import com.exa.companydemo.utils.Tools.getPackageList
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -40,6 +39,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private var index = 0
 
     override fun setContentViewLayoutId(): Int {
+//        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN or WindowManager.LayoutParams.FLAG_FULLSCREEN)
         return R.layout.activity_main
     }
 
@@ -73,6 +73,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        TestUtil.registerBroadcast(this);
         // 沉浸式
 //        ScreenUtils.setStatusBarAndNavigationBarInvasion(this)
+//        ScreenUtils.setStatusBarInvasion(this)
 
         L.dd("777")
     }
@@ -84,7 +85,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         L.dd("$index")
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
-//
+//        startService(Intent(this, MDialogService::class.java))
+
 //        TestUtil.testSensorData(this);
 //        startActivity(MDialogActivity::class.java)
 //        startService(new Intent(this, MDialogService.class));
@@ -99,16 +101,12 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        TestDialog.showMyDialog(this,"121212",-1)
 //        TestDialog.showLayout(this)
 
+//        getPackageList(packageManager,10)
+
 //        TestUtil.testSensorData(mContext);
 //        L.dd("isTelephonyNetEnable:" + networkManager.isTelephonyDataEnable());WifiActivity
 //        networkManager.switchTelephonyDataEnable();
 //        Toast.makeText(this, "测试Toast: " + index, Toast.LENGTH_SHORT).show();
-
-        TestUtil.installPackage(
-            this,
-            "/mnt/user/0/emulated/0/Download/shihuademo.apk",
-            "com.exa.companydemo"
-        )
     }
 
 
@@ -182,7 +180,12 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        L.w("onWindowFocusChanged: hasFocus = $hasFocus")
+        L.w("onWindowFocusChanged: hasFocus 1 = $hasFocus")
+        if (hasFocus) {
+            BaseConstants.getHandler().postDelayed({
+//                ScreenUtils.hideStatusBars(this)
+            }, 500)
+        }
 //        window.statusBarColor = getColor(R.color.gray)
 //        window.navigationBarColor = getColor(R.color.gray)
     }
@@ -231,11 +234,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                 }, 2000)
             }
             R.id.btnEngineMode -> {
-                val engineAppList = arrayListOf(
-                    "com.android.engmode",
-                    "com.gxatek.cockpit.diagnostic"
-                )
-                for (item in engineAppList) {
+                val engines = resources.getStringArray(com.exa.baselib.R.array.engine_mode_pkgs)
+                for (item in engines) {
                     if (Utils.openApp(this, item)) {
                         break
                     }

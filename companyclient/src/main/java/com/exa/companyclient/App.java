@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 
 public class App extends Application {
     @SuppressLint("StaticFieldLeak")
-    private static Context app;
+    private static Application app;
 
     @Override
     public void onCreate() {
@@ -65,7 +65,7 @@ public class App extends Application {
         });
     }
 
-    public static Context getContext() {
+    public static Application getContext() {
         return app;
     }
 }

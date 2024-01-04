@@ -1,5 +1,3 @@
 <resources>
-    <string name="app_name">客户端</string>
-    <!-- 系统签名 android:sharedUserId="android.uid.system" -->
-    <string name="sharedUserId">android.uid.system</string>
+    <string name="app_name">shihuaclient</string>
 </resources>

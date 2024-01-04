@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.exa.systemui"
-        minSdk 28
+        minSdk 27
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -22,12 +22,16 @@ android {
             keyPassword 'android'
             keyAlias 'android'
             storeFile file(rootProject.ext.android.path)
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
         release {
             storePassword 'android'
             keyPassword 'android'
             keyAlias 'android'
             storeFile file(rootProject.ext.android.path)
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
 
@@ -66,7 +70,8 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            output.outputFileName = "systemui.apk"
+//            output.outputFileName = "systemui.apk"
+            output.outputFileName = "CarSystemUI.apk"
         }
     }
     kotlinOptions {
@@ -83,5 +88,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    compileOnly files('libs/framework.jar')
+//    compileOnly files('libs/framework.jar')
+    compileOnly files('libs/framework9.jar')
 }

@@ -1117,4 +1117,32 @@ public class Tools {
             }
         }
     }
+
+    /**
+     * 获取对应用户下的所有应用
+     * @param context
+     * @param userId 用户id
+     */
+    public static List<PackageInfo> getPackageList(Context context,/* UserIdInt*/ int userId) {
+        List<PackageInfo> list = null;
+        PackageManager pm = context.getPackageManager();
+        try {
+            Method getInstalledPackagesAsUser = PackageManager.class
+                    .getMethod("getInstalledPackagesAsUser", int.class, int.class);
+            list = (List<PackageInfo>) getInstalledPackagesAsUser.invoke(pm, 0, 10);
+            if (list != null) {
+                L.d("-------------listPackage-start--------------");
+                for (PackageInfo pkg : list) {
+                    L.d(pkg.applicationInfo.loadLabel(pm) + " " + pkg.packageName
+                            + ", versionCode=" + pkg.versionCode
+                            + ", versionName=" + pkg.versionName);
+                }
+                L.d("-------------listPackage-end--------------");
+            }
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            L.e("listPackage reflect err,", e.getMessage());
+        }
+        return list;
+    }
 }

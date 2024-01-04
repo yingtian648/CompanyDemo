@@ -8,7 +8,6 @@ package com.exa.systemui.common;
 
 import android.content.ComponentName;
 import android.graphics.Rect;
-import android.hardware.biometrics.IBiometricServiceReceiverInternal;
 import android.os.Bundle;
 import android.os.IBinder;
 
@@ -35,7 +34,7 @@ public interface MessageCallback {
      * @param state1    The combination of following DISABLE_* flags:
      * @param state2    The combination of following DISABLE2_* flags:
      * @param animate   {@code true} to show animations.
-     * @see IStatusBar#disable(int, int, int).
+     * IStatusBar#disable(int, int, int).
      */
     default void disable(int displayId, int state1,int state2,
                          boolean animate) {
@@ -119,7 +118,7 @@ public interface MessageCallback {
      * @param windowType    Window type. It should be one of {StatusBarManager#WINDOW_STATUS_BAR}
      *                  or {StatusBarManager#WINDOW_NAVIGATION_BAR}
      * @param state     Window visible state.
-     * @see IStatusBar#setWindowState(int, int, int)
+     * IStatusBar#setWindowState(int, int, int)
      */
     default void setWindowState(int displayId, int windowType,
                                 /** WindowVisibleState */ int state) {
@@ -133,7 +132,7 @@ public interface MessageCallback {
      *
      * @param displayId The id of the display to notify.
      * @param forced    {@code true} to force transition pending.
-     * @see IStatusBar#appTransitionPending(int).
+     * IStatusBar#appTransitionPending(int).
      */
     default void appTransitionPending(int displayId, boolean forced) {
     }
@@ -142,7 +141,7 @@ public interface MessageCallback {
      * Called to notify System UI that an application transition is canceled.
      *
      * @param displayId The id of the display to notify.
-     * @see IStatusBar#appTransitionCancelled(int).
+     * IStatusBar#appTransitionCancelled(int).
      */
     default void appTransitionCancelled(int displayId) {
     }
@@ -154,7 +153,7 @@ public interface MessageCallback {
      * @param startTime Transition start time.
      * @param duration  Transition duration.
      * @param forced    {@code true} to force transition pending.
-     * @see IStatusBar#appTransitionStarting(int, long, long).
+     * IStatusBar#appTransitionStarting(int, long, long).
      */
     default void appTransitionStarting(
             int displayId, long startTime, long duration, boolean forced) {
@@ -164,7 +163,7 @@ public interface MessageCallback {
      * Called to notify System UI that an application transition is finished.
      *
      * @param displayId The id of the display to notify.
-     * @see IStatusBar#appTransitionFinished(int)
+     * IStatusBar#appTransitionFinished(int)
      */
     default void appTransitionFinished(int displayId) {
     }
@@ -214,10 +213,6 @@ public interface MessageCallback {
     default void onRotationProposal(int rotation, boolean isValid) {
     }
 
-    default void showBiometricDialog(Bundle bundle, IBiometricServiceReceiverInternal receiver,
-                                     int type, boolean requireConfirmation, int userId) {
-    }
-
     default void onBiometricAuthenticated(boolean authenticated, String failureReason) {
     }
 
@@ -231,7 +226,7 @@ public interface MessageCallback {
     }
 
     /**
-     * @see IStatusBar#onDisplayReady(int)
+     * IStatusBar#onDisplayReady(int)
      */
     default void onDisplayReady(int displayId) {
     }
@@ -243,7 +238,7 @@ public interface MessageCallback {
     }
 
     /**
-     * @see IStatusBar#onRecentsAnimationStateChanged(boolean)
+     * IStatusBar#onRecentsAnimationStateChanged(boolean)
      */
     default void onRecentsAnimationStateChanged(boolean running) {
     }

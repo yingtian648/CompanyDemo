@@ -23,7 +23,7 @@ import androidx.databinding.DataBindingUtil;
  * @Date 2023/3/20 17:02
  * @Description
  */
-public class StatusBarView implements View.OnClickListener, MCommandQueue.Callback, IConfigChangedListener {
+public class StatusBarView implements View.OnClickListener, IConfigChangedListener {
     private final String TAG = "StatusBarView";
     private final Context mContext;
     private final View mRootView;
@@ -45,11 +45,10 @@ public class StatusBarView implements View.OnClickListener, MCommandQueue.Callba
         return mRootView;
     }
 
-    public StatusBarView(Context context, UiModeManager modeManager, MCommandQueue commandQueue, int displayId) {
+    public StatusBarView(Context context, UiModeManager modeManager,  int displayId) {
         mContext = context;
         mUiModeManager = modeManager;
         mDisplayId = displayId;
-        commandQueue.registerCallback(this);
         mBind = DataBindingUtil.inflate(LayoutInflater.from(context),
                 R.layout.system_ui_statusbar, null, false);
         mRootView = mBind.getRoot();
