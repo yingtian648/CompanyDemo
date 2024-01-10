@@ -60,32 +60,32 @@ public class ScreenUtils {
         }
     }
 
+    /**
+     * 判断是否全屏
+     * 判断状态栏导航栏显示OR隐藏
+     */
     public static void delayCheckSystemBarsStatus(Activity activity) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            activity.getWindow().getDecorView().postDelayed(() -> {
+        activity.getWindow().getDecorView().postDelayed(() -> {
+            boolean svis = true;
+            boolean nvis = true;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                 WindowInsets insets = activity.getWindow().getDecorView().getRootWindowInsets();
-                int top = insets.getInsets(WindowInsets.Type.systemBars()).top;
-                int bottom = insets.getInsets(WindowInsets.Type.systemBars()).bottom;
-                boolean vis = insets.isVisible(WindowInsets.Type.statusBars());
-                boolean vis1 = insets.isVisible(WindowInsets.Type.navigationBars());
-                L.d("onControllableInsetsChanged：top=" + top + ",bottom=" + bottom + ",status=" + vis + ",navi=" + vis1);
-            }, 300);
-        } else {
-            int flags = activity.getWindow().getAttributes().flags;
-            int sysUiVis = activity.getWindow().getDecorView().getSystemUiVisibility();
-            L.df("activity arr=%d, sysUiVis=%d", flags, sysUiVis);
-            if ((sysUiVis & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0
-                    || (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0) {
-                L.dd("状态栏 已隐藏");
+                svis = insets.isVisible(WindowInsets.Type.statusBars());
+                nvis = insets.isVisible(WindowInsets.Type.navigationBars());
             } else {
-                L.dd("状态栏 显示");
+                int flags = activity.getWindow().getAttributes().flags;
+                int sysUiVis = activity.getWindow().getDecorView().getSystemUiVisibility();
+                L.df("activity arr=%d, sysUiVis=%d", flags, sysUiVis);
+                if ((sysUiVis & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0
+                        || (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0) {
+                    svis = false;
+                }
+                if ((sysUiVis & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
+                    nvis = false;
+                }
             }
-            if ((sysUiVis & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
-                L.dd("导航栏 已隐藏");
-            } else {
-                L.dd("导航栏 显示");
-            }
-        }
+            L.d("delayCheckSystemBarsStatus：StatusBar=" + svis + ",NavigationBar=" + nvis);
+        }, 500);
     }
 
     /**
