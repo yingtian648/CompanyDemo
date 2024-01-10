@@ -13,13 +13,20 @@
         <item name="android:windowAnimationStyle">@null</item><!--移除原生动画-->
         <!-- Status bar color. -->
         <!--        <item name="android:windowFullscreen">true</item>-->
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
     <style name="MainActivity" parent="Theme.CompanyDemo">
-<!--        <item name="android:supportsPictureInPicture">true</item>-->
-<!--        <item name="android:windowAnimationStyle">@null</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:colorFocusedHighlight">@android:color/transparent</item>
+<!--        <item name="android:windowTranslucentStatus">false</item>-->
+<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+<!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
     </style>
     <style name="WifiActivity" parent="Theme.CompanyDemo">
 <!--        <item name="android:windowBackground">@android:color/transparent</item>-->

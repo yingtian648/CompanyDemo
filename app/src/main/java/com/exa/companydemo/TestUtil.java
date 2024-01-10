@@ -534,25 +534,25 @@ public class TestUtil {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
-//                L.e("registerFullScreenListener onChange1:" + selfChange);
+                L.e("registerFullScreenListener onChange1:" + selfChange);
             }
 
             @Override
             public void onChange(boolean selfChange, @Nullable Uri uri) {
                 super.onChange(selfChange, uri);
-//                L.e("registerFullScreenListener onChange2:" + selfChange);
+                L.e("registerFullScreenListener onChange2:" + selfChange + ",uri=" + uri);
             }
 
             @Override
             public void onChange(boolean selfChange, @Nullable Uri uri, int flags) {
                 super.onChange(selfChange, uri, flags);
-//                L.e("registerFullScreenListener onChange3:" + selfChange + ",flags:" + flags);
+                L.e("registerFullScreenListener onChange3:" + selfChange + ",flags:" + flags);
             }
 
             @Override
             public void onChange(boolean selfChange, @NonNull Collection<Uri> uris, int flags) {
                 super.onChange(selfChange, uris, flags);
-//                L.e("registerFullScreenListener onChange4:" + selfChange + ",flags:" + flags);
+                L.e("registerFullScreenListener onChange4:" + selfChange + ",flags:" + flags);
             }
         });
     }

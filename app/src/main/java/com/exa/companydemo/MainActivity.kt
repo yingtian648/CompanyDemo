@@ -6,12 +6,11 @@ import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.os.*
-import android.view.View
+import android.view.*
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.*
-import com.exa.companydemo.TestUtil.isRegisterBroadCast
-import com.exa.companydemo.TestUtil.mReceiver
+import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
@@ -31,6 +30,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private var modeManager: UiModeManager? = null
     private var index = 0
     private val networkManager: NetworkManager? = null
+    private var lastDisplayId = Display.DEFAULT_DISPLAY
+    private var isDisplayChange = false
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
@@ -49,6 +50,11 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun initView() {
+        lastDisplayId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display?.displayId ?: Display.DEFAULT_DISPLAY
+        } else {
+            Display.DEFAULT_DISPLAY
+        }
         modeManager = getSystemService(UiModeManager::class.java)
         L.d("黑夜模式：" + TestUtil.getUiModeStr(modeManager))
         bind.toolbar.setSubTitle("返回 (wifi:" + NetworkManager.getInstance(this).getWifiIp() + ")")
@@ -62,17 +68,21 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     }
 
     private fun doAfterInitView() {
+        bind.elv.disable()
         //设置屏幕亮度
 //        Tools.setScreenBrightness(this, 50)
 //        checkPermission()
 //        TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
         // 沉浸式
-        ScreenUtils.setStatusBarInvasion(this)
+        //ScreenUtils.setStatusBarInvasion(this)
         L.dd("55")
     }
 
-    @SuppressLint("RestrictedApi", "WrongConstant", "Range", "UnspecifiedImmutableFlag")
+    @SuppressLint(
+        "RestrictedApi", "WrongConstant", "Range", "UnspecifiedImmutableFlag",
+        "ClickableViewAccessibility"
+    )
     @Throws(Exception::class)
     private fun test() {
         index++
@@ -80,16 +90,16 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
 //
-//        TestUtil.testSensorData(this);
+//        TestUtil.testSensorData(this)
 //        startActivity(MDialogActivity::class.java)
 //        startService(new Intent(this, MDialogService.class));
-//        TestUtil.testDialog(this,"ssssss",-1);
+//        TestUtil.testDialog(this,"ssssss",-1)
 //        BuildTestDialog.getInstance().addNoteView(this)
 //        BaseConstants.getHandler().postDelayed({
 //            TestDialog.showLayout(this)
 //            window.navigationBarColor  = 0
 //        }, 3000)
-//        TestDialog.showDialog(this)
+        TestDialog.showDialog(this)
 //        TestDialog.showAlertDialog(this)
 //        TestDialog.showMyDialog(this,"121212",-1)
 //        TestDialog.showLayout(this)
@@ -97,21 +107,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        L.dd("isTelephonyNetEnable:" + networkManager.isTelephonyDataEnable());WifiActivity
 //        networkManager.switchTelephonyDataEnable();
 //        Toast.makeText(this, "测试Toast wifi: " + index, Toast.LENGTH_SHORT).show()
-    }
-
-
-    private fun delayCheck() {
-        BaseConstants.getHandler().postDelayed({
-            val arr: Int = window.attributes.systemUiVisibility
-            val sysUiVis: Int = window.decorView.systemUiVisibility
-            L.dd("activity arr=$arr, sysUiVis=$sysUiVis")
-            if (sysUiVis and View.SYSTEM_UI_FLAG_FULLSCREEN != 0) {
-                L.dd("状态栏 已隐藏")
-            }
-            if (sysUiVis and View.SYSTEM_UI_FLAG_HIDE_NAVIGATION != 0) {
-                L.dd("导航栏 已隐藏")
-            }
-        }, 2000)
     }
 
     @SuppressLint("WrongConstant")
@@ -197,7 +192,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                 } else {
                     ScreenUtils.showStatusBars(this)
                 }
-                delayCheck()
             }
             R.id.btnLocation -> startActivity(LocationActivity::class.java)
             R.id.btnPlay -> startActivity(VideoPlayerActivity::class.java)
@@ -244,29 +238,58 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        L.dd(javaClass.simpleName)
+        var msg = javaClass.simpleName
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            msg += " displayId=" + display?.displayId
+        }
+        L.dd(msg)
     }
 
     override fun onRestart() {
         super.onRestart()
-        L.dd(javaClass.simpleName)
+        var msg = javaClass.simpleName
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            msg += " displayId=" + display?.displayId
+        }
+        L.dd(msg)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onResume() {
         super.onResume()
-        L.dd(javaClass.simpleName)
+        var msg = javaClass.simpleName
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            msg += " displayId=" + display?.displayId + ", isDisplayChange=" + isDisplayChange
+        }
+        L.dd(msg)
+        if (isDisplayChange) {
+            isDisplayChange = false
+//            BaseConstants.getHandler().postDelayed({
+                ScreenUtils.showStatusBars(this)
+//            }, 100)
+        }
 //        checkPermission();
 //        bindScreenSaver();
 //        finish();
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
     override fun onStop() {
         super.onStop()
-        L.dd(javaClass.simpleName)
+        var msg = javaClass.simpleName
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            msg += " displayId=" + display?.displayId
+        }
+        L.dd(msg)
+
+        val currDisplayId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display?.displayId ?: Display.DEFAULT_DISPLAY
+        } else {
+            Display.DEFAULT_DISPLAY
+        }
+        if (currDisplayId != lastDisplayId) {
+            lastDisplayId = currDisplayId
+            isDisplayChange = true
+        }
     }
 
     override fun onDestroy() {

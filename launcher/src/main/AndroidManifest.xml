@@ -17,11 +17,13 @@
 
         <activity
             android:name=".CarLauncher"
-            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation
+            |orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
             android:exported="true"
             android:launchMode="singleInstance"
             android:priority="1000"
             android:screenOrientation="landscape"
+            android:theme="@style/CarLauncher"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

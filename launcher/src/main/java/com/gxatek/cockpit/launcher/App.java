@@ -15,7 +15,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        L.init("lsh-launcher", true);
+        L.init("launcher-lsh", true);
         CrashHandle.getInstance().init(this);
     }
 }

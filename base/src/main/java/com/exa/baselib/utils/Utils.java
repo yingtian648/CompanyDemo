@@ -45,6 +45,14 @@ import static com.exa.baselib.utils.L.TAG;
 
 public class Utils {
 
+    /**
+     * 获取16进制的int字符串
+     * 可用于打印color值，int的16进制字符串等
+     */
+    private static String getIntHexString(int num){
+        return Integer.toHexString(num);
+    }
+
     private void logIpArrivedStatus(String GNSS_SERVER_IP,String TEST_IP) {
         BaseConstants.getHandler().post(new Runnable() {
             @Override

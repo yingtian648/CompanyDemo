@@ -4,9 +4,11 @@ import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.ACTION_PACKAGE_ADDED
+import android.content.Intent.ACTION_MEDIA_EJECT
+import android.content.Intent.ACTION_MEDIA_MOUNTED
 import android.content.IntentFilter
 import android.hardware.display.DisplayManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
@@ -46,15 +48,20 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
             L.d("关闭按钮")
             finish()
         }
-        L.dd(javaClass.simpleName + "注册广播PACKAGE_ADDED")
+        L.dd(javaClass.simpleName + "注册广播MEDIA_MOUNTED,MEDIA_EJECT")
         val filter = IntentFilter()
-        filter.addAction(ACTION_PACKAGE_ADDED)
-        registerReceiver(PkgReceiver(), filter)
+        filter.addDataScheme("file")
+        filter.addAction(ACTION_MEDIA_MOUNTED)
+        filter.addAction(ACTION_MEDIA_EJECT)
+        registerReceiver(TestReceiver(), filter)
     }
 
-    class PkgReceiver : BroadcastReceiver() {
+    inner class TestReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            L.dd(intent?.action)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                L.dd("MainActivity3 onReceive:" + intent?.action + ", displayid=" + context?.display?.displayId)
+                setText("MainActivity3 onReceive:" + intent?.action + ", displayid=" + context?.display?.displayId)
+            }
         }
     }
 
@@ -72,6 +79,12 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
     private fun showDialog() {
         val dialog = MDialog(this, R.style.DialogTheme, R.layout.dialog_layout)
         dialog.show()
+    }
+
+    private fun setText(msg: String) {
+        bind.text.post {
+            bind.text.text = msg
+        }
     }
 
     class MDialog(

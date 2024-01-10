@@ -15,6 +15,7 @@ import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +38,8 @@ import java.util.Date;
 import androidx.activity.ComponentActivity;
 import androidx.appcompat.app.AlertDialog;
 
+import static android.content.Intent.ACTION_MEDIA_EJECT;
+import static android.content.Intent.ACTION_MEDIA_MOUNTED;
 import static android.content.Intent.ACTION_PACKAGE_ADDED;
 
 public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implements View.OnClickListener {
@@ -51,16 +54,21 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
     @Override
     protected void initView() {
         logScreenInfo();
-        L.dd(getClass().getSimpleName()+"注册广播PACKAGE_ADDED");
+        L.dd(getClass().getSimpleName() + "注册广播MEDIA_MOUNTED,MEDIA_EJECT");
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_PACKAGE_ADDED);
-        registerReceiver(new PkgReceiver(), filter);
+        filter.addDataScheme("file");
+        filter.addAction(ACTION_MEDIA_MOUNTED);
+        filter.addAction(ACTION_MEDIA_EJECT);
+        registerReceiver(new TestReceiver(), filter);
     }
 
-    static class PkgReceiver extends BroadcastReceiver {
+    class TestReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            L.dd("onReceive:" + intent.getAction());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                L.d("MainActivity2 onReceive:" + intent.getAction() + ", displayid=" + context.getDisplay().getDisplayId());
+                setText("MainActivity2 onReceive:" + intent.getAction() + ", displayid=" + context.getDisplay().getDisplayId());
+            }
         }
     }
 
@@ -127,11 +135,18 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
         L.dd();
         index++;
 //        Toast.makeText(App.getContext(),"主屏测试Toast " + index,Toast.LENGTH_SHORT).show();
-        Dialog dialog = new Dialog(this);
-        dialog.setOwnerActivity(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout,null);
-        dialog.setContentView(view);
-        dialog.show();
+//        Dialog dialog = new Dialog(this);
+//        dialog.setOwnerActivity(this);
+//        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout, null);
+//        dialog.setContentView(view);
+//        dialog.show();
+
+        Toast.makeText(App.getContext(), "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
+
+        DisplayManager dm = (DisplayManager) getSystemService(DISPLAY_SERVICE);
+        Context d1Context = App.getContext().createDisplayContext(dm.getDisplay(1));
+        Toast.makeText(d1Context, "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
+
     }
 
     private void logScreenInfo() {
@@ -169,6 +184,19 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
         intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
         ActivityOptions options = ActivityOptions.makeBasic().setLaunchDisplayId(displayId);
         context.startActivity(intent, options.toBundle());
+    }
+
+    public void registerShareReceiver(android.content.Context context) {
+        android.content.IntentFilter filter = new android.content.IntentFilter();
+        filter.addAction("com.raite.test_move_task");
+        context.registerReceiver(new android.content.BroadcastReceiver() {
+            @Override
+            public void onReceive(android.content.Context context, android.content.Intent intent) {
+                int fromDisplayId = intent.getIntExtra("from", 0);
+                int toDisplayId = intent.getIntExtra("to", 1);
+
+            }
+        }, filter);
     }
 
     private void setText(String msg) {

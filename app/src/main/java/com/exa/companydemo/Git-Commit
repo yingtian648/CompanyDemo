@@ -54,25 +54,25 @@ test:upass
 fid:JARA-A58A88GOS2-44270
 level:B
 
-fix[AOSP/DialogSplitScreenExt]:Fix Dialog crash err.
-rootcause:App Crash by show dialog.
-solution:Add judgment of owner-activity is not null.
-product:A02
+fix[AOSP/WMS]:Disable SystemUI transient.
+rootcause:Disable SystemUI transient.
+solution:Modify transient config.
+product:T58X
+span:<A18V,A21>
+build:mpass
+test:upass
+fid:ID1258396
+level:C
+
+fix[AOSP/KeyguardServiceDelegate]:fix click home invalid.
+rootcause:KeyguardService did not use.
+solution:Default return unlock success.
+product:AH8
 span:none
 build:mpass
 test:upass
-fid:ID1237712
-level:A
-
-fix[AOSP/DialogSplitScreenExt]:Fix SystemUI display error.
-rootcause:Dialog decorView invisible err.
-solution:Add calculation conditions of owner Activity is fullScreen-width.
-product:A19
-span:<A02,A19>
-build:mpass
-test:upass
-fid:ID1231601
-level:B
+fid:ID1255261
+level:C
 
 Description: Add screenOff window title.
 JiraID: CS-237

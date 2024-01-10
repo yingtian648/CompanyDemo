@@ -9,8 +9,7 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
-import androidx.annotation.NonNull;
-
+import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
 
 /**
@@ -24,9 +23,11 @@ public class ScreenUtils {
      * @param activity
      */
     public static void hideStatusBars(Activity activity) {
+        L.dd();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
+                delayCheckSystemBarsStatus(activity);
                 // 手机自动隐藏状态栏导航栏
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
 //                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
@@ -36,7 +37,7 @@ public class ScreenUtils {
             int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             activity.getWindow().getDecorView().setSystemUiVisibility(option);
@@ -44,23 +45,46 @@ public class ScreenUtils {
     }
 
     public static void hideStatusBar(Activity activity) {
+        delayCheckSystemBarsStatus(activity);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
                 // 手机自动隐藏状态栏导航栏
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                 controller.hide(WindowInsets.Type.statusBars());
-                controller.addOnControllableInsetsChangedListener(new WindowInsetsController.OnControllableInsetsChangedListener() {
-                    @Override
-                    public void onControllableInsetsChanged(@NonNull WindowInsetsController controller, int typeMask) {
-                        L.d("onControllableInsetsChanged：" + typeMask);
-                    }
-                });
             }
         } else {
             int option = View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE;
             activity.getWindow().getDecorView().setSystemUiVisibility(option);
+        }
+    }
+
+    public static void delayCheckSystemBarsStatus(Activity activity) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            activity.getWindow().getDecorView().postDelayed(() -> {
+                WindowInsets insets = activity.getWindow().getDecorView().getRootWindowInsets();
+                int top = insets.getInsets(WindowInsets.Type.systemBars()).top;
+                int bottom = insets.getInsets(WindowInsets.Type.systemBars()).bottom;
+                boolean vis = insets.isVisible(WindowInsets.Type.statusBars());
+                boolean vis1 = insets.isVisible(WindowInsets.Type.navigationBars());
+                L.d("onControllableInsetsChanged：top=" + top + ",bottom=" + bottom + ",status=" + vis + ",navi=" + vis1);
+            }, 300);
+        } else {
+            int flags = activity.getWindow().getAttributes().flags;
+            int sysUiVis = activity.getWindow().getDecorView().getSystemUiVisibility();
+            L.df("activity arr=%d, sysUiVis=%d", flags, sysUiVis);
+            if ((sysUiVis & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0
+                    || (flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0) {
+                L.dd("状态栏 已隐藏");
+            } else {
+                L.dd("状态栏 显示");
+            }
+            if ((sysUiVis & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
+                L.dd("导航栏 已隐藏");
+            } else {
+                L.dd("导航栏 显示");
+            }
         }
     }
 
@@ -92,7 +116,7 @@ public class ScreenUtils {
             int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
             window.getDecorView().setSystemUiVisibility(option);
@@ -108,9 +132,11 @@ public class ScreenUtils {
     }
 
     public static void showStatusBars(Activity activity) {
+        L.dd();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
+                delayCheckSystemBarsStatus(activity);
                 controller.show(WindowInsets.Type.systemBars());
             }
         } else {

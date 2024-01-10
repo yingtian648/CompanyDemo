@@ -23,7 +23,7 @@ class EndLineView @JvmOverloads constructor(
     attrs: AttributeSet?,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
+    var listenTouchEvent = true
 
     companion object {
         const val TAG = "EndLineView"
@@ -98,12 +98,22 @@ class EndLineView @JvmOverloads constructor(
         invalidate()
     }
 
+    fun disable() {
+        listenTouchEvent = false
+    }
+
+    fun enable() {
+        listenTouchEvent = true
+    }
+
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        event?.apply {
-            when (action) {
-                MotionEvent.ACTION_DOWN -> checkAndDrawLine(this)
-                MotionEvent.ACTION_MOVE -> checkAndDrawLine(this)
-                else -> Unit
+        if (listenTouchEvent) {
+            event?.apply {
+                when (action) {
+                    MotionEvent.ACTION_DOWN -> checkAndDrawLine(this)
+                    MotionEvent.ACTION_MOVE -> checkAndDrawLine(this)
+                    else -> Unit
+                }
             }
         }
         return super.dispatchTouchEvent(event)

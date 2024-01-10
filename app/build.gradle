@@ -12,7 +12,7 @@ android {
         applicationId "com.exa.companydemo"
 //        applicationId "com.exa.toasttest"
 //        applicationId "com.exa.locationtest"
-//        applicationId "com.android.companydemo"
+//        applicationId "com.raite.gallery"
 //        applicationId "com.gxatek.cockpit.launcher"
 //        applicationId "space.syncore.cockpit.soundeffect"
 

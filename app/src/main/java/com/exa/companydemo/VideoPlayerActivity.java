@@ -2,6 +2,7 @@ package com.exa.companydemo;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetFileDescriptor;
+import android.os.Build;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -9,11 +10,11 @@ import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.ScreenUtils;
-import com.exa.baselib.utils.StatubarUtil;
 import com.exa.baselib.utils.VideoPlayer;
-import com.exa.companydemo.databinding.ActivitySecondBinding;
+import com.exa.companydemo.databinding.ActivityVideoPlayerBinding;
+import com.exa.companydemo.utils.Ces2715Util;
 
-public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding> {
+public class VideoPlayerActivity extends BaseBindActivity<ActivityVideoPlayerBinding> {
 
     private VideoPlayer player;
     private boolean wakeController = false;
@@ -103,11 +104,20 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     @Override
     protected int setContentViewLayoutId() {
 //        overridePendingTransition(R.anim.task_open_enter,R.anim.task_open_enter);
-        return R.layout.activity_second;
+        return R.layout.activity_video_player;
     }
 
     @Override
     protected void initView() {
+        bind.testBtn.setOnClickListener(v -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                L.d("switchMoveTask 11 curr-display " + getDisplay().getDisplayId());
+                Ces2715Util.switchMoveTask(this);
+                BaseConstants.getHandler().postDelayed(() -> {
+                    L.d("switchMoveTask 22 curr-display  " + getDisplay().getDisplayId());
+                }, 3000);
+            }
+        });
         bind.text.setOnClickListener(v -> finish());
         bind.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -147,17 +157,20 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivitySecondBinding>
     protected void onPause() {
         super.onPause();
         player.pause();
+        L.dd(getClass().getSimpleName());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         player.resume();
+        L.dd(getClass().getSimpleName());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         player.stop();
+        L.dd(getClass().getSimpleName());
     }
 }

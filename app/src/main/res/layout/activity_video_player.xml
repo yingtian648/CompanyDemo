@@ -19,18 +19,28 @@
             android:id="@+id/controllerLine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="30px"
-            android:paddingBottom="30px"
+            android:paddingTop="15px"
+            android:paddingBottom="15px"
             android:background="#77666666"
             android:gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="parent">
+
+            <Button
+                android:id="@+id/testBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                android:textAllCaps="false"
+                android:textSize="20px"
+                android:text="testBtn"
+                />
 
             <TextView
                 android:id="@+id/durT"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="20px"
+                android:textSize="25px"
                 android:text="00:00:00"
                 android:layout_marginStart="100px" />
 
@@ -47,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="20px"
+                android:textSize="25px"
                 android:text="00:00:00"
                 android:layout_marginEnd="50px" />
 

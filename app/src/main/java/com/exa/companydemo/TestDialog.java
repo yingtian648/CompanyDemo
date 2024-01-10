@@ -57,8 +57,10 @@ public class TestDialog {
          * 未加载style的时候——没有半透明背景
          */
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false);
-//        final Dialog dialog = new Dialog(context);
-        final Dialog dialog = new Dialog(context, R.style.MyAlertDialog);
+        TextView titleT = view.findViewById(R.id.titleT);
+        titleT.setText("TestDialog.showDialog");
+        final Dialog dialog = new Dialog(context);
+//        final Dialog dialog = new Dialog(context, R.style.MyAlertDialog);
         dialog.setCancelable(true);
         view.findViewById(R.id.sure_button).setOnClickListener(v -> {
             dialog.dismiss();
@@ -85,7 +87,7 @@ public class TestDialog {
 
 //        setAlertDialogWindowAttrs(dialog.getWindow());
 
-        hideSystemBars(view);
+//        hideSystemBars(view);
 
         dialog.setContentView(view);
         dialog.setTitle("CompanyDemo_showAlertDialog");
@@ -107,14 +109,13 @@ public class TestDialog {
     }
 
     public static void showAlertDialog(Context context){
-        L.dd("isActivity 111:" + (context instanceof Activity));
-        AlertDialog dialog = new AlertDialog.Builder(context).setTitle("测试标题")
-                .setMessage("测试内容")
+        L.dd();
+        AlertDialog dialog = new AlertDialog.Builder(context).setTitle("TestDialog.showAlertDialog")
+                .setMessage("showAlertDialogshowAlertDialogshowAlertDialogshowAlertDialog")
                 .create();
         dialog.show();
         Context context1  = dialog.getContext();
         L.dd("isActivity 222:" + (context1 instanceof Activity));
-
     }
 
     private static void setAlertDialogWindowAttrs(Window window) {
