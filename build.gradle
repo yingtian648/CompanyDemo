@@ -32,7 +32,7 @@ afterEvaluate {
             Runtime runtime = Runtime.getRuntime()
             String cmd = "adb install -r shihuademo.apk"
             Process process = runtime.exec(cmd)
-            System.print("install-result:" + (process.waitFor()==0?"success":"failed!"))
+            System.println("install-result:" + (process.waitFor()==0?"success":"failed!"))
         }
     }
 
@@ -62,7 +62,15 @@ afterEvaluate {
             Runtime runtime = Runtime.getRuntime()
             String cmd = "adb install -r shihuademo.apk"
             Process process = runtime.exec(cmd)
-            System.print("install-result:" + (process.waitFor()==0?"success":"failed!"))
+            int result = process.waitFor()
+            System.println("install-result:" + (result==0?"success":"failed!"))
+        }
+        doLast{
+            Runtime runtime = Runtime.getRuntime()
+            String startCmd = "adb shell am start com.exa.companydemo/.MainActivity"
+            Process process = runtime.exec(startCmd)
+            int result = process.waitFor()
+            System.println("start-app-result:" + (result==0?"success":"failed!"))
         }
     }
 }
