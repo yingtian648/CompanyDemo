@@ -49,7 +49,7 @@
         <activity
             android:name=".MDialogActivity"
             android:exported="true"
-            android:theme="@style/DialogActivity" />
+            android:theme="@style/PermissionDialog" />
         <activity
             android:name=".DemoActivity"
             android:exported="true">
@@ -81,9 +81,9 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
+<!--            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
         <activity
             android:name=".MainActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:exported="true"
             android:resizeableActivity="true"
             android:theme="@style/MainActivity">

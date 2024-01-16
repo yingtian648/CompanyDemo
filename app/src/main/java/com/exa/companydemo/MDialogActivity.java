@@ -2,6 +2,7 @@ package com.exa.companydemo;
 
 import android.app.Dialog;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -19,6 +20,8 @@ import com.exa.companydemo.databinding.ActivityMDialogBinding;
 public class MDialogActivity extends BaseBindActivity<ActivityMDialogBinding> {
 
     private boolean isShow = false;
+    int x;
+
     @Override
     protected int setContentViewLayoutId() {
         return R.layout.activity_m_dialog;
@@ -26,13 +29,15 @@ public class MDialogActivity extends BaseBindActivity<ActivityMDialogBinding> {
 
     @Override
     protected void initView() {
+        getResources().getConfiguration().hardKeyboardHidden =
+                android.content.res.Configuration.HARDKEYBOARDHIDDEN_YES;
         bind.cancelButton.setOnClickListener(v -> finish());
         bind.sureButton.setOnClickListener(v -> finish());
         bind.switchButton.setOnClickListener(v -> {
             isShow = !isShow;
-            if(isShow){
+            if (isShow) {
                 ScreenUtils.showStatusBars(this);
-            }else {
+            } else {
                 ScreenUtils.hideStatusBars(this);
             }
         });
@@ -60,6 +65,7 @@ public class MDialogActivity extends BaseBindActivity<ActivityMDialogBinding> {
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
         );
     }
 }

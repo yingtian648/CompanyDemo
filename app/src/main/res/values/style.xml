@@ -42,15 +42,17 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="PermissionDialog" parent="@style/Theme.AppCompat.DayNight.Dialog">
+    <style name="PermissionDialog" parent="@style/Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:navigationBarColor">@color/transparent</item>
+        <item name="android:windowElevation">0px</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
-
 
     <style name="DialogActivity" parent="Theme.AppCompat">
         <item name="windowNoTitle">true</item>

@@ -4,18 +4,19 @@ import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.graphics.Paint
+import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Button
 import android.widget.TextView
 import com.exa.baselib.utils.L
-import com.exa.baselib.utils.Tools
 import com.exa.companydemo.R
 import java.util.*
 
@@ -33,12 +34,11 @@ class DemoService : Service() {
             start()
             handler = Handler(looper)
         }
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                checkFullScreen(windowManager)
-            }
-        }, 1000, 1000)
+//        Timer().schedule(object : TimerTask() {
+//            override fun run() {
+//                checkFullScreen(windowManager)
+//            }
+//        }, 1000, 1000)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -67,42 +67,34 @@ class DemoService : Service() {
 
     @SuppressLint("WrongConstant")
     private fun addView() {
+        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        L.dd("DemoService")
         val view = LayoutInflater.from(this)
-            .inflate(R.layout.transient_notification_customer, null, false)
-        val tv = view.findViewById<TextView>(R.id.message)
-        tv.getTag()
-        tv.text = "一二三四五六七八一二三四五六七八一二三四五六七八"
-//        view.findViewById<Button>(R.id.cancel_button).setOnClickListener {
-//            windowManager.removeView(view)
-//            stopSelf()
-//        }
-        var with = 0
-        Paint().apply {
-            textSize = tv.textSize
-            with = Tools.getDrawTextWidth(this, tv.text.toString())
+            .inflate(R.layout.dialog_layout, null, false)
+        view.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+            windowManager.removeView(view)
+            stopSelf()
         }
-        L.d("width = $with textView-width = ${tv.maxWidth}")
+        val titleT = view.findViewById<TextView>(R.id.titleT)
         val params = WindowManager.LayoutParams()
-        params.width = WindowManager.LayoutParams.WRAP_CONTENT
-        params.height = WindowManager.LayoutParams.WRAP_CONTENT
-        params.type = 2008
+        params.title = "DemoService"
+        params.width = WindowManager.LayoutParams.MATCH_PARENT
+        params.height = WindowManager.LayoutParams.MATCH_PARENT
+        params.type = 2003
+        params.format = PixelFormat.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            params.fitInsetsTypes = WindowInsets.Type.navigationBars() or WindowInsets.Type.statusBars()
+        }
         params.flags = (WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                 or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+                or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+//                or WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+//                or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+//                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 )
-        if (isFullScreen) {
-            view.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        }
+//        view.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+        titleT.text = "555"
         windowManager.addView(view, params)
-        handler.postDelayed({
-            try {
-                windowManager.removeView(view)
-            } catch (e: Exception) {
-                L.de(e)
-            }
-        },5000)
     }
 }

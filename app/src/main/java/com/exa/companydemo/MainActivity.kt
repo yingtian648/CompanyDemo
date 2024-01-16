@@ -5,8 +5,10 @@ import android.annotation.SuppressLint
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
+import android.content.res.Configuration
 import android.os.*
 import android.view.*
+import android.widget.Toast
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.*
@@ -14,6 +16,7 @@ import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.service.DemoService
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.NetworkManager
 import java.text.SimpleDateFormat
@@ -86,27 +89,30 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     @Throws(Exception::class)
     private fun test() {
         index++
-        L.dd("$index")
+        L.dd("$index 111")
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
 //
 //        TestUtil.testSensorData(this)
 //        startActivity(MDialogActivity::class.java)
-//        startService(new Intent(this, MDialogService.class));
 //        TestUtil.testDialog(this,"ssssss",-1)
 //        BuildTestDialog.getInstance().addNoteView(this)
 //        BaseConstants.getHandler().postDelayed({
 //            TestDialog.showLayout(this)
 //            window.navigationBarColor  = 0
 //        }, 3000)
-        TestDialog.showDialog(this)
+//        startService(Intent(this, DemoService::class.java))
+        Tools.showKeyboard(bind.edit)
+//        TestDialog.showDialog(this)
 //        TestDialog.showAlertDialog(this)
 //        TestDialog.showMyDialog(this,"121212",-1)
 //        TestDialog.showLayout(this)
 //        TestUtil.testSensorData(mContext);
 //        L.dd("isTelephonyNetEnable:" + networkManager.isTelephonyDataEnable());WifiActivity
 //        networkManager.switchTelephonyDataEnable();
-//        Toast.makeText(this, "测试Toast wifi: " + index, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "测试Toast $index", Toast.LENGTH_SHORT).show()
+
+//        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
     @SuppressLint("WrongConstant")
@@ -264,13 +270,15 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         L.dd(msg)
         if (isDisplayChange) {
             isDisplayChange = false
-//            BaseConstants.getHandler().postDelayed({
-                ScreenUtils.showStatusBars(this)
-//            }, 100)
         }
 //        checkPermission();
 //        bindScreenSaver();
 //        finish();
+    }
+
+    override fun onPause() {
+        super.onPause()
+        L.dd()
     }
 
     override fun onStop() {

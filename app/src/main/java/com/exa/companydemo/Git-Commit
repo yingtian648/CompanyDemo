@@ -74,8 +74,8 @@ test:upass
 fid:ID1255261
 level:C
 
-Description: Add screenOff window title.
-JiraID: CS-237
+Description: Fix Inputmethod did not show err.
+JiraID: NA
 Module: AOSP
 Bug or feature: Bug
 Team: FW
