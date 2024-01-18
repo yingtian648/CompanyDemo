@@ -10,10 +10,12 @@ import java.io.LineNumberReader
 
 object CmdUtil {
 
-    const val CMD_DEVINFO = "getprop"   //获取系统属性
-    const val ABD_CMD_DEVINFO =
-        "adb shell getprop"   //adb 获取设备信息【获取指定信息adb shell getprop ro.build.version.sdk】
+    const val CMD_GET_PROP = "getprop"   //获取系统属性
 
+    //adb 获取设备信息(获取指定信息adb shell getprop ro.build.version.sdk)
+    const val ABD_CMD_GET_PROP = "adb shell getprop"
+    const val SET_TCP_IP_PORT_5555 = "setprop service.adb.tcp.port 5555"
+    const val GET_TCP_IP_PORT = "getprop service.adb.tcp.port"
     const val HANDLER_EXE_COMMAND = 12345
 
     /**
@@ -25,10 +27,8 @@ object CmdUtil {
      */
     fun exeCommand(command: String?, isRoot: Boolean, handler: Handler?) {
         if (command == null || command == "") {
-            L.d("没有需要执行的命令")
+            L.d("exeCommand: command is empty")
             return
-        } else {
-            L.d("执行命令：$command isRoot=$isRoot")
         }
         object : Thread() {
             override fun run() {
@@ -73,7 +73,7 @@ object CmdUtil {
                     try {
                         os?.close()
                         process!!.destroy()
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                     }
                 }
                 if (handler != null) {
@@ -86,6 +86,11 @@ object CmdUtil {
                     message.data = bundle
                     message.what = HANDLER_EXE_COMMAND
                     handler.sendMessage(message)
+                }
+                if (result != 0) {
+                    L.d("exeCommand：$command isRoot=$isRoot failed, $errMsg")
+                } else {
+                    L.d("exeCommand：$command isRoot=$isRoot success, $norMsg")
                 }
             }
         }.start()

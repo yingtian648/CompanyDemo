@@ -70,6 +70,7 @@ public class Ces2715Util {
 
     /**
      * 主屏副屏来回移动栈到另外一个屏上
+     * Ces2715Util.switchMoveTask(this);
      */
     public static void switchMoveTask(Context context) {
         int displayId = Display.DEFAULT_DISPLAY;

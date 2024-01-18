@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.exa.companydemo">
-    <!--    android:sharedUserId="@string/sharedUserId"-->
-    <!-- <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" -->
-    <!-- tools:ignore="ProtectedPermissions" /> -->
+    package="com.exa.companydemo"
+    >
+<!--    android:sharedUserId="@string/sharedUserId"-->
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -20,16 +20,22 @@
         android:theme="@style/Theme.CompanyDemo"
         tools:targetApi="31">
         <activity
+            android:name=".WebActivity"
+            android:launchMode="singleTask"
+            android:exported="false" />
+        <activity
             android:name=".carotatest.CarOtaTestActivity"
             android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".toasttest.ToastTestActivity"
             android:exported="true">
+
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
@@ -38,11 +44,9 @@
         <activity
             android:name=".common.WifiActivity"
             android:theme="@style/WifiActivity" />
-
         <activity
             android:name=".activityview.ActivityViewActivity"
             android:exported="false" />
-
         <activity
             android:name=".activityview.StartActivityViewActivity"
             android:exported="false" />
@@ -76,21 +80,19 @@
         <activity
             android:name=".image.ImageUtilActivity"
             android:exported="true">
+
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
-        </activity>
-<!--            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"-->
+        </activity> <!-- android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:resizeableActivity="true"
             android:theme="@style/MainActivity">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale" -->
@@ -161,7 +163,6 @@
                 android:readPermission="android.permission.READ_EXTERNAL_STORAGE"
                 android:writePermission="android.permission.WRITE_EXTERNAL_STORAGE" />
         </provider>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -187,20 +188,16 @@
                 <action android:name="android.intent.action.MEDIA_MOUNTED" />
                 <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
             </intent-filter>
-        </receiver>
-
-        <!--        <receiver-->
-        <!--            android:name=".broadcast.BootReceiver"-->
-        <!--            android:exported="true">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
-        <!--            </intent-filter>-->
-        <!--        </receiver>-->
-
+        </receiver> <!-- <receiver -->
+        <!-- android:name=".broadcast.BootReceiver" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <service
             android:name="com.zlw.main.recorderlib.recorder.RecordService"
             android:exported="true" />
-
         <service
             android:name=".service.DemoService"
             android:enabled="true"
@@ -257,7 +254,6 @@
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="true" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
         android:name="android.permission.SET_TIME"
@@ -266,8 +262,8 @@
     <uses-permission
         android:name="android.hardware.usb.host"
         android:required="false" />
-    <uses-permission android:name="com.gxatek.cockpit.datacenter.permission.DATA_CENTER" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" /> <!-- 系统权限 -->
+    <uses-permission android:name="com.gxatek.cockpit.datacenter.permission.DATA_CENTER" /> <!-- 系统权限 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />

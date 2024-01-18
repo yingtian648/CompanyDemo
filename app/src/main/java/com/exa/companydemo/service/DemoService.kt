@@ -18,6 +18,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.exa.baselib.utils.L
 import com.exa.companydemo.R
+import com.exa.companydemo.utils.ShareVideoDialog
 import java.util.*
 
 class DemoService : Service() {
@@ -42,7 +43,8 @@ class DemoService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        addView()
+//        addView()
+        ShareVideoDialog(this).show()
         return START_STICKY
     }
 
@@ -96,5 +98,7 @@ class DemoService : Service() {
 //        view.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
         titleT.text = "555"
         windowManager.addView(view, params)
+
+        L.d("titleT displayId:" + titleT.context.display?.displayId)
     }
 }

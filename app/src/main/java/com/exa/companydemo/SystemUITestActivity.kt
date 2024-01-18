@@ -1,5 +1,6 @@
 package com.exa.companydemo
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.UiModeManager
 import android.content.Intent
@@ -8,8 +9,7 @@ import android.view.View
 import android.widget.Button
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.L
-import com.exa.baselib.utils.ScreenUtils
-import com.exa.baselib.utils.StatubarUtil
+import com.exa.baselib.utils.SystemBarUtil
 import com.exa.companydemo.databinding.ActivitySystemuiTestBinding
 import org.json.JSONObject
 import kotlin.properties.Delegates
@@ -34,12 +34,12 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
     }
 
     private fun clickTestBtn() {
-        val json =  JSONObject()
-        json.put("name","123")
+        val json = JSONObject()
+        json.put("name", "123")
         L.d("generateJson:" + generateJson(json.toString()))
     }
 
-    fun generateJson(json:String): String? {
+    fun generateJson(json: String): String? {
         return json.runCatching { JSONObject(this) }.getOrNull()?.run {
             JSONObject().apply {
                 put("appId", "mAppId")
@@ -91,6 +91,7 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
         }.show()
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun initView() {
         initListener()
         mUiModeManager = getSystemService(UiModeManager::class.java)
@@ -104,7 +105,7 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
             } else {
                 R.color.yellow
             }
-            StatubarUtil.setStatusBarBgColor(this, statusColor)
+            window.statusBarColor = statusColor
         }
         bind.btnStart.setOnClickListener {
             L.d("启动SystemUI")
@@ -119,22 +120,22 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
             } else {
                 R.color.yellow
             }
-            StatubarUtil.setNavigationBarColor(this, naviColor)
+            window.navigationBarColor = naviColor
         }
         bind.btnAppearance.setOnClickListener {
             L.d("亮色SystemUI")
             bind.tv.text = L.msg
             isShowLightBar = !isShowLightBar
-            ScreenUtils.showLightStatusBars(this, isShowLightBar)
+            SystemBarUtil.showLightStatusBars(this, isShowLightBar)
         }
         bind.btnCJ.setOnClickListener {
             L.d("沉浸式")
             bind.tv.text = L.msg
             isShowInvasion = !isShowInvasion
             if (isShowInvasion) {
-                StatubarUtil.setStatusBarInvasion(this)
+                SystemBarUtil.setInvasionSystemBars(this)
             } else {
-                StatubarUtil.setUnInvasion(this)
+                SystemBarUtil.setInvasionNone(this)
             }
         }
         bind.btnUIMode.setOnClickListener {
@@ -150,9 +151,9 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
             L.w("全屏测试")
             bind.tv.text = L.msg
             if (isFullScreen) {
-                ScreenUtils.showStatusBars(window)
+                SystemBarUtil.showStatusBars(window)
             } else {
-                ScreenUtils.hideStatusBars(window)
+                SystemBarUtil.hideStatusBars(window)
             }
             isFullScreen = !isFullScreen
         }

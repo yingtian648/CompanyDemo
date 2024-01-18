@@ -1,17 +1,18 @@
 package com.exa.companydemo;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
-import android.os.Build;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.ScreenUtils;
+import com.exa.baselib.utils.SystemBarUtil;
 import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companydemo.databinding.ActivityVideoPlayerBinding;
+import com.exa.companydemo.service.DemoService;
 import com.exa.companydemo.utils.Ces2715Util;
 
 public class VideoPlayerActivity extends BaseBindActivity<ActivityVideoPlayerBinding> {
@@ -67,10 +68,10 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivityVideoPlayerBin
     private void switchFullScreen() {
         isFullScreen = !isFullScreen;
         if (isFullScreen) {
-            ScreenUtils.hideStatusBars(this);
+            SystemBarUtil.hideStatusBars(this);
             bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_white);
         } else {
-            ScreenUtils.showStatusBars(this);
+            SystemBarUtil.showStatusBars(this);
             bind.fullBtn.setImageResource(com.exa.baselib.R.drawable.fullscreen_exit_white);
         }
         wakeController = true;
@@ -107,16 +108,16 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivityVideoPlayerBin
         return R.layout.activity_video_player;
     }
 
+    private void test(){
+        L.d(getClass().getSimpleName() + "#test");
+//        startService(new Intent(this, DemoService.class));
+        Ces2715Util.switchMoveTask(this);
+    }
+
     @Override
     protected void initView() {
         bind.testBtn.setOnClickListener(v -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                L.d("switchMoveTask 11 curr-display " + getDisplay().getDisplayId());
-                Ces2715Util.switchMoveTask(this);
-                BaseConstants.getHandler().postDelayed(() -> {
-                    L.d("switchMoveTask 22 curr-display  " + getDisplay().getDisplayId());
-                }, 3000);
-            }
+            test();
         });
         bind.text.setOnClickListener(v -> finish());
         bind.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

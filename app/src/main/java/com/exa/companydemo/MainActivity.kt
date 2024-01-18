@@ -5,10 +5,8 @@ import android.annotation.SuppressLint
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
-import android.content.res.Configuration
 import android.os.*
 import android.view.*
-import android.widget.Toast
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.*
@@ -18,6 +16,7 @@ import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
 import com.exa.companydemo.service.DemoService
 import com.exa.companydemo.toasttest.ToastTestActivity
+import com.exa.companydemo.utils.CmdUtil
 import com.exa.companydemo.utils.NetworkManager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,9 +31,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     private var modeManager: UiModeManager? = null
     private var index = 0
-    private val networkManager: NetworkManager? = null
-    private var lastDisplayId = Display.DEFAULT_DISPLAY
-    private var isDisplayChange = false
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
@@ -44,7 +40,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         val clickIds = intArrayOf(
             R.id.btnLocation, R.id.btnSystemUI, R.id.btnPlay,
             R.id.btnAppList, R.id.btnTestActivity, R.id.btnToast,
-            R.id.btnNightMode, R.id.btnEngineMode, R.id.btnTest
+            R.id.btnNightMode, R.id.btnEngineMode, R.id.btnTest,
+            R.id.btnTcpip
         )
         for (clickId in clickIds) {
             findViewById<View>(clickId).setOnClickListener(this)
@@ -53,21 +50,19 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun initView() {
-        lastDisplayId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display?.displayId ?: Display.DEFAULT_DISPLAY
-        } else {
-            Display.DEFAULT_DISPLAY
-        }
         modeManager = getSystemService(UiModeManager::class.java)
-        L.d("黑夜模式：" + TestUtil.getUiModeStr(modeManager))
-        bind.toolbar.setSubTitle("返回 (wifi:" + NetworkManager.getInstance(this).getWifiIp() + ")")
+        L.d("黑夜模式：" + getUiModeStr(modeManager))
+        bind.toolbar.setSubTitle(
+            "返回 (wifi:" + NetworkManager.getInstance(this).getWifiIp()
+                    + ":" + SystemProperties.get("service.adb.tcp.port") + ")"
+        )
         bind.toolbar.setNavigationOnClickListener { v -> finish() }
-        bind.toolbar.subTitleTextView?.setOnClickListener { v -> finish() }
         bind.edit.setOnEditorActionListener { v, actionId, event ->
             Tools.hideKeyboard(bind.edit)
             false
         }
         doAfterInitView()
+        L.dd("window.insetsController=" + window.decorView.windowInsetsController)
     }
 
     private fun doAfterInitView() {
@@ -79,7 +74,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        TestUtil.registerBroadcast(this);
         // 沉浸式
         //ScreenUtils.setStatusBarInvasion(this)
-        L.dd("55")
+        L.dd("66")
     }
 
     @SuppressLint(
@@ -92,7 +87,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         L.dd("$index 111")
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
-//
+//        startActivity(Intent(this,WebActivity::class.java))
 //        TestUtil.testSensorData(this)
 //        startActivity(MDialogActivity::class.java)
 //        TestUtil.testDialog(this,"ssssss",-1)
@@ -102,7 +97,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //            window.navigationBarColor  = 0
 //        }, 3000)
 //        startService(Intent(this, DemoService::class.java))
-        Tools.showKeyboard(bind.edit)
+//        Tools.showKeyboard(bind.edit)
 //        TestDialog.showDialog(this)
 //        TestDialog.showAlertDialog(this)
 //        TestDialog.showMyDialog(this,"121212",-1)
@@ -172,8 +167,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
         L.w("onWindowFocusChanged: hasFocus = $hasFocus")
-//        window.statusBarColor = getColor(R.color.gray)
-//        window.navigationBarColor = getColor(R.color.gray)
     }
 
     private fun checkPermission() {
@@ -194,9 +187,10 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             R.id.btnSystemUI -> {
                 isFullScreen = !isFullScreen
                 if (isFullScreen) {
-                    ScreenUtils.hideStatusBars(this)
+                    SystemBarUtil.hideStatusBars(this)
+//                    SystemBarUtil.hideStatusBar(this)
                 } else {
-                    ScreenUtils.showStatusBars(this)
+                    SystemBarUtil.showStatusBars(this)
                 }
             }
             R.id.btnLocation -> startActivity(LocationActivity::class.java)
@@ -204,6 +198,9 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             R.id.btnAppList -> startActivity(AppInfoActivity::class.java)
             R.id.btnTestActivity -> startActivity(TestActivity::class.java)
             R.id.btnToast -> startActivity(ToastTestActivity::class.java)
+            R.id.btnTcpip -> {
+                CmdUtil.exeCommand(CmdUtil.SET_TCP_IP_PORT_5555, true, null)
+            }
             R.id.btnNightMode -> {
                 if (modeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES) {
                     modeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
@@ -253,27 +250,24 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     override fun onRestart() {
         super.onRestart()
-        var msg = javaClass.simpleName
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            msg += " displayId=" + display?.displayId
-        }
+        val msg = javaClass.simpleName
         L.dd(msg)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        L.dd("window.insetsController=" + window.decorView.windowInsetsController)
     }
 
     @SuppressLint("SuspiciousIndentation")
     override fun onResume() {
         super.onResume()
-        var msg = javaClass.simpleName
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            msg += " displayId=" + display?.displayId + ", isDisplayChange=" + isDisplayChange
-        }
+        val msg = javaClass.simpleName
         L.dd(msg)
-        if (isDisplayChange) {
-            isDisplayChange = false
-        }
 //        checkPermission();
 //        bindScreenSaver();
 //        finish();
+        L.dd("window.insetsController=" + window.decorView.windowInsetsController)
     }
 
     override fun onPause() {
@@ -283,21 +277,18 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     override fun onStop() {
         super.onStop()
-        var msg = javaClass.simpleName
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            msg += " displayId=" + display?.displayId
-        }
+        val msg = javaClass.simpleName
         L.dd(msg)
+    }
 
-        val currDisplayId = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            display?.displayId ?: Display.DEFAULT_DISPLAY
-        } else {
-            Display.DEFAULT_DISPLAY
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        event?.apply {
+            if(keyCode==KeyEvent.KEYCODE_BACK){
+                L.d("Do nothing with KEYCODE_BACK")
+//                return true
+            }
         }
-        if (currDisplayId != lastDisplayId) {
-            lastDisplayId = currDisplayId
-            isDisplayChange = true
-        }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onDestroy() {

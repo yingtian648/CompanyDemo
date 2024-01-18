@@ -1,10 +1,7 @@
 package com.exa.companydemo.common;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.providers.settings.GlobalSettingsProto;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,9 +11,8 @@ import com.exa.baselib.base.adapter.BaseRecyclerAdapter;
 import com.exa.baselib.base.adapter.OnClickItemListener;
 import com.exa.baselib.bean.AppInfo;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.ScreenUtils;
+import com.exa.baselib.utils.SystemBarUtil;
 import com.exa.baselib.utils.Tools;
-import com.exa.companydemo.App;
 import com.exa.companydemo.Constants;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityAppInfoBinding;
@@ -74,8 +70,7 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
                 tvPkg.setText(data.packageName + "");
             }
         });
-        ScreenUtils.setStatusBarInvasion(this);
-        ScreenUtils.hideStatusBars(this);
+        SystemBarUtil.setInvasionSystemBars(this);
     }
 
     @Override

@@ -15,7 +15,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.L
-import com.exa.baselib.utils.ScreenUtils
+import com.exa.baselib.utils.SystemBarUtil
 import com.exa.companyclient.databinding.ActivityMain3Binding
 
 class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
@@ -34,10 +34,10 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
         }
         bind.showSystemUi.setOnClickListener {
             L.d("showSystemUi")
-            ScreenUtils.showStatusBars(this)
+            SystemBarUtil.showStatusBars(this)
         }
         bind.hideSystemUi.setOnClickListener {
-            ScreenUtils.hideStatusBars(this)
+            SystemBarUtil.hideStatusBars(this)
             L.d("hideSystemUi")
         }
         bind.testBtn.setOnClickListener {
@@ -73,7 +73,7 @@ class MainActivity3 : BaseBindActivity<ActivityMain3Binding>() {
     }
 
     override fun initData() {
-        ScreenUtils.hideStatusBars(this)
+        SystemBarUtil.hideStatusBars(this)
     }
 
     private fun showDialog() {

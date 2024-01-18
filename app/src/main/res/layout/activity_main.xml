@@ -87,11 +87,6 @@
                     />
 
                 <Button
-                    android:id="@+id/btnPlay"
-                    android:text="视频播放"
-                    style="@style/main_btn" />
-
-                <Button
                     android:id="@+id/btnEngineMode"
                     android:text="工程模式"
                     style="@style/main_btn" />
@@ -100,7 +95,6 @@
                     android:id="@+id/btnNightMode"
                     android:text="白天黑夜"
                     style="@style/main_btn" />
-
 
                 <Button
                     android:id="@+id/btnLocation"
@@ -118,6 +112,16 @@
                     style="@style/main_btn" />
 
                 <Button
+                    android:id="@+id/btnPlay"
+                    android:text="视频播放"
+                    style="@style/main_btn" />
+
+                <Button
+                    android:id="@+id/btnTcpip"
+                    android:text="tcpip5555"
+                    style="@style/main_btn" />
+
+                <Button
                     android:id="@+id/btnTestActivity"
                     android:text="TestActivity"
                     style="@style/main_btn" />
@@ -126,6 +130,7 @@
                     android:id="@+id/btnTest"
                     android:text="测试按钮"
                     style="@style/main_btn" />
+
             </LinearLayout>
 
         </ScrollView>

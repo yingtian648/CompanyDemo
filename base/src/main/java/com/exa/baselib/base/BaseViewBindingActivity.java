@@ -1,10 +1,11 @@
 package com.exa.baselib.base;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
-import java.util.zip.Inflater;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +22,31 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends App
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(setContentViewId());
+        bind = getViewBinding();
+        setContentView(bind.getRoot());
+        initView();
+        initData();
     }
 
-    protected abstract int setContentViewId();
+    /**
+     * 反射获取viewbinding
+     */
+    private void initBind() {
+        ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
+        assert type != null;
+        Class cls = (Class) type.getActualTypeArguments()[0];
+        try {
+            Method inflate = cls.getDeclaredMethod("inflate", LayoutInflater.class);
+            bind = (T) inflate.invoke(null, getLayoutInflater());
+            setContentView(bind.getRoot());
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected abstract void initView();
+
+    protected abstract void initData();
+
+    protected abstract T getViewBinding();
 }

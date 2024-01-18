@@ -87,3 +87,12 @@ Module:AOSP
 Bug or feature:feature
 Team:FW
 Test:pass
+
+
+Description: Fix Activity pause err.
+JiraID: NA
+Module: AOSP
+Bug or feature: Bug
+Team: FW
+Test: pass
+

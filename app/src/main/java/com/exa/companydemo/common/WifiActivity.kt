@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.base.adapter.BaseRecyclerAdapter
 import com.exa.baselib.utils.L
-import com.exa.baselib.utils.ScreenUtils
+import com.exa.baselib.utils.SystemBarUtil
 import com.exa.baselib.utils.Tools
 import com.exa.companydemo.R
 import com.exa.companydemo.databinding.ActivityWifiBinding
@@ -295,7 +295,7 @@ class WifiActivity : BaseBindActivity<ActivityWifiBinding>() {
     }
 
     override fun initView() {
-        ScreenUtils.setStatusBarInvasion(this)
+        SystemBarUtil.setStatusBarInvasion(this)
         checkPermission()
         bind.openBtn.setOnClickListener {
             setWifiEnable(true)

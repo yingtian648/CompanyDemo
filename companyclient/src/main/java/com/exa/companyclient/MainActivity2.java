@@ -3,44 +3,27 @@ package com.exa.companyclient;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.Dialog;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
-import android.os.IBinder;
-import android.os.RemoteException;
-import android.os.UserHandle;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.PermissionUtil;
-import com.exa.baselib.utils.ScreenUtils;
+import com.exa.baselib.utils.SystemBarUtil;
 import com.exa.baselib.utils.StatubarUtil;
-import com.exa.baselib.utils.Tools;
-import com.exa.baselib.utils.Utils;
 import com.exa.companyclient.databinding.ActivityMain2Binding;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-
-import androidx.activity.ComponentActivity;
-import androidx.appcompat.app.AlertDialog;
 
 import static android.content.Intent.ACTION_MEDIA_EJECT;
 import static android.content.Intent.ACTION_MEDIA_MOUNTED;
-import static android.content.Intent.ACTION_PACKAGE_ADDED;
 
 public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implements View.OnClickListener {
     private int index = 0;
@@ -115,9 +98,9 @@ public class MainActivity2 extends BaseBindActivity<ActivityMain2Binding> implem
             case R.id.switchSystemUI:
                 mShowSystemUI = !mShowSystemUI;
                 if (mShowSystemUI) {
-                    ScreenUtils.showStatusBars(this);
+                    SystemBarUtil.showStatusBars(this);
                 } else {
-                    ScreenUtils.hideStatusBars(this);
+                    SystemBarUtil.hideStatusBars(this);
                 }
                 break;
             case R.id.testBtn:

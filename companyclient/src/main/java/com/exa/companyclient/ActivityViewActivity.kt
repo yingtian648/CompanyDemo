@@ -2,14 +2,12 @@ package com.exa.companyclient
 
 import android.annotation.SuppressLint
 import android.app.ActivityOptions
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.exa.baselib.utils.L
-import com.exa.baselib.utils.ScreenUtils
 import com.exa.baselib.view.MySurfaceView
 
 class ActivityViewActivity : AppCompatActivity() {

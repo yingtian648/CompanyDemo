@@ -3,39 +3,25 @@ package com.exa.companydemo;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
-import android.graphics.RenderEffect;
-import android.graphics.Shader;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.Logs;
-import com.exa.baselib.utils.OnClickViewListener;
-import com.exa.baselib.utils.ScreenUtils;
-
-import java.security.PublicKey;
+import com.exa.baselib.utils.SystemBarUtil;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 /**
  * @Author lsh
@@ -79,9 +65,9 @@ public class TestDialog {
         view.findViewById(R.id.switch_button).setOnClickListener(v -> {
             isHide = !isHide;
             if (isHide) {
-                ScreenUtils.hideStatusBars(dialog.getWindow());
+                SystemBarUtil.hideStatusBars(dialog.getWindow());
             } else {
-                ScreenUtils.showStatusBars(dialog.getWindow());
+                SystemBarUtil.showStatusBars(dialog.getWindow());
             }
         });
 
@@ -199,9 +185,9 @@ public class TestDialog {
                 L.d("点击开关按钮");
                 isHide = !isHide;
                 if (isHide) {
-                    ScreenUtils.hideStatusBars(getWindow());
+                    SystemBarUtil.hideStatusBars(getWindow());
                 } else {
-                    ScreenUtils.showStatusBars(getWindow());
+                    SystemBarUtil.showStatusBars(getWindow());
                 }
             });
         }
