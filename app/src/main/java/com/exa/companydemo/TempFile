@@ -25,3 +25,36 @@ ping 192.0.2.2 -n 1 -w 500 > nul
 for /F %%i in ('adb shell "ps -A -o pid,name | grep %pkgName% | grep -v grep | awk '{print $1}'"') do ( set number=%%i)
 adb shell kill %number%
 echo kill process %number%
+
+com.android.server.wm.ActivityRecord.occludesParent:2679
+com.android.server.wm.TaskFragment.isOpaqueActivity:697
+com.android.server.wm.TaskFragment.$r8$lambda$q77xa5YS28EmN0qaij-drM-u_C8:0 com.android.server.wm.TaskFragment$$ExternalSyntheticLambda1.test:4
+com.android.internal.util.function.pooled.PooledLambdaImpl.doInvoke:285
+com.android.internal.util.function.pooled.PooledLambdaImpl.invoke:204
+
+com.android.server.wm.EnsureActivitiesVisibleHelper.setActivityVisibilityState:160
+com.android.server.wm.EnsureActivitiesVisibleHelper.process:139
+com.android.server.wm.TaskFragment.updateActivityVisibilities:985
+com.android.server.wm.Task.lambda$ensureActivitiesVisible$15:4866
+com.android.server.wm.Task$$ExternalSyntheticLambda20.accept:10
+
+com.android.server.wm.ActivityRecord.fillsParent:2673
+com.android.server.wm.DisplayPolicy.adjustWindowParamsLw:1044
+com.android.server.wm.WindowManagerService.relayoutWindow:2275
+com.android.server.wm.Session.relayout:235 android.view.IWindowSession$Stub.onTransact:745
+com.android.server.wm.Session.onTransact:170
+
+com.android.server.wm.ActivityRecord.fillsParent:2673
+com.android.server.wm.AppTransitionController.getTransitCompatType:387
+com.android.server.wm.AppTransitionController.handleAppTransitionReady:215
+com.android.server.wm.RootWindowContainer.checkAppTransitionReady:1047
+com.android.server.wm.RootWindowContainer.performSurfacePlacementNoTrace:886
+com.android.server.wm.RootWindowContainer.performSurfacePlacement:822
+
+com.android.server.wm.ActivityRecord.fillsParent:2673
+com.android.server.wm.AppTransitionController.lambda$findAnimLayoutParamsToken$2:708
+com.android.server.wm.AppTransitionController$$ExternalSyntheticLambda4.test:2
+com.android.server.wm.AppTransitionController.lookForHighestTokenWithFilter:751
+om.android.server.wm.AppTransitionController.findAnimLayoutParamsToken:707
+com.android.server.wm.AppTransitionController.handleAppTransitionReady:236
+

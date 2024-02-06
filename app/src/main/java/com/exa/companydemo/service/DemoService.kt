@@ -1,51 +1,88 @@
 package com.exa.companydemo.service
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
+import android.app.Dialog
 import android.app.Service
+import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import com.exa.baselib.BaseConstants
 import com.exa.baselib.utils.L
+import com.exa.companydemo.App
 import com.exa.companydemo.R
-import com.exa.companydemo.utils.ShareVideoDialog
 import java.util.*
 
 class DemoService : Service() {
     private lateinit var windowManager: WindowManager
     private var isFullScreen = false
     private lateinit var handler: Handler
+    private lateinit var mContext: Context
+    private lateinit var contentView: View
+    private var dialog: Dialog? = null
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
 
     override fun onCreate() {
         super.onCreate()
+        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        contentView = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_layout, null, false)
+        contentView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+            dismissDialog()
+        }
+        contentView.findViewById<Button>(R.id.sure_button).setOnClickListener {
+            dismissDialog()
+        }
+        mContext = this
         HandlerThread("DemoService_Handler").apply {
             start()
             handler = Handler(looper)
         }
-//        Timer().schedule(object : TimerTask() {
-//            override fun run() {
-//                checkFullScreen(windowManager)
-//            }
-//        }, 1000, 1000)
+        L.dd("context 1:" + mContext.toString())
+        L.dd("context 2:" + App.getContext().toString())
+    }
+
+    private fun dismissDialog() {
+        runCatching {
+            windowManager.removeView(contentView)
+        }
+        runCatching {
+            dialog?.dismiss()
+        }
+        stopSelf()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 //        addView()
-        ShareVideoDialog(this).show()
+//        ShareVideoDialog(this).show()
+        test()
         return START_STICKY
+    }
+
+    private fun test() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            L.dd(javaClass.simpleName + " display=" + mContext.display?.displayId)
+        }
+        dialog = Dialog(mContext)
+        dialog?.apply {
+            window?.setType(WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG)
+            setContentView(contentView)
+        }?.show()
     }
 
     private fun checkFullScreen(windowManager: WindowManager) {
@@ -67,9 +104,13 @@ class DemoService : Service() {
         }
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+    }
+
     @SuppressLint("WrongConstant")
     private fun addView() {
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         L.dd("DemoService")
         val view = LayoutInflater.from(this)
             .inflate(R.layout.dialog_layout, null, false)
@@ -99,6 +140,13 @@ class DemoService : Service() {
         titleT.text = "555"
         windowManager.addView(view, params)
 
-        L.d("titleT displayId:" + titleT.context.display?.displayId)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            L.d("titleT displayId:" + titleT.context.display?.displayId)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        L.dd(javaClass.simpleName)
     }
 }

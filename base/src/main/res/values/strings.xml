@@ -4,5 +4,11 @@
     <string-array name="engine_mode_pkgs">
         <item>com.android.engmode</item>
         <item>com.gxatek.cockpit.diagnostic</item>
+        <item>com.android.settings</item>
+        <item>com.android.car.settings</item>
+    </string-array>
+    <string-array name="setting_pkgs">
+        <item>com.android.settings</item>
+        <item>com.android.car.settings</item>
     </string-array>
 </resources>

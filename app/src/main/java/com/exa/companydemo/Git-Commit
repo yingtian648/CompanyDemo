@@ -34,9 +34,11 @@ test:upass
 fid:none
 level:none
 
-fix[CarLocationService]:Fix parse utc time err.
-rootcause:Parse utc time err.
-solution:parse utc time err.
+feat[CarLocationService]: Let subscribe after unSubscribe 3 seconds.
+rootcause:订阅soalib优化.
+solution:
+1.添加每隔10的W级别日志。
+2.取消订阅后延时3秒再订阅。
 product:A02
 span:none
 build:mpass
@@ -44,15 +46,15 @@ test:upass
 fid:none
 level:none
 
-fix[ProcManager]:Add com.iflytek.autofly.mediax.second whitlist.
-rootcause:副屏聚合媒体被ProcManager杀死.
-solution:Add com.iflytek.autofly.mediax.second whitlist.
-product:A8E
+fix[CarLocationService]:Fix crash error.
+rootcause:电源状态回调过早导致闪退.
+solution:Let power state listen after handler create.
+product:A02
 span:none
 build:mpass
 test:upass
-fid:JARA-A58A88GOS2-44270
-level:B
+fid:none
+level:none
 
 fix[AOSP/WMS]:Disable SystemUI transient.
 rootcause:Disable SystemUI transient.
@@ -89,8 +91,8 @@ Team:FW
 Test:pass
 
 
-Description: Fix Activity pause err.
-JiraID: NA
+Description:Fix open launcher invalid.
+JiraID: CS-663
 Module: AOSP
 Bug or feature: Bug
 Team: FW

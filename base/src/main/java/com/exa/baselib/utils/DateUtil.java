@@ -19,55 +19,55 @@ public class DateUtil {
     public static final String PATTERN_TIME = "HH:mm:ss";
     public static final String PATTERN_TIME_HM = "HH:mm";
 
-    public static String getNowDate(){
+    public static String getNowDate() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_DATE);
         return simpleDateFormat.format(new Date());
     }
 
-    public static String getNowDateFull(){
+    public static String getNowDateFull() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL);
         return simpleDateFormat.format(new Date());
     }
 
-    public static String getNowDateHM(){
+    public static String getNowDateHM() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_TIME_HM);
         return simpleDateFormat.format(new Date());
     }
 
-    public static String getNowDateFullMs(){
+    public static String getNowDateFullMs() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL_MS);
         return simpleDateFormat.format(new Date());
     }
 
-    public static String getNowTime(){
+    public static String getNowTime() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_TIME);
         return simpleDateFormat.format(new Date());
     }
 
-    public static String getNowDateFullNum(){
+    public static String getNowDateFullNum() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL_NUM);
         return simpleDateFormat.format(new Date());
     }
 
-    public static String getFullTime(long time){
+    public static String getFullTime(long time) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL);
         return simpleDateFormat.format(new Date(time));
     }
 
-    public static String getFullSTime(long time){
+    public static String getFullSTime(long time) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL_MS);
         return simpleDateFormat.format(new Date(time));
     }
 
-    public static long getFullTimeMillis(String fullTime){
+    public static long getFullTimeMillis(String fullTime) {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL);
         try {
@@ -78,7 +78,26 @@ public class DateUtil {
         }
     }
 
-    public static Date getLocalDateFromUtcTime(){
+    public static String getTimeStr(long time) {
+        long s = time / 1000;
+        if (s < 60) {
+            return s + "s";
+        } else if (s < 60 * 60) {
+            return s / 60 + ":" + s % 60;
+        } else if (s < 60 * 60 * 24) {
+            long h = s / 3600;
+            long min = s % 3600 / 60;
+            return h + ":" + min + ":" + s % 3600 % 60;
+        } else {
+            long last = s % (60 * 60 * 24);
+            long h = last / 3600;
+            long min = last % 3600 / 60;
+            return s/(60 * 60 * 24) + "天" + h + ":" + min + ":" + last % 3600 % 60;
+        }
+
+    }
+
+    public static Date getLocalDateFromUtcTime() {
         return new Date();
     }
 }

@@ -46,15 +46,13 @@ public class MInputMethodService extends InputMethodService implements View.OnCl
 
     @Override
     public View onCreateInputView() {//当IME第一次显示，系统会调用 onCreateInputView() 回调。在你实现的这个方法中，你创建你想要的IME窗口的布局并返回给系统
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().getWindow().setDecorFitsSystemWindows(true);
-            WindowInsetsController insetsController = getWindow().getWindow().getInsetsController();
-            if (insetsController != null) {
-                insetsController.hide(WindowInsets.Type.navigationBars());
-            }
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            getWindow().getWindow().setDecorFitsSystemWindows(true);
+//        }
         inputView = getLayoutInflater().inflate(R.layout.input_layout, null);
         initView();
+        getWindow().getWindow().getDecorView()
+                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         return inputView;
     }
 
@@ -166,9 +164,7 @@ public class MInputMethodService extends InputMethodService implements View.OnCl
                 mInput.commitText("9", 1);
                 break;
             case R.id.btnEnter:
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    mInput.closeConnection();
-                }
+                mInput.closeConnection();
                 break;
             case R.id.btnDel:
                 mInput.deleteSurroundingText(1, 0);

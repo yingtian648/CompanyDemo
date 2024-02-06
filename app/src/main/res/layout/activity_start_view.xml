@@ -6,12 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".activityview.StartActivityViewActivity">
 
-    <android.app.ActivityView
-        android:id="@+id/actView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray"
-        android:layout_below="@id/toolbar" />
+<!--    <android.app.ActivityView-->
+<!--        android:id="@+id/actView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@color/gray"-->
+<!--        android:layout_below="@id/toolbar" />-->
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

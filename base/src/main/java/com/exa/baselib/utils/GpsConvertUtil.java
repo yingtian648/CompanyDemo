@@ -22,13 +22,38 @@ public class GpsConvertUtil {
      * @return
      */
     public static double convertCoordinates(double res) {
+        res = res * 100;
         if (res != 0) {
             int wdd = (int) (res / 100);
             double wmm = res % 100 / 60;
-            return getDoubleAcc(wdd + wmm, 7);
+            L.dd(res / 100 + " wdd=" + wdd + ", wmm=" + wmm);
+            return wdd + wmm;
         } else {
             return res;
         }
+    }
+
+    /**
+     * dd.dddd to ddmm.mmmm
+     *
+     * @param res 2302.4545412/11325.45451212
+     * @return
+     */
+    public static double unConvertCoordinates(double res) {
+        String splitTag = ".";
+        if (res != 0) {
+            String temp = String.valueOf(res);
+            L.dd("temp=" + temp);
+            if (temp.contains(splitTag)) {
+                int head = Integer.parseInt(temp.substring(0, temp.indexOf(splitTag)));
+                double last = Double.parseDouble("0."
+                        + temp.substring(temp.indexOf(splitTag) + 1));
+                last = last * 60 / 100;
+                L.dd("head=" + head + " last=" + last);
+                return head + last;
+            }
+        }
+        return res;
     }
 
     /**

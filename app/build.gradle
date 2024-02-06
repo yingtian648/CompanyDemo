@@ -17,9 +17,9 @@ android {
 //        applicationId "space.syncore.cockpit.soundeffect"
 
         minSdk 26
-        targetSdk 31
+        targetSdk 32
         versionCode 999999
-        versionName getDate()
+        versionName getVersionN()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -53,7 +53,6 @@ android {
         // 根View tools:viewBindingIgnore="true" 禁用viewBinding
         viewBinding = true  //for id 'kotlin-parcelize'
     }
-
     sourceSets {
         main {
             java.srcDirs = ['src/main/java', 'src/main/java-gen', 'src/main/aidl']
@@ -78,9 +77,8 @@ android {
 }
 
 
-static String getDate() {
-    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss")
-    return df.format(new Date())
+static String getVersionN() {
+    return new Date().format("yyyyMMdd_HHmm")
 }
 
 dependencies {
@@ -91,7 +89,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation files('libs/scenemanager.jar')
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    compileOnly files('libs/framework.jar')
+    compileOnly files('libs\\services.core.jar')
+//    compileOnly files('libs/framework.jar')
+    compileOnly files('libs/framework-minus-apex.jar')
     implementation files('libs/carlocalupdatesdk.jar')
     implementation files('libs/recorderlib.aar')
     implementation files('libs/carotasdk.jar')

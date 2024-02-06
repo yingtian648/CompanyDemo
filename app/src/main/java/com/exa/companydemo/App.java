@@ -8,9 +8,11 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.SystemClock;
 import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
+import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.utils.PathUtil;
@@ -28,12 +30,13 @@ public class App extends Application {
         Constants.init();
         BaseConstants.init();
         L.init("MCompanyDemo", true);
+        L.d("开机时长：" + DateUtil.getTimeStr(SystemClock.elapsedRealtime()));
         PathUtil.INSTANCE.init(this);
         app = this;
         Tools.logScreenWH(this);
     }
 
-    private void listenActivityLife(){
+    private void listenActivityLife() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
@@ -88,7 +91,7 @@ public class App extends Application {
         L.dd("---App---");
     }
 
-    public static void exit(){
+    public static void exit() {
         L.d("App exit");
         System.exit(0);
     }

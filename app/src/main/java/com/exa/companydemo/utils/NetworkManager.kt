@@ -9,7 +9,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-import android.net.TetheringManager
+//import android.net.TetheringManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.telephony.PhoneStateListener
@@ -29,8 +29,8 @@ import java.lang.reflect.InvocationTargetException
 class NetworkManager private constructor(private val mContext: Context) {
     private var mNetManager: ConnectivityManager =
         mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    private var mTetheringManager: TetheringManager =
-        mContext.getSystemService(TetheringManager::class.java)
+//    private var mTetheringManager: TetheringManager =
+//        mContext.getSystemService(TetheringManager::class.java)
     private var mWifiManager: WifiManager =
         mContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
     private var mTelephonyManager: TelephonyManager =
@@ -327,30 +327,30 @@ class NetworkManager private constructor(private val mContext: Context) {
      * wifi-热点
      */
     fun switchHotSpot() {
-        L.i(TAG, "switchHotSpot:$mHotSpotEnable")
-        if(mWaitingForTerminalState){
-            return
-        }
-        if (!mHotSpotEnable) {
-            mWaitingForTerminalState = true
-            mTetheringManager.startTethering(
-                TetheringManager.TetheringRequest.Builder(TetheringManager.TETHERING_WIFI)
-                .setShouldShowEntitlementUi(false).build(),
-                ConcurrentUtils.DIRECT_EXECUTOR,
-                object : TetheringManager.StartTetheringCallback {
-                    override fun onTetheringFailed(result: Int) {
-                        mWaitingForTerminalState = false
-                        L.w(TAG, "onTetheringFailed")
-                    }
-
-                    override fun onTetheringStarted() {
-                        mWaitingForTerminalState = false
-                        L.w(TAG, "onTetheringStarted")
-                    }
-                })
-        } else {
-            mTetheringManager.stopTethering(TetheringManager.TETHERING_WIFI)
-        }
+//        L.i(TAG, "switchHotSpot:$mHotSpotEnable")
+//        if(mWaitingForTerminalState){
+//            return
+//        }
+//        if (!mHotSpotEnable) {
+//            mWaitingForTerminalState = true
+//            mTetheringManager.startTethering(
+//                TetheringManager.TetheringRequest.Builder(TetheringManager.TETHERING_WIFI)
+//                .setShouldShowEntitlementUi(false).build(),
+//                ConcurrentUtils.DIRECT_EXECUTOR,
+//                object : TetheringManager.StartTetheringCallback {
+//                    override fun onTetheringFailed(result: Int) {
+//                        mWaitingForTerminalState = false
+//                        L.w(TAG, "onTetheringFailed")
+//                    }
+//
+//                    override fun onTetheringStarted() {
+//                        mWaitingForTerminalState = false
+//                        L.w(TAG, "onTetheringStarted")
+//                    }
+//                })
+//        } else {
+//            mTetheringManager.stopTethering(TetheringManager.TETHERING_WIFI)
+//        }
     }
 
     /**

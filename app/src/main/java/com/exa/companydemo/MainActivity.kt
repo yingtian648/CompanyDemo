@@ -1,10 +1,12 @@
 package com.exa.companydemo
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
+import android.hardware.display.DisplayManager
 import android.os.*
 import android.view.*
 import com.exa.baselib.BaseConstants
@@ -31,6 +33,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     private var modeManager: UiModeManager? = null
     private var index = 0
+    private var mObjAnim: ObjectAnimator? = null
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
@@ -46,6 +49,15 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         for (clickId in clickIds) {
             findViewById<View>(clickId).setOnClickListener(this)
         }
+        bind.btnEngineMode.setOnLongClickListener {
+            val apps = resources.getStringArray(com.exa.baselib.R.array.setting_pkgs)
+            for (item in apps) {
+                if (Utils.openApp(this, item)) {
+                    break
+                }
+            }
+            return@setOnLongClickListener false
+        }
     }
 
     @SuppressLint("ResourceType", "SetTextI18n")
@@ -56,13 +68,12 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             "返回 (wifi:" + NetworkManager.getInstance(this).getWifiIp()
                     + ":" + SystemProperties.get("service.adb.tcp.port") + ")"
         )
-        bind.toolbar.setNavigationOnClickListener { v -> finish() }
-        bind.edit.setOnEditorActionListener { v, actionId, event ->
+        bind.toolbar.setNavigationOnClickListener { finish() }
+        bind.edit.setOnEditorActionListener { _, _, _ ->
             Tools.hideKeyboard(bind.edit)
             false
         }
         doAfterInitView()
-        L.dd("window.insetsController=" + window.decorView.windowInsetsController)
     }
 
     private fun doAfterInitView() {
@@ -96,7 +107,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //            TestDialog.showLayout(this)
 //            window.navigationBarColor  = 0
 //        }, 3000)
-//        startService(Intent(this, DemoService::class.java))
 //        Tools.showKeyboard(bind.edit)
 //        TestDialog.showDialog(this)
 //        TestDialog.showAlertDialog(this)
@@ -256,7 +266,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     override fun onStart() {
         super.onStart()
-        L.dd("window.insetsController=" + window.decorView.windowInsetsController)
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -267,7 +276,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        checkPermission();
 //        bindScreenSaver();
 //        finish();
-        L.dd("window.insetsController=" + window.decorView.windowInsetsController)
     }
 
     override fun onPause() {
@@ -283,7 +291,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         event?.apply {
-            if(keyCode==KeyEvent.KEYCODE_BACK){
+            if (keyCode == KeyEvent.KEYCODE_BACK) {
                 L.d("Do nothing with KEYCODE_BACK")
 //                return true
             }
