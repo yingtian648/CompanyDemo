@@ -24,4 +24,18 @@
     <dimen name="panel_seekbar_radius">@dimen/dp6</dimen>
 
     <dimen name="test_height">50dp</dimen>
+
+    <dimen name="pro_test_sp_nor">22sp</dimen>
+    <dimen name="pro_test_sp_big">28sp</dimen>
+    <dimen name="pro_test_dp_2">2dp</dimen>
+    <dimen name="pro_test_dp_5">5dp</dimen>
+    <dimen name="pro_test_dp_10">10dp</dimen>
+    <dimen name="pro_test_dp_15">15dp</dimen>
+    <dimen name="pro_test_dp_20">20dp</dimen>
+    <dimen name="pro_test_dp_50">50dp</dimen>
+    <dimen name="pro_test_dp_60">60dp</dimen>
+    <dimen name="pro_test_dp_70">70dp</dimen>
+    <dimen name="pro_test_dp_120">120dp</dimen>
+    <dimen name="pro_test_dp_200">200dp</dimen>
+    <dimen name="pro_test_dp_250">250dp</dimen>
 </resources>

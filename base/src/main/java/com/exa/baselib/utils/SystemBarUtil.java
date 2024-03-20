@@ -9,6 +9,9 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.WindowManager;
 
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import static android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
 import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
 
@@ -115,6 +118,34 @@ public class SystemBarUtil {
             int showingInsets = getShowingInsets(activity.getWindow());
             L.d("delayCheckSystemBarsStatus：" + showingInsets);
         }, 500);
+    }
+
+    public static void hideNavigationBar(Window window) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsetsController controller = window.getInsetsController();
+            if (controller != null) {
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                controller.hide(WindowInsets.Type.navigationBars());
+            } else {
+                L.dd("controller is null");
+            }
+        } else {
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+            window.getDecorView().setSystemUiVisibility(option);
+        }
+    }
+
+    public static void registerInsetsListener(Window window) {
+        ViewCompat.setOnApplyWindowInsetsListener(window.getDecorView().getRootView(), (v, insets) -> {
+            boolean imeState = insets.isVisible(WindowInsetsCompat.Type.ime());
+            boolean statusState = insets.isVisible(WindowInsetsCompat.Type.statusBars());
+            boolean naviState = insets.isVisible(WindowInsetsCompat.Type.navigationBars());
+            L.dd("statusVisible=" + statusState
+                    + " naviVisible=" + naviState
+                    + " imeVisible=" + imeState);
+            return insets;
+        });
     }
 
     /**

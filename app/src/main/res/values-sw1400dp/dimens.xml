@@ -19,4 +19,18 @@
     <dimen name="toast_bg_corners_radius">20dp</dimen>
 
     <dimen name="toast_h">80dp</dimen>
+
+    <dimen name="pro_test_sp_nor">30sp</dimen>
+    <dimen name="pro_test_sp_big">38sp</dimen>
+    <dimen name="pro_test_dp_2">3dp</dimen>
+    <dimen name="pro_test_dp_5">8dp</dimen>
+    <dimen name="pro_test_dp_10">14dp</dimen>
+    <dimen name="pro_test_dp_15">20dp</dimen>
+    <dimen name="pro_test_dp_20">27dp</dimen>
+    <dimen name="pro_test_dp_50">66dp</dimen>
+    <dimen name="pro_test_dp_60">80dp</dimen>
+    <dimen name="pro_test_dp_70">93dp</dimen>
+    <dimen name="pro_test_dp_120">160dp</dimen>
+    <dimen name="pro_test_dp_200">267dp</dimen>
+    <dimen name="pro_test_dp_250">375dp</dimen>
 </resources>

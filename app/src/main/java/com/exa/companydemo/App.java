@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 public class App extends Application {
     @SuppressLint("StaticFieldLeak")
     private static Application app;
+    public static int index = 0;
 
     @Override
     public void onCreate() {
@@ -88,7 +89,7 @@ public class App extends Application {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        L.dd("---App---");
+        L.dd("---App---" + newConfig.getLocales().toString());
     }
 
     public static void exit() {

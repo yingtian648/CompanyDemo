@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    android:padding="@dimen/pro_test_dp_10">
+
+    <include layout="@layout/layout_title_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pro_test_dp_10">
+
+        <Button
+            android:id="@+id/btnOpen"
+            style="@style/ProTestBtn_Main"
+            android:layout_marginStart="0dp"
+            android:text="打开蓝牙"
+            />
+
+        <Button
+            android:id="@+id/btnClose"
+            style="@style/ProTestBtn_Main"
+            android:text="关闭蓝牙"
+            />
+
+        <Button
+            android:id="@+id/btnScan"
+            style="@style/ProTestBtn_Main"
+            android:text="扫描设备"
+            />
+
+        <Button
+            android:id="@+id/btnDisc"
+            style="@style/ProTestBtn_Main"
+            android:text="断开连接"
+            />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="@dimen/pro_test_dp_20"
+            android:textSize="@dimen/pro_test_sp_nor"
+            android:text="蓝牙状态"
+            />
+
+        <TextView
+            android:id="@+id/tvConn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:layout_marginStart="@dimen/pro_test_dp_20"
+            android:textSize="@dimen/pro_test_sp_nor"
+            android:text="连接状态：未连接"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/pro_test_dp_10"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/pro_test_sp_nor"
+                android:textColor="@android:color/white"
+                android:text="搜索列表"
+                />
+
+            <ListView
+                android:id="@+id/lvFind"
+                android:layout_marginTop="@dimen/pro_test_dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:layout_marginStart="@dimen/pro_test_dp_10"
+            android:layout_marginEnd="@dimen/pro_test_dp_10"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/pro_test_sp_nor"
+                android:textColor="@android:color/white"
+                android:text="已配对列表"
+                />
+
+            <ListView
+                android:id="@+id/lvBonded"
+                android:layout_marginTop="@dimen/pro_test_dp_10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -2,6 +2,7 @@ package com.exa.baselib.base;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.WindowManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,6 +23,7 @@ public abstract class BaseViewBindingActivity<T extends ViewBinding> extends App
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         bind = getViewBinding();
         setContentView(bind.getRoot());
         initView();

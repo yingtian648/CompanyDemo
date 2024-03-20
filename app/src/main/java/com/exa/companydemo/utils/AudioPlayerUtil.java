@@ -1,5 +1,6 @@
 package com.exa.companydemo.utils;
 
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 
 import com.exa.baselib.utils.L;
@@ -85,6 +86,13 @@ public class AudioPlayerUtil {
         if (mPlayer == null) {
             //创建MediaPlayer和设置监听
             mPlayer = new MediaPlayer();
+            AudioAttributes attributes = new AudioAttributes.Builder()
+                    // 播放通道
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    // 声音类型
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            mPlayer.setAudioAttributes(attributes);
         }
         setListener(listener);
         if (isPlaying) {

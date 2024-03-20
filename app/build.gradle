@@ -89,7 +89,11 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation files('libs/scenemanager.jar')
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    compileOnly files('libs\\services.core.jar')
+    implementation files('libs\\android_car.jar')
+    implementation files('libs\\framework-wifi.jar')
+    compileOnly files('libs\\Car-Framework.jar')
+    compileOnly files('libs\\SettingsLib.jar')
+    implementation files('libs\\services.core.jar')
 //    compileOnly files('libs/framework.jar')
     compileOnly files('libs/framework-minus-apex.jar')
     implementation files('libs/carlocalupdatesdk.jar')

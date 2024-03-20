@@ -1,12 +1,17 @@
 package com.exa.companydemo.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.fonts.FontFamilyUpdateRequest;
+import android.graphics.fonts.FontFileUpdateRequest;
+import android.graphics.fonts.FontManager;
+import android.graphics.fonts.FontStyle;
 import android.media.MediaMetadataRetriever;
-import android.os.UserHandle;
+import android.os.Build;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.util.Xml;
@@ -25,14 +30,59 @@ import org.xmlpull.v1.XmlPullParser;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.graphics.fonts.FontStyle.FONT_SLANT_ITALIC;
+import static android.graphics.fonts.FontStyle.FONT_SLANT_UPRIGHT;
+import static android.graphics.fonts.FontStyle.FONT_WEIGHT_NORMAL;
+import static android.os.Environment.DIRECTORY_PICTURES;
 
 public class Tools {
+
+    public static void updateFontFamily(Context context) {
+        FontManager fm = context.getSystemService(FontManager.class);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            try {
+                File fileR = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), "AIONType-regular.otf");
+                File fileL = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), "AIONType-light.otf");
+                File fileB = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), "AIONType-bold.otf");
+                ParcelFileDescriptor fdR = ParcelFileDescriptor.open(fileR, ParcelFileDescriptor.MODE_READ_ONLY);
+                ParcelFileDescriptor fdL = ParcelFileDescriptor.open(fileL, ParcelFileDescriptor.MODE_READ_ONLY);
+                ParcelFileDescriptor fdB = ParcelFileDescriptor.open(fileB, ParcelFileDescriptor.MODE_READ_ONLY);
+                byte[] signature = null;
+                fm.updateFontFamily(new FontFamilyUpdateRequest.Builder()
+                        .addFontFileUpdateRequest(new FontFileUpdateRequest(fdR, signature))
+                        .addFontFileUpdateRequest(new FontFileUpdateRequest(fdL, signature))
+                        .addFontFileUpdateRequest(new FontFileUpdateRequest(fdB, signature))
+                        .addFontFamily(
+                                new FontFamilyUpdateRequest.FontFamily.Builder("AIONType",
+                                        Arrays.asList(
+                                                new FontFamilyUpdateRequest.Font.Builder(
+                                                        "AIONType-regular",
+                                                        new FontStyle(FONT_WEIGHT_NORMAL, FONT_SLANT_UPRIGHT)
+                                                ).build(),
+                                                new FontFamilyUpdateRequest.Font.Builder(
+                                                        "AIONType-light",
+                                                        new FontStyle(FONT_WEIGHT_NORMAL, FONT_SLANT_UPRIGHT)
+                                                ).build(),
+                                                new FontFamilyUpdateRequest.Font.Builder(
+                                                        "AIONType-bold",
+                                                        new FontStyle(FONT_WEIGHT_NORMAL, FONT_SLANT_UPRIGHT)
+                                                ).build()
+                                        )).build()
+                        )
+                        .build(), fm.getFontConfig().getConfigVersion());
+            } catch (FileNotFoundException e) {
+                L.de(e);
+            }
+        }
+    }
 
     /**
      * @param res

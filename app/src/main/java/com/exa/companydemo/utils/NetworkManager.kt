@@ -7,14 +7,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
+import android.net.*
+import android.net.wifi.WifiInfo
 //import android.net.TetheringManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.telephony.PhoneStateListener
 import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.android.internal.util.ConcurrentUtils
 import com.exa.baselib.utils.L
@@ -29,7 +30,8 @@ import java.lang.reflect.InvocationTargetException
 class NetworkManager private constructor(private val mContext: Context) {
     private var mNetManager: ConnectivityManager =
         mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//    private var mTetheringManager: TetheringManager =
+
+    //    private var mTetheringManager: TetheringManager =
 //        mContext.getSystemService(TetheringManager::class.java)
     private var mWifiManager: WifiManager =
         mContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
@@ -86,6 +88,7 @@ class NetworkManager private constructor(private val mContext: Context) {
     init {
         registerReceiver()
         listenTelephonyDataChange()
+        registerNetworkListener()
         mWifiEnable = mWifiManager.isWifiEnabled
         mWifiConnected = isWifiConnected()
         if (mWifiConnected) {
@@ -93,6 +96,49 @@ class NetworkManager private constructor(private val mContext: Context) {
         }
         mTelephonyDataEnable = isTelephonyDataEnable()
         getHotSpotState()
+    }
+
+    private fun registerNetworkListener() {
+        val request = NetworkRequest.Builder()
+            .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+            .build()
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            @RequiresApi(Build.VERSION_CODES.Q)
+            override fun onAvailable(network: Network) {
+                L.w(TAG, "onAvailable $network")
+                runCatching {
+                    mNetManager.getNetworkCapabilities(network)?.apply {
+                        (transportInfo as WifiInfo?)?.apply {
+                            L.w(TAG, "onAvailable connected $this")
+                        }
+                    }
+                }
+            }
+
+            override fun onLost(network: Network) {
+                L.w(TAG, "onLost $network")
+            }
+
+            @RequiresApi(Build.VERSION_CODES.Q)
+            override fun onCapabilitiesChanged(
+                network: Network,
+                networkCapabilities: NetworkCapabilities
+            ) {
+                runCatching {
+                    (networkCapabilities.transportInfo as WifiInfo?)?.apply {
+                        L.w(TAG, "onCapabilitiesChanged connected $this}")
+                    }
+                }
+            }
+
+            /**
+             * 打印ip
+             */
+            override fun onLinkPropertiesChanged(network: Network, linkProperties: LinkProperties) {
+                L.w(TAG, "onLinkPropertiesChanged ${linkProperties.linkAddresses}")
+            }
+        }
+        mNetManager.registerNetworkCallback(request, callback)
     }
 
     fun initCurrNetworkStatus() {

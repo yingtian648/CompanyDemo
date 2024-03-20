@@ -115,7 +115,7 @@ public class L {
     public static void d(String TAG, String msg) {
         L.msg = msg;
         if (DEBUG) {
-            Log.e(L.TAG + TAG_DIVIDER + TAG, "" + msg);
+            Log.d(L.TAG + TAG_DIVIDER + TAG, "" + msg);
         }
     }
 

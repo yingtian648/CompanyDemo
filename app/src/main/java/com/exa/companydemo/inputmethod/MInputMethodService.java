@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.exa.baselib.utils.L;
 import com.exa.companydemo.R;
 
+import java.util.Objects;
+
 import static android.view.inputmethod.EditorInfo.IME_ACTION_GO;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_NEXT;
 import static android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH;
@@ -51,8 +53,6 @@ public class MInputMethodService extends InputMethodService implements View.OnCl
 //        }
         inputView = getLayoutInflater().inflate(R.layout.input_layout, null);
         initView();
-        getWindow().getWindow().getDecorView()
-                .setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         return inputView;
     }
 
@@ -101,6 +101,7 @@ public class MInputMethodService extends InputMethodService implements View.OnCl
         super.onStartInputView(info, restarting);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setImeOptionText() {
         mImeOptions = mEditorInfo.imeOptions;
         switch (mImeOptions) {

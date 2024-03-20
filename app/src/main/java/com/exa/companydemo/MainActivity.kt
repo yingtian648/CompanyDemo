@@ -6,7 +6,8 @@ import android.annotation.SuppressLint
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
-import android.hardware.display.DisplayManager
+import android.content.res.Configuration
+import android.net.*
 import android.os.*
 import android.view.*
 import com.exa.baselib.BaseConstants
@@ -16,7 +17,6 @@ import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
-import com.exa.companydemo.service.DemoService
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.CmdUtil
 import com.exa.companydemo.utils.NetworkManager
@@ -64,10 +64,11 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     override fun initView() {
         modeManager = getSystemService(UiModeManager::class.java)
         L.d("黑夜模式：" + getUiModeStr(modeManager))
-        bind.toolbar.setSubTitle(
-            "返回 (wifi:" + NetworkManager.getInstance(this).getWifiIp()
-                    + ":" + SystemProperties.get("service.adb.tcp.port") + ")"
-        )
+
+        val title = (getString(R.string.back) + " (wifi:"
+                + NetworkManager.getInstance(this).getWifiIp()
+                + ":" + SystemProperties.get("service.adb.tcp.port") + ")")
+        bind.toolbar.setSubTitle(title)
         bind.toolbar.setNavigationOnClickListener { finish() }
         bind.edit.setOnEditorActionListener { _, _, _ ->
             Tools.hideKeyboard(bind.edit)
@@ -94,8 +95,23 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     )
     @Throws(Exception::class)
     private fun test() {
-        index++
-        L.dd("$index 111")
+        App.index++
+        L.dd("${App.index}")
+//        BluetoothTestUtil.getInstance().setCallback(object : BluetoothTestUtil.Callback {
+//            override fun onConnected(rssi: Int) {
+//                L.dd(rssi)
+//            }
+//
+//            override fun onFail(msg: String) {
+//                L.dd(msg)
+//            }
+//        })
+
+//        val fm = TunerTestFragment()
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.fl, fm)
+//            .commit()
+
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
 //        startActivity(Intent(this,WebActivity::class.java))
@@ -118,6 +134,13 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        Toast.makeText(this, "测试Toast $index", Toast.LENGTH_SHORT).show()
 
 //        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        newConfig.apply {
+            L.dd("language=${locale.language} country=${locale.country} uiMode=${uiMode}")
+        }
     }
 
     @SuppressLint("WrongConstant")
@@ -305,6 +328,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         if (isRegisterBroadCast) {
             unregisterReceiver(mReceiver)
         }
-        App.exit()
+//        App.exit()
     }
 }

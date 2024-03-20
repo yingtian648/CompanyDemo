@@ -17,6 +17,7 @@ public class DateUtil {
     public static final String PATTERN_DATE = "yyyy-MM-dd";
     public static final String PATTERN_FULL_NUM = "yyyyMMddHHmmss";
     public static final String PATTERN_TIME = "HH:mm:ss";
+    public static final String PATTERN_TIME_NUM = "HHmmss";
     public static final String PATTERN_TIME_HM = "HH:mm";
 
     public static String getNowDate() {
@@ -59,6 +60,12 @@ public class DateUtil {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_FULL);
         return simpleDateFormat.format(new Date(time));
+    }
+
+    public static String getNowTimeNum() {
+        @SuppressLint("SimpleDateFormat")
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(PATTERN_TIME_NUM);
+        return simpleDateFormat.format(new Date());
     }
 
     public static String getFullSTime(long time) {

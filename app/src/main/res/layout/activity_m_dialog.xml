@@ -11,29 +11,10 @@
         <LinearLayout
             android:layout_width="600dp"
             android:layout_height="500dp"
-            android:orientation="vertical"
             android:layout_gravity="center"
             android:background="@drawable/win_bg"
+            android:orientation="vertical"
             android:padding="15dp">
-
-            <TextView
-                android:id="@+id/titleT"
-                android:layout_width="800dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:text="MDialogActivity"
-                android:textSize="30dp" />
-
-            <TextView
-                android:id="@+id/edt"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30dp"
-                android:layout_weight="1"
-                android:hint="input..."
-                android:paddingHorizontal="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,6 +45,25 @@
                     android:layout_weight="1"
                     android:text="开关" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/edt"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="30dp"
+                android:layout_weight="1"
+                android:hint="input..."
+                android:paddingHorizontal="30dp" />
+
+            <TextView
+                android:id="@+id/titleT"
+                android:layout_width="800dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="MDialogActivity"
+                android:textSize="30dp" />
         </LinearLayout>
     </FrameLayout>
 </layout>

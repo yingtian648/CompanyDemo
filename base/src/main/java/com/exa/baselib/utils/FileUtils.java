@@ -1,7 +1,10 @@
 package com.exa.baselib.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.text.TextUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -96,5 +99,32 @@ public class FileUtils {
             e.printStackTrace();
             L.e("copyAssetsFile IO Err", e);
         }
+    }
+
+    /**
+     * 保存bitmap为问文件
+     */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static boolean saveBitmapToImage(final Bitmap bitmap, final String savePath) {
+        File file = new File(savePath);
+        if (bitmap != null && !TextUtils.isEmpty(savePath)) {
+            try {
+                if (!file.exists()) {
+                    Objects.requireNonNull(file.getParentFile()).mkdirs();
+                    file.createNewFile();
+                }
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(bos.toByteArray());
+                fos.flush();
+                fos.close();
+                bos.close();
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 }

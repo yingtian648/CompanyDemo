@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:sharedUserId="@string/sharedUserId"
     package="com.exa.companydemo"
-    >
-<!--    android:sharedUserId="@string/sharedUserId"-->
+    android:sharedUserId="@string/sharedUserId"
+    tools:ignore="ManifestResource">
+    <!--    android:sharedUserId="@string/sharedUserId"-->
 
     <application
         android:name=".App"
@@ -21,9 +21,18 @@
         android:theme="@style/Theme.CompanyDemo"
         tools:targetApi="31">
         <activity
+            android:name=".socket.SocketActivity"
+            android:exported="true" >
+<!--            <intent-filter android:priority="1000">-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
+        <activity
             android:name=".WebActivity"
-            android:launchMode="singleTask"
-            android:exported="false" />
+            android:exported="false"
+            android:launchMode="singleTask" />
         <activity
             android:name=".carotatest.CarOtaTestActivity"
             android:exported="true">
@@ -43,7 +52,7 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".common.WifiActivity"
+            android:name=".wifi.WifiActivity"
             android:theme="@style/WifiActivity" />
         <activity
             android:name=".activityview.ActivityViewActivity"
@@ -89,10 +98,10 @@
         </activity> <!-- android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" -->
         <activity
             android:name=".MainActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|locale"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
-            android:theme="@style/MainActivity">
+            android:theme="@style/MainActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
@@ -254,18 +263,42 @@
         </service>
     </application>
 
+    <permission
+        android:name="android.permission.ACCESS_BROADCAST_RADIO"
+        android:protectionLevel="signature|privileged"
+        tools:ignore="ReservedSystemPermission" />
+
+    <permission
+        android:name="android.permission.ACCESS_FM_RADIO"
+        android:protectionLevel="signature|privileged"
+        tools:ignore="ReservedSystemPermission" />
+
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="true" />
+
+    <uses-permission
+        android:name="android.permission.ACCESS_BROADCAST_RADIO"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission
+        android:name="android.permission.UPDATE_FONTS"
+        android:protectionLevel="signature|privileged"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!--
+ @deprecated @SystemApi Allows access to FM
+         @hide This is not a third-party API (intended for system apps).
+    -->
     <uses-permission
         android:name="android.permission.SET_TIME"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 系统权限 -->
     <uses-permission
         android:name="android.hardware.usb.host"
         android:required="false" />
-    <uses-permission android:name="com.gxatek.cockpit.datacenter.permission.DATA_CENTER" /> <!-- 系统权限 -->
+    <uses-permission android:name="com.gxatek.cockpit.datacenter.permission.DATA_CENTER" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/pro_test_dp_60"
+    android:layout_gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/tvBack"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/pro_test_dp_50"
+        android:drawableStart="@drawable/arrow_back_white"
+        android:drawablePadding="@dimen/pro_test_dp_5"
+        android:gravity="center_vertical"
+        android:paddingEnd="30dp"
+        android:text="返回"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/pro_test_sp_nor" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/pro_test_sp_big" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#D3D3D3"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="3dp"
+        />
+
+</FrameLayout>

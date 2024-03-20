@@ -50,7 +50,7 @@ public class AudioFocusManager {
                 L.d("AudioFocusManager  onAudioFocusChange:" + focusChange);
                 switch (focusChange) {
                     case AudioManager.AUDIOFOCUS_LOSS://-1
-                        //对应AUDIOFOCUS_GAIN
+                        //应AUDIOFOCUS_GAIN
                         //表示音频焦点请求者需要长期占有焦点，这里一般需要stop播放和释放
                         // 如果当前正在播放，需要记录是焦点丢失导致的暂停
                         currAudioFocusState = AudioManager.AUDIOFOCUS_LOSS;

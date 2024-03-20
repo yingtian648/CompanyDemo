@@ -14,15 +14,15 @@ Bug or feature: feature
 Team: FW
 Test: pass
 
-fix[fonts]:Update ADiGO5 fonts file.
-rootcause:替换新国标字体文件.
-solution:Update ADiGO5 fonts file.
-product:A02/A19
-span:<A02,A19>
+feat[EmbeddedKitchenSinkApp]:Add test page.
+rootcause:添加测试页.
+solution:添加测试页.
+product:AY5
+span:none
 build:mpass
 test:upass
-fid:ID1240439
-level:B
+fid:none
+level:none
 
 feat[fonts]:Import ADiGO4_FONT.
 rootcause:引入新国标字体ADiGO4.
@@ -39,6 +39,17 @@ rootcause:订阅soalib优化.
 solution:
 1.添加每隔10的W级别日志。
 2.取消订阅后延时3秒再订阅。
+3.取消绑定电源服务成功后获取电源状态功能,绑定成功后会自动回调一次。
+product:A19
+span:none
+build:mpass
+test:upass
+fid:none
+level:none
+
+fix[CarLocationService]:Encrypt sensitive data.
+rootcause:加密经纬度.
+solution:加密经纬度.
 product:A02
 span:none
 build:mpass
@@ -46,25 +57,27 @@ test:upass
 fid:none
 level:none
 
-fix[CarLocationService]:Fix crash error.
-rootcause:电源状态回调过早导致闪退.
-solution:Let power state listen after handler create.
-product:A02
+fix[AOSP/WMS]:fix SystemUI display err.
+rootcause:昊铂悦听全屏切2/3屏时SystemUI显示异常.
+solution:
+1.Set InsetsStates CopySource is true when relayoutWindow.
+2.refer：https://cs.android.com/android/_/android/platform/frameworks/base/+/fc8f9637c8f1b9fbe92a75231741c3ad12d03279
+product:AH8
 span:none
 build:mpass
 test:upass
 fid:none
 level:none
 
-fix[AOSP/WMS]:Disable SystemUI transient.
-rootcause:Disable SystemUI transient.
-solution:Modify transient config.
-product:T58X
-span:<A18V,A21>
+feat[language]:Let user can choose all system language.
+rootcause:适配多语言版本，用户可以自行选择所需语言.
+solution:show all system language.
+product:A19
+span:none
 build:mpass
 test:upass
-fid:ID1258396
-level:C
+fid:none
+level:none
 
 fix[AOSP/KeyguardServiceDelegate]:fix click home invalid.
 rootcause:KeyguardService did not use.
