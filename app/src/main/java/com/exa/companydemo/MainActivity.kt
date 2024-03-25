@@ -17,6 +17,8 @@ import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.socket.impl.AbstractSocketClient
+import com.exa.companydemo.socket.impl.BtSocketClientUtil
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.CmdUtil
 import com.exa.companydemo.utils.NetworkManager
@@ -97,6 +99,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private fun test() {
         App.index++
         L.dd("${App.index}")
+
 //        BluetoothTestUtil.getInstance().setCallback(object : BluetoothTestUtil.Callback {
 //            override fun onConnected(rssi: Int) {
 //                L.dd(rssi)
@@ -111,7 +114,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        supportFragmentManager.beginTransaction()
 //            .replace(R.id.fl, fm)
 //            .commit()
-
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
 //        startActivity(Intent(this,WebActivity::class.java))

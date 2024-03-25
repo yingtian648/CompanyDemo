@@ -11,7 +11,6 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -21,21 +20,14 @@ import java.util.Map;
  */
 public class TunerManager {
     private final static String TAG = "TunerManager";
-
-    public interface Callback {
-        default void onConfigurationChanged(RadioManager.BandConfig config) {
-        }
-
-        default void onProgramInfoChanged(RadioManager.ProgramInfo info) {
-        }
-
-        default void onSearchListChanged(List<RadioStation> infoList) {
-        }
-
-        default void onMuteChanged(boolean mute) {
-        }
-    }
-
+    private RadioManager mRadioManager;
+    private List<RadioManager.ModuleProperties> mModules;
+    private RadioManager.FmBandDescriptor mFmDescriptor;
+    private RadioManager.AmBandDescriptor mAmDescriptor;
+    private RadioManager.FmBandConfig mFmConfig;
+    private RadioManager.AmBandConfig mAmConfig;
+    private RadioTuner mTuner;
+    private int mCurrentRadioBand = RadioManager.BAND_FM;
     private Context mContext;
     private HandlerThread mScanHandlerThread;
     private Handler mScanHandler;
@@ -44,13 +36,76 @@ public class TunerManager {
     /**
      * fm频率 87.5-108
      */
-    private final int MIN_FM_FREQUENCY = 87500;
-    private final int MAX_FM_FREQUENCY = 108000;
+    private static final int MIN_FM_FREQUENCY = 87500;
+    private static final int MAX_FM_FREQUENCY = 108000;
     /**
      * am频率 531-1629
      */
-    private final int MIN_AM_FREQUENCY = 531;
-    private final int MAX_AM_FREQUENCY = 1629;
+    private static final int MIN_AM_FREQUENCY = 531;
+    private static final int MAX_AM_FREQUENCY = 1629;
+    /**
+     * 搜索时停台时长超过1秒——搜索成功
+     */
+    private static final int FREQUENCY_STOPPING_TIME = 3000;
+    /**
+     * 当前频道
+     */
+    private int mChannel = -1;
+    private RadioManager.ProgramInfo mProgramInfo;
+    private int mStartScanFrequency = -1;
+    private int mLastFrequency = -1;
+
+    public interface Callback {
+
+        /**
+         * 报错
+         *
+         * @param msg 信息
+         */
+        default void onError(String msg) {
+        }
+
+        /**
+         * 配置变化
+         *
+         * @param config 配置信息
+         */
+        default void onConfigurationChanged(RadioManager.BandConfig config) {
+        }
+
+        /**
+         * 电台信息变化
+         *
+         * @param info 电台信息
+         */
+        default void onProgramInfoChanged(RadioManager.ProgramInfo info) {
+        }
+
+        /**
+         * 搜索列表变化
+         *
+         * @param infoList 电台列表
+         */
+        default void onSearchListChanged(List<RadioManager.ProgramInfo> infoList) {
+        }
+
+        /**
+         * 静音状态变化
+         *
+         * @param mute 是否静音
+         */
+        default void onMuteChanged(boolean mute) {
+        }
+
+        /**
+         * 搜索完成
+         *
+         * @param success   是否成功
+         * @param frequency 频率
+         */
+        default void onScanComplete(boolean success, int frequency) {
+        }
+    }
 
     public TunerManager(Context context, Callback callback) {
         this.mContext = context;
@@ -74,16 +129,18 @@ public class TunerManager {
     }
 
     public int switchBand(int band) {
+        Log.i(TAG, "switchBand: " + band);
         return openRadioBandInternal(band);
     }
 
-    public void setMute(boolean mute) {
-        if (!isRadioTunerValid()) {
-            return;
-        }
+    public boolean setMute(boolean mute) {
         Log.d(TAG, "setMute:" + mute);
+        if (!isRadioTunerValid()) {
+            return false;
+        }
         mTuner.setMute(mute);
-        onMuteChanged(mute);
+        onMuteChanged(mTuner.getMute());
+        return mTuner.getMute() == mute;
     }
 
     public boolean isMute() {
@@ -93,26 +150,24 @@ public class TunerManager {
         return mTuner.getMute();
     }
 
-    public int play() {
-        if (!isRadioTunerValid()) {
-            return -1;
-        }
-        if (mTuner.getMute()) {
-            mTuner.setMute(false);
-            if (!mTuner.getMute()) {
-                onMuteChanged(false);
+    public boolean play() {
+        Log.i(TAG, "play");
+        if (isRadioTunerValid()) {
+            if (mTuner.getMute()) {
+                int res = mTuner.setMute(false);
+                onMuteChanged(res == RadioManager.STATUS_OK);
             }
+            return !mTuner.getMute();
+        } else {
+            return false;
         }
-        RadioManager.BandConfig[] config = new RadioManager.BandConfig[1];
-        mTuner.getConfiguration(config);
-        Log.d(TAG, "play " + config[0].toString());
-        return 0;
     }
 
 
     public void stopScan() {
         if (isRadioTunerValid()) {
             synchronized (mTuneLock) {
+                mScanHandler.removeCallbacks(mFrequencyCheckRunnable);
                 int res = mTuner.cancel();
                 Log.d(TAG, "stopScan: " + (res == RadioManager.STATUS_OK));
             }
@@ -131,14 +186,14 @@ public class TunerManager {
             mTuner.setConfiguration(config);
         } else {
             mTuner = mRadioManager.openTuner(mModules.get(0).getId(), config,
-                    true, mTunnerCallback, mScanHandler);
+                    true, mTunerCallback, mScanHandler);
         }
         return RadioManager.STATUS_OK;
     }
 
     private boolean isRadioTunerValid() {
         if (null == mRadioManager) {
-            Log.d(TAG, "isRadioTunerValid mRadioManager == null");
+            Log.w(TAG, "isRadioTunerValid mRadioManager == null");
             return false;
         }
         if (null == mTuner) {
@@ -158,41 +213,30 @@ public class TunerManager {
         return frequency >= MIN_AM_FREQUENCY && frequency <= MAX_AM_FREQUENCY;
     }
 
-    public int search() {
+    /**
+     * 获取已发现电台的动态列表
+     */
+    public boolean getFondedList() {
         Log.d(TAG, "search");
         if (!isRadioTunerValid()) {
-            return -1;
+            return false;
         }
+        // null获取完整列表
         ProgramList list = mTuner.getDynamicProgramList(null);
-        if (mCurrentRadioBand == RADIO_BAND_FM) {
-            mFmScanList.clear();
-        } else if (mCurrentRadioBand == RADIO_BAND_AM) {
-            mAmScanList.clear();
-        }
         if (list != null) {
-            Log.d(TAG, "search start list.isEmpty " + list.toList().isEmpty());
+            Log.d(TAG, "search start list.isEmpty? " + list.toList().isEmpty());
             list.registerListCallback(new ProgramList.ListCallback() {
                 @Override
                 public void onItemChanged(ProgramSelector.Identifier id) {
-                    Log.d(TAG, "onItemChanged id:" + id.toString());
+                    Log.d(TAG, "getDynamicProgramList onItemChanged id:" + id.toString());
                 }
             });
             list.addOnCompleteListener(() -> {
-                List<RadioManager.ProgramInfo> pList = list.toList();
-                Log.d(TAG, "search onComplete " + pList);
-                for (RadioManager.ProgramInfo info : pList) {
-                    if (info.getSelector().getPrimaryId().getType() == RADIO_BAND_FM) {
-                        mFmScanList.add(new RadioStation(info.getChannel(),
-                                info.getSelector().getPrimaryId().getType()));
-                    } else if (info.getSelector().getPrimaryId().getType() == RADIO_BAND_AM) {
-                        mAmScanList.add(new RadioStation(info.getChannel(),
-                                info.getSelector().getPrimaryId().getType()));
-                    }
-                }
-                onSearchListChanged(mCurrentRadioBand == RADIO_BAND_FM ? mFmScanList : mFmScanList);
+                Log.d(TAG, "getDynamicProgramList onComplete");
+                onSearchListChanged(list.toList());
             });
         }
-        return 0;
+        return true;
     }
 
     public int pause() {
@@ -211,30 +255,37 @@ public class TunerManager {
     /**
      * See {@link RadioTuner#scan}.
      */
-    public void seek(boolean forward) {
+    public boolean scan(boolean forward) {
+        if (!isRadioTunerValid()) {
+            return false;
+        }
         synchronized (mTuneLock) {
+            mScanHandler.removeCallbacks(mFrequencyCheckRunnable);
             mTuner.cancel();
+            mStartScanFrequency = mChannel;
+            mLastFrequency = mChannel;
             int res = mTuner.scan(
                     forward ? RadioTuner.DIRECTION_UP : RadioTuner.DIRECTION_DOWN, false);
-            if (res != RadioManager.STATUS_OK) {
-                Log.w(TAG, "Seek failed with result of " + res);
+            boolean started = res == RadioManager.STATUS_OK;
+            if (started) {
+                startFrequencyStoppingCheck();
             }
+            Log.w(TAG, "start scan result: " + (started ? "OK" : res));
+            return started;
         }
     }
 
     /**
      * 逐步设置频率
      */
-    public int step(boolean forward, boolean skipSubChannel) {
+    public boolean step(boolean forward, boolean skipSubChannel) {
         if (!isRadioTunerValid()) {
-            return -1;
+            return false;
         }
-        try {
-            mTuner.step(forward ? RadioTuner.DIRECTION_UP : RadioTuner.DIRECTION_DOWN, skipSubChannel);
-        } catch (Exception e) {
-            Log.d(TAG, "seekDownByStep catch exection do nothing.");
-        }
-        return 0;
+        int res = mTuner.step(forward ? RadioTuner.DIRECTION_UP : RadioTuner.DIRECTION_DOWN, skipSubChannel);
+        boolean started = res == RadioManager.STATUS_OK;
+        Log.w(TAG, "start step result: " + (started ? "OK" : res));
+        return started;
     }
 
     public boolean setFmFrequency(int frequency) {
@@ -284,37 +335,9 @@ public class TunerManager {
         return 0;
     }
 
-    public RadioStation getCurrentStation() {
-        if (mChannel != -1 && mTuner != null) {
-            RadioManager.ProgramInfo[] info = new RadioManager.ProgramInfo[1];
-            int status = mTuner.getProgramInformation(info);
-            if (status == RadioManager.STATUS_OK && info[0] != null) {
-                mChannel = info[0].getChannel();
-                return new RadioStation(mChannel, mCurrentRadioBand);
-            }
-        }
-        return new RadioStation(mChannel, mCurrentRadioBand);
+    public int getCurrentChannel() {
+        return mChannel;
     }
-
-    /**
-     * for band switch AM bind
-     */
-    public static final int RADIO_BAND_AM = RadioManager.BAND_AM;
-    /**
-     * for band switch FM bind
-     */
-    public static final int RADIO_BAND_FM = RadioManager.BAND_FM;
-
-    public List<RadioStation> getScanList(int type) {
-        if (type == RADIO_BAND_FM) {
-            return mFmScanList;
-        }
-        if (type == RADIO_BAND_AM) {
-            return mAmScanList;
-        }
-        return null;
-    }
-
 
     @SuppressLint("WrongConstant")
     private void initTuner() {
@@ -367,35 +390,7 @@ public class TunerManager {
         }
     }
 
-    private void programSort(List<RadioStation> scanList) {
-        Collections.sort(scanList, mSort);
-    }
-
-    static class ProgramSort implements Comparator {
-
-        @Override
-        public int compare(Object o1, Object o2) {
-            RadioStation s1 = (RadioStation) o1;
-            RadioStation s2 = (RadioStation) o2;
-            return s1.getChannel() - (s2.getChannel());
-        }
-    }
-
-    private ProgramSort mSort = new ProgramSort();
-    private final HandlerThread mCallbackThread = new HandlerThread("tuner_manager");
-    private RadioManager mRadioManager;
-    private List<RadioManager.ModuleProperties> mModules;
-    private List<RadioManager.BandDescriptor> mAmFmRagionConfig;
-    private RadioManager.FmBandDescriptor mFmDescriptor;
-    private RadioManager.AmBandDescriptor mAmDescriptor;
-    private RadioManager.FmBandConfig mFmConfig;
-    private RadioManager.AmBandConfig mAmConfig;
-    private RadioTuner mTuner;
-    private List<RadioStation> mFmScanList = new ArrayList<>();
-    private List<RadioStation> mAmScanList = new ArrayList<>();
-    private int mCurrentRadioBand = RadioManager.BAND_FM;
-    private int mChannel = -1;
-    private RadioTuner.Callback mTunnerCallback = new RadioTuner.Callback() {
+    private final RadioTuner.Callback mTunerCallback = new RadioTuner.Callback() {
         @Override
         public void onError(int status) {
             super.onError(status);
@@ -427,6 +422,7 @@ public class TunerManager {
             Log.d(TAG, "onProgramInfoChanged channel=" + info.getChannel()
                     + ",sunChannel=" + info.getSubChannel());
             mChannel = info.getChannel();
+            mProgramInfo = info;
             onProgramChanged(info);
             if (mTuner != null) {
                 if (mTuner.getMute()) {
@@ -481,28 +477,7 @@ public class TunerManager {
                 return;
             }
             Log.d(TAG, "onProgramListChanged programList.size=" + programList.size());
-            if (programList.size() > 0) {
-                int type = 0;
-                List<RadioStation> scanList = new ArrayList<>();
-                for (int i = 0; i < programList.size(); i++) {
-                    ProgramSelector.Identifier primaryId = programList.get(i).getSelector().getPrimaryId();
-                    type = programList.get(i).getSelector().getProgramType();
-                    scanList.add(new RadioStation((int) primaryId.getValue(), type - 1));
-                }
-
-                if (scanList.get(0).getChannel() <= MAX_AM_FREQUENCY) {
-                    mAmScanList.clear();
-                    mAmScanList.addAll(scanList);
-                    programSort(mAmScanList);
-                    onSearchListChanged(mAmScanList);
-                } else {
-                    mFmScanList.clear();
-                    mFmScanList.addAll(scanList);
-                    programSort(mFmScanList);
-                    onSearchListChanged(mFmScanList);
-                }
-            }
-
+            onSearchListChanged(programList);
         }
 
         @Override
@@ -512,6 +487,26 @@ public class TunerManager {
         }
     };
 
+    private final Runnable mFrequencyCheckRunnable = () -> {
+        if (mLastFrequency == mChannel) {
+            onScanComplete(mChannel);
+        } else {
+            mLastFrequency = mChannel;
+            startFrequencyStoppingCheck();
+        }
+    };
+
+    /**
+     * 开始频率停台检测
+     */
+    private void startFrequencyStoppingCheck() {
+        mScanHandler.postDelayed(mFrequencyCheckRunnable, FREQUENCY_STOPPING_TIME);
+    }
+
+    private void sortProgramList(List<RadioManager.ProgramInfo> list) {
+        list.sort(Comparator.comparingInt(RadioManager.ProgramInfo::getChannel));
+    }
+
     private void onConfigChanged(RadioManager.BandConfig config) {
         mCallback.onConfigurationChanged(config);
     }
@@ -520,8 +515,18 @@ public class TunerManager {
         mCallback.onProgramInfoChanged(info);
     }
 
-    private void onSearchListChanged(List<RadioStation> list) {
+    private void onSearchListChanged(List<RadioManager.ProgramInfo> list) {
         mCallback.onSearchListChanged(list);
+    }
+
+    /**
+     * 搜索完成
+     * 1.如果搜索失败，会回到搜索开始的频道
+     * @param channel 频道
+     */
+    private void onScanComplete(int channel) {
+        Log.i(TAG, "onScanComplete: " + channel + ", " + mStartScanFrequency);
+        mCallback.onScanComplete(mStartScanFrequency != channel, channel);
     }
 
     private void onMuteChanged(boolean mute) {
@@ -533,5 +538,6 @@ public class TunerManager {
         if (mTuner != null) {
             mTuner.close();
         }
+        mScanHandler.removeCallbacksAndMessages(null);
     }
 }

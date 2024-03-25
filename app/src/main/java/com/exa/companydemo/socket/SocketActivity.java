@@ -1,17 +1,19 @@
 package com.exa.companydemo.socket;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.view.View;
 
 import com.exa.baselib.base.BaseViewBindingActivity;
 import com.exa.baselib.utils.L;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivitySocketBinding;
+import com.exa.companydemo.socket.impl.AbstractSocketService;
+import com.exa.companydemo.socket.impl.BtSocketServiceUtil;
+import com.exa.companydemo.socket.impl.SocketCallback;
+import com.exa.companydemo.socket.impl.WifiSocketServiceUtil;
 import com.exa.companydemo.utils.NetworkManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,11 +22,15 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBinding> implements View.OnClickListener {
+import androidx.core.app.ActivityCompat;
+
+public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBinding>
+        implements View.OnClickListener, SocketCallback {
     private static final String TAG = "SocketActivity";
     private Executor mExecutor;
     private List<Socket> clientList = new ArrayList<>();
     private static final int PORT = 8080;
+    private AbstractSocketService socketService;
 
     @Override
     protected ActivitySocketBinding getViewBinding() {
@@ -33,6 +39,7 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
 
     @Override
     protected void initView() {
+        checkBtPermission();
         mExecutor = Executors.newFixedThreadPool(5);
         String title = (getString(R.string.back) + " (wifi:"
                 + NetworkManager.Companion.getInstance(this).getWifiIp() + ")");
@@ -40,9 +47,37 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
         bind.toolbar.setNavigationOnClickListener(v -> finish());
     }
 
+    private boolean checkBtPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 100);
+            return false;
+        } else {
+            L.i(TAG, "initView: 有蓝牙连接权限");
+            return true;
+        }
+    }
+
     @Override
     protected void initData() {
-        initSocket();
+        bind.rg.setOnCheckedChangeListener((group, checkedId) -> {
+            setTvContent("");
+            if (checkedId == R.id.rbWifi) {
+                BtSocketServiceUtil.getInstance().release();
+                socketService = WifiSocketServiceUtil.getInstance();
+                socketService.registerCallback(this);
+                socketService.init(this);
+                socketService.startService();
+            } else {
+                if (checkBtPermission()) {
+                    WifiSocketServiceUtil.getInstance().release();
+                    socketService = BtSocketServiceUtil.getInstance();
+                    socketService.registerCallback(this);
+                    socketService.init(this);
+                    socketService.startService();
+                }
+            }
+        });
         bind.btnAm.setOnClickListener(v -> {
             String json = ProTestParser.createTestJson(ProTestParser.TestCode.AM_OPEN,
                     ProTestParser.MSG_TYPE_REQUEST,
@@ -84,8 +119,8 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
             sendMessage(json);
         });
         int[] ids = new int[]{R.id.btnVoiceGps, R.id.btnVoiceSpeech, R.id.btnVoiceMedia,
-                R.id.btnVoiceTel, R.id.btnVoiceKey, R.id.btnGps,
-                R.id.btnUsb2, R.id.btnUsb32,R.id.btnUsb33,
+                R.id.btnVoiceTel, R.id.btnVoiceKey, R.id.btnGps, R.id.btnVolume,
+                R.id.btnUsb2, R.id.btnUsb32, R.id.btnUsb33, R.id.btnAppleConn,
                 R.id.btnWifi, R.id.btnWifiSet, R.id.btnBt,
                 R.id.btnBtSet, R.id.btnVersion, R.id.btnProduct};
         for (int id : ids) {
@@ -96,8 +131,8 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
     @Override
     public void onClick(View v) {
         String json = "";
-        Map<String,Object> map = new HashMap<>();
-        switch (v.getId()){
+        Map<String, Object> map = new HashMap<>();
+        switch (v.getId()) {
             case R.id.btnVersion:
                 json = ProTestParser.createTestJson(ProTestParser.TestCode.VERSION,
                         ProTestParser.MSG_TYPE_REQUEST,
@@ -143,6 +178,17 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
                         ProTestParser.MSG_TYPE_REQUEST,
                         null);
                 break;
+            case R.id.btnVolume:
+                map.put(ProTestParser.ParamsContent.NUM_1, "26");
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.FM_VOICE_VOLUME,
+                        ProTestParser.MSG_TYPE_SET,
+                        map);
+                break;
+            case R.id.btnAppleConn:
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.APPLE_CONN,
+                        ProTestParser.MSG_TYPE_REQUEST,
+                        null);
+                break;
             case R.id.btnUsb32:
                 json = ProTestParser.createTestJson(ProTestParser.TestCode.USB3_2,
                         ProTestParser.MSG_TYPE_REQUEST,
@@ -181,47 +227,6 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
     }
 
     /**
-     * 初始化socket服务端
-     */
-    private void initSocket() {
-        // 初始化socket服务端
-        mExecutor.execute(() -> {
-            try {
-                ServerSocket serverSocket = new ServerSocket(PORT);
-                setTvContent("服务端启动成功,port=" + PORT + ",等待客户端连接...");
-                while (true) {
-                    Socket socket = serverSocket.accept();
-                    clientList.add(socket);
-                    setTvContent("Client连接成功:" + socket.getInetAddress().getHostAddress() + ":"
-                            + socket.getPort() + ",连接数：" + clientList.size());
-                    new Thread(() -> {
-                        try {
-                            // 获取输入流
-                            InputStream is = socket.getInputStream();
-                            // 获取输出流
-                            OutputStream os = socket.getOutputStream();
-                            // 读取数据
-                            byte[] buffer = new byte[1024];
-                            int len;
-                            while ((len = is.read(buffer)) != -1) {
-                                String msg = new String(buffer, 0, len);
-                                L.w("收到客户端消息: " + msg);
-                                setTvResult("收到客户端消息: " + msg);
-                                // 回复消息
-//                                os.write("服务端收到消息".getBytes());
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }).start();
-                }
-            } catch (IOException e) {
-                L.de(e);
-            }
-        });
-    }
-
-    /**
      * 设置tv内容
      *
      * @param msg
@@ -247,52 +252,36 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
      * 发送消息
      */
     private void sendMessage(String json) {
-        L.w("sendMessage: " + json + ", clientList.size():" + clientList.size());
-        mExecutor.execute(() -> {
-            for (Socket socket : clientList) {
-                try {
-                    OutputStream os = socket.getOutputStream();
-                    os.write(json.getBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        if (socketService != null) {
+            socketService.sendMessage(json);
+        }
     }
 
-    /**
-     * 关闭socket
-     */
-    private void closeSocket() {
-        mExecutor.execute(() -> {
-            for (Socket socket : clientList) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    @Override
+    public void onStarted(String port) {
+        runOnUiThread(() -> setTvContent("服务端启动成功,port=" + port + ",等待客户端连接.."));
     }
 
-    /**
-     * 初始化客户端socket
-     * 接收服务端消息
-     *
-     * @param ip
-     */
-    private void initClientSocket(String ip) {
-        mExecutor.execute(() -> {
-            try {
-                Socket socket = new Socket(ip, PORT);
-                // 接收服务端消息
-                InputStream is = socket.getInputStream();
-                setTvContent("客户端连接成功:" + socket.getInetAddress().getHostAddress() + ":"
-                        + socket.getPort());
-                clientList.add(socket);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    @Override
+    public void onError(String msg) {
+        runOnUiThread(() -> setTvContent("报错:" + msg));
+    }
+
+    @Override
+    public void onClientConnected(String address, int port) {
+        runOnUiThread(() -> setTvContent("Client连接:" + address + ":" + port));
+    }
+
+    @Override
+    public void onReceived(String msg) {
+        runOnUiThread(() -> setTvResult("客户端消息: " + msg));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (socketService != null) {
+            socketService.release();
+        }
     }
 }

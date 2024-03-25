@@ -99,6 +99,7 @@ public class ProTestParser {
         public static final String USB2 = "6.8.1";
         public static final String USB3_1 = "6.8.2";
         public static final String USB3_2 = "6.8.3";
+        public static final String APPLE_CONN = "6.8.4";
 
         public static final String BLUETOOTH = "6.10.1";
         public static final String WIFI = "6.10.2";

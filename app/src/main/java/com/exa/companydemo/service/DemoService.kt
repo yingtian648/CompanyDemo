@@ -1,10 +1,8 @@
 package com.exa.companydemo.service
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.Dialog
 import android.app.Service
-import android.content.ComponentCallbacks
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -18,9 +16,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
-import com.exa.baselib.BaseConstants
 import com.exa.baselib.utils.L
 import com.exa.companydemo.App
 import com.exa.companydemo.R

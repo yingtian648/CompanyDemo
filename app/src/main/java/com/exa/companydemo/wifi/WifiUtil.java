@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.LinkAddress;
 import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -18,6 +19,7 @@ import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -49,6 +51,7 @@ public class WifiUtil {
     public static final String WPA = "WPA";
     public static final String PSK = "PSK";
     public static final String EAP = "EAP";
+    private String mIp;
 
     public void setCallback(Callback callback) {
         this.mCallback = callback;
@@ -78,6 +81,9 @@ public class WifiUtil {
         }
 
         default void onScanListChanged(List<MResult> list) {
+        }
+
+        default void onWifiIpChanged(String ip) {
         }
     }
 
@@ -247,8 +253,31 @@ public class WifiUtil {
                 public void onLinkPropertiesChanged(@NonNull Network network,
                                                     @NonNull LinkProperties linkProperties) {
                     Log.d(TAG, "onLinkPropertiesChanged=" + network + "," + linkProperties);
+                    for (LinkAddress a : linkProperties.getLinkAddresses()) {
+                        if (a.getAddress() instanceof Inet4Address) {
+                            mIp = numericToTextFormat(a.getAddress().getAddress());
+                            if (mIp != null && mCallback != null) {
+                                mCallback.onWifiIpChanged(mIp);
+                            }
+                            break;
+                        }
+                    }
                 }
             };
+
+    /**
+     * 数字转IP地址
+     */
+    private String numericToTextFormat(byte[] src) {
+        if (src.length != 4) {
+            return null;
+        }
+        return (src[0] & 0xff)
+                + "." + (src[1] & 0xff)
+                + "." + (src[2] & 0xff)
+                + "." + (src[3] & 0xff);
+    }
+
 
     public void startTest(String ssid, String pwd) {
         Log.d(TAG, "startWifiTest ssid=" + ssid + ",pwd=" + pwd);

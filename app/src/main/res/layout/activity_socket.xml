@@ -11,8 +11,32 @@
         android:id="@+id/toolbar"
         app:navigationIcon="@drawable/arrow_back_black"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         />
+
+    <RadioGroup
+        android:id="@+id/rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbWifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="WifiSocket"
+            android:textSize="16sp" />
+
+        <RadioButton
+            android:id="@+id/rbBt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="蓝牙Socket"
+            android:layout_marginStart="10dp"
+            android:textAllCaps="false"
+            android:textSize="16sp" />
+    </RadioGroup>
 
     <TextView
         android:id="@+id/tv"
@@ -99,6 +123,14 @@
                     android:text="AM搜索"
                     android:textSize="16sp" />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btnVolume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="媒体音量调到26"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -253,6 +285,15 @@
                     android:layout_marginStart="10dp"
                     android:textAllCaps="false"
                     android:text="连接蓝牙"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btnAppleConn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textAllCaps="false"
+                    android:text="手机互联"
                     android:textSize="16sp" />
             </LinearLayout>
 
