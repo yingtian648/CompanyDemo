@@ -11,7 +11,7 @@ import java.net.Socket;
  * @Date 2024/3/19 10:17
  * @Description
  */
-public class WifiSocketClientUtil extends AbstractSocketClient {
+public class WifiSocketClientUtil extends AbstractClient {
     private static final String TAG = "SocketClientUtil";
     private static final WifiSocketClientUtil mInstance = new WifiSocketClientUtil();
     private Socket mServerSocket;
@@ -27,6 +27,7 @@ public class WifiSocketClientUtil extends AbstractSocketClient {
     /**
      * 初始化客户端socket
      */
+    @Override
     public void connect(String ip, int port) {
         Log.w(TAG, "initmServerSocket: " + ip + ":" + port + ", " + mServerSocket);
         mExecutor.execute(() -> {
@@ -45,7 +46,7 @@ public class WifiSocketClientUtil extends AbstractSocketClient {
     }
 
     private void waitServerMessage() {
-        new Thread(() -> {
+        mExecutor.execute(() -> {
             try {
                 InputStream is = mServerSocket.getInputStream();
                 byte[] buffer = new byte[1024];
@@ -59,11 +60,11 @@ public class WifiSocketClientUtil extends AbstractSocketClient {
                 Thread.currentThread().interrupt();
                 Log.e(TAG, "waitServerMessage: ", e);
             }
-        }).start();
+        });
     }
 
     @Override
-    public void sendMessageToServer(final String message) {
+    public void sendMessage(final String message) {
         Log.i(TAG, "sendMessageToServer: " + message);
         if (mServerSocket != null) {
             mExecutor.execute(() -> {

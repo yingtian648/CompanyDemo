@@ -1,7 +1,10 @@
 package com.exa.companydemo.utils
 
 import android.graphics.*
-import android.os.Debug
+import android.media.MediaCodec
+import android.media.MediaCodecInfo
+import android.media.MediaFormat
+import android.media.MediaMuxer
 import android.os.Environment
 import android.os.Environment.DIRECTORY_PICTURES
 import android.os.SystemClock
@@ -11,6 +14,7 @@ import com.exa.baselib.utils.DateUtil
 import com.exa.baselib.utils.FileUtils
 import com.exa.baselib.utils.L
 import java.io.File
+import java.nio.ByteBuffer
 import kotlin.math.abs
 import kotlin.math.sqrt
 
@@ -62,6 +66,10 @@ object ImageUtil {
         splitImage(path)
     }
 
+    fun makeVideoFromImages() {
+        makeVideoFromImages(list)
+    }
+
     /**
      * 将多张图片合并成1张图片
      */
@@ -72,14 +80,14 @@ object ImageUtil {
         scaleType: Int = SCALE_XY,
         callback: Callback? = null
     ) {
-        Trace.beginSection("composeImagest")
+        Trace.beginSection("composeImages")
         if (list.size == 4 || list.size == 9 || list.size == 16) {
             // 合成后的图片宽高
             val outW = 1920
             val outH = 1080
             // 图片距离
             val rowSize = sqrt(list.size.toDouble()).toInt()
-            val imgDis = if(!hasDivider) 0 else if (rowSize == 3) 3 else if (rowSize == 4) 4 else 2
+            val imgDis = if (!hasDivider) 0 else if (rowSize == 3) 3 else if (rowSize == 4) 4 else 2
             val imgW = (outW - (rowSize - 1) * imgDis) / rowSize
             val imgH = (outH - (rowSize - 1) * imgDis) / rowSize
             // 图片宽高比
@@ -205,6 +213,59 @@ object ImageUtil {
             } catch (e: Exception) {
                 e.printStackTrace()
                 callback?.onError("splitImage fail!" + e.message)
+            }
+            L.dd("end " + (SystemClock.elapsedRealtime() - startTime))
+        }
+    }
+
+    /**
+     * 将多张图片合成视频
+     */
+    fun makeVideoFromImages(paths: List<String>, callback: Callback? = null) {
+        L.dd("start $paths")
+        BaseConstants.getFixPool().execute {
+            val startTime = SystemClock.elapsedRealtime()
+            try {
+                val outDir = File(pictureDirFile.absolutePath, "temp").apply {
+                    mkdir()
+                }.absolutePath
+                val outTemp = "$outDir/video.mp4"
+                // 输出格式
+                val mediaMuxer = MediaMuxer(outTemp, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+                // 输出格式
+                val mediaFormat = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, 1920, 1080)
+                // 颜色格式
+                mediaFormat.setInteger(
+                    MediaFormat.KEY_COLOR_FORMAT,
+                    MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible
+                )
+                // 平均比特率（以比特/秒为单位）
+                mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, 1920 * 1080 * 3)
+                // 每秒的帧数
+                mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
+                // 关键帧之间的频率（以秒为单位）
+                mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
+                mediaMuxer.addTrack(mediaFormat)
+                mediaMuxer.start()
+                paths.forEach {
+                    val bitmap = BitmapFactory.decodeFile(it)
+                    val byteBuffer = ByteBuffer.allocate(bitmap.byteCount)
+                    bitmap.copyPixelsToBuffer(byteBuffer)
+                    val byteBufferArray = byteBuffer.array()
+                    val byteBufferInput = ByteBuffer.wrap(byteBufferArray)
+                    val bufferInfo = MediaCodec.BufferInfo()
+                    bufferInfo.presentationTimeUs = SystemClock.elapsedRealtimeNanos() / 1000
+                    bufferInfo.size = byteBufferInput.capacity()
+                    bufferInfo.offset = 0
+                    bufferInfo.flags = MediaCodec.BUFFER_FLAG_KEY_FRAME
+                    mediaMuxer.writeSampleData(0, byteBufferInput, bufferInfo)
+                }
+                mediaMuxer.stop()
+                mediaMuxer.release()
+                callback?.onComposeResult(outTemp)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                callback?.onError("makeVideoFromImages fail!" + e.message)
             }
             L.dd("end " + (SystemClock.elapsedRealtime() - startTime))
         }

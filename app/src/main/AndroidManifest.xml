@@ -24,6 +24,7 @@
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|locale"
             android:exported="true"
+            android:label="LshMain"
             android:theme="@style/MainActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter android:priority="1000">
@@ -34,12 +35,13 @@
         </activity>
         <activity
             android:name=".socket.SocketActivity"
+            android:label="LshSocket"
             android:exported="true" >
-<!--            <intent-filter android:priority="1000">-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".WebActivity"
@@ -180,7 +182,7 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".accessibility.MyAccessibilityService"
+            android:name=".accessibility.MAccessibility"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

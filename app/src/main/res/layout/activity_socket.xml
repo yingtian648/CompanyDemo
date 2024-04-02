@@ -319,6 +319,18 @@
                     android:textAllCaps="false"
                     android:text="Wifi连接"
                     android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/etInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="niuyisheng"
+                    android:layout_marginStart="10dp"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:layout_weight="1"
+                    />
             </LinearLayout>
 
         </LinearLayout>

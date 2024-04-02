@@ -21,7 +21,7 @@ import static android.bluetooth.BluetoothAdapter.EXTRA_STATE;
  * @Date 2024/3/21 10:16
  * @Description
  */
-public class BtSocketServiceUtil extends AbstractSocketService {
+public class BtSocketServiceUtil extends AbstractService {
     private static final String TAG = "BtSocketServiceUtil";
     private BluetoothSocket mClientSocket;
     private BluetoothAdapter mAdapter;
@@ -31,6 +31,7 @@ public class BtSocketServiceUtil extends AbstractSocketService {
     private boolean isStarted = false;
     private boolean isReleased = false;
     private BluetoothServerSocket mServerSocket;
+    private UUID mUuid;
 
     public static BtSocketServiceUtil getInstance() {
         return mInstance;
@@ -82,6 +83,7 @@ public class BtSocketServiceUtil extends AbstractSocketService {
             synchronized (mLock) {
                 if (isStarted) {
                     Log.w(TAG, "startService: isStarted");
+                    onStarted(mUuid.toString());
                     return;
                 }
             }
@@ -95,11 +97,11 @@ public class BtSocketServiceUtil extends AbstractSocketService {
                     Log.w(TAG, "startBluetoothSocketService bluetooth is not enabled");
                     return;
                 }
-                UUID uuid = getUUID(mAdapter.getName());
-                Log.i(TAG, "startService uuid: " + uuid.toString());
+                mUuid = getUUID(mAdapter.getName());
+                Log.i(TAG, "startService uuid: " + mUuid.toString());
                 mServerSocket = mAdapter.listenUsingInsecureRfcommWithServiceRecord(
-                        NAME_INSECURE, uuid);
-                onStarted(uuid.toString());
+                        NAME_INSECURE, mUuid);
+                onStarted(mUuid.toString());
                 while (!isReleased) {
                     //阻塞式，直到获取socket
                     mClientSocket = mServerSocket.accept();
@@ -116,7 +118,7 @@ public class BtSocketServiceUtil extends AbstractSocketService {
     }
 
     private void waitServerMessage() {
-        new Thread(() -> {
+        mExecutor.execute(() -> {
             try {
                 // 获取输入流
                 InputStream is = mClientSocket.getInputStream();
@@ -131,33 +133,33 @@ public class BtSocketServiceUtil extends AbstractSocketService {
                 Log.e(TAG, "waitServerMessage: ", e);
                 Thread.currentThread().interrupt();
             }
-        }).start();
+        });
     }
 
     private void onError(String msg) {
         Log.e(TAG, "onError: " + msg);
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onError(msg);
         }
     }
 
     private void onStarted(String uuid) {
         isStarted = true;
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onStarted(uuid);
         }
     }
 
     @SuppressLint("MissingPermission")
     private void onClientConnected(BluetoothSocket socket) {
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onClientConnected(socket.getRemoteDevice().getName(), 0);
         }
     }
 
     private void onReceiveMessage(String msg) {
         Log.w(TAG, "收到客户端消息: " + msg);
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onReceived(msg);
         }
     }

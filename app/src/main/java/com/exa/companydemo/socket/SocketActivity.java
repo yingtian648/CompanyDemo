@@ -2,35 +2,27 @@ package com.exa.companydemo.socket;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.view.View;
 
 import com.exa.baselib.base.BaseViewBindingActivity;
 import com.exa.baselib.utils.L;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivitySocketBinding;
-import com.exa.companydemo.socket.impl.AbstractSocketService;
-import com.exa.companydemo.socket.impl.BtSocketServiceUtil;
-import com.exa.companydemo.socket.impl.SocketCallback;
-import com.exa.companydemo.socket.impl.WifiSocketServiceUtil;
+import com.exa.companydemo.socket.impl.AbstractService;
 import com.exa.companydemo.utils.NetworkManager;
 
-import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.UUID;
 
 import androidx.core.app.ActivityCompat;
 
 public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBinding>
-        implements View.OnClickListener, SocketCallback {
+        implements View.OnClickListener, AbstractService.Callback {
+
     private static final String TAG = "SocketActivity";
-    private Executor mExecutor;
-    private List<Socket> clientList = new ArrayList<>();
-    private static final int PORT = 8080;
-    private AbstractSocketService socketService;
+    private AbstractService socketService;
 
     @Override
     protected ActivitySocketBinding getViewBinding() {
@@ -40,7 +32,6 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
     @Override
     protected void initView() {
         checkBtPermission();
-        mExecutor = Executors.newFixedThreadPool(5);
         String title = (getString(R.string.back) + " (wifi:"
                 + NetworkManager.Companion.getInstance(this).getWifiIp() + ")");
         bind.toolbar.setSubtitle(title);
@@ -50,7 +41,9 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
     private boolean checkBtPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 100);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH_CONNECT}, 100);
+            }
             return false;
         } else {
             L.i(TAG, "initView: 有蓝牙连接权限");
@@ -63,18 +56,12 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
         bind.rg.setOnCheckedChangeListener((group, checkedId) -> {
             setTvContent("");
             if (checkedId == R.id.rbWifi) {
-                BtSocketServiceUtil.getInstance().release();
-                socketService = WifiSocketServiceUtil.getInstance();
-                socketService.registerCallback(this);
-                socketService.init(this);
-                socketService.startService();
+                socketService = AbstractService.switchServiceType(this,
+                        AbstractService.TYPE_WIFI, this);
             } else {
                 if (checkBtPermission()) {
-                    WifiSocketServiceUtil.getInstance().release();
-                    socketService = BtSocketServiceUtil.getInstance();
-                    socketService.registerCallback(this);
-                    socketService.init(this);
-                    socketService.startService();
+                    socketService = AbstractService.switchServiceType(this,
+                            AbstractService.TYPE_BLUETOOTH, this);
                 }
             }
         });
@@ -217,7 +204,12 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
                         null);
                 break;
             case R.id.btnBtSet:
-                map.put(ProTestParser.ParamsContent.NUM_1, "OPPO K9x 5G");
+                if (bind.etInput.getText() == null
+                        || bind.etInput.getText().toString().trim().isEmpty()) {
+                    return;
+                }
+                String con = bind.etInput.getText().toString().trim();
+                map.put(ProTestParser.ParamsContent.NUM_1, con);
                 json = ProTestParser.createTestJson(ProTestParser.TestCode.BLUETOOTH,
                         ProTestParser.MSG_TYPE_SET,
                         map);

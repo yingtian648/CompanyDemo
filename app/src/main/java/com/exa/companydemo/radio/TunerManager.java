@@ -31,7 +31,7 @@ public class TunerManager {
     private Context mContext;
     private HandlerThread mScanHandlerThread;
     private Handler mScanHandler;
-    private Callback mCallback;
+    private TunerListener mCallback;
     private final Object mTuneLock = new Object();
     /**
      * fm频率 87.5-108
@@ -55,7 +55,7 @@ public class TunerManager {
     private int mStartScanFrequency = -1;
     private int mLastFrequency = -1;
 
-    public interface Callback {
+    public interface TunerListener {
 
         /**
          * 报错
@@ -107,7 +107,7 @@ public class TunerManager {
         }
     }
 
-    public TunerManager(Context context, Callback callback) {
+    public TunerManager(Context context, TunerListener callback) {
         this.mContext = context;
         this.mCallback = callback;
         initTuner();
@@ -216,7 +216,7 @@ public class TunerManager {
     /**
      * 获取已发现电台的动态列表
      */
-    public boolean getFondedList() {
+    public boolean getFondedListAsync() {
         Log.d(TAG, "search");
         if (!isRadioTunerValid()) {
             return false;

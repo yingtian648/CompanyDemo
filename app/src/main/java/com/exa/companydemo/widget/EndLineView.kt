@@ -121,6 +121,13 @@ class EndLineView @JvmOverloads constructor(
 
     private fun checkAndDrawLine(event: MotionEvent) {
         event.apply {
+            for (i in 0 until event.pointerCount) {
+                val x = event.getX(i)
+                val y = event.getY(i)
+                if (DEBUG) {
+                    Log.d(TAG, "手指${i} 点击：(${x},${y} ${event.action} getPointerId=${event.getPointerId(i)})")
+                }
+            }
             if (mPoint.x != x || mPoint.y != y) {
                 mPoint.x = x
                 mPoint.y = y

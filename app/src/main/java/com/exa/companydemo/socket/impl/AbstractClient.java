@@ -1,7 +1,6 @@
 package com.exa.companydemo.socket.impl;
 
 import android.app.Application;
-import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -18,24 +17,52 @@ import static java.util.concurrent.Executors.newFixedThreadPool;
  * @date 2024/3/21 18:12
  * @description 抽象socket客户端
  */
-public abstract class AbstractSocketClient {
-    protected static final String TAG = "AbstractSocketClient";
+public abstract class AbstractClient {
+    protected static final String TAG = "AbstractClient";
+    public static final int TYPE_WIFI = 1;
+    public static final int TYPE_BLUETOOTH = 2;
     protected ExecutorService mExecutor = newFixedThreadPool(10);
     protected final List<Callback> mCallbacks = new ArrayList<>();
     private static final String UUID_STRING = "00001101-0000-1000-8000-00805F9B34FB";
-    private static final String UUID_END = "-0000-1000-8000-00805F9B34FB";
+    private static final String MY_UUID = "FCD9FA90-825F-4DB1-AAF4-3D1B19B597C8";
     private Application mApplication;
+    private static AbstractClient mInstance;
+
+    public static AbstractClient getInstance(int type) {
+        if (type == TYPE_WIFI) {
+            mInstance = WifiSocketClientUtil.getInstance();
+        } else if (type == TYPE_BLUETOOTH) {
+            mInstance = BtSocketClientUtil.getInstance();
+        }
+        return mInstance;
+    }
 
     public interface Callback {
+        /**
+         * 连接成功
+         *
+         * @param ip   ip
+         * @param port 端口
+         */
         void onConnected(String ip, int port);
 
+        /**
+         * 收到消息
+         *
+         * @param msg 消息
+         */
         void onReceived(String msg);
 
+        /**
+         * 错误
+         *
+         * @param msg 错误信息
+         */
         void onError(String msg);
     }
 
     public Application getApplication() {
-        synchronized (AbstractSocketClient.class) {
+        synchronized (AbstractClient.class) {
             if (mApplication == null) {
                 try {
                     Class<?> clazz = Class.forName("android.app.ActivityThread");
@@ -57,19 +84,7 @@ public abstract class AbstractSocketClient {
 
     public UUID getUUID(String name) {
         if (!TextUtils.isEmpty(name)) {
-            name = name.replace(" ", "").trim();
-            int ascii = 0;
-            for (int i = 0; i < name.length(); i++) {
-                ascii += name.charAt(i);
-            }
-            StringBuilder asciiStr = new StringBuilder(String.valueOf(ascii));
-            if (asciiStr.length() < 8) {
-                for (int i = 0; i < 8 - asciiStr.length(); i++) {
-                    asciiStr.insert(0, "0");
-                }
-            }
-            name = asciiStr + UUID_END;
-            return UUID.fromString(name);
+            return UUID.fromString(MY_UUID);
         }
         return UUID.fromString(UUID_STRING);
     }
@@ -78,7 +93,16 @@ public abstract class AbstractSocketClient {
         mCallbacks.remove(callback);
     }
 
-    public abstract void sendMessageToServer(final String message);
+    public void connect() {
+    }
+
+    public void connect(String ip, int port) {
+    }
+
+    public void init() {
+    }
+
+    public abstract void sendMessage(final String message);
 
     public abstract void release();
 

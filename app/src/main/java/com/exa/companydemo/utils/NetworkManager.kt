@@ -1,5 +1,6 @@
 package com.exa.companydemo.utils
 
+//import android.net.TetheringManager
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -9,7 +10,6 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.net.*
 import android.net.wifi.WifiInfo
-//import android.net.TetheringManager
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.telephony.PhoneStateListener
@@ -17,7 +17,6 @@ import android.telephony.SignalStrength
 import android.telephony.TelephonyManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import com.android.internal.util.ConcurrentUtils
 import com.exa.baselib.utils.L
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
@@ -124,11 +123,11 @@ class NetworkManager private constructor(private val mContext: Context) {
                 network: Network,
                 networkCapabilities: NetworkCapabilities
             ) {
-                runCatching {
-                    (networkCapabilities.transportInfo as WifiInfo?)?.apply {
-                        L.w(TAG, "onCapabilitiesChanged connected $this}")
-                    }
-                }
+//                runCatching {
+//                    (networkCapabilities.transportInfo as WifiInfo?)?.apply {
+//                        L.w(TAG, "onCapabilitiesChanged connected $this}")
+//                    }
+//                }
             }
 
             /**
@@ -139,6 +138,18 @@ class NetworkManager private constructor(private val mContext: Context) {
             }
         }
         mNetManager.registerNetworkCallback(request, callback)
+    }
+
+    /**
+     * 数字转IP地址
+     */
+    private fun getIpv4Address(src: ByteArray): String? {
+        return if (src.size != 4) {
+            null
+        } else ((src[0].toInt() and 0xff)
+            .toString() + "." + (src[1].toInt() and 0xff)
+                + "." + (src[2].toInt() and 0xff)
+                + "." + (src[3].toInt() and 0xff))
     }
 
     fun initCurrNetworkStatus() {

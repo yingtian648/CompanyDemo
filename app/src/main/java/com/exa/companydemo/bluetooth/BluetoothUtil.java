@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothAvrcpController;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothHeadsetClient;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.BluetoothPbapClient;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -57,6 +56,7 @@ public class BluetoothUtil {
     private BluetoothDevice mConnectedDevice;
     private Context mContext;
     private final Object mLock = new Object();
+    private final Object mConnectStateLock = new Object();
     private Handler mHandler;
     private boolean mEnabled = false;
     private static final int HEADSET_CLIENT = 16;
@@ -75,6 +75,12 @@ public class BluetoothUtil {
     private final List<BluetoothDevice> mConnectedList = new ArrayList<>();
     private static final UUID MY_UUID = UUID.randomUUID();
     private Executor mExecutor = Executors.newSingleThreadExecutor();
+    private static final String EXTRA_REASON = "android.bluetooth.device.extra.REASON";
+    private boolean mA2dpConnected = false;
+    private boolean mHeadsetConnected = false;
+    private boolean mA2dpSinkConnected = false;
+    private boolean mAvrcpConnected = false;
+
     private final BluetoothProfile.ServiceListener mServiceListener =
             new BluetoothProfile.ServiceListener() {
 
@@ -241,6 +247,7 @@ public class BluetoothUtil {
     public interface Callback {
         /**
          * 蓝牙是否开启
+         *
          * @param enable 是否开启
          */
         default void onStateChange(boolean enable) {
@@ -248,14 +255,16 @@ public class BluetoothUtil {
 
         /**
          * 蓝牙是否连接
+         *
          * @param connect 是否已连接
-         * @param device 连接的设备
+         * @param device  连接的设备
          */
         default void onConnectStateChange(boolean connect, MBtDevice device) {
         }
 
         /**
          * 失败
+         *
          * @param msg 错误消息
          */
         default void onFail(String msg) {
@@ -263,6 +272,7 @@ public class BluetoothUtil {
 
         /**
          * 发现设备
+         *
          * @param device 设备
          */
         default void onFindDevice(MBtDevice device) {
@@ -270,6 +280,7 @@ public class BluetoothUtil {
 
         /**
          * 绑定列表变化
+         *
          * @param devices 设备列表
          */
         default void onBondDeviceChange(List<MBtDevice> devices) {
@@ -310,9 +321,11 @@ public class BluetoothUtil {
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
         filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        filter.addAction(BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED);
         filter.addAction(BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED);
         filter.addAction(BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED);
-        filter.addAction(BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED);
+//        filter.addAction(BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED);
+        filter.addAction(BluetoothAvrcpController.ACTION_CONNECTION_STATE_CHANGED);
         mContext.registerReceiver(mBTReceiver, filter);
     }
 
@@ -360,8 +373,6 @@ public class BluetoothUtil {
                                 break;
                             case BluetoothDevice.BOND_BONDED://配对成功
                                 mConnectedDevice = dev;
-                                mHandler.obtainMessage(H.MSG_ON_CONNECTED, new MBtDevice(dev, rssi))
-                                        .sendToTarget();
                                 Log.d(TAG, "完成配对");
                                 break;
                             case BluetoothDevice.BOND_NONE://取消配对/未配对
@@ -381,8 +392,6 @@ public class BluetoothUtil {
                     mConnectedDevice = dev;
                     Log.d(TAG, "蓝牙设备已连接");
                     mConnecting = false;
-                    mHandler.obtainMessage(H.MSG_ON_CONNECTED, new MBtDevice(dev, rssi))
-                            .sendToTarget();
                     mHandler.obtainMessage(H.MSG_BOND_LIST_CHANGE, new MBtDevice(dev, rssi))
                             .sendToTarget();
                     break;
@@ -393,9 +402,10 @@ public class BluetoothUtil {
                     mHandler.obtainMessage(H.MSG_ON_DIS_CONNECTED).sendToTarget();
                     mHandler.obtainMessage(H.MSG_BOND_LIST_CHANGE).sendToTarget();
                     break;
+                case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
                 case BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED:
                 case BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED:
-                case BluetoothPbapClient.ACTION_CONNECTION_STATE_CHANGED:
+                case BluetoothAvrcpController.ACTION_CONNECTION_STATE_CHANGED:
                     checkProxyConnectState(intent);
                     break;
                 default:
@@ -405,14 +415,64 @@ public class BluetoothUtil {
     };
 
     private void checkProxyConnectState(Intent intent) {
+        BluetoothDevice dev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         int preState = intent.getIntExtra(BluetoothProfile.EXTRA_PREVIOUS_STATE, 0);
         int state = intent.getIntExtra(BluetoothProfile.EXTRA_STATE, 0);
-        Log.d(TAG, "onReceive:" + intent.getAction()
-                + ", preState=" + preState + ", state=" + state);
-        if (preState == BluetoothProfile.STATE_CONNECTED) {
-            Log.d(TAG, "checkProxyConnectState: 已连接 " + intent.getAction());
-        } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
-            Log.d(TAG, "checkProxyConnectState: 已断开 " + intent.getAction());
+        short rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
+        int reason = intent.getIntExtra(EXTRA_REASON, Integer.MIN_VALUE);
+        Log.d(TAG, "onReceive:" + intent.getAction() + ", preState=" + preState
+                + ", state=" + state + ", reason=" + reason);
+        switch (intent.getAction()) {
+            case BluetoothA2dp.ACTION_CONNECTION_STATE_CHANGED:
+                if (state == BluetoothProfile.STATE_CONNECTED) {
+                    mA2dpConnected = true;
+                } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
+                    mA2dpConnected = false;
+                }
+                break;
+            case BluetoothA2dpSink.ACTION_CONNECTION_STATE_CHANGED:
+                if (state == BluetoothProfile.STATE_CONNECTED) {
+                    mA2dpSinkConnected = true;
+                } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
+                    mA2dpSinkConnected = false;
+                }
+                break;
+            case BluetoothHeadsetClient.ACTION_CONNECTION_STATE_CHANGED:
+                if (state == BluetoothProfile.STATE_CONNECTED) {
+                    mHeadsetConnected = true;
+                } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
+                    mHeadsetConnected = false;
+                }
+                break;
+            case BluetoothAvrcpController.ACTION_CONNECTION_STATE_CHANGED:
+                if (state == BluetoothProfile.STATE_CONNECTED) {
+                    mAvrcpConnected = true;
+                } else if (state == BluetoothProfile.STATE_DISCONNECTED) {
+                    mAvrcpConnected = false;
+                }
+                break;
+            default:
+                break;
+        }
+        checkCurrentProxyConnectState(dev, rssi);
+    }
+
+    private void checkCurrentProxyConnectState(BluetoothDevice device, int rssi) {
+        synchronized (mConnectStateLock) {
+            Log.d(TAG, "checkCurrentProxyConnectState: "
+                    + "mA2dpConnected=" + mA2dpConnected
+                    + ",mHeadsetConnected=" + mHeadsetConnected
+                    + ",mA2dpSinkConnected=" + mA2dpSinkConnected
+                    + ",mAvrcpConnected=" + mAvrcpConnected
+            );
+            boolean connected = mA2dpConnected || mHeadsetConnected
+                    || mA2dpSinkConnected || mAvrcpConnected;
+            if (connected) {
+                mHandler.obtainMessage(H.MSG_ON_CONNECTED, new MBtDevice(device, rssi))
+                        .sendToTarget();
+            } else {
+                mHandler.obtainMessage(H.MSG_ON_DIS_CONNECTED).sendToTarget();
+            }
         }
     }
 

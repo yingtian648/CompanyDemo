@@ -1,19 +1,22 @@
 package com.exa.companydemo.accessibility;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.Context;
+import android.util.DebugUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.exa.baselib.utils.L;
+import com.exa.companydemo.utils.Tools;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
-public class MyAccessibilityService extends AccessibilityService {
-    public static MyAccessibilityService service;
+public class MAccessibility extends AccessibilityService {
+    public static MAccessibility service;
     private static boolean isActionFinish = false;
     private static OnCompleteListener listener;
+    private Context mContext;
 
     public interface OnCompleteListener {
         void onComplete();
@@ -23,7 +26,10 @@ public class MyAccessibilityService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        L.w("MAccessibility onServiceConnected");
         service = this;
+        mContext = this;
+        AccessibilityHelper.registerReceiver(mContext);
     }
 
     @Override
@@ -32,6 +38,7 @@ public class MyAccessibilityService extends AccessibilityService {
 //        L.d("AppActiveService onAccessibilityEvent：" + event.getPackageName().toString());
         String className = event.getClassName().toString();
         int eventType = event.getEventType();
+        Tools.valueToString(AccessibilityEvent.class, "TYPE_", eventType);
         switch (eventType) {
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED://通知栏发生变化
                 break;
@@ -39,8 +46,8 @@ public class MyAccessibilityService extends AccessibilityService {
                 L.d("TYPE_WINDOW_STATE_CHANGED");
                 if (!isActionFinish) {
                     isActionFinish = true;
-                    if (MyAccessibilityService.listener != null) {
-                        MyAccessibilityService.listener.onComplete();
+                    if (MAccessibility.listener != null) {
+                        MAccessibility.listener.onComplete();
                     }
                 }
                 break;
@@ -48,7 +55,7 @@ public class MyAccessibilityService extends AccessibilityService {
 //                L.d("TYPE_WINDOW_CONTENT_CHANGED");
                 break;
             case AccessibilityEvent.TYPE_VIEW_CLICKED://点击一个控件
-                L.d("TYPE_VIEW_CLICKED:"+className);
+                L.d("TYPE_VIEW_CLICKED:" + className);
                 break;
             case AccessibilityEvent.TYPE_VIEW_HOVER_ENTER://[手指]覆盖在屏幕上
                 break;
@@ -101,8 +108,8 @@ public class MyAccessibilityService extends AccessibilityService {
      * @param listener
      */
     public static void startAction(OnCompleteListener listener) {
-        MyAccessibilityService.isActionFinish = false;
-        MyAccessibilityService.listener = listener;
+        MAccessibility.isActionFinish = false;
+        MAccessibility.listener = listener;
     }
 
     /**
@@ -145,7 +152,7 @@ public class MyAccessibilityService extends AccessibilityService {
     }
 
     // 停止服务
-    public void stopAccessibility(){
+    public void stopAccessibility() {
         try {
             disableSelf();
             stopSelf();

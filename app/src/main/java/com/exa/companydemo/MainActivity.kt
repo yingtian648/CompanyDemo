@@ -7,21 +7,33 @@ import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.content.res.Configuration
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
+import android.hardware.radio.RadioManager
 import android.net.*
 import android.os.*
+import android.util.Log
 import android.view.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.*
+import com.exa.baselib.utils.Tools
 import com.exa.companydemo.TestUtil.*
+import com.exa.companydemo.accessibility.AccessibilityHelper
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
-import com.exa.companydemo.socket.impl.AbstractSocketClient
-import com.exa.companydemo.socket.impl.BtSocketClientUtil
+import com.exa.companydemo.radio.TunerManager
+import com.exa.companydemo.socket.impl.AbstractClient
+import com.exa.companydemo.socket.impl.WifiSocketClientUtil
 import com.exa.companydemo.toasttest.ToastTestActivity
-import com.exa.companydemo.utils.CmdUtil
-import com.exa.companydemo.utils.NetworkManager
+import com.exa.companydemo.utils.*
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -80,7 +92,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     }
 
     private fun doAfterInitView() {
-        bind.elv.disable()
+//        bind.elv.disable()
         //设置屏幕亮度
 //        Tools.setScreenBrightness(this, 50)
 //        checkPermission()
@@ -100,15 +112,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index}")
 
-//        BluetoothTestUtil.getInstance().setCallback(object : BluetoothTestUtil.Callback {
-//            override fun onConnected(rssi: Int) {
-//                L.dd(rssi)
-//            }
-//
-//            override fun onFail(msg: String) {
-//                L.dd(msg)
-//            }
-//        })
+        AccessibilityHelper.checkToOpenAccessibility(this)
 
 //        val fm = TunerTestFragment()
 //        supportFragmentManager.beginTransaction()
@@ -258,7 +262,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                 test()
             } catch (e: Exception) {
                 e.printStackTrace()
-                L.e("执行测试异常：" + e.message)
+                Log.e(L.TAG, "执行测试异常：" + e.message, e)
             }
             else -> {}
         }

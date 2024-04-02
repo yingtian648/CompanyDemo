@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author lsh
- * @Date 2024/3/21 11:26
- * @Description
+ * @author  lsh
+ * @date  2024/3/21 11:26
+ * @description Wifi-SocketService
  */
-public class WifiSocketServiceUtil extends AbstractSocketService {
+public class WifiSocketServiceUtil extends AbstractService {
     private static final String TAG = "WifiSocketServiceUtil";
-    private List<Socket> clientList = new ArrayList<>();
+    private final List<Socket> clientList = new ArrayList<>();
     private static final int PORT = 8080;
     private static final WifiSocketServiceUtil mInstance = new WifiSocketServiceUtil();
     private boolean isReleased = false;
@@ -46,6 +46,7 @@ public class WifiSocketServiceUtil extends AbstractSocketService {
             synchronized (mLock) {
                 if (isStarted) {
                     Log.w(TAG, "startService: isStarted");
+                    onStarted();
                     return;
                 }
             }
@@ -66,7 +67,7 @@ public class WifiSocketServiceUtil extends AbstractSocketService {
     }
 
     private void waitClientMessage(final Socket socket) {
-        new Thread(() -> {
+        mExecutor.execute(() -> {
             try {
                 // 获取输入流
                 InputStream is = socket.getInputStream();
@@ -81,34 +82,34 @@ public class WifiSocketServiceUtil extends AbstractSocketService {
                 clientList.remove(socket);
                 Thread.currentThread().interrupt();
             }
-        }).start();
+        });
     }
 
     private void onStarted() {
         synchronized (mLock) {
             isStarted = true;
         }
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onStarted(String.valueOf(WifiSocketServiceUtil.PORT));
         }
     }
 
     private void onError(String msg) {
         isStarted = true;
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onError(msg);
         }
     }
 
     private void onClientConnected(Socket socket) {
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onClientConnected(socket.getInetAddress().getHostAddress(), socket.getPort());
         }
     }
 
     private void onReceiveMsg(String msg) {
         Log.w(TAG, "收到客户端消息: " + msg);
-        for (SocketCallback callback : mCallbacks) {
+        for (Callback callback : mCallbacks) {
             callback.onReceived(msg);
         }
     }

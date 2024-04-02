@@ -2,11 +2,9 @@ package com.exa.baselib.utils;
 
 import android.annotation.SuppressLint;
 import android.icu.text.SimpleDateFormat;
-import android.icu.util.TimeZone;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * @author Administrator
@@ -88,18 +86,18 @@ public class DateUtil {
     public static String getTimeStr(long time) {
         long s = time / 1000;
         if (s < 60) {
-            return s + "s";
+            return s + "秒";
         } else if (s < 60 * 60) {
-            return s / 60 + ":" + s % 60;
+            return s / 60 + "分" + s % 60 + "秒";
         } else if (s < 60 * 60 * 24) {
             long h = s / 3600;
             long min = s % 3600 / 60;
-            return h + ":" + min + ":" + s % 3600 % 60;
+            return h + "时" + min + "分" + s % 3600 % 60 + "秒";
         } else {
             long last = s % (60 * 60 * 24);
             long h = last / 3600;
             long min = last % 3600 / 60;
-            return s/(60 * 60 * 24) + "天" + h + ":" + min + ":" + last % 3600 % 60;
+            return s / (60 * 60 * 24) + "天" + h + "时" + min + "分" + last % 3600 % 60 + "秒";
         }
 
     }

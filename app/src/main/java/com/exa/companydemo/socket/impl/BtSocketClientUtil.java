@@ -1,7 +1,6 @@
 package com.exa.companydemo.socket.impl;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.bluetooth.BluetoothA2dpSink;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,7 +11,6 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +19,7 @@ import java.util.UUID;
  * @Date 2024/3/21 18:12
  * @Description
  */
-public class BtSocketClientUtil extends AbstractSocketClient {
+public class BtSocketClientUtil extends AbstractClient {
     private static final String TAG = "BtSocketClientUtil";
     private static final BtSocketClientUtil mInstance = new BtSocketClientUtil();
     private BluetoothAdapter mAdapter;
@@ -68,12 +66,10 @@ public class BtSocketClientUtil extends AbstractSocketClient {
 
     private BtSocketClientUtil() {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
+        init();
     }
 
-    public void init(Context context) {
-        mAdapter.getProfileProxy(context, mListener, A2DP_SINK);
-    }
-
+    @Override
     public void init() {
         Context context = getApplication();
         if (context != null) {
@@ -81,6 +77,7 @@ public class BtSocketClientUtil extends AbstractSocketClient {
         }
     }
 
+    @Override
     public void connect() {
         if (!mAdapter.isEnabled()) {
             onError("蓝牙未开启");
@@ -113,7 +110,7 @@ public class BtSocketClientUtil extends AbstractSocketClient {
     }
 
     private void waitServerMessage() {
-        new Thread(() -> {
+        mExecutor.execute(() -> {
             try {
                 // 获取输入流
                 InputStream is = mServerSocket.getInputStream();
@@ -127,11 +124,11 @@ public class BtSocketClientUtil extends AbstractSocketClient {
                 Log.e(TAG, "waitServerMessage: ", e);
                 Thread.currentThread().interrupt();
             }
-        }).start();
+        });
     }
 
     @Override
-    public void sendMessageToServer(String message) {
+    public void sendMessage(String message) {
         Log.i(TAG, "sendMessageToServer: " + message);
         mExecutor.execute(() -> {
             if (mServerSocket != null) {

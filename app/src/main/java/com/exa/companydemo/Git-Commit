@@ -7,12 +7,12 @@ Build:mpass
 Test:upass
 BugID:noid
 
-Description: add statusbar view
-JiraID: noid
-Module: SystemUI
-Bug or feature: feature
-Team: FW
-Test: pass
+Description:fix image title switch slowly.
+JiraID:CS-864
+Module:RaiteGallery
+Bug or feature:Bug
+Team:FW
+Test:pass
 
 feat[EmbeddedKitchenSinkApp]:Add test page.
 rootcause:添加测试页.
@@ -89,12 +89,6 @@ test:upass
 fid:ID1255261
 level:C
 
-Description: Fix Inputmethod did not show err.
-JiraID: NA
-Module: AOSP
-Bug or feature: Bug
-Team: FW
-Test: pass
 
 Description:Modify CarLatinIME ui.
 JiraID:NA.
@@ -102,12 +96,3 @@ Module:AOSP
 Bug or feature:feature
 Team:FW
 Test:pass
-
-
-Description:Fix open launcher invalid.
-JiraID: CS-663
-Module: AOSP
-Bug or feature: Bug
-Team: FW
-Test: pass
-

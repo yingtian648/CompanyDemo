@@ -4,14 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.fonts.FontFamilyUpdateRequest;
-import android.graphics.fonts.FontFileUpdateRequest;
-import android.graphics.fonts.FontManager;
-import android.graphics.fonts.FontStyle;
 import android.media.MediaMetadataRetriever;
-import android.os.Build;
-import android.os.Environment;
-import android.os.ParcelFileDescriptor;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.util.Xml;
@@ -30,59 +23,15 @@ import org.xmlpull.v1.XmlPullParser;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
-import static android.graphics.fonts.FontStyle.FONT_SLANT_ITALIC;
-import static android.graphics.fonts.FontStyle.FONT_SLANT_UPRIGHT;
-import static android.graphics.fonts.FontStyle.FONT_WEIGHT_NORMAL;
-import static android.os.Environment.DIRECTORY_PICTURES;
 
 public class Tools {
-
-    public static void updateFontFamily(Context context) {
-        FontManager fm = context.getSystemService(FontManager.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            try {
-                File fileR = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), "AIONType-regular.otf");
-                File fileL = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), "AIONType-light.otf");
-                File fileB = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_PICTURES), "AIONType-bold.otf");
-                ParcelFileDescriptor fdR = ParcelFileDescriptor.open(fileR, ParcelFileDescriptor.MODE_READ_ONLY);
-                ParcelFileDescriptor fdL = ParcelFileDescriptor.open(fileL, ParcelFileDescriptor.MODE_READ_ONLY);
-                ParcelFileDescriptor fdB = ParcelFileDescriptor.open(fileB, ParcelFileDescriptor.MODE_READ_ONLY);
-                byte[] signature = null;
-                fm.updateFontFamily(new FontFamilyUpdateRequest.Builder()
-                        .addFontFileUpdateRequest(new FontFileUpdateRequest(fdR, signature))
-                        .addFontFileUpdateRequest(new FontFileUpdateRequest(fdL, signature))
-                        .addFontFileUpdateRequest(new FontFileUpdateRequest(fdB, signature))
-                        .addFontFamily(
-                                new FontFamilyUpdateRequest.FontFamily.Builder("AIONType",
-                                        Arrays.asList(
-                                                new FontFamilyUpdateRequest.Font.Builder(
-                                                        "AIONType-regular",
-                                                        new FontStyle(FONT_WEIGHT_NORMAL, FONT_SLANT_UPRIGHT)
-                                                ).build(),
-                                                new FontFamilyUpdateRequest.Font.Builder(
-                                                        "AIONType-light",
-                                                        new FontStyle(FONT_WEIGHT_NORMAL, FONT_SLANT_UPRIGHT)
-                                                ).build(),
-                                                new FontFamilyUpdateRequest.Font.Builder(
-                                                        "AIONType-bold",
-                                                        new FontStyle(FONT_WEIGHT_NORMAL, FONT_SLANT_UPRIGHT)
-                                                ).build()
-                                        )).build()
-                        )
-                        .build(), fm.getFontConfig().getConfigVersion());
-            } catch (FileNotFoundException e) {
-                L.de(e);
-            }
-        }
-    }
 
     /**
      * @param res
@@ -321,5 +270,66 @@ public class Tools {
             }
         }
         return results;
+    }
+
+    /**
+     * Use prefixed constants (static final values) on given class to turn value
+     * into human-readable string.
+     *
+     * @hide
+     */
+    public static String valueToString(Class<?> clazz, String prefix, int value) {
+        for (Field field : clazz.getDeclaredFields()) {
+            final int modifiers = field.getModifiers();
+            if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)
+                    && field.getType().equals(int.class) && field.getName().startsWith(prefix)) {
+                try {
+                    if (value == field.getInt(null)) {
+                        return constNameWithoutPrefix(prefix, field);
+                    }
+                } catch (IllegalAccessException ignored) {
+                }
+            }
+        }
+        return Integer.toString(value);
+    }
+
+    /**
+     * Use prefixed constants (static final values) on given class to turn flags
+     * into human-readable string.
+     *
+     * @hide
+     */
+    public static String flagsToString(Class<?> clazz, String prefix, int flags) {
+        final StringBuilder res = new StringBuilder();
+        boolean flagsWasZero = flags == 0;
+
+        for (Field field : clazz.getDeclaredFields()) {
+            final int modifiers = field.getModifiers();
+            if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)
+                    && field.getType().equals(int.class) && field.getName().startsWith(prefix)) {
+                try {
+                    final int value = field.getInt(null);
+                    if (value == 0 && flagsWasZero) {
+                        return constNameWithoutPrefix(prefix, field);
+                    }
+                    if (value != 0 && (flags & value) == value) {
+                        flags &= ~value;
+                        res.append(constNameWithoutPrefix(prefix, field)).append('|');
+                    }
+                } catch (IllegalAccessException ignored) {
+                }
+            }
+        }
+        if (flags != 0 || res.length() == 0) {
+            res.append(Integer.toHexString(flags));
+        } else {
+            res.deleteCharAt(res.length() - 1);
+        }
+        return res.toString();
+    }
+
+    private static String constNameWithoutPrefix(String prefix, Field field) {
+        return field.getName().substring(prefix.length());
     }
 }

@@ -31,7 +31,7 @@ public class App extends Application {
         Constants.init();
         BaseConstants.init();
         L.init("MCompanyDemo", true);
-        L.d("开机时长：" + DateUtil.getTimeStr(SystemClock.elapsedRealtime()));
+        L.w("开机时长：" + DateUtil.getTimeStr(SystemClock.elapsedRealtime()));
         PathUtil.INSTANCE.init(this);
         app = this;
         Tools.logScreenWH(this);
