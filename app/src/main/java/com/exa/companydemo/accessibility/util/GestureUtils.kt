@@ -6,17 +6,18 @@ import android.accessibilityservice.GestureDescription.StrokeDescription
 import android.graphics.Path
 import android.graphics.Rect
 import android.os.Build
+import android.util.DisplayMetrics
+import android.view.Display
 import android.view.accessibility.AccessibilityNodeInfo
-import androidx.annotation.RequiresApi
 import com.exa.baselib.utils.L
 import com.exa.baselib.utils.Tools
 import com.exa.companydemo.App
 
 
 /**
- * @作者 Liushihua
- * @创建日志 2021-9-13 15:56
- * @描述
+ * @author Liushihua
+ * @date 2021-9-13 15:56
+ * @describe 手势工具类
  */
 object GestureUtils {
 
@@ -86,12 +87,10 @@ object GestureUtils {
 
         service.dispatchGesture(description, object : AccessibilityService.GestureResultCallback() {
             override fun onCancelled(gestureDescription: GestureDescription?) {
-                super.onCancelled(gestureDescription)
                 L.d("取消滑动")
             }
 
             override fun onCompleted(gestureDescription: GestureDescription?) {
-                super.onCompleted(gestureDescription)
                 L.d("滑动成功")
             }
         }, null)
@@ -123,35 +122,107 @@ object GestureUtils {
     /**
      * 缩放
      * 两点触控
-     * @param scale 两个手指之间的距离 >0 放大 <0 缩小
+     * @param scaleBigger 是否放大
+     *
+     * 添加控制点（可以是多个）
+     * GestureDescription.addStroke(StrokeDescription(path1, 0, 100))
      */
-    fun scaleAtScreenCenter(service: AccessibilityService, scale: Int) {
+    fun scaleInCenter(service: AccessibilityService, scaleBigger: Boolean) {
+        L.dd(scaleBigger)
         val builder = GestureDescription.Builder()
+        val norDistance = 300
         val path1 = Path()
         val path2 = Path()
         val w = Tools.getScreenW(App.getContext())
         val h = Tools.getScreenH(App.getContext())
         val centerX = w / 2
         val centerY = h / 2
-        val offset = 60
-        path1.moveTo(centerX + offset.toFloat(), centerY.toFloat())
-        path1.lineTo(centerX + offset.toFloat() + scale / 2, centerY.toFloat())
-        path1.moveTo(centerX - offset.toFloat(), centerY.toFloat())
-        path1.lineTo(centerX - offset.toFloat() - scale / 2, centerY.toFloat())
-        val description = builder
-            .addStroke(StrokeDescription(path1, 0L, 500))
-            .addStroke(StrokeDescription(path2, 0L, 500))
-            .build()
-        service.dispatchGesture(description, object : AccessibilityService.GestureResultCallback() {
-            override fun onCancelled(gestureDescription: GestureDescription?) {
-                super.onCancelled(gestureDescription)
-                L.d("取消缩放")
-            }
+        val desc = if (scaleBigger) {
+            path1.moveTo(centerX.toFloat(), centerY.toFloat())
+            path1.lineTo(centerX.toFloat() - 100, centerY.toFloat() + 50)
+            //第二个点
+            path2.moveTo(centerX.toFloat() + norDistance, centerY.toFloat())
+            path2.lineTo(centerX.toFloat() + norDistance + 100, centerY.toFloat() - 100)
 
-            override fun onCompleted(gestureDescription: GestureDescription?) {
-                super.onCompleted(gestureDescription)
-                L.d("缩放成功")
-            }
-        }, null)
+            builder.addStroke(StrokeDescription(path1, 0, 100))
+                .addStroke(StrokeDescription(path2, 0, 100))
+                .build()
+        } else {
+            path1.moveTo(centerX.toFloat() - 100, centerY.toFloat() + 100)
+            path1.lineTo(centerX.toFloat() - 100 + 100, centerY.toFloat() + 100 + 50)
+            //第二个点
+            path2.moveTo(centerX.toFloat() + norDistance, centerY.toFloat() + 200)
+            path2.lineTo(centerX.toFloat() + norDistance - 100, centerY.toFloat() + 200 - 50)
+
+            builder.addStroke(StrokeDescription(path1, 0, 400))
+                .addStroke(StrokeDescription(path2, 0, 400))
+                .build()
+        }
+        service.dispatchGesture(
+            desc, object : AccessibilityService.GestureResultCallback() {
+                override fun onCancelled(gestureDescription: GestureDescription?) {
+                    L.d("取消缩放")
+                }
+
+                override fun onCompleted(gestureDescription: GestureDescription?) {
+                    L.d("缩放成功")
+                }
+            },
+            null
+        )
+    }
+
+    /**
+     * 三指左右滑动
+     */
+    fun swipeWith3Points(service: AccessibilityService, display: Display, toLeft: Boolean) {
+        val path = Path()
+        val path1 = Path()
+        val path2 = Path()
+        val metrics = DisplayMetrics()
+        display.getRealMetrics(metrics)
+        val cenX = metrics.widthPixels / 2
+        val cenY = metrics.heightPixels / 2
+        path.moveTo(cenX.toFloat(), cenY.toFloat() - 100)
+        path1.moveTo(cenX.toFloat() + 100, cenY.toFloat() - 100 - 100)
+        path2.moveTo(cenX.toFloat() + 200, cenY.toFloat() - 80)
+        if (toLeft) {
+            path.lineTo(cenX.toFloat() - (cenX - 100), cenY.toFloat() - 100)
+            path1.lineTo(cenX.toFloat() + 100 - (cenX - 100), cenY.toFloat() - 100 - 10)
+            path2.lineTo(cenX.toFloat() + 200 - (cenX - 100), cenY.toFloat() - 80)
+        } else {
+            path.lineTo(cenX.toFloat() + (cenX - 100), cenY.toFloat() - 100)
+            path1.lineTo(cenX.toFloat() + 100 + (cenX - 100), cenY.toFloat() - 100 - 10)
+            path2.lineTo(cenX.toFloat() + 200 + (cenX - 100), cenY.toFloat() - 80)
+        }
+        val gestureDescription = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            GestureDescription.Builder()
+                .setDisplayId(display.displayId)
+                .addStroke(StrokeDescription(path, 0, 500))
+                .addStroke(StrokeDescription(path1, 0, 500))
+                .addStroke(StrokeDescription(path2, 0, 500))
+                .build()
+        } else {
+            GestureDescription.Builder()
+                .addStroke(StrokeDescription(path, 0, 500))
+                .addStroke(StrokeDescription(path1, 0, 500))
+                .addStroke(StrokeDescription(path2, 0, 500))
+                .build()
+        }
+        service.dispatchGesture(
+            gestureDescription,
+            object : AccessibilityService.GestureResultCallback() {
+                override fun onCancelled(gestureDescription: GestureDescription?) {
+                    super.onCancelled(gestureDescription)
+                    L.d("onCancelled")
+                }
+
+                override fun onCompleted(gestureDescription: GestureDescription?) {
+                    super.onCompleted(gestureDescription)
+                    L.d("onCompleted")
+                }
+            },
+            null
+        )
     }
 }

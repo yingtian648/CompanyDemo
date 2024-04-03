@@ -5,15 +5,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.display.DisplayManager;
 import android.provider.Settings;
+import android.view.Display;
 
 import com.exa.baselib.utils.L;
 import com.exa.companydemo.accessibility.util.GestureUtils;
 
 /**
- * @作者 Liushihua
- * @创建日志 2021-9-13 14:49
- * @描述
+ * @author lsh
+ * @date 2021-9-13 14:49
+ * 无障碍服务帮助类
  */
 public class AccessibilityHelper {
     /**
@@ -40,16 +42,34 @@ public class AccessibilityHelper {
         }
     }
 
-    private static final String ACTION_SCALE_IN_CENTER = "com.exa.companydemo.accessibility.scaleInCenter";
+    /**
+     * 通过广播接收手势操作
+     * <p>
+     * 测试aab命令
+     * adb shell am broadcast -a com.exa.companydemo.accessibility.gesture -e operation bigger
+     */
+    private static final String ACTION_ACCESSIBILITY_GESTURE = "com.exa.companydemo.accessibility.gesture";
 
     private static final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            L.w("onReceive: " + intent.getAction());
+            String opr = intent.getStringExtra("operation");
+            L.w("onReceive: " + intent.getAction() + " operation=" + opr);
             assert MAccessibility.isStart();
-            switch (intent.getAction()) {
-                case ACTION_SCALE_IN_CENTER:
-                    GestureUtils.INSTANCE.scaleAtScreenCenter(MAccessibility.service, 200);
+            switch (opr) {
+                case "bigger":
+                    GestureUtils.INSTANCE.scaleInCenter(MAccessibility.service, true);
+                    break;
+                case "smaller":
+                    GestureUtils.INSTANCE.scaleInCenter(MAccessibility.service, false);
+                    break;
+                case "left3":
+                    GestureUtils.INSTANCE.swipeWith3Points(MAccessibility.service,
+                            getDisplay(context, false), true);
+                    break;
+                case "right3":
+                    GestureUtils.INSTANCE.swipeWith3Points(MAccessibility.service,
+                            getDisplay(context, true), false);
                     break;
             }
         }
@@ -57,11 +77,20 @@ public class AccessibilityHelper {
 
     public static void registerReceiver(Context context) {
         IntentFilter filter = new IntentFilter();
-        filter.addAction(ACTION_SCALE_IN_CENTER);
+        filter.addAction(ACTION_ACCESSIBILITY_GESTURE);
         context.registerReceiver(mReceiver, filter);
     }
 
     public static void unRegisterReceiver(Context context) {
         context.unregisterReceiver(mReceiver);
+    }
+
+    private static Display getDisplay(Context context, Boolean isDefaultDisplay) {
+        if (isDefaultDisplay) {
+            return context.getSystemService(DisplayManager.class)
+                    .getDisplay(Display.DEFAULT_DISPLAY);
+        } else {
+            return context.getSystemService(DisplayManager.class).getDisplay(2);
+        }
     }
 }

@@ -275,8 +275,6 @@ public class Tools {
     /**
      * Use prefixed constants (static final values) on given class to turn value
      * into human-readable string.
-     *
-     * @hide
      */
     public static String valueToString(Class<?> clazz, String prefix, int value) {
         for (Field field : clazz.getDeclaredFields()) {
@@ -297,8 +295,6 @@ public class Tools {
     /**
      * Use prefixed constants (static final values) on given class to turn flags
      * into human-readable string.
-     *
-     * @hide
      */
     public static String flagsToString(Class<?> clazz, String prefix, int flags) {
         final StringBuilder res = new StringBuilder();

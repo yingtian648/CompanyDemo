@@ -1,6 +1,7 @@
 package com.exa.companydemo.accessibility;
 
 import android.accessibilityservice.AccessibilityService;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.DebugUtils;
 import android.view.accessibility.AccessibilityEvent;
@@ -11,8 +12,15 @@ import com.exa.companydemo.utils.Tools;
 
 import androidx.annotation.Nullable;
 
-
+/**
+ * 1.adb命令授予包的android.permission.WRITE_SECURE_SETTINGS权限
+ * adb shell pm grant app包名 android.permission.WRITE_SECURE_SETTINGS
+ * 2.application处添加代码——启用无障碍功能
+ * Settings.Secure.putString(getContentResolver(), Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES, "app包名/AccessibilityService 全名");
+ * Settings.Secure.putInt(getContentResolver(),Settings.Secure.ACCESSIBILITY_ENABLED, 1);
+ */
 public class MAccessibility extends AccessibilityService {
+    @SuppressLint("StaticFieldLeak")
     public static MAccessibility service;
     private static boolean isActionFinish = false;
     private static OnCompleteListener listener;
@@ -33,12 +41,19 @@ public class MAccessibility extends AccessibilityService {
     }
 
     @Override
+    public void onInterrupt() {
+        L.w("MAccessibility onInterrupt");
+        service = null;
+        AccessibilityHelper.unRegisterReceiver(mContext);
+    }
+
+    @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-//        L.d("AppActiveService onAccessibilityEvent：" + event.getClassName().toString());
-//        L.d("AppActiveService onAccessibilityEvent：" + event.getPackageName().toString());
-        String className = event.getClassName().toString();
+        String clazz = event.getClassName().toString();
+        String pkg = event.getClassName().toString();
         int eventType = event.getEventType();
-        Tools.valueToString(AccessibilityEvent.class, "TYPE_", eventType);
+        String type = Tools.valueToString(AccessibilityEvent.class, "TYPE_", eventType);
+        L.d("onAccessibilityEvent：" + type + " " + pkg + "/" + clazz);
         switch (eventType) {
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED://通知栏发生变化
                 break;
@@ -55,7 +70,7 @@ public class MAccessibility extends AccessibilityService {
 //                L.d("TYPE_WINDOW_CONTENT_CHANGED");
                 break;
             case AccessibilityEvent.TYPE_VIEW_CLICKED://点击一个控件
-                L.d("TYPE_VIEW_CLICKED:" + className);
+                L.d("TYPE_VIEW_CLICKED:" + clazz);
                 break;
             case AccessibilityEvent.TYPE_VIEW_HOVER_ENTER://[手指]覆盖在屏幕上
                 break;
@@ -120,12 +135,6 @@ public class MAccessibility extends AccessibilityService {
         return getRootInActiveWindow();
     }
 
-    @Override
-    public void onInterrupt() {
-        service = null;
-        L.d("AppActiveService onInterrupt");
-    }
-
     /**
      * 处理通知栏信息 *
      * if (accessibilityEvent.getEventType() == AccessibilityEvent.TYPE_VIEW_CLICKED) {//只接收点击事件
@@ -160,5 +169,11 @@ public class MAccessibility extends AccessibilityService {
             e.printStackTrace();
             L.de(e);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        L.w("MAccessibility onDestroy");
     }
 }

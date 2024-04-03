@@ -9,12 +9,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.Tools;
+import com.exa.companydemo.accessibility.MAccessibility;
 import com.exa.companydemo.utils.PathUtil;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,13 @@ public class App extends Application {
         PathUtil.INSTANCE.init(this);
         app = this;
         Tools.logScreenWH(this);
+
+        //启动无障碍服务
+        Settings.Secure.putString(getContentResolver(),
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+                getPackageName() + "/" + MAccessibility.class.getName());
+        Settings.Secure.putInt(getContentResolver(),
+                Settings.Secure.ACCESSIBILITY_ENABLED, 1);
     }
 
     private void listenActivityLife() {
