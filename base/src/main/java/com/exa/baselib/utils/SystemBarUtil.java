@@ -1,8 +1,12 @@
 package com.exa.baselib.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.os.Build;
+import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowInsets;
@@ -19,6 +23,7 @@ import static android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACK
  * @author Administrator
  */
 public class SystemBarUtil {
+    private static final String TAG = "SystemBarUtil";
     public static final int INSETS_TYPE_STATUS_BAR = 1;
     public static final int INSETS_TYPE_NAVIGATION_BAR = 2;
 
@@ -349,5 +354,24 @@ public class SystemBarUtil {
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
+    }
+
+    /**
+     * 获取状态栏和导航栏是否可见
+     *
+     * @return Pair<Boolean, Boolean>  first:状态栏是否隐藏  second:导航栏是否隐藏 true:隐藏  false:显示
+     */
+    public static Pair<Boolean, Boolean> isSystemUiHide(Context context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        // Check if the system UI is visible
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowInsets insets = windowManager.getMaximumWindowMetrics().getWindowInsets();
+            Insets navi = insets.getInsets(WindowInsets.Type.navigationBars());
+            Insets status = insets.getInsets(WindowInsets.Type.statusBars());
+            Log.d(TAG, String.format("naviBars:%d statusBars:%d", navi.bottom, status.top));
+            Log.d(TAG, "是否隐藏状态栏：" + (status.top == 0) + ",是否隐藏导航栏：" + (navi.bottom == 0));
+            return new Pair<>(status.top == 0, navi.bottom == 0);
+        }
+        return new Pair<>(false, false);
     }
 }
