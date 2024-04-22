@@ -109,6 +109,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <!--底部activity变暗-->
         <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
         <!-- 弹窗左上角的标题-->
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@null</item>

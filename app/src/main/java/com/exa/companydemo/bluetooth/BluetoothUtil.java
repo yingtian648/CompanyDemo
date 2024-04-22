@@ -387,6 +387,7 @@ public class BluetoothUtil {
                     if (dev != null) {
                         dev.setPairingConfirmation(true);
                     }
+//                    abortBroadcast();//拦截此广播——避免其它应用收到后弹出配对框
                     break;
                 case BluetoothDevice.ACTION_ACL_CONNECTED:
                     mConnectedDevice = dev;

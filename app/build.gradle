@@ -1,12 +1,10 @@
-import java.text.SimpleDateFormat
-
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.exa.companydemo"
@@ -17,7 +15,7 @@ android {
 //        applicationId "space.syncore.cockpit.soundeffect"
 
         minSdk 26
-        targetSdk 32
+        targetSdk 34
         versionCode 999999
         versionName getVersionN()
 

@@ -1,16 +1,12 @@
 package com.exa.companydemo;
 
-import android.location.Location;
 import android.util.SparseArray;
-
-import com.exa.companydemo.test.SonC;
 
 import org.junit.Test;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -19,9 +15,29 @@ import static org.junit.Assert.*;
  */
 public class ExampleUnitTest {
     private SparseArray<String> dumpList = new SparseArray<>();
+
+    public void log(String msg) {
+        System.out.println(msg);
+    }
+
     @Test
     public void addition_isCorrect() {
-        SonC sonC = new SonC();
-        System.out.println(sonC.getName());
+
     }
+
+    @Test
+    public void testTreeMapSort(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("03", "03");
+        map.put("04", "04");
+        map.put("01", "01");
+        map.put("02", "02");
+        map.put("05", "05");
+        TreeMap<String, Object> treeMap = new TreeMap<>(map);
+        log("---------------------");
+        for ( Map.Entry<String, Object> entry : treeMap.entrySet()) {
+            log(entry.getKey() + " " + entry.getValue());
+        }
+    }
+
 }

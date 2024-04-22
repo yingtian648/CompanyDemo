@@ -1,5 +1,6 @@
 package com.exa.companydemo;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Handler;
 import android.view.View;
 import android.view.Window;
@@ -10,6 +11,7 @@ import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.SystemBarUtil;
 import com.exa.companydemo.databinding.ActivityMDialogBinding;
 
+import java.lang.reflect.Method;
 import java.util.Objects;
 
 /**
@@ -42,6 +44,12 @@ public class MDialogActivity extends BaseBindActivity<ActivityMDialogBinding> {
                 SystemBarUtil.hideStatusBars(this);
             }
         });
+    }
+
+    public boolean autoBond(Class btClass, BluetoothDevice device, String strPin) throws Exception {
+        Method autoBondMethod = device.getClass().getMethod("setPin", new Class[]{byte[].class});
+        Boolean result = (Boolean) autoBondMethod.invoke(device, new Object[]{strPin.getBytes()});
+        return result;
     }
 
     @Override

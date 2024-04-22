@@ -109,7 +109,10 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
                 R.id.btnVoiceTel, R.id.btnVoiceKey, R.id.btnGps, R.id.btnVolume,
                 R.id.btnUsb2, R.id.btnUsb32, R.id.btnUsb33, R.id.btnAppleConn,
                 R.id.btnWifi, R.id.btnWifiSet, R.id.btnBt,
-                R.id.btnBtSet, R.id.btnVersion, R.id.btnProduct};
+                R.id.btnBtSet, R.id.btnVersion, R.id.btnProduct,
+                R.id.btnFan, R.id.btnRtc, R.id.btnTemp,
+                R.id.btnNaviQuit, R.id.btnSpQuit, R.id.btnMediaQuit,
+        };
         for (int id : ids) {
             findViewById(id).setOnClickListener(this);
         }
@@ -171,6 +174,21 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
                         ProTestParser.MSG_TYPE_SET,
                         map);
                 break;
+            case R.id.btnNaviQuit:
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.VOICE_NAVIGATION,
+                        ProTestParser.MSG_TYPE_QUIT,
+                        null);
+                break;
+            case R.id.btnSpQuit:
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.VOICE_SPEECH,
+                        ProTestParser.MSG_TYPE_QUIT,
+                        null);
+                break;
+            case R.id.btnMediaQuit:
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.VOICE_MEDIA,
+                        ProTestParser.MSG_TYPE_QUIT,
+                        null);
+                break;
             case R.id.btnAppleConn:
                 json = ProTestParser.createTestJson(ProTestParser.TestCode.APPLE_CONN,
                         ProTestParser.MSG_TYPE_REQUEST,
@@ -200,6 +218,21 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
                 break;
             case R.id.btnBt:
                 json = ProTestParser.createTestJson(ProTestParser.TestCode.BLUETOOTH,
+                        ProTestParser.MSG_TYPE_REQUEST,
+                        null);
+                break;
+            case R.id.btnFan:
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.CODE_623,
+                        ProTestParser.MSG_TYPE_REQUEST,
+                        null);
+                break;
+            case R.id.btnRtc:
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.CODE_624,
+                        ProTestParser.MSG_TYPE_REQUEST,
+                        null);
+                break;
+            case R.id.btnTemp:
+                json = ProTestParser.createTestJson(ProTestParser.TestCode.CODE_625,
                         ProTestParser.MSG_TYPE_REQUEST,
                         null);
                 break;

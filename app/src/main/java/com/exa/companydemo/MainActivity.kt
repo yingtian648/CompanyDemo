@@ -3,6 +3,7 @@ package com.exa.companydemo
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
@@ -14,6 +15,7 @@ import android.net.*
 import android.os.*
 import android.util.Log
 import android.view.*
+import android.widget.CarToast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -31,6 +33,7 @@ import com.exa.companydemo.locationtest.LocationActivity
 import com.exa.companydemo.radio.TunerManager
 import com.exa.companydemo.socket.impl.AbstractClient
 import com.exa.companydemo.socket.impl.WifiSocketClientUtil
+import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import java.io.File
@@ -89,6 +92,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             false
         }
         doAfterInitView()
+        bind.edit.visibility
     }
 
     private fun doAfterInitView() {
@@ -99,8 +103,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
         // 沉浸式
-        //ScreenUtils.setStatusBarInvasion(this)
-        L.dd("66")
+        SystemBarUtil.setStatusBarInvasion(this)
+        L.dd("66 " + resources.getDimensionPixelSize(R.dimen.toast_max_width))
     }
 
     @SuppressLint(
@@ -112,7 +116,11 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index}")
 
-        AccessibilityHelper.checkToOpenAccessibility(this)
+        L.dd("66 " + resources.getDimensionPixelSize(R.dimen.toast_max_width))
+
+//        TestDialog.showDialog(this)
+
+        SystemBarUtil.isSystemUiHide(this)
 
 //        val fm = TunerTestFragment()
 //        supportFragmentManager.beginTransaction()

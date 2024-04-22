@@ -45,8 +45,8 @@ public class TestDialog {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_layout, null, false);
         TextView titleT = view.findViewById(R.id.titleT);
         titleT.setText("TestDialog.showDialog");
-        final Dialog dialog = new Dialog(context);
-//        final Dialog dialog = new Dialog(context, R.style.MyAlertDialog);
+//        final Dialog dialog = new Dialog(context);
+        final Dialog dialog = new Dialog(context, R.style.MyAlertDialog);
         dialog.setCancelable(true);
         view.findViewById(R.id.sure_button).setOnClickListener(v -> {
             dialog.dismiss();
@@ -76,7 +76,7 @@ public class TestDialog {
 //        hideSystemBars(view);
 
         dialog.setContentView(view);
-        dialog.setTitle("CompanyDemo_showAlertDialog");
+        dialog.setTitle("TestDialog.showDialog");
         dialog.show();
     }
 

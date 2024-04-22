@@ -7,8 +7,8 @@ Build:mpass
 Test:upass
 BugID:noid
 
-Description:fix image title switch slowly.
-JiraID:CS-864
+Description:fix picture search fail.
+JiraID:ZLCES-70
 Module:RaiteGallery
 Bug or feature:Bug
 Team:FW

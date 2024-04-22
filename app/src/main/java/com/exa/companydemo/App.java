@@ -39,11 +39,11 @@ public class App extends Application {
         Tools.logScreenWH(this);
 
         //启动无障碍服务
-        Settings.Secure.putString(getContentResolver(),
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-                getPackageName() + "/" + MAccessibility.class.getName());
-        Settings.Secure.putInt(getContentResolver(),
-                Settings.Secure.ACCESSIBILITY_ENABLED, 1);
+//        Settings.Secure.putString(getContentResolver(),
+//                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+//                getPackageName() + "/" + MAccessibility.class.getName());
+//        Settings.Secure.putInt(getContentResolver(),
+//                Settings.Secure.ACCESSIBILITY_ENABLED, 1);
     }
 
     private void listenActivityLife() {

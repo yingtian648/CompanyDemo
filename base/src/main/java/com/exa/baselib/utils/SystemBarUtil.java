@@ -343,17 +343,17 @@ public class SystemBarUtil {
     public static void setStatusBarInvasion(Activity activity) {
         L.dd();
         Window window = activity.getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowManager.LayoutParams params = window.getAttributes();
-            params.setFitInsetsTypes(WindowInsets.Type.navigationBars());
-            window.setAttributes(params);
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            WindowManager.LayoutParams params = window.getAttributes();
+//            params.setFitInsetsTypes(WindowInsets.Type.navigationBars());
+//            window.setAttributes(params);
+//        } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-        }
+//        }
     }
 
     /**

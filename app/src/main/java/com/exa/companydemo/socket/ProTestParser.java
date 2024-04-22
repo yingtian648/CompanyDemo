@@ -111,6 +111,16 @@ public class ProTestParser {
         public static final String VOICE_KEY = "6.11.5";
 
         public static final String LOCATION = "6.12";
+
+        public static final String CODE_623 = "6.23";
+        public static final String CODE_624 = "6.24";
+        public static final String CODE_625 = "6.25";
+        public static final String CODE_626 = "6.26";
+        public static final String CODE_628 = "6.28";
+        public static final String CODE_631 = "6.31";
+        public static final String CODE_632 = "6.32";
+        public static final String CODE_633_1 = "6.33.1";
+        public static final String CODE_633_2 = "6.33.2";
     }
 
     public static class DataBean {

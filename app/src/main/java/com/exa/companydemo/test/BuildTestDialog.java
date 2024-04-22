@@ -74,6 +74,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         params.gravity = Gravity.TOP;
         params.windowAnimations = 0;
         mWindowManager.addView(dialogView, params);
+        mWindowManager.removeViewImmediate(dialogView);
     }
 
     public void addNoteView(Context context){

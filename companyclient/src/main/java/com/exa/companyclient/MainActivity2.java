@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.SystemBarUtil;
-import com.exa.baselib.utils.StatubarUtil;
 import com.exa.companyclient.databinding.ActivityMain2Binding;
 
 import java.text.SimpleDateFormat;
