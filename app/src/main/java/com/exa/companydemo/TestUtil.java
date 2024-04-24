@@ -260,7 +260,7 @@ public class TestUtil {
         int date = 10123;
         double time = 123403.588;
         L.d("-------------------------");
-        long result = GpsConvertUtil.getCurrentTimeZoneTimeMillis(date, time);
+        long result = GpsConvertUtil.getTimeZoneMillis(date, time);
         SimpleDateFormat sdfOut = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
         L.d(String.valueOf(result));
         L.d(sdfOut.format(new Date(result)));

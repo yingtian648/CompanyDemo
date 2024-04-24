@@ -135,7 +135,7 @@ class SystemUITestActivity : BaseBindActivity<ActivitySystemuiTestBinding>() {
             if (isShowInvasion) {
                 SystemBarUtil.setInvasionSystemBars(this)
             } else {
-                SystemBarUtil.setInvasionNone(this)
+                SystemBarUtil.setInvasionNone(window)
             }
         }
         bind.btnUIMode.setOnClickListener {

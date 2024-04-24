@@ -254,9 +254,9 @@ public class SystemBarUtil {
         L.dd();
         Window window = activity.getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(false);
             window.setNavigationBarColor(Color.TRANSPARENT);
             window.setStatusBarColor(Color.TRANSPARENT);
+            window.setDecorFitsSystemWindows(false);
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -265,7 +265,7 @@ public class SystemBarUtil {
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
                 window.setNavigationBarContrastEnforced(false);
             }
             window.setNavigationBarColor(Color.TRANSPARENT);
@@ -280,9 +280,9 @@ public class SystemBarUtil {
     public static void setInvasionSystemBars(Window window) {
         L.dd();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowManager.LayoutParams params = window.getAttributes();
-            params.setFitInsetsTypes(0);
-            window.setAttributes(params);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setDecorFitsSystemWindows(false);
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
                     | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -291,7 +291,7 @@ public class SystemBarUtil {
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
                 window.setNavigationBarContrastEnforced(false);
             }
             window.setNavigationBarColor(Color.TRANSPARENT);
@@ -302,58 +302,51 @@ public class SystemBarUtil {
     /**
      * 设置非沉浸式
      */
-    public static void setInvasionNone(Activity activity) {
-        L.dd();
-        Window window = activity.getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.setDecorFitsSystemWindows(true);
-        } else {
-            window.clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-            window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                window.setNavigationBarContrastEnforced(false);
-            }
-        }
+    public static void setInvasionNone(Window window) {
+        setInvasionNone(window, 0, 0);
     }
 
     /**
      * 设置非沉浸式
      */
-    public static void setInvasionNone(Window window) {
+    public static void setInvasionNone(Window window, int statusColor, int naviColor) {
         L.dd();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowManager.LayoutParams params = window.getAttributes();
-            params.setFitInsetsTypes(WindowInsets.Type.statusBars()
-                    | WindowInsets.Type.navigationBars());
-            window.setAttributes(params);
+            window.setDecorFitsSystemWindows(true);
+            if (statusColor != 0) {
+                window.setStatusBarColor(statusColor);
+            }
+            if (naviColor != 0) {
+                window.setNavigationBarColor(naviColor);
+            }
         } else {
             window.clearFlags(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
                 window.setNavigationBarContrastEnforced(false);
             }
         }
     }
 
-
-    public static void setStatusBarInvasion(Activity activity) {
+    public static void setInvasionStatusBar(Activity activity) {
         L.dd();
         Window window = activity.getWindow();
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            WindowManager.LayoutParams params = window.getAttributes();
-//            params.setFitInsetsTypes(WindowInsets.Type.navigationBars());
-//            window.setAttributes(params);
-//        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setDecorFitsSystemWindows(false);
+            WindowManager.LayoutParams params = window.getAttributes();
+            params.setFitInsetsTypes(WindowInsets.Type.systemBars() & ~WindowInsets.Type.statusBars());
+            params.setFitInsetsSides(WindowInsets.Side.all() & ~WindowInsets.Side.TOP);
+            window.setAttributes(params);
+        } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
-//        }
+        }
     }
 
     /**

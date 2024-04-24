@@ -295,7 +295,7 @@ class WifiActivity : BaseBindActivity<ActivityWifiBinding>() {
     }
 
     override fun initView() {
-        SystemBarUtil.setStatusBarInvasion(this)
+        SystemBarUtil.setInvasionStatusBar(this)
         checkPermission()
         bind.openBtn.setOnClickListener {
             setWifiEnable(true)

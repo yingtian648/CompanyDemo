@@ -102,9 +102,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        checkPermission()
 //        TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
-        // 沉浸式
-        SystemBarUtil.setStatusBarInvasion(this)
-        L.dd("66 " + resources.getDimensionPixelSize(R.dimen.toast_max_width))
+
     }
 
     @SuppressLint(
@@ -116,11 +114,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index}")
 
-        L.dd("66 " + resources.getDimensionPixelSize(R.dimen.toast_max_width))
-
 //        TestDialog.showDialog(this)
 
-        SystemBarUtil.isSystemUiHide(this)
 
 //        val fm = TunerTestFragment()
 //        supportFragmentManager.beginTransaction()
@@ -234,10 +229,12 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             R.id.btnSystemUI -> {
                 isFullScreen = !isFullScreen
                 if (isFullScreen) {
-                    SystemBarUtil.hideStatusBars(this)
+//                    SystemBarUtil.hideStatusBars(this)
 //                    SystemBarUtil.hideStatusBar(this)
+
+                    SystemBarUtil.setInvasionStatusBar(this)
                 } else {
-                    SystemBarUtil.showStatusBars(this)
+                    SystemBarUtil.setInvasionNone(window)
                 }
             }
             R.id.btnLocation -> startActivity(LocationActivity::class.java)

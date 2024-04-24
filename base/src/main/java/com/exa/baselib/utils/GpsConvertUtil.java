@@ -11,6 +11,7 @@ package com.exa.baselib.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
@@ -71,41 +72,23 @@ public class GpsConvertUtil {
      * GMT date convert to current TimeZone date
      * <p>
      * GMT time
-     * int date = 150322; 211123
+     * int date = 150322; 20220315
      * double time = 3333.11;
      *
-     * @param utcDate GMT ddMMyy
+     * @param utcDate GMT ddMMyyyy
      * @param utcTime GMT hhmmss.SSS
      */
-    public static long getCurrentTimeZoneTimeMillis(int utcDate, double utcTime) {
-        final String split = ".";
-        final String nor0 = "0";
-        final int timeMaxLength = 6;
+    public static long getTimeZoneMillis(int utcDate, double utcTime) {
         long result = System.currentTimeMillis();
         if (utcDate > 0 && utcTime >= 0) {
-            String date = String.valueOf(utcDate);
-            StringBuilder time = new StringBuilder(String.valueOf(utcTime));
-            if (time.toString().contains(split)) {
-                time = new StringBuilder(time.substring(0, time.indexOf(split)));
-            }
-            while (time.length() < timeMaxLength) {
-                time.insert(0, nor0);
-            }
             try {
-                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-                int year = 2000 + Integer.parseInt(date.substring(date.length() - 2));
-                int mon = Integer.parseInt(date.substring(date.length() - 4, date.length() - 2));
-                int day = Integer.parseInt(date.substring(0, date.length() - 4));
-                int hh = Integer.parseInt(time.substring(0, time.length() - 4));
-                int mm = Integer.parseInt(time.substring(time.length() - 4, time.length() - 2));
-                int ss = Integer.parseInt(time.substring(time.length() - 2));
-                calendar.set(year, mon - 1, day, hh, mm, ss);
-                L.d("hh=" + hh + ",mm=" + mm + ",ss=" + ss);
-                result = calendar.getTimeInMillis();
+                SimpleDateFormat format = new SimpleDateFormat("ddMMyyHHmmss");
+                format.setTimeZone(TimeZone.getTimeZone("GMT"));
+                String date = String.format("%06d", utcDate);
+                String time = String.format("%06d", (int) utcTime);
+                result = format.parse(date + time).getTime();
             } catch (Exception e) {
-                e.printStackTrace();
-                L.w("getCurrentTimeZoneTimeMillis time parse err!!! utcDate,utcTime="
-                        + utcDate + "," + utcTime);
+                L.w("time parse err!!! utcDate,utcTime=" + utcDate + "," + utcTime);
             }
         }
         return result;
