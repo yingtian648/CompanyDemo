@@ -18,10 +18,16 @@ public class ThreadPoolManager {
     private ThreadPoolManager() {
     }
 
+    /**
+     * 获取单线程的线程池
+     */
     public static ExecutorService getSingleThreadPool() {
         return getFixThreadPool(1);
     }
 
+    /**
+     * 获取多线程的线程池
+     */
     public static ExecutorService getFixThreadPool(int corePoolSize) {
         BlockingQueue<Runnable> workQueue = new LinkedBlockingQueue<>();
         ThreadFactory factory = r -> new Thread(r, "Thread_" + SystemClock.elapsedRealtime());

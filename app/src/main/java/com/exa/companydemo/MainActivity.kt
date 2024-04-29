@@ -21,7 +21,6 @@ import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
-import com.exa.lsh.library.ThreadManager
 import com.exa.lsh.library.ThreadPoolManager
 import java.text.SimpleDateFormat
 import java.util.*

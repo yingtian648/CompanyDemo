@@ -35,24 +35,43 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
 
+// 1. 增加上传源码的task
+tasks.register('sourceJar', Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier = "sources"
+}
 
 // 官方文档：https://docs.gradle.org/7.0/userguide/publishing_maven.html#publishing_maven
+// 阿里云Maven仓：https://packages.aliyun.com/
 afterEvaluate {
     publishing {
         publications {
-            ExaMaven(MavenPublication) {
-                from components.release
+            PublicationContainer publicationContainer ->
+            maven(MavenPublication) {
+                artifact sourceJar
+                afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+                // 包含所有组件的所有变体
+//                from components.release
                 groupId 'com.exa.lsh'
                 artifactId 'library'
-                version '1.0.1'
+                version '1.0.5'
             }
         }
         repositories {
+//            maven {
+//                name "maven"
+//                //推到本地Maven仓库
+//                url URI.create("file://C:/Users/Administrator/.m2/repository")
+//                //允许gradle用不安全仓库且无警告
+//                allowInsecureProtocol true
+//            }
             maven {
-                name "ExaMaven"
-                //推到本地Maven仓库
-                url URI.create("file://C:/Users/Administrator/.m2/repository")
-                allowInsecureProtocol true
+                name "maven"
+                url 'https://packages.aliyun.com/maven/repository/2467396-release-xFAxEr'
+                credentials {
+                    username = '5f4629732d5925c55bd27fda'
+                    password = 'Wd_ic8[zVaNm'
+                }
             }
         }
     }

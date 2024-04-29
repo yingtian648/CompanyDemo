@@ -16,6 +16,9 @@ pluginManagement {
         maven {
             url "C:/Users/Administrator/.m2/repository"
         }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
         mavenCentral()
         google()
     }
@@ -37,6 +40,16 @@ dependencyResolutionManagement {
         }
         maven {
             url "C:/Users/Administrator/.m2/repository"
+        }
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
+        }
+        maven {
+            credentials {
+                username '5f4629732d5925c55bd27fda'
+                password 'Wd_ic8[zVaNm'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2467396-release-xFAxEr'
         }
         google()
     }
