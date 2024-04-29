@@ -24,13 +24,24 @@ test:upass
 fid:none
 level:none
 
-feat[fonts]:Import ADiGO4_FONT.
-rootcause:引入新国标字体ADiGO4.
-solution:Import ADiGO4_FONT.
-product:A18V/A21
-span:<AS9,T58X,A5X,A18V,A21>
+Description:添加进入设置页功能.
+JiraID:NA
+Module:SystemUI
+Bug or feature:feature
+Team:FW
+Test:pass
+
+
+feat[CarLocationService]:Remove the unsubscribe feature.
+rootcause:No need resubscribe.
+solution:
+1.Remove the unsubscribe feature.
+2.Fix parse time error.
+product:A02
+span:none
 build:mpass
 test:upass
+influence:location-user
 fid:none
 level:none
 
