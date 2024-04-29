@@ -3,21 +3,16 @@ package com.exa.companydemo;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.SystemClock;
-import android.provider.Settings;
-import android.widget.Toast;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.Tools;
-import com.exa.companydemo.accessibility.MAccessibility;
 import com.exa.companydemo.utils.PathUtil;
+import com.exa.lsh.library.CrashHandle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,11 +21,13 @@ public class App extends Application {
     @SuppressLint("StaticFieldLeak")
     private static Application app;
     public static int index = 0;
+    private static final boolean isDebug = true;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Constants.init();
+        CrashHandle.getInstance().init(this, isDebug);
         BaseConstants.init();
         L.init("MCompanyDemo", true);
         L.w("开机时长：" + DateUtil.getTimeStr(SystemClock.elapsedRealtime()));
@@ -89,6 +86,10 @@ public class App extends Application {
     public void onTerminate() {
         super.onTerminate();
         L.dd();
+    }
+
+    public static boolean isIsDebug() {
+        return isDebug;
     }
 
     public static Application getContext() {

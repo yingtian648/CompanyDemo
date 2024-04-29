@@ -5,8 +5,8 @@ import android.app.Dialog
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
@@ -18,16 +18,20 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import com.exa.baselib.utils.L
-import com.exa.companydemo.App
 import com.exa.companydemo.R
+import com.google.android.material.badge.BadgeDrawable
 import java.util.*
+
 
 class DemoService : Service() {
     private lateinit var windowManager: WindowManager
+    private lateinit var subWindowManager: WindowManager
+    private lateinit var displayManager: DisplayManager
     private var isFullScreen = false
     private lateinit var handler: Handler
     private lateinit var mContext: Context
     private lateinit var contentView: View
+    private lateinit var subContentView: View
     private var dialog: Dialog? = null
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -35,22 +39,64 @@ class DemoService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        contentView = LayoutInflater.from(this)
-            .inflate(R.layout.dialog_layout, null, false)
-        contentView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
-            dismissDialog()
-        }
-        contentView.findViewById<Button>(R.id.sure_button).setOnClickListener {
-            dismissDialog()
-        }
         mContext = this
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            L.d("mContext init:${mContext.hashCode()} $mContext ${mContext.display?.displayId}")
+//        }
         HandlerThread("DemoService_Handler").apply {
             start()
             handler = Handler(looper)
         }
-        L.dd("context 1:" + mContext.toString())
-        L.dd("context 2:" + App.getContext().toString())
+        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        displayManager = getSystemService(DisplayManager::class.java)
+
+        // 主屏View
+        contentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout, null)
+        contentView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+            L.d("onClick cancel_button ")
+            dismissDialog()
+        }
+        contentView.findViewById<Button>(R.id.sure_button).setOnClickListener {
+            L.d("onClick sure_button ")
+            subContentView.visibility = View.VISIBLE
+            subWindowManager.updateViewLayout(subContentView,getLayoutParams())
+            handler.postDelayed({
+                L.d("mContext 44:${mContext.hashCode()} $mContext ${mContext.display?.displayId}")
+                L.d("mContext 55:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
+            }, 500)
+        }
+
+        // 副屏View
+        subContentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout, null)
+        L.d("mContext 11:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
+        subContentView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
+            dismissSubDialog()
+        }
+        subContentView.findViewById<Button>(R.id.sure_button).setOnClickListener {
+            dismissSubDialog()
+        }
+        mContext.createDisplayContext(displayManager.getDisplay(2)).apply {
+            subWindowManager = this.getSystemService(WindowManager::class.java)
+            subContentView.visibility = View.GONE
+            subContentView.alpha = 1.0F
+            subWindowManager.addView(subContentView, getLayoutParams())
+            L.d("mContext 22:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
+            handler.postDelayed({
+                L.d("mContext 33:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
+            }, 500)
+        }
+    }
+
+    @SuppressLint("WrongConstant")
+    private fun getLayoutParams(): WindowManager.LayoutParams {
+        val params = WindowManager.LayoutParams()
+        params.title = "subWindow"
+        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG
+        params.flags = params.flags or -2138832568
+        params.width = WindowManager.LayoutParams.MATCH_PARENT
+        params.height = WindowManager.LayoutParams.MATCH_PARENT
+        params.flags = params.flags and -33
+        return params
     }
 
     private fun dismissDialog() {
@@ -63,22 +109,20 @@ class DemoService : Service() {
         stopSelf()
     }
 
+    private fun dismissSubDialog() {
+        runCatching {
+            subWindowManager.removeView(subContentView)
+        }
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//        addView()
-//        ShareVideoDialog(this).show()
         test()
         return START_STICKY
     }
 
     private fun test() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            L.dd(javaClass.simpleName + " display=" + mContext.display?.displayId)
-        }
-        dialog = Dialog(mContext)
-        dialog?.apply {
-            window?.setType(WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG)
-            setContentView(contentView)
-        }?.show()
+        addView()
+//        ShareVideoDialog(this).show()
     }
 
     private fun checkFullScreen(windowManager: WindowManager) {
@@ -100,11 +144,6 @@ class DemoService : Service() {
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-    }
-
     @SuppressLint("WrongConstant")
     private fun addView() {
         L.dd("DemoService")
@@ -114,9 +153,17 @@ class DemoService : Service() {
             windowManager.removeView(view)
             stopSelf()
         }
+        view.findViewById<Button>(R.id.sure_button).setOnClickListener {
+            subContentView.visibility = View.VISIBLE
+//            subWindowManager.updateViewLayout(subContentView,getLayoutParams())
+            handler.postDelayed({
+                L.d("mContext 44:${mContext.hashCode()} $mContext ${mContext.display?.displayId}")
+                L.d("mContext 55:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
+            }, 500)
+        }
         val titleT = view.findViewById<TextView>(R.id.titleT)
         val params = WindowManager.LayoutParams()
-        params.title = "DemoService"
+        params.title = "MainWindow"
         params.width = WindowManager.LayoutParams.MATCH_PARENT
         params.height = WindowManager.LayoutParams.MATCH_PARENT
         params.type = 2003
@@ -133,12 +180,8 @@ class DemoService : Service() {
 //                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 )
 //        view.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        titleT.text = "555"
+        titleT.text = "addView"
         windowManager.addView(view, params)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            L.d("titleT displayId:" + titleT.context.display?.displayId)
-        }
     }
 
     override fun onDestroy() {

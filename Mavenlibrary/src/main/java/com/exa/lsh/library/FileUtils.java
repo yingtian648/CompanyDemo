@@ -1,4 +1,4 @@
-package com.exa.baselib.utils;
+package com.exa.lsh.library;
 
 import android.content.Context;
 import android.graphics.Bitmap;

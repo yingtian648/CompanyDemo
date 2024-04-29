@@ -3,40 +3,26 @@ package com.exa.companydemo
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.content.res.Configuration
-import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
-import android.hardware.radio.RadioManager
 import android.net.*
 import android.os.*
 import android.util.Log
 import android.view.*
-import android.widget.CarToast
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.utils.*
 import com.exa.baselib.utils.Tools
 import com.exa.companydemo.TestUtil.*
-import com.exa.companydemo.accessibility.AccessibilityHelper
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
-import com.exa.companydemo.radio.TunerManager
-import com.exa.companydemo.socket.impl.AbstractClient
-import com.exa.companydemo.socket.impl.WifiSocketClientUtil
-import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
-import java.io.File
+import com.exa.lsh.library.ThreadManager
+import com.exa.lsh.library.ThreadPoolManager
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -114,9 +100,10 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index}")
 
+
+
 //        TestDialog.showDialog(this)
-
-
+//        startService(Intent(this,DemoService::class.java))
 //        val fm = TunerTestFragment()
 //        supportFragmentManager.beginTransaction()
 //            .replace(R.id.fl, fm)
@@ -229,14 +216,15 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             R.id.btnSystemUI -> {
                 isFullScreen = !isFullScreen
                 if (isFullScreen) {
-//                    SystemBarUtil.hideStatusBars(this)
+                    SystemBarUtil.hideStatusBars(this)
 //                    SystemBarUtil.hideStatusBar(this)
-
-                    SystemBarUtil.setInvasionStatusBar(this)
+//                    SystemBarUtil.setInvasionStatusBar(this)
                 } else {
-                    SystemBarUtil.setInvasionNone(window)
+//                    SystemBarUtil.setInvasionNone(window)
+                    SystemBarUtil.showStatusBars(window)
                 }
             }
+
             R.id.btnLocation -> startActivity(LocationActivity::class.java)
             R.id.btnPlay -> startActivity(VideoPlayerActivity::class.java)
             R.id.btnAppList -> startActivity(AppInfoActivity::class.java)
@@ -245,6 +233,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             R.id.btnTcpip -> {
                 CmdUtil.exeCommand(CmdUtil.SET_TCP_IP_PORT_5555, true, null)
             }
+
             R.id.btnNightMode -> {
                 if (modeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES) {
                     modeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
@@ -255,6 +244,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                     L.w("白天黑夜模式:" + TestUtil.getUiModeStr(modeManager))
                 }, 2000)
             }
+
             R.id.btnEngineMode -> {
                 val apps = resources.getStringArray(com.exa.baselib.R.array.engine_mode_pkgs)
                 for (item in apps) {
@@ -263,12 +253,14 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                     }
                 }
             }
+
             R.id.btnTest -> try {
                 test()
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e(L.TAG, "执行测试异常：" + e.message, e)
             }
+
             else -> {}
         }
     }

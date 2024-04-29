@@ -13,6 +13,9 @@ pluginManagement {
         maven {
             url 'https://maven.aliyun.com/repository/jcenter'
         }
+        maven {
+            url "C:/Users/Administrator/.m2/repository"
+        }
         mavenCentral()
         google()
     }
@@ -32,6 +35,9 @@ dependencyResolutionManagement {
         maven {
             url 'https://maven.aliyun.com/repository/jcenter'
         }
+        maven {
+            url "C:/Users/Administrator/.m2/repository"
+        }
         google()
     }
 }
@@ -42,3 +48,4 @@ include ':base'
 include ':mtestapp'
 include ':systemui'
 include ':launcher'
+include ':Mavenlibrary'

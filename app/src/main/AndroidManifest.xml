@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
-
+    android:sharedUserId="@string/sharedUserId"
     tools:ignore="ManifestResource">
     <!--    android:sharedUserId="@string/sharedUserId"-->
 
@@ -165,9 +165,8 @@
             android:exported="true" />
         <service
             android:name=".service.DemoService"
-            android:enabled="true"
             android:exported="true"
-            android:process="com.exa.companydemo.demoservice" />
+            />
         <service
             android:name=".service.MDialogService"
             android:enabled="true"

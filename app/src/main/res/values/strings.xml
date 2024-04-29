@@ -7,6 +7,7 @@
     <!-- 系统签名 android:sharedUserId="android.uid.system" -->
     <string name="sharedUserId" translatable="false">android.uid.system</string>
 
+    <string name="ac_temperature">%.0f°C</string>
     <string name="app_name" translatable="false">shihuademo</string>
     <!--    <string name="app_name">ToastCarToastTest</string>-->
     <!--    <string name="app_name">LocationTest</string>-->
