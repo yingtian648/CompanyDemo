@@ -9,10 +9,11 @@
 
 package com.exa.baselib.utils;
 
+import android.annotation.SuppressLint;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.TimeZone;
 
 public class GpsConvertUtil {
@@ -20,7 +21,6 @@ public class GpsConvertUtil {
      * ddmm.mmmm to dd.dddd
      *
      * @param res 2302.4545412/11325.45451212
-     * @return
      */
     public static double convertCoordinates(double res) {
         res = res * 100;
@@ -38,7 +38,6 @@ public class GpsConvertUtil {
      * dd.dddd to ddmm.mmmm
      *
      * @param res 2302.4545412/11325.45451212
-     * @return
      */
     public static double unConvertCoordinates(double res) {
         String splitTag = ".";
@@ -59,10 +58,7 @@ public class GpsConvertUtil {
 
     /**
      * Get the corresponding precision value
-     *
-     * @param value
      * @param newScale target digits
-     * @return
      */
     public static double getDoubleAcc(double value, int newScale) {
         return BigDecimal.valueOf(value).setScale(newScale, RoundingMode.HALF_UP).doubleValue();
@@ -78,11 +74,12 @@ public class GpsConvertUtil {
      * @param utcDate GMT ddMMyyyy
      * @param utcTime GMT hhmmss.SSS
      */
+    @SuppressLint({"SimpleDateFormat","DefaultLocale"})
     public static long getTimeZoneMillis(int utcDate, double utcTime) {
         long result = System.currentTimeMillis();
         if (utcDate > 0 && utcTime >= 0) {
             try {
-                SimpleDateFormat format = new SimpleDateFormat("ddMMyyHHmmss");
+                 SimpleDateFormat format = new SimpleDateFormat("ddMMyyHHmmss");
                 format.setTimeZone(TimeZone.getTimeZone("GMT"));
                 String date = String.format("%06d", utcDate);
                 String time = String.format("%06d", (int) utcTime);

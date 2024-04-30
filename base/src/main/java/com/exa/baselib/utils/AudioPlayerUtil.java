@@ -9,9 +9,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @作者 刘世华
- * @创建时间 2021-2-2 15:15
- * @描述 音频播放器-播放一次
+ * @author  lsh
+ * @date  2021-2-2 15:15
+ * @description  音频播放器-播放一次
  * <p>
  * mediaPlayer.setLooping(true); 设置循环播放-不回调OnCompleteListener
  */

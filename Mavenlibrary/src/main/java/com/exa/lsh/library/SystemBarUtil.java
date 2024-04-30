@@ -1,4 +1,4 @@
-package com.exa.baselib.utils;
+package com.exa.lsh.library;
 
 import android.app.Activity;
 import android.content.Context;
@@ -77,7 +77,7 @@ public class SystemBarUtil {
         boolean svis = true;
         //导航栏是否可见
         boolean nvis = true;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsets insets = window.getDecorView().getRootWindowInsets();
             if (insets != null) {
                 svis = insets.isVisible(WindowInsets.Type.statusBars());

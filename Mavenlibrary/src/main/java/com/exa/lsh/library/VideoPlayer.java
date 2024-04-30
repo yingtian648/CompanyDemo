@@ -1,4 +1,4 @@
-package com.exa.baselib.utils;
+package com.exa.lsh.library;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -338,7 +338,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     /**
      * 初始化完成
      * @param surface The surface returned by
-     *                {@link android.view.TextureView#getSurfaceTexture()}
+     *                {@link TextureView#getSurfaceTexture()}
      * @param width The width of the surface
      * @param height The height of the surface
      */

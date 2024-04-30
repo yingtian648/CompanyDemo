@@ -10,9 +10,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * @Author lsh
- * @Date 2023/5/30 9:34
- * @Description
+ * @author  lsh
+ * @date  2023/5/30 9:34
+ * @description
  */
 public class UsbUtils {
 
@@ -53,24 +53,5 @@ public class UsbUtils {
         return false;
     }
 
-    /**
-     * U盘格式化
-     *
-     * @return
-     */
-    public static boolean format1(Context context) {
-        L.dd();
-        StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
-        try {
-            List<StorageVolume> volumeList = storageManager.getStorageVolumes();
-            for (StorageVolume volume : volumeList) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    L.dd("isRemovable=" + volume.isRemovable() + ", dir=" + volume.getDirectory() + ", uuid=" + volume.getUuid());
-                }
-            }
-        } catch (Exception e) {
-            L.de(e);
-        }
-        return false;
-    }
+
 }

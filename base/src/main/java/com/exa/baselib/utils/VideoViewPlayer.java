@@ -1,15 +1,11 @@
 package com.exa.baselib.utils;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.MediaController;
 import android.widget.VideoView;
-
-
-import com.exa.baselib.BuildConfig;
 
 import java.io.File;
 import java.io.IOException;
