@@ -109,6 +109,7 @@ public class ProTestParser {
         public static final String VOICE_MEDIA = "6.11.3";
         public static final String VOICE_TEL = "6.11.4";
         public static final String VOICE_KEY = "6.11.5";
+        public static final String VOICE_CHIME = "6.11.6";
 
         public static final String LOCATION = "6.12";
 

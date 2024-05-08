@@ -22,11 +22,12 @@ public class ExampleUnitTest {
 
     @Test
     public void addition_isCorrect() {
-
+        byte[] bytes = new byte[]{53, 46, 48, 46, 49};
+        System.out.println("1111111111: " + new String(bytes));
     }
 
     @Test
-    public void testTreeMapSort(){
+    public void testTreeMapSort() {
         Map<String, Object> map = new HashMap<>();
         map.put("03", "03");
         map.put("04", "04");
@@ -35,7 +36,7 @@ public class ExampleUnitTest {
         map.put("05", "05");
         TreeMap<String, Object> treeMap = new TreeMap<>(map);
         log("---------------------");
-        for ( Map.Entry<String, Object> entry : treeMap.entrySet()) {
+        for (Map.Entry<String, Object> entry : treeMap.entrySet()) {
             log(entry.getKey() + " " + entry.getValue());
         }
     }

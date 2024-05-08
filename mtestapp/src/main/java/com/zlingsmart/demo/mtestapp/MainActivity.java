@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
 
     private void test() {
         getWindow().setSoftInputMode(3);
+
+        byte[] bytes = new byte[]{53, 46, 48, 46, 49};
+        L.dd("1111111111: " + new String(bytes));
     }
 
     private void registerWindowChangedListener() {

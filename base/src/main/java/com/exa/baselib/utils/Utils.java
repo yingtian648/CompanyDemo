@@ -254,7 +254,11 @@ public class Utils {
             e.printStackTrace();
             L.d("onViewHolder mmr.setDataSource err");
         } finally {
-            mmr.release();
+            try {
+                mmr.release();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return null;
     }

@@ -91,6 +91,12 @@ public class SocketActivity extends BaseViewBindingActivity<ActivitySocketBindin
                     map);
             sendMessage(json);
         });
+        bind.btnChime.setOnClickListener(v -> {
+            String json = ProTestParser.createTestJson(ProTestParser.TestCode.VOICE_CHIME,
+                    ProTestParser.MSG_TYPE_REQUEST,
+                    null);
+            sendMessage(json);
+        });
         bind.btnAmSet.setOnClickListener(v -> {
             Map<String, Object> map = new HashMap<>();
             map.put(ProTestParser.ParamsContent.NUM_1, "981");

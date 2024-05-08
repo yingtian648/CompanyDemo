@@ -21,7 +21,6 @@ import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
-import com.exa.lsh.library.ThreadPoolManager
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -87,7 +86,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        checkPermission()
 //        TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
-
+        test()
     }
 
     @SuppressLint(
@@ -99,8 +98,9 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index}")
 
-
-
+        val bytes = byteArrayOf(53, 46, 48, 46, 49)
+        L.dd("1111111111: " + String(bytes))
+        setText("1111111111: " + String(bytes))
 //        TestDialog.showDialog(this)
 //        startService(Intent(this,DemoService::class.java))
 //        val fm = TunerTestFragment()

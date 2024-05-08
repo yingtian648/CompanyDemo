@@ -264,6 +264,15 @@
                     android:textAllCaps="false"
                     android:text="版本信息"
                     android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btnChime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:textAllCaps="false"
+                    android:text="播放Chime"
+                    android:textSize="13sp" />
             </LinearLayout>
 
             <LinearLayout

@@ -14,7 +14,7 @@ android {
 //        applicationId "com.gxatek.cockpit.launcher"
 //        applicationId "space.syncore.cockpit.soundeffect"
 
-        minSdk 26
+        minSdk 28
         targetSdk 34
         versionCode 999999
         versionName getVersionN()
