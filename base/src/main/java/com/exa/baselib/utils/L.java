@@ -1,9 +1,6 @@
 package com.exa.baselib.utils;
 
-import android.app.Application;
 import android.util.Log;
-
-import com.exa.baselib.BuildConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;

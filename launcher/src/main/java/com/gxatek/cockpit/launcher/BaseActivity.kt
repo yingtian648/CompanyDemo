@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.exa.baselib.utils.L
+import com.exa.baselib.utils.SystemBarUtil
 
 /**
  * @Author lsh
@@ -19,8 +20,8 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
         L.dd()
         _binding = getViewBinding()
         setContentView(_binding.root)
-        initView();
-        initData();
+        initView()
+        initData()
     }
 
     protected abstract fun getViewBinding(): T

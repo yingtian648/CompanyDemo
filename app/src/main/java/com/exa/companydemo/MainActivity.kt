@@ -320,6 +320,11 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
                 L.d("Do nothing with KEYCODE_BACK")
 //                return true
             }
+            if (keyCode == KeyEvent.KEYCODE_HOME) {
+                L.d("Do nothing with KEYCODE_HOME")
+//                return true
+                return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }

@@ -8,8 +8,9 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.gxatek.cockpit.launcher"
-        minSdk 25
+//        applicationId "com.gxatek.cockpit.launcher"
+        applicationId "com.raite.launcher"
+        minSdk 26
         targetSdk 33
         versionCode 9999
         versionName "1.0"
@@ -52,7 +53,8 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            output.outputFileName = "SYLauncher.apk"
+//            output.outputFileName = "SYLauncher.apk"
+            output.outputFileName = "RaiteLauncher.apk"
         }
     }
 }
@@ -63,7 +65,15 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.activity:activity-ktx:1.7.0'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    // Duplicate class kotlin.streams.jdk8.StreamsKt$asSequence$$inlined$Sequence$3 found in modules jetifi
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+        because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+    }
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+        because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+    }
 }
