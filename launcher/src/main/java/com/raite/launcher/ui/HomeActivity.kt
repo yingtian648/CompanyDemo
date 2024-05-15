@@ -1,5 +1,6 @@
 package com.raite.launcher.ui
 
+import android.content.Intent
 import com.exa.baselib.utils.SystemBarUtil
 import com.gxatek.cockpit.launcher.BaseActivity
 import com.gxatek.cockpit.launcher.R
@@ -21,6 +22,10 @@ class HomeActivity:BaseActivity<ActivitySecondaryHomeBinding>() {
     }
 
     override fun initData() {
-
+        binding.tvTitle.setOnClickListener {
+            val intent = Intent(this, DefaultDisplayActivity::class.java)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
     }
 }

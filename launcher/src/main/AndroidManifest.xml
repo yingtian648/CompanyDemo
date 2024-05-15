@@ -15,14 +15,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CompanyDemo">
         <activity
-            android:name="com.raite.launcher.ui.TestActivity"
+            android:name="com.raite.launcher.ui.SubDisplayActivity"
+            android:exported="false"
+            android:launchMode="singleTask" />
+        <activity
+            android:name="com.raite.launcher.ui.DefaultDisplayActivity"
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
             android:name="com.raite.launcher.ui.SecondaryHomeActivity"
             android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|colorMode|density"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstancePerTask"
+            android:resumeWhilePausing="true"
+            android:clearTaskOnLaunch="true"
             android:stateNotNeeded="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -7,26 +7,31 @@ Build:mpass
 Test:upass
 BugID:noid
 
-Description:fix picture search fail.
-JiraID:ZLCES-70
-Module:RaiteGallery
-Bug or feature:Bug
-Team:FW
-Test:pass
-
-feat[EmbeddedKitchenSinkApp]:Add test page.
-rootcause:添加测试页.
-solution:添加测试页.
+feat[EmbeddedKitchenSinkApp]:Add uuid field.
+rootcause:在产品信息页添加UUID展示.
+solution:在产品信息页添加UUID展示.
 product:AY5
 span:none
 build:mpass
 test:upass
+influence:none
 fid:none
 level:none
 
-Description:添加进入设置页功能.
+feat[system-core]:Add public library libjni_gxa_tbox config.
+rootcause:Add public library libjni_gxa_tbox config.
+solution:Add public library libjni_gxa_tbox config.
+product:AY5
+span:none
+build:mpass
+test:upass
+influence:CarTboxSdk-user
+fid:none
+level:none
+
+Description:添加All-Menu黑白名单配置文件.
 JiraID:NA
-Module:SystemUI
+Module:AOSP
 Bug or feature:feature
 Team:FW
 Test:pass

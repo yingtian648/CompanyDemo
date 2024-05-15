@@ -37,6 +37,7 @@ public class MAccessibility extends AccessibilityService {
         L.w("MAccessibility onServiceConnected");
         service = this;
         mContext = this;
+        // 用于广播发送操作，接收后用无障碍服务实现
         AccessibilityHelper.registerReceiver(mContext);
     }
 

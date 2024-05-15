@@ -21,6 +21,10 @@ import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,6 +39,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private var modeManager: UiModeManager? = null
     private var index = 0
     private var mObjAnim: ObjectAnimator? = null
+    private val scope = CoroutineScope(Job() + Dispatchers.IO)
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
@@ -98,9 +103,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index}")
 
-        val bytes = byteArrayOf(53, 46, 48, 46, 49)
-        L.dd("1111111111: " + String(bytes))
-        setText("1111111111: " + String(bytes))
 //        TestDialog.showDialog(this)
 //        startService(Intent(this,DemoService::class.java))
 //        val fm = TunerTestFragment()
@@ -110,7 +112,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
 //        startActivity(Intent(this,WebActivity::class.java))
-//        TestUtil.testSensorData(this)
+        TestUtil.testSensorData(this, bind.tvAcc, bind.tvGy)
 //        startActivity(MDialogActivity::class.java)
 //        TestUtil.testDialog(this,"ssssss",-1)
 //        BuildTestDialog.getInstance().addNoteView(this)

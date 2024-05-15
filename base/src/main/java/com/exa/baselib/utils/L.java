@@ -119,7 +119,7 @@ public class L {
     public static void e(String msg, Throwable throwable) {
         L.msg = msg;
         if (isLog) {
-            Log.e(TAG, msg + "," + getThrowableLineNum(throwable));
+            Log.e(TAG, msg + "", throwable);
         }
     }
 
@@ -193,6 +193,15 @@ public class L {
         StackTraceElement[] s = Thread.currentThread().getStackTrace();
         String methodName = s[3].getMethodName();
         e(methodName + "," + getThrowableLineNum(e));
+    }
+
+    /**
+     * 获取调用方法名
+     */
+    public static void de(String title, Throwable e) {
+        StackTraceElement[] s = Thread.currentThread().getStackTrace();
+        String methodName = s[3].getMethodName();
+        e(methodName + "," + title, e);
     }
 
     /**

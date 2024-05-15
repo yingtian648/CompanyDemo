@@ -44,14 +44,17 @@ import com.exa.baselib.utils.GpsConvertUtil;
 import com.exa.baselib.utils.L;
 import com.exa.companydemo.utils.LogTools;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -74,6 +77,41 @@ public class TestUtil {
 
     private static Toast toast;
     private static int index = 0;
+    private static final String VR_RES_PATH = "/vendor/etc/data/version.txt";
+    private static final String VR_RES_VERSION_NAME = "versionCode";
+
+    private String getVRResVersion() {
+        String vrVersion = "";
+        File file = new File(VR_RES_PATH);
+        if (!file.isFile() || !file.exists()) {
+            return null;
+        }
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(fileInputStream));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            bufferedReader.close();
+            String vrJson = sb.toString();
+            if (TextUtils.isEmpty(vrJson)) {
+                Log.e(TAG, "vr version is empty");
+                return vrVersion;
+            }
+            JSONArray jsonArray = new JSONArray(vrJson);
+            int length = jsonArray.length();
+            if (length > 0) {
+                JSONObject jsonObject = jsonArray.optJSONObject(0);
+                vrVersion = jsonObject.optString(VR_RES_VERSION_NAME);
+            }
+        } catch (IOException | JSONException e) {
+            Log.w(TAG, "getVRResVersion err", e);
+        }
+        return vrVersion;
+    }
+
 
     /**
      * 测试 Toast
@@ -112,7 +150,7 @@ public class TestUtil {
 
     }
 
-    public static void setFull(Window window,Context context,boolean isFull){
+    public static void setFull(Window window, Context context, boolean isFull) {
         try {
             Window.class.getDeclaredMethod("setFullScreen", Context.class, Boolean.TYPE).invoke(window, context, isFull);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -285,18 +323,24 @@ public class TestUtil {
         return Double.parseDouble(wdd) + wmm_a;
     }
 
+
+    private static TextView tvGtro;
+    private static TextView tvAcc;
+
     /**
      * 获取陀螺仪数据
      *
      * @param context
      */
-    public static void testSensorData(Context context) {
+    public static void testSensorData(Context context, TextView tvAcc, TextView tvGtro) {
+        TestUtil.tvAcc = tvAcc;
+        TestUtil.tvGtro = tvGtro;
         L.d("getSensorData");
         SensorManager sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         Sensor gyroscopeSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);//陀螺仪
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);//加速度
         sensorManager.registerListener(gyroscopeSensorListener, gyroscopeSensor, 1);
-//        sensorManager.registerListener(accelerometerSensorListener, accelerometerSensor, 1);
+        sensorManager.registerListener(accelerometerSensorListener, accelerometerSensor, 1);
 
     }
 
@@ -308,10 +352,15 @@ public class TestUtil {
             long now = System.currentTimeMillis();
             if (now - lastLogTime >= 1000) {
                 lastLogTime = now;
+                String msg;
                 if (event.values[0] > 0 || event.values[1] > 0 || event.values[2] > 0) {
-                    L.d("gyroscopeSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+                    msg = "gyroscopeSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2];
                 } else {
-                    L.d("gyroscopeSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+                    msg = "gyroscopeSensor onSensorChanged:: 0";
+                }
+                L.d(msg);
+                if (tvGtro != null) {
+                    tvGtro.post(() -> tvGtro.setText(msg));
                 }
             }
         }
@@ -325,7 +374,11 @@ public class TestUtil {
     private static final SensorEventListener accelerometerSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
-            L.d("accelerometerSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2]);
+            String msg = "accelerometerSensor onSensorChanged::" + event.values[0] + " " + event.values[1] + " " + event.values[2];
+            L.d(msg);
+            if (tvAcc != null) {
+//                tvAcc.post(() -> tvAcc.setText(msg);
+            }
         }
 
         @Override

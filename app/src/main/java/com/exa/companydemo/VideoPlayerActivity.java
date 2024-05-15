@@ -3,6 +3,7 @@ package com.exa.companydemo;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -62,6 +63,7 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivityVideoPlayerBin
 
         });
         AssetFileDescriptor afd = getResources().openRawResourceFd(R.raw.test);
+        Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.test);
         player.play(this, bind.frame, afd);
     }
 

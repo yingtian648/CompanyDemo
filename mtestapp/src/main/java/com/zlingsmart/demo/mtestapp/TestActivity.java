@@ -18,8 +18,7 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
     }
 
     private void test() {
-        OfferAdviceDialog dialog = new OfferAdviceDialog(this);
-        dialog.show();
+
     }
 
     @Override

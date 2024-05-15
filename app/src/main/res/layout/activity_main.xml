@@ -183,5 +183,34 @@
             android:background="@android:color/black"
             android:textColor="@android:color/white"
             />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_margin="100dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvAcc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:text="tvAcc"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                />
+
+            <TextView
+                android:id="@+id/tvGy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textSize="25sp"
+                android:text="tvGy"
+                android:background="@android:color/black"
+                android:textColor="@android:color/white"
+                />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -56,6 +56,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     private TextureView textureView;
     private BlockingDeque<String> playList;
     private AssetFileDescriptor assetFileDescriptor;
+    private Uri resourceUri;
     private final int HANDLE_REPEAT_TIME = 1;
 
     public interface Callback {
@@ -111,6 +112,12 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         play(context, frameLayout, (String) null);
     }
 
+    public void play(Context context, FrameLayout frameLayout, Uri uri) {
+        playList.clear();
+        resourceUri = uri;
+        play(context, frameLayout, (String) null);
+    }
+
     /**
      * 播放视频
      */
@@ -120,7 +127,8 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         this.context = context.getApplicationContext();
         this.playPath = path;
         this.frameLayout = frameLayout;
-        if (frameLayout == null || (path == null && assetFileDescriptor == null)) return;
+        if (frameLayout == null ||
+                (path == null && assetFileDescriptor == null && resourceUri == null)) return;
         for (int i = 0; i < frameLayout.getChildCount(); i++) {
             if (frameLayout.getChildAt(i) != null
                     && (frameLayout.getChildAt(i) instanceof TextureView
@@ -248,7 +256,9 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                     .build();
             mediaPlayer.setAudioAttributes(audioAttributes);
             mediaPlayer.setScreenOnWhilePlaying(true);
-            if (assetFileDescriptor != null) {
+            if (resourceUri != null) {
+                mediaPlayer.setDataSource(context, resourceUri);
+            } else if (assetFileDescriptor != null) {
                 mediaPlayer.setDataSource(assetFileDescriptor);
             } else if (playPath.startsWith("http:") || playPath.startsWith("https:")) {
                 mediaPlayer.setDataSource(this.context, Uri.parse(playPath));
@@ -337,10 +347,11 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
 
     /**
      * 初始化完成
+     *
      * @param surface The surface returned by
      *                {@link android.view.TextureView#getSurfaceTexture()}
-     * @param width The width of the surface
-     * @param height The height of the surface
+     * @param width   The width of the surface
+     * @param height  The height of the surface
      */
     @Override
     public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {

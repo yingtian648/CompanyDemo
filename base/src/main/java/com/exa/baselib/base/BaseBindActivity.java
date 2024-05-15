@@ -1,11 +1,9 @@
 package com.exa.baselib.base;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
@@ -36,6 +34,7 @@ public abstract class BaseBindActivity<T extends ViewDataBinding> extends AppCom
         getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
         activity = this;
         bind = DataBindingUtil.setContentView(this, setContentViewLayoutId());
+        //onActivityResult新用法
         //用于启动新的Activity并获取返回值，用于替换StartActivityForResult
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 this::onActivityResult);

@@ -1,5 +1,6 @@
 package com.exa.companydemo.accessibility;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,28 +17,36 @@ import com.exa.companydemo.accessibility.util.GestureUtils;
  * @author lsh
  * @date 2021-9-13 14:49
  * 无障碍服务帮助类
+ *
+ * 安装python后执行下面命名来安装和启动获取Android应用元素树及元素id
+ * 1.安装获取Android app元素的插件
+ * pip install weditor
+ * 2.打开weditor同步手机界面元素网页
+ * python -m weditor
  */
 public class AccessibilityHelper {
+
     /**
-     * 安装python后执行下面命名来安装和启动获取Android应用元素树及元素id
-     * 1.安装获取Android app元素的插件
-     * pip install weditor
-     * 2.打开weditor同步手机界面元素网页
-     * python -m weditor
+     * 启用无障碍服务
      */
+    public static void setMyAccessibilityEnable(Context context){
+        android.provider.Settings.Secure.putString(context.getContentResolver(),
+                android.provider.Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+                context.getPackageName() + "/" + MAccessibility.class.getName());
+        android.provider.Settings.Secure.putInt(context.getContentResolver(),
+                android.provider.Settings.Secure.ACCESSIBILITY_ENABLED, 1);
+    }
 
     /**
      * 校验是否已打开无障碍服务
      * 如果未打开 —— 则打开【打不开则打开设置界面】
      */
-    public static void checkToOpenAccessibility(Activity activity) {
+    public static void startAccessibilitySettingPage(Activity activity) {
         if (!MAccessibility.isStart()) {
             try {
                 activity.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
             } catch (Exception e) {
-//                activity.startActivity(new Intent(Settings.ACTION_SETTINGS));
                 L.de(e);
-                e.printStackTrace();
             }
         }
     }
@@ -47,6 +56,9 @@ public class AccessibilityHelper {
      * <p>
      * 测试aab命令
      * adb shell am broadcast -a com.exa.companydemo.accessibility.gesture -e operation bigger
+     * adb shell am broadcast -a com.exa.companydemo.accessibility.gesture -e operation smaller
+     * adb shell am broadcast -a com.exa.companydemo.accessibility.gesture -e operation right3
+     * adb shell am broadcast -a com.exa.companydemo.accessibility.gesture -e operation left3
      */
     private static final String ACTION_ACCESSIBILITY_GESTURE = "com.exa.companydemo.accessibility.gesture";
 
@@ -55,7 +67,7 @@ public class AccessibilityHelper {
         public void onReceive(Context context, Intent intent) {
             String opr = intent.getStringExtra("operation");
             L.w("onReceive: " + intent.getAction() + " operation=" + opr);
-            assert MAccessibility.isStart();
+            assert MAccessibility.isStart() && opr != null;
             switch (opr) {
                 case "bigger":
                     GestureUtils.INSTANCE.scaleInCenter(MAccessibility.service, true);
@@ -75,6 +87,7 @@ public class AccessibilityHelper {
         }
     };
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     public static void registerReceiver(Context context) {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_ACCESSIBILITY_GESTURE);

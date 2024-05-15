@@ -214,12 +214,12 @@ object GestureUtils {
             object : AccessibilityService.GestureResultCallback() {
                 override fun onCancelled(gestureDescription: GestureDescription?) {
                     super.onCancelled(gestureDescription)
-                    L.d("onCancelled")
+                    L.d("swipeWith3Points onCancelled")
                 }
 
                 override fun onCompleted(gestureDescription: GestureDescription?) {
                     super.onCompleted(gestureDescription)
-                    L.d("onCompleted")
+                    L.d("swipeWith3Points onCompleted")
                 }
             },
             null

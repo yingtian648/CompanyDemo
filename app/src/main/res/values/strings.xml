@@ -60,4 +60,16 @@
         <item>item3</item>
         <item>item4</item>
     </string-array>
+
+    <string name="enable_adb1" translatable="false">USB2.0</string>
+    <string name="enable_adb1_summary" translatable="false">Tips: 开启则为device模式支持adb，关闭则为host模式</string>
+
+    <string name="enable_adb2" translatable="false">USB3.0</string>
+    <string name="enable_adb2_summary" translatable="false">Tips: 默认开启，开启则为device模式支持adb，关闭则为host模式</string>
+
+    <string name="enable_wiress_adb" translatable="false">无线调试</string>
+    <string name="enable_wiress_adb_summary" translatable="false">Tips: 请先连接WIFI后，打开无线调试，端口5555</string>
+
+    <string name="enable_ndk_switch" translatable="false">跳过NDK教学</string>
+    <string name="enable_ndk_switch_summary" translatable="false">Tips: 不进入教学模式</string>
 </resources>
