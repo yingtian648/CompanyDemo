@@ -54,6 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:hint="请将参与人员粘贴在此处..."
             android:imeOptions="actionDone"
             android:background="@drawable/style_stroke_conner"
             android:layout_marginTop="10dp"

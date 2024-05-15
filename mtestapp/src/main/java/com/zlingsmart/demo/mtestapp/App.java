@@ -11,10 +11,17 @@ import com.exa.baselib.utils.L;
  * @Description
  */
 public class App extends Application {
+    private static App instance;
+
     @Override
     public void onCreate() {
         super.onCreate();
-        L.init("testapp--->",true);
+        L.init("testapp--->", true);
         BaseConstants.init();
+        instance = this;
+    }
+
+    public static App getContext() {
+        return instance;
     }
 }

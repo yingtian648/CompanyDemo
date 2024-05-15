@@ -10,10 +10,10 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.blankj.utilcode.util.SPUtils
 import com.exa.baselib.utils.L
 import com.exa.baselib.utils.Tools
 import com.google.gson.Gson
+import com.zlingsmart.demo.mtestapp.util.SPUtils
 
 class PersonCheckActivity : AppCompatActivity() {
 
@@ -128,7 +128,7 @@ class PersonCheckActivity : AppCompatActivity() {
             res.split(",").forEach {
                 resLst.add(it)
             }
-            SPUtils.getInstance().put(spKey, Gson().toJson(resLst))
+            SPUtils.saveStringData(spKey, Gson().toJson(resLst))
             L.d("saveResPeople 保存成功 ${Gson().toJson(resLst)}")
             Toast.makeText(this, "修改成功！", Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
@@ -150,7 +150,7 @@ class PersonCheckActivity : AppCompatActivity() {
     }
 
     private fun getLocalPeople(): String {
-        val s = SPUtils.getInstance().getString(spKey)
+        val s = SPUtils.getStringData(spKey)
         L.dd("sp save: $s")
         val sb = StringBuilder()
         if (TextUtils.isEmpty(s)) {
@@ -163,7 +163,7 @@ class PersonCheckActivity : AppCompatActivity() {
                 }
             }
             val ms = Gson().toJson(resLst)
-            SPUtils.getInstance().put(spKey, ms)
+            SPUtils.saveStringData(spKey, ms)
         } else {
             Gson().fromJson(s, resLst.javaClass).forEach {
                 resLst.add(it)

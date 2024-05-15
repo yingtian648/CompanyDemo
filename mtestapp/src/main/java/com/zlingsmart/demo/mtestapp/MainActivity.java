@@ -1,10 +1,5 @@
 package com.zlingsmart.demo.mtestapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,16 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
-import com.gxa.car.scene.SceneInfo;
-import com.gxa.car.scene.SceneManager;
-import com.gxa.car.scene.ServiceStateListener;
-import com.gxa.car.scene.WindowChangeListener;
 import com.zlingsmart.demo.mtestapp.util.OnClickItemListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author Administrator
@@ -53,36 +48,11 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
 
     private void registerWindowChangedListener() {
         L.dd();
-        SceneManager.getInstance(mContext).registerServiceStateListener(new ServiceStateListener() {
-            @Override
-            public void onServiceStarted() {
-                L.dd();
-                BaseConstants.getHandler().postDelayed(()->{
-                    listenWindowChangeStatus();
-                },3000);
-
-            }
-
-            @Override
-            public void onServiceDied() {
-                L.dd();
-            }
-        });
 
     }
 
     private void listenWindowChangeStatus(){
-        SceneManager.getInstance(mContext).addWindowChangeListener(new WindowChangeListener() {
-            @Override
-            public void onWindowsChanged(SceneInfo sceneInfo, int i) {
-                L.d("onWindowsChanged : " + sceneInfo.getPackageName() + ", windowType = " + sceneInfo.getWindowType());
-            }
 
-            @Override
-            public void onFocusChanged(SceneInfo sceneInfo, SceneInfo sceneInfo1) {
-                L.d("onFocusChanged : " + sceneInfo.getPackageName() + ", windowType = " + sceneInfo1.getWindowType());
-            }
-        });
     }
 
     /**
