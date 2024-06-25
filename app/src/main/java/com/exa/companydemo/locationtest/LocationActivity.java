@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Gravity;
 import android.view.View;
@@ -127,8 +128,10 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         loadBaseLocationInfo();
         getBestProvider();
         // 注册协议监听
-        locationManager.addNmeaListener((message, timestamp) ->
-                        L.d("locationManager.onNmeaMessage:" + message + "," + timestamp),
+        locationManager.addNmeaListener((message, timestamp) -> {
+                    L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
+                    handleNmeaData(message, timestamp);
+                },
                 new Handler(Looper.myLooper()));
         // 注册卫星状态改变监听
         locationManager.registerGnssStatusCallback(new GnssStatus.Callback() {
@@ -173,7 +176,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                         usedInFixNum++;
                     }
                     builder.append(status.getSvid(i)).append(" ");
-                    snrSb.append((int)status.getCn0DbHz(i)).append(" ");
+                    snrSb.append((int) status.getCn0DbHz(i)).append(" ");
                 }
                 String msg = DateUtil.getNowTime() + "卫星列表 count=" + status.getSatelliteCount()
                         + ", usedInFixNum=" + usedInFixNum + ", satIds=" + builder
@@ -184,6 +187,21 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         }, new Handler(Looper.myLooper()));
 
         subscribeGpsUpdates();
+    }
+
+    /**
+     * 处理nmea数据
+     *
+     * @param nmea
+     * @param timestamp
+     */
+    private void handleNmeaData(String nmea, long timestamp) {
+        if (TextUtils.isEmpty(nmea)) return;
+        String[] fields = nmea.split(",");
+        if (fields.length == 0) return;
+        StringBuilder builder = new StringBuilder();
+        builder.append("星座：").append(fields[0]);
+
     }
 
     private void testExtra() {

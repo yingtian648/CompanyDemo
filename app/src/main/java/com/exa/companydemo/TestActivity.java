@@ -1,5 +1,8 @@
 package com.exa.companydemo;
 
+import android.view.Window;
+import android.view.WindowManager;
+
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.companydemo.databinding.ActivityTestBinding;
 import com.exa.companydemo.test.TabFm;
@@ -19,6 +22,7 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
     @Override
     protected int setContentViewLayoutId() {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         return R.layout.debug_fragment;
     }
 

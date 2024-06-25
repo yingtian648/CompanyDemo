@@ -17,6 +17,9 @@ object CmdUtil {
     const val SET_TCP_IP_PORT_5555 = "setprop service.adb.tcp.port 5555"
     const val GET_TCP_IP_PORT = "getprop service.adb.tcp.port"
     const val HANDLER_EXE_COMMAND = 12345
+    //连续执行两条命令中间添加“> /dev/null;”
+    private const val CMD_MFI =
+        "i2ctransfer  -y 3 w1@0x10 0x00 > /dev/null;i2ctransfer  -y 3 r1@0x10"
 
     /**
      * 执行命令的方法

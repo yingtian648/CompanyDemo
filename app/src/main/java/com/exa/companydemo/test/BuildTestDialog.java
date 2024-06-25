@@ -77,7 +77,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         mWindowManager.removeViewImmediate(dialogView);
     }
 
-    public void addNoteView(Context context){
+    public void addNoteView(Context context) {
         GuideRemindView remindView = new GuideRemindView(context);
         remindView.showGuideView();
     }
@@ -100,19 +100,39 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         });
         mWindow.setContentView(dialogView);
         mDecor = mWindow.getDecorView();
+
         WindowManager.LayoutParams lp = mWindow.getAttributes();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        lp.setTitle("AddView");
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.BOTTOM;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//            lp.setFitInsetsTypes(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+//            lp.setFitInsetsSides(WindowInsets.Side.all());
+            mWindow.setDecorFitsSystemWindows(false);
         }
+        final int windowFlags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+        final int windowFlagsMask = windowFlags
+                | WindowManager.LayoutParams.FLAG_DIM_BEHIND;  // to be unset
+        mWindow.setFlags(windowFlags, windowFlagsMask);
+
+        lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
         mDecor.setPadding(0, 0, 0, 0);
-        mWindow.setLayout(Tools.getScreenW(context), Tools.getScreenH(context));
-        mDecor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+//        mWindow.setLayout(Tools.getScreenW(context), Tools.getScreenH(context));
+//        mDecor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//        );
+
+//        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 //        mWindow.setStatusBarColor(Color.TRANSPARENT);
 //        mWindow.setNavigationBarColor(Color.TRANSPARENT);
-        mWindow.setStatusBarColor(Color.parseColor("#E3E3E3"));
-        mWindow.setNavigationBarColor(Color.parseColor("#E3E3E3"));
+//        mWindow.setStatusBarColor(Color.parseColor("#E3E3E3"));
+//        mWindow.setNavigationBarColor(Color.parseColor("#E3E3E3"));
         mWindowManager.addView(mDecor, lp);
         mShowing = true;
 

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
-
     tools:ignore="ManifestResource">
     <!--    android:sharedUserId="@string/sharedUserId"-->
 
@@ -20,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CompanyDemo"
         tools:targetApi="31">
+        <uses-library android:name="car.framework" />
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|locale"
@@ -90,6 +90,7 @@
         </activity>
         <activity
             android:name=".TestActivity"
+            android:theme="@style/TestActivity"
             android:exported="true">
         </activity>
         <activity

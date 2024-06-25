@@ -80,6 +80,11 @@ public class TestUtil {
     private static final String VR_RES_PATH = "/vendor/etc/data/version.txt";
     private static final String VR_RES_VERSION_NAME = "versionCode";
 
+    public static void readBytes() {
+        byte[] bytes = {71, 65, 67, 95, 88, 54, 54, 95, 73, 68, 67, 95, 81, 78, 88, 95, 88, 57, 69, 95, 50, 48, 50, 52, 48, 53, 49, 55, 95, 48, 50, 48, 52};
+        L.dd("result:" + new String(bytes));
+    }
+
     private String getVRResVersion() {
         String vrVersion = "";
         File file = new File(VR_RES_PATH);

@@ -38,7 +38,7 @@ public class App extends Application {
         Tools.logScreenWH(this);
 
         //启动无障碍服务
-        AccessibilityHelper.setMyAccessibilityEnable(this);
+//        AccessibilityHelper.setMyAccessibilityEnable(this);
     }
 
     private void listenActivityLife() {

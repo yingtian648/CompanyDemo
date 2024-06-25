@@ -7,10 +7,21 @@ Build:mpass
 Test:upass
 BugID:noid
 
-feat[EmbeddedKitchenSinkApp]:Add uuid field.
-rootcause:在产品信息页添加UUID展示.
-solution:在产品信息页添加UUID展示.
+feat[EmbeddedKitchenSinkApp]:Read hardware version from system prop.
+rootcause:从系统属性种读取硬件版本.
+solution:从系统属性种读取硬件版本.
 product:AY5
+span:none
+build:mpass
+test:upass
+influence:none
+fid:none
+level:none
+
+feat[CoreSystemServer]:Setup DEVICE_PROVISIONED and USER_SETUP_COMPLETE value.
+rootcause:设置DEVICE_PROVISIONED和USER_SETUP_COMPLETE为1.
+solution:设置DEVICE_PROVISIONED和USER_SETUP_COMPLETE为1.
+product:A02/A19
 span:none
 build:mpass
 test:upass
@@ -28,6 +39,9 @@ test:upass
 influence:CarTboxSdk-user
 fid:none
 level:none
+
+多行注释
+git commit -m "Description:调整SystemUI图标."$'\n'"JiraID:NA"$'\n'"Module:SystemUI"$'\n'"Bug or feature:Bug"$'\n'"Team:FW"$'\n'"Test:pass"
 
 Description:添加All-Menu黑白名单配置文件.
 JiraID:NA

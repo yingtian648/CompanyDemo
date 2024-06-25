@@ -192,7 +192,7 @@ public class L {
     public static void de(Throwable e) {
         StackTraceElement[] s = Thread.currentThread().getStackTrace();
         String methodName = s[3].getMethodName();
-        e(methodName + "," + getThrowableLineNum(e));
+        e(methodName,e);
     }
 
     /**

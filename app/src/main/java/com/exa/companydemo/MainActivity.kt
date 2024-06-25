@@ -19,14 +19,18 @@ import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.service.DemoService
+import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
+import gxa.car.hardkey.HardKeyPolicyManager
+import gxa.car.hardkey.KeyEventCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 /**
  * @Author lsh
@@ -40,6 +44,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private var index = 0
     private var mObjAnim: ObjectAnimator? = null
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
+    private lateinit var powerUtil: PowerUtil
+    private var hardKeyManager: HardKeyPolicyManager? = null
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
@@ -68,6 +74,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun initView() {
+//        powerUtil = PowerUtil(this)
         modeManager = getSystemService(UiModeManager::class.java)
         L.d("黑夜模式：" + getUiModeStr(modeManager))
 
@@ -91,7 +98,21 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        checkPermission()
 //        TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
-        test()
+
+        hardKeyManager = HardKeyPolicyManager.getInstance(this)
+        bind.toolbar.postDelayed({
+            hardKeyManager?.addKeyEventCallBack(object : KeyEventCallback {
+                override fun onKeyEvent(event: KeyEvent?, p1: Int, p2: Int) {
+                    L.dd("${event?.action}  ${event?.keyCode}")
+                }
+
+                override fun onKeyLongPress(event: KeyEvent?, p1: Int, p2: Int) {
+                    L.dd("${event?.action}  ${event?.keyCode}")
+                }
+            }, HardKeyPolicyManager.SCENE_JOOX)
+
+        }, 100)
+//        test()
     }
 
     @SuppressLint(
@@ -101,8 +122,18 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     @Throws(Exception::class)
     private fun test() {
         App.index++
-        L.dd("${App.index}")
+        L.dd("${App.index} start------------")
 
+//        powerUtil.goToSleep()
+
+//        startService(Intent(this,DemoService::class.java))
+
+//        hardKeyManager?.processHardKeyNoPolicy(event,HardKeyPolicyManager.SCENE_JOOX,false)
+
+//        TestUtil.readBytes()
+
+//        powerUtil.setDynamicPowerSaveHint()
+//        startActivity(TestActivity::class.java)
 //        TestDialog.showDialog(this)
 //        startService(Intent(this,DemoService::class.java))
 //        val fm = TunerTestFragment()
@@ -112,10 +143,10 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        startActivity(WifiActivity::class.java)
 //        bind.imageView.setCurrentAngle(index*30);
 //        startActivity(Intent(this,WebActivity::class.java))
-        TestUtil.testSensorData(this, bind.tvAcc, bind.tvGy)
+//        testSensorData(this, bind.tvAcc, bind.tvGy)
 //        startActivity(MDialogActivity::class.java)
 //        TestUtil.testDialog(this,"ssssss",-1)
-//        BuildTestDialog.getInstance().addNoteView(this)
+//        BuildTestDialog.getInstance().addView(this)
 //        BaseConstants.getHandler().postDelayed({
 //            TestDialog.showLayout(this)
 //            window.navigationBarColor  = 0
@@ -131,6 +162,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        Toast.makeText(this, "测试Toast $index", Toast.LENGTH_SHORT).show()
 
 //        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        L.dd("${App.index} end------------")
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

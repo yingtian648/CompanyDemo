@@ -22,6 +22,10 @@
 <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
 <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
     </style>
+    <style name="TestActivity" parent="Theme.CompanyDemo">
+        <item name="android:focusable">false</item>
+        <item name="android:focusedByDefault">false</item>
+    </style>
     <style name="WifiActivity" parent="Theme.CompanyDemo">
 <!--        <item name="android:windowBackground">@android:color/transparent</item>-->
 <!--        <item name="android:windowNoTitle">true</item>-->

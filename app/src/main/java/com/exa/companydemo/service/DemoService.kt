@@ -11,9 +11,11 @@ import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
+import android.view.WindowInsets.Type.*
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
@@ -60,15 +62,10 @@ class DemoService : Service() {
             L.d("onClick sure_button ")
             subContentView.visibility = View.VISIBLE
             subWindowManager.updateViewLayout(subContentView,getLayoutParams())
-            handler.postDelayed({
-                L.d("mContext 44:${mContext.hashCode()} $mContext ${mContext.display?.displayId}")
-                L.d("mContext 55:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
-            }, 500)
         }
 
         // 副屏View
         subContentView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout, null)
-        L.d("mContext 11:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
         subContentView.findViewById<Button>(R.id.cancel_button).setOnClickListener {
             dismissSubDialog()
         }
@@ -80,10 +77,6 @@ class DemoService : Service() {
             subContentView.visibility = View.GONE
             subContentView.alpha = 1.0F
             subWindowManager.addView(subContentView, getLayoutParams())
-            L.d("mContext 22:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
-            handler.postDelayed({
-                L.d("mContext 33:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
-            }, 500)
         }
     }
 
@@ -128,10 +121,10 @@ class DemoService : Service() {
     private fun checkFullScreen(windowManager: WindowManager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val insets = windowManager.maximumWindowMetrics.windowInsets
-            val naviInsets = insets.getInsets(WindowInsets.Type.navigationBars())
-            val statusInsets = insets.getInsets(WindowInsets.Type.statusBars())
-            L.dd(insets.getInsets(WindowInsets.Type.navigationBars()).toString())
-            L.dd(insets.getInsets(WindowInsets.Type.statusBars()).toString())
+            val naviInsets = insets.getInsets(navigationBars())
+            val statusInsets = insets.getInsets(statusBars())
+            L.dd(insets.getInsets(navigationBars()).toString())
+            L.dd(insets.getInsets(statusBars()).toString())
             if (naviInsets.bottom == 0 && statusInsets.top == 0) {
                 if (!isFullScreen) {
                     isFullScreen = true
@@ -154,34 +147,34 @@ class DemoService : Service() {
             stopSelf()
         }
         view.findViewById<Button>(R.id.sure_button).setOnClickListener {
-            subContentView.visibility = View.VISIBLE
-//            subWindowManager.updateViewLayout(subContentView,getLayoutParams())
-            handler.postDelayed({
-                L.d("mContext 44:${mContext.hashCode()} $mContext ${mContext.display?.displayId}")
-                L.d("mContext 55:${subContentView.context.hashCode()} ${subContentView.context} ${subContentView.context.display?.displayId}")
-            }, 500)
+            windowManager.removeView(view)
+            stopSelf()
         }
         val titleT = view.findViewById<TextView>(R.id.titleT)
-        val params = WindowManager.LayoutParams()
-        params.title = "MainWindow"
-        params.width = WindowManager.LayoutParams.MATCH_PARENT
-        params.height = WindowManager.LayoutParams.MATCH_PARENT
-        params.type = 2003
-        params.format = PixelFormat.TRANSPARENT
+        val lp = WindowManager.LayoutParams()
+        lp.title = "DemoService_dialog"
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT
+        lp.type = 2003
+        lp.gravity = Gravity.BOTTOM
+//        lp.format = PixelFormat.TRANSLUCENT
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//            params.fitInsetsTypes = WindowInsets.Type.navigationBars() or WindowInsets.Type.statusBars()
+//            lp.fitInsetsTypes = navigationBars() or statusBars() //3
+            lp.fitInsetsTypes = 3
         }
-        params.flags = (WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+        lp.flags = (WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                 or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                or WindowManager.LayoutParams.FLAG_DIM_BEHIND
-                or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+                or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                or WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+                or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+//                or WindowManager.LayoutParams.FLAG_DIM_BEHIND
+//                or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
 //                or WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
 //                or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
 //                or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 )
 //        view.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        titleT.text = "addView"
-        windowManager.addView(view, params)
+        windowManager.addView(view, lp)
     }
 
     override fun onDestroy() {

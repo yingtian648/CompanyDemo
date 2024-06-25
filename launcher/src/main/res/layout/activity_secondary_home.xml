@@ -5,33 +5,43 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_light">
+    android:background="@android:color/holo_blue_light"
+    android:focusableInTouchMode="false">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        android:text="TOP-END"
-        />
+    <EditText
+        android:id="@+id/edit"
+        android:layout_width="500dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@color/purple_500"
+        android:hint="请输入..."
+        android:gravity="center"
+        android:textColor="@color/white" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
-        android:textColor="@color/black"
-        android:textSize="30sp"
         android:text="BOTTOM-START"
-        />
+        android:textColor="@color/black"
+        android:textSize="30sp" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/black"
-        android:textSize="30sp"
         android:text="SecondaryHomeActivity"
-        />
+        android:textColor="@color/black"
+        android:layout_marginBottom="100dp"
+        android:textSize="30sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:text="TOP-END"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
 </FrameLayout>

@@ -35,6 +35,14 @@ class MDialogService : Service(), Window.Callback {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    /**
+     * Provision has been removed now, the default value of def_device_provisioned and
+     * def_user_setup_complete changed to 'true' in SettingProvider to skip user setup.
+     * If user does not do factory reset and happened to upgrade before Provision set
+     * the value to true, it may cause DEVICE_PROVISIONED and
+     * USER_SETUP_COMPLETE always be 0.
+     * We check its value at here and ensure be set 1.
+     */
     @SuppressLint("WrongConstant")
     override fun onCreate() {
         super.onCreate()
@@ -92,10 +100,8 @@ class MDialogService : Service(), Window.Callback {
         mWindow.setContentView(dialogView)
         val mDecor = mWindow.decorView
         val lp = mWindow.attributes
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            lp.layoutInDisplayCutoutMode =
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-        }
+        lp.layoutInDisplayCutoutMode =
+            WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
         mDecor.setPadding(0, 0, 0, 0)
         mWindow.setLayout(Tools.getScreenW(context), Tools.getScreenH(context))
         mDecor.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
