@@ -18,3 +18,4 @@ local.properties
 /signatures
 shihuademo.apk
 config.gradle
+/trace

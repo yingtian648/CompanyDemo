@@ -213,7 +213,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             L.d("收到广播：$action")
-            if (action == null || action.isEmpty()) return
+            if (action.isNullOrEmpty()) return
             if (action == Intent.ACTION_TIME_TICK) {
                 //系统每1分钟发送一次广播
                 L.d(DateUtil.getNowDateHM())
