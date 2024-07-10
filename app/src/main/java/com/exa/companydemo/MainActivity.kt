@@ -19,8 +19,6 @@ import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
-import com.exa.companydemo.service.DemoService
-import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import gxa.car.hardkey.HardKeyPolicyManager
@@ -28,6 +26,7 @@ import gxa.car.hardkey.KeyEventCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import com.exa.companydemo.test.DialogFragmentTest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -153,6 +152,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        }, 3000)
 //        Tools.showKeyboard(bind.edit)
 //        TestDialog.showDialog(this)
+            TestDialog.showDialogFragment(this)
 //        TestDialog.showAlertDialog(this)
 //        TestDialog.showMyDialog(this,"121212",-1)
 //        TestDialog.showLayout(this)
@@ -244,7 +244,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     @SuppressLint("NonConstantResourceId")
     override fun onClick(v: View) {
         L.d("点击按钮:" + v.id)
-        setText(L.msg)
+//        setText(L.msg)
         when (v.id) {
             R.id.btnSystemUI -> {
                 isFullScreen = !isFullScreen

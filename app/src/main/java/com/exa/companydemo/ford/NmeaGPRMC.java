@@ -45,6 +45,10 @@ public class NmeaGPRMC implements Parcelable {
         this.mCheckValue = checkValue;
     }
 
+    public String getNMEA(){
+        return  "" + System.currentTimeMillis();
+    }
+
     public String getmCheckValue() {
         return mCheckValue;
     }

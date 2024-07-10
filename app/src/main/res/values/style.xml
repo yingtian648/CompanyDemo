@@ -33,8 +33,8 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowActionBar">false</item>
-        <item name="android:splitMotionEvents">false</item>
-        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">true</item>
+        <item name="android:windowEnableSplitTouch">true</item>
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>

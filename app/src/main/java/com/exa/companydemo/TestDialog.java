@@ -9,10 +9,12 @@ import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,6 +24,9 @@ import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.SystemBarUtil;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * @Author lsh
@@ -29,6 +34,7 @@ import androidx.annotation.NonNull;
  * @Description
  */
 public class TestDialog {
+    private static final String TAG = "TestDialog";
     private static boolean isHide = false;
     private static WindowManager.LayoutParams mParams, mCardListParams;
 
@@ -80,7 +86,7 @@ public class TestDialog {
         dialog.show();
     }
 
-    public static void hideSystemBars(View view){
+    public static void hideSystemBars(View view) {
         int visibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -90,17 +96,17 @@ public class TestDialog {
         view.setSystemUiVisibility(visibility);
     }
 
-    public static void showSystemBars(View view){
+    public static void showSystemBars(View view) {
         view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
     }
 
-    public static void showAlertDialog(Context context){
+    public static void showAlertDialog(Context context) {
         L.dd();
         AlertDialog dialog = new AlertDialog.Builder(context).setTitle("TestDialog.showAlertDialog")
                 .setMessage("showAlertDialogshowAlertDialogshowAlertDialogshowAlertDialog")
                 .create();
         dialog.show();
-        Context context1  = dialog.getContext();
+        Context context1 = dialog.getContext();
         L.dd("isActivity 222:" + (context1 instanceof Activity));
     }
 
@@ -245,6 +251,34 @@ public class TestDialog {
             }
             window.setAttributes(attributes);
             return window;
+        }
+    }
+
+    private static final String content = "1.一二三四五六七八九十一二三四五六七八九十\n"
+            + "2.一二三四五六七八九十一二三四五六七八九十\n"
+            + "3.一二三四五六七八九十一二三四五六七八九十\n"
+            + "4.一二三四五六七八九十一二三四五六七八九十\n"
+            + "5.一二三四五六七八九十一二三四五六七八九十";
+
+    public static void showDialogFragment(FragmentActivity activity) {
+        DialogFragment df = new MyDialogFragment(R.layout.dialog_layout);
+        df.show(activity.getSupportFragmentManager(), "showDialogFragment");
+    }
+
+    public static class MyDialogFragment extends DialogFragment {
+        private TextView tvContent;
+
+        public MyDialogFragment() {
+        }
+
+        public MyDialogFragment(int contentLayoutId) {
+            super(contentLayoutId);
+        }
+
+        @Override
+        public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            tvContent = view.findViewById(R.id.edt);
+            tvContent.setText(content);
         }
     }
 }

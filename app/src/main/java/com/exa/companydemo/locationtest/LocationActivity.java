@@ -197,11 +197,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
      */
     private void handleNmeaData(String nmea, long timestamp) {
         if (TextUtils.isEmpty(nmea)) return;
-        String[] fields = nmea.split(",");
-        if (fields.length == 0) return;
-        StringBuilder builder = new StringBuilder();
-        builder.append("星座：").append(fields[0]);
-
+        setText("NMEA:" + nmea);
     }
 
     private void testExtra() {

@@ -7,10 +7,10 @@ Build:mpass
 Test:upass
 BugID:noid
 
-feat[EmbeddedKitchenSinkApp]:Read hardware version from system prop.
-rootcause:从系统属性种读取硬件版本.
-solution:从系统属性种读取硬件版本.
-product:AY5
+feat[location]:Add use CarLocationService config.
+rootcause:Add use CarLocationService config.
+solution:Add use CarLocationService config.
+product:A19G
 span:none
 build:mpass
 test:upass
