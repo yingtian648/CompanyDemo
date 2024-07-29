@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#D85C65E3"
-        tools:context=".MainActivity2">
+        tools:context=".MainActivity">
 
         <TextView
             android:id="@+id/text"
@@ -17,6 +17,7 @@
             android:textSize="35sp" />
 
         <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -31,7 +32,7 @@
                 android:layout_marginStart="10dp"
                 android:text="关闭"
                 android:textAllCaps="false"
-                android:textSize="30sp" />
+                android:textSize="35sp" />
 
             <Button
                 android:id="@+id/showSystemUi"
@@ -40,7 +41,7 @@
                 android:layout_marginStart="10dp"
                 android:text="显示stattusBar"
                 android:textAllCaps="false"
-                android:textSize="30sp" />
+                android:textSize="35sp" />
 
             <Button
                 android:id="@+id/hideSystemUi"
@@ -49,17 +50,20 @@
                 android:layout_marginStart="10dp"
                 android:text="隐藏stattusBar"
                 android:textAllCaps="false"
-                android:textSize="30sp" />
+                android:textSize="35sp" />
 
-            <Button
-                android:id="@+id/testBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="测试"
-                android:textAllCaps="false"
-                android:textSize="30sp" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/testBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/linear"
+            android:text="测试"
+            android:textAllCaps="false"
+            android:textSize="35sp" />
 
     </RelativeLayout>
 </layout>

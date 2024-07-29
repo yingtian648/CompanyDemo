@@ -39,43 +39,44 @@ public class App extends Application {
 
         //启动无障碍服务
 //        AccessibilityHelper.setMyAccessibilityEnable(this);
+        listenActivityLife();
     }
 
     private void listenActivityLife() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-                L.dd("---App---" + activity.getLocalClassName());
+                L.dm("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityStarted(@NonNull Activity activity) {
-                L.dd("---App---" + activity.getLocalClassName());
+                L.dm("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityResumed(@NonNull Activity activity) {
-                L.dd("---App---" + activity.getLocalClassName());
+                L.dm("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityPaused(@NonNull Activity activity) {
-                L.dd("---App---" + activity.getLocalClassName());
+                L.dm("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityStopped(@NonNull Activity activity) {
-                L.dd("---App---" + activity.getLocalClassName());
+                L.dm("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-                L.dd("---App---" + activity.getLocalClassName());
+                L.dm("---App---" + activity.getLocalClassName());
             }
 
             @Override
             public void onActivityDestroyed(@NonNull Activity activity) {
-                L.dd("---App---" + activity.getLocalClassName());
+                L.dm("---App---" + activity.getLocalClassName());
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.exa.companydemo;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -12,6 +13,11 @@ import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.RenderNode;
 import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -32,8 +38,18 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.PathInterpolator;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.Transformation;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +72,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -117,6 +134,76 @@ public class TestUtil {
         return vrVersion;
     }
 
+    public static void doSurfaceViewAnimation(Context context, FrameLayout frame) {
+        SurfaceView surfaceView = new SurfaceView(context);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+        );
+        surfaceView.setLayoutParams(params);
+        frame.addView(surfaceView);
+        Method method = null;
+        try {
+            method = SurfaceView.class.getMethod("setUseAlpha");
+            method.invoke(surfaceView);
+        } catch (NoSuchMethodException | RuntimeException | IllegalAccessException |
+                 InvocationTargetException e) {
+            L.w("doSurfaceViewAnimation setUseAlpha err");
+        }
+        // 加载要显示的图片资源
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.win_bg);
+        surfaceView.setZOrderOnTop(true);
+        surfaceView.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+        surfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(@NonNull SurfaceHolder holder) {
+                Canvas canvas = holder.lockHardwareCanvas();
+                canvas.drawBitmap(bitmap, 0f, 0f, null);
+                holder.unlockCanvasAndPost(canvas);
+            }
+
+            @Override
+            public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
+
+            }
+        });
+
+        frame.postDelayed(() -> {
+            doAnimation(surfaceView);
+        }, 3000);
+    }
+
+    private static void doAnimation(SurfaceView view) {
+        L.dd();
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f) {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+//                super.applyTransformation(interpolatedTime, t);
+                L.dd(" interpolatedTime=" + interpolatedTime);
+                final float alpha = 1.0f;
+                final float target = alpha + ((0.0f - alpha) * interpolatedTime);
+                view.setAlpha(target);
+            }
+        };
+        alphaAnimation.setDuration(3000);
+        alphaAnimation.setFillAfter(true);
+        alphaAnimation.setFillBefore(true);
+
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, 1.5f, 1.0f, 1.5f);
+        scaleAnimation.setDuration(3000);
+        scaleAnimation.setFillAfter(true);
+        scaleAnimation.setFillBefore(true);
+        AnimationSet animatorSet = new AnimationSet(true);
+
+        animatorSet.addAnimation(alphaAnimation);
+//        animatorSet.addAnimation(scaleAnimation);
+        view.startAnimation(animatorSet);
+    }
+
 
     /**
      * 测试 Toast
@@ -133,9 +220,9 @@ public class TestUtil {
 //        toast.show();
         String msg = "一二三四五六七八一二三四五六七八一二三四五六七八111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
         msg = "一二三四五六七Toast " + index;
-//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
         BaseConstants.getHandler().postDelayed(() -> {
-            Toast.makeText(context, "延时Toast", Toast.LENGTH_LONG).show();
+//            Toast.makeText(context, "延时Toast", Toast.LENGTH_LONG).show();
         }, 7000);
         toast = new Toast(context);
         View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
@@ -151,8 +238,16 @@ public class TestUtil {
          */
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.setDuration(Toast.LENGTH_LONG);
-        toast.show();
+//        toast.show();
 
+    }
+
+    public static void startShowAnim(View view) {
+        PathInterpolator pathInterpolator = new PathInterpolator(0.4f, 0f, 0.2f, 1f);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", 0f, 1000f);
+        animator.setInterpolator(pathInterpolator);
+        animator.setDuration(5000);
+        animator.start();
     }
 
     public static void setFull(Window window, Context context, boolean isFull) {

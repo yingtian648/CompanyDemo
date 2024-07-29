@@ -10,6 +10,7 @@
     <color name="brown">#D68829</color>
 
     <color name="gray">#E3E3E3</color>
+    <color name="gray666">#666666</color>
     <color name="green">#6FCA1F</color>
     <color name="blue">#2C83ED</color>
 </resources>

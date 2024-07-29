@@ -108,15 +108,13 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             return;
         }
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            setText("定位功能是否开启：" + locationManager.isLocationEnabled());
-        }
+        setText("定位功能是否开启：" + locationManager.isLocationEnabled());
         setText("GPS是否开启：" + isOPenGPS());
         setText("");
         List<String> providers = locationManager.getAllProviders();
         eProviders = locationManager.getProviders(true);
         getLocationManagerInfo();
-        L.d("全部定位方式: " + (providers != null ? providers : "null"));
+        L.d("全部定位方式: " + providers);
         setText(L.msg);
         L.d("可用的定位方式: " + (eProviders != null ? eProviders : "null"));
         setText(L.msg);
@@ -128,6 +126,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         loadBaseLocationInfo();
         getBestProvider();
         // 注册协议监听
+        setText("注册NMEA监听");
         locationManager.addNmeaListener((message, timestamp) -> {
                     L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
                     handleNmeaData(message, timestamp);

@@ -3,100 +3,100 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#F9F9F9"
+        android:fitsSystemWindows="true"
         tools:context=".MainActivity">
 
         <TextView
             android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="Hello World!"
-            android:textSize="25px"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/linear"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <FrameLayout
-            android:id="@+id/frame"
-            android:layout_width="600px"
-            android:layout_height="400px"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/iamge"
-            android:layout_width="400px"
-            android:layout_height="400px"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/frame"
-            android:layout_marginTop="20px"/>
-
-        <ImageView
-            android:id="@+id/aImage"
-            android:layout_width="400px"
-            android:layout_height="400px"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="20px"/>
-
-        <TextView
-            android:id="@+id/aImageName"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24px"
-            android:gravity="center"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="@id/aImage"
-            app:layout_constraintStart_toStartOf="@id/aImage"
-            app:layout_constraintEnd_toEndOf="@id/aImage"
-            android:layout_marginBottom="10px"
-            />
+            android:layout_centerInParent="true"
+            android:text="Client"
+            android:textSize="35sp" />
 
         <LinearLayout
             android:id="@+id/linear"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <Button
-                android:id="@+id/btn1"
-                android:layout_width="0dp"
-                android:textAllCaps="false"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="连接AIDL服务"
-                android:textSize="30px" />
-
-            <Button
-                android:id="@+id/btn2"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
-                android:layout_weight="1"
-                android:text="获取U盘数据"
-                android:textSize="30px" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textSize="30px"
-            android:textColor="@color/black"
-            app:layout_constraintStart_toStartOf="parent"
-            android:background="@null"
-            android:text="返回"
-            android:drawableLeft="@drawable/arrow_back_black"
-            android:layout_marginStart="20px"
-            />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <Button
+                android:id="@+id/startOnMainScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="主屏显示"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/display1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAllCaps="false"
+                android:text="Display1"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/display2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAllCaps="false"
+                android:text="Display2"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/display3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAllCaps="false"
+                android:text="Display3"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/display5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textAllCaps="false"
+                android:text="Display5"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/switchSystemUI"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="显示隐藏SystemBar"
+                android:textAllCaps="false"
+                android:textSize="28sp" />
+
+            <Button
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="关闭"
+                android:textSize="28sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/testBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/linear"
+            android:text="测试按钮"
+            android:textSize="35sp" />
+
+    </RelativeLayout>
 </layout>

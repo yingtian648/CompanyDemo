@@ -20,12 +20,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CompanyDemo"
-        tools:targetApi="31"
-        tools:ignore="HardcodedDebugMode">
+        tools:ignore="HardcodedDebugMode"
+        tools:targetApi="31">
 
-        <uses-library android:name="car.framework" />
-
-        <profileable android:shell="true"/>
+<!--        <uses-library android:name="car.framework" />-->
 
         <activity
             android:name=".MainActivity"
@@ -40,28 +38,28 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".socket.SocketActivity"
-            android:label="LshSocket"
-            android:exported="true" >
+            android:exported="true"
+            android:label="LshSocket">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".WebActivity"
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
             android:name=".carotatest.CarOtaTestActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".toasttest.ToastTestActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".wifi.WifiActivity"
             android:theme="@style/WifiActivity" />
@@ -77,40 +75,34 @@
             android:theme="@style/PermissionDialog" />
         <activity
             android:name=".DemoActivity"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name="space.syncore.cockpit.soundeffect.soundeffectactivity.AdigoSoundActivity"
-            android:configChanges="uiMode"
-            android:exported="true"
-            android:launchMode="singleTask"
-            android:theme="@style/PermissionDialog">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".image.ImageUtilActivity"
-            android:exported="true">
-        </activity> <!-- android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" -->
+            android:exported="true"></activity>
         <activity
             android:name=".locationtest.LocationActivity"
+            android:label="LocationTest"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
             android:exported="true">
+<!--            <intent-filter android:priority="1000">-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".TestActivity"
-            android:theme="@style/TestActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"
+            android:theme="@style/TestActivity"></activity> <!-- android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" -->
         <activity
             android:name=".inputmethod.InputMethodSettingActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".pms.PmsActivity"
             android:exported="false" />
         <activity
             android:name=".SystemUITestActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".common.AppInfoActivity"
             android:exported="true"
@@ -123,7 +115,7 @@
         <activity
             android:name=".musicload.MediaLoadActivity"
             android:exported="true" />
-
+        <profileable android:shell="true" />
         <provider
             android:name=".mediaprovider.MMediaProvider"
             android:authorities="${applicationId}.media.provider"
@@ -136,6 +128,7 @@
                 android:readPermission="android.permission.READ_EXTERNAL_STORAGE"
                 android:writePermission="android.permission.WRITE_EXTERNAL_STORAGE" />
         </provider>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -145,6 +138,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/pathlist" />
         </provider>
+        <receiver
+            android:name=".mediaprovider.MediaScannerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+            </intent-filter>
+        </receiver>
         <!--
         这里主要的字段为 authorities ，他是ContentProvider的唯一标识。
         permission，它分为 读权限，和写权限 对应为 android:readpermission 和
@@ -154,14 +155,9 @@
         星号（'*'）匹配紧随其前字符的0次或多次出现。
         句点加星号（“.*”）匹配任何字符的0次或多次出现
         -->
-        <receiver
-            android:name=".mediaprovider.MediaScannerReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
-            </intent-filter>
-        </receiver> <!-- <receiver -->
+        <service
+            android:name="com.zlw.main.recorderlib.recorder.RecordService"
+            android:exported="true" /> <!-- <receiver -->
         <!-- android:name=".broadcast.BootReceiver" -->
         <!-- android:exported="true"> -->
         <!-- <intent-filter> -->
@@ -169,12 +165,8 @@
         <!-- </intent-filter> -->
         <!-- </receiver> -->
         <service
-            android:name="com.zlw.main.recorderlib.recorder.RecordService"
-            android:exported="true" />
-        <service
             android:name=".service.DemoService"
-            android:exported="true"
-            />
+            android:exported="true" />
         <service
             android:name=".service.MDialogService"
             android:enabled="true"

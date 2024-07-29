@@ -6,7 +6,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/win_bg"
         android:focusableInTouchMode="true"
         tools:context=".MainActivity">
 
@@ -41,6 +40,18 @@
             android:visibility="visible"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             />
+
+        <FrameLayout
+            android:id="@+id/frame"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </FrameLayout>
+
 
         <TextView
             android:id="@+id/msgT"
@@ -139,27 +150,14 @@
         </ScrollView>
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="500px"
-            android:layout_height="500px"
+            android:id="@+id/image"
+            android:layout_width="400dp"
+            android:layout_height="300dp"
+            android:background="@drawable/win_bg"
+            android:layout_marginBottom="300dp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            />
-
-        <ImageView
-            android:id="@+id/tvel"
-            android:layout_width="500px"
-            android:layout_height="500px"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-
-        <FrameLayout
-            android:id="@+id/fl"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar"
             />
 
         <TextView

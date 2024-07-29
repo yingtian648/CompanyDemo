@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
@@ -22,6 +23,8 @@ import android.widget.TextView;
 
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.SystemBarUtil;
+
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -213,6 +216,11 @@ public class TestDialog {
             return super.onTouchEvent(event);
         }
 
+        @Override
+        public void cancel() {
+            L.dd("cancel111");
+        }
+
         /* access modifiers changed from: protected */
         @SuppressLint("WrongConstant")
         private Window setWindowAttrs() {
@@ -260,9 +268,18 @@ public class TestDialog {
             + "4.一二三四五六七八九十一二三四五六七八九十\n"
             + "5.一二三四五六七八九十一二三四五六七八九十";
 
+
+    private static DialogFragment df;
+
     public static void showDialogFragment(FragmentActivity activity) {
-        DialogFragment df = new MyDialogFragment(R.layout.dialog_layout);
-        df.show(activity.getSupportFragmentManager(), "showDialogFragment");
+        if (df == null) {
+            L.dd("getDialog().init()");
+            df = new MyDialogFragment(R.layout.dialog_layout);
+            df.show(activity.getSupportFragmentManager(), "showDialogFragment");
+        } else {
+            L.dd("getDialog().show()");
+            Objects.requireNonNull(df.getDialog()).show();
+        }
     }
 
     public static class MyDialogFragment extends DialogFragment {
@@ -273,12 +290,75 @@ public class TestDialog {
 
         public MyDialogFragment(int contentLayoutId) {
             super(contentLayoutId);
+            L.dd();
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            L.dd();
+            Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+            // 设置点击外部对话框不会关闭
+//            dialog.setCanceledOnTouchOutside(false);
+
+            // 获取布局视图
+            View view = getLayoutInflater().inflate(R.layout.dialog_layout, null);
+            dialog.setContentView(view);
+            dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
+            dialog.getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                        L.dd("处理界面外点击事件");
+                        // 处理外部点击事件
+                        // 例如，可以关闭对话框
+                        dialog.hide();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            return dialog;
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            L.dd();
+            return super.onCreateView(inflater, container, savedInstanceState);
         }
 
         @Override
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+            L.dd();
+            initView(view);
+        }
+
+        @Override
+        public void onCancel(@NonNull DialogInterface dialog) {
+            L.dd();
+        }
+
+        @Override
+        public void onDismiss(@NonNull DialogInterface dialog) {
+            L.dd();
+        }
+
+        private void initView(View view) {
             tvContent = view.findViewById(R.id.edt);
             tvContent.setText(content);
+
+            view.findViewById(R.id.cancel_button).setOnClickListener(v -> {
+                Objects.requireNonNull(getDialog()).hide();
+            });
+            view.findViewById(R.id.sure_button).setOnClickListener(v -> {
+                Objects.requireNonNull(getDialog()).hide();
+            });
+            Objects.requireNonNull(getDialog()).setOnCancelListener(dialog -> L.dd("OnCancel"));
+            Objects.requireNonNull(getDialog()).setOnDismissListener(dialog -> L.dd("OnDismiss"));
         }
     }
 }

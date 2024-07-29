@@ -44,6 +44,10 @@
 <!--        <item name="android:activityOpenExitAnimation">@null</item>-->
 <!--        <item name="android:activityCloseEnterAnimation">@null</item>-->
 <!--        <item name="android:activityCloseExitAnimation">@null</item>-->
+
+        <!-- 半透明背景 -->
+<!--        <item name="android:windowBackground">#7FFFFFFF</item>-->
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="Theme.CarLauncher" parent="@style/Theme.AppCompat.DayNight.NoActionBar">

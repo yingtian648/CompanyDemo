@@ -93,9 +93,10 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation files('libs\\android_car.jar')
     implementation files('libs\\framework-wifi.jar')
+    implementation files('libs\\vendor.gxa.tbox-V1.0-java.jar')
     compileOnly files('libs\\Car-Framework.jar')
     compileOnly files('libs\\SettingsLib.jar')
-    implementation files('libs\\services.core.jar')
+//    implementation files('libs\\services.core.jar')
 //    compileOnly files('libs/framework.jar')
     compileOnly files('libs/framework-minus-apex.jar')
     implementation files('libs/carlocalupdatesdk.jar')

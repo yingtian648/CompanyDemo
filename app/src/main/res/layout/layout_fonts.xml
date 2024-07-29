@@ -11,17 +11,65 @@
         android:text="@string/font_words" />
 
     <TextView
-        android:id="@+id/textRoboto"
+        android:id="@+id/sans_serif"
         style="@style/main_font_text"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/font_words_medium" />
+        android:fontFamily="sans-serif"
+        android:textFontWeight="200"
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 textFontWeight200" />
+
+    <TextView
+        android:id="@+id/sans_serif3"
+        style="@style/main_font_text"
+        android:fontFamily="sans-serif"
+        android:textFontWeight="300"
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 sans_serif3" />
+
+    <TextView
+        android:id="@+id/sans_serif_light"
+        style="@style/main_font_text"
+        android:fontFamily="sans-serif-light"
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 sans-serif-light" />
+
+    <TextView
+        android:id="@+id/gac300"
+        style="@style/main_font_text"
+        android:fontFamily="@string/gac_font"
+        android:textFontWeight="300"
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 GacFont300" />
+
+    <TextView
+        android:id="@+id/gac_font_light"
+        style="@style/main_font_text"
+        android:fontFamily="@string/gac_font_light"
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 gac_font_light" />
+
+    <TextView
+        android:id="@+id/sans_serif4"
+        style="@style/main_font_text"
+        android:fontFamily="sans-serif"
+        android:textFontWeight="400"
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 textFontWeight400" />
+
+    <TextView
+        android:id="@+id/sans_serif5"
+        style="@style/main_font_text"
+        android:fontFamily="sans-serif"
+        android:textFontWeight="500"
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 textFontWeight500" />
 
     <TextView
         android:id="@+id/text0"
         style="@style/main_font_text"
+        android:fontFamily="sans-serif-medium"
         android:hint="text0"
-        android:text="@string/font_style_words"
-        android:textStyle="bold" />
+        android:text="Innovation in China fiti 中国制造，惠及全球 0123456789 sans-serif-medium" />
+
+    <TextView
+        android:id="@+id/text01"
+        style="@style/main_font_text"
+        android:fontFamily="@string/gac_font_light"
+        android:hint="text1"
+        android:text="@string/font_words_GacFont_Light" />
 
     <TextView
         android:id="@+id/text1"

@@ -1,11 +1,9 @@
-
-feat[CarLocationService]:update soalib version to 1.3.6.
-rootcause:update soalib version to 1.3.6.
-solution:update soalib version to 1.3.6.
-Product:A02
-Build:mpass
-Test:upass
-BugID:noid
+fix[我的车]: 性能优化-优化智能辅助驾驶弹框显示隐藏逻辑
+test pass
+influence none
+fid none
+span none
+level none
 
 feat[location]:Add use CarLocationService config.
 rootcause:Add use CarLocationService config.
@@ -84,18 +82,18 @@ product:A02
 span:none
 build:mpass
 test:upass
+influence:location-user
 fid:none
 level:none
 
-fix[AOSP/WMS]:fix SystemUI display err.
-rootcause:昊铂悦听全屏切2/3屏时SystemUI显示异常.
-solution:
-1.Set InsetsStates CopySource is true when relayoutWindow.
-2.refer：https://cs.android.com/android/_/android/platform/frameworks/base/+/fc8f9637c8f1b9fbe92a75231741c3ad12d03279
+fix[Toast]:Modify Toast animation.
+rootcause:实现Adigo 6.0的Toast动效.
+solution:Modify Toast animation.
 product:AH8
 span:none
 build:mpass
 test:upass
+influence:system-toast
 fid:none
 level:none
 

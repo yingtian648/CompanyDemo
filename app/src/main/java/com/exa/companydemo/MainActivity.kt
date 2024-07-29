@@ -7,6 +7,9 @@ import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.RenderNode
 import android.net.*
 import android.os.*
 import android.util.Log
@@ -19,14 +22,13 @@ import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import gxa.car.hardkey.HardKeyPolicyManager
-import gxa.car.hardkey.KeyEventCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import com.exa.companydemo.test.DialogFragmentTest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,6 +46,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private var mObjAnim: ObjectAnimator? = null
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
     private lateinit var powerUtil: PowerUtil
+    private lateinit var bitmap: Bitmap
+    private val renderNode = RenderNode("MainActivity_Render")
     private var hardKeyManager: HardKeyPolicyManager? = null
 
     override fun setContentViewLayoutId(): Int {
@@ -52,9 +56,15 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 
     override fun initData() {
         val clickIds = intArrayOf(
-            R.id.btnLocation, R.id.btnSystemUI, R.id.btnPlay,
-            R.id.btnAppList, R.id.btnTestActivity, R.id.btnToast,
-            R.id.btnNightMode, R.id.btnEngineMode, R.id.btnTest,
+            R.id.btnLocation,
+            R.id.btnSystemUI,
+            R.id.btnPlay,
+            R.id.btnAppList,
+            R.id.btnTestActivity,
+            R.id.btnToast,
+            R.id.btnNightMode,
+            R.id.btnEngineMode,
+            R.id.btnTest,
             R.id.btnTcpip
         )
         for (clickId in clickIds) {
@@ -77,9 +87,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         modeManager = getSystemService(UiModeManager::class.java)
         L.d("黑夜模式：" + getUiModeStr(modeManager))
 
-        val title = (getString(R.string.back) + " (wifi:"
-                + NetworkManager.getInstance(this).getWifiIp()
-                + ":" + SystemProperties.get("service.adb.tcp.port") + ")")
+        val title = (getString(R.string.back) + " (wifi:" + NetworkManager.getInstance(this)
+            .getWifiIp() + ":" + SystemProperties.get("service.adb.tcp.port") + ")")
         bind.toolbar.setSubTitle(title)
         bind.toolbar.setNavigationOnClickListener { finish() }
         bind.edit.setOnEditorActionListener { _, _, _ ->
@@ -97,25 +106,16 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        checkPermission()
 //        TestUtil.registerFullScreenListener(this);
 //        TestUtil.registerBroadcast(this);
-
-        hardKeyManager = HardKeyPolicyManager.getInstance(this)
-        bind.toolbar.postDelayed({
-            hardKeyManager?.addKeyEventCallBack(object : KeyEventCallback {
-                override fun onKeyEvent(event: KeyEvent?, p1: Int, p2: Int) {
-                    L.dd("${event?.action}  ${event?.keyCode}")
-                }
-
-                override fun onKeyLongPress(event: KeyEvent?, p1: Int, p2: Int) {
-                    L.dd("${event?.action}  ${event?.keyCode}")
-                }
-            }, HardKeyPolicyManager.SCENE_JOOX)
-
-        }, 100)
 //        test()
+        // 加载要显示的图片资源
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.win_bg)
     }
 
     @SuppressLint(
-        "RestrictedApi", "WrongConstant", "Range", "UnspecifiedImmutableFlag",
+        "RestrictedApi",
+        "WrongConstant",
+        "Range",
+        "UnspecifiedImmutableFlag",
         "ClickableViewAccessibility"
     )
     @Throws(Exception::class)
@@ -123,28 +123,26 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index} start------------")
 
+//        showToast(this)
+        BuildTestDialog.getInstance().makeMyToast(this)
+
+//        startShowAnim(bind.image)
+//        doSurfaceViewAnimation(this, bind.frame)
 //        powerUtil.goToSleep()
-
 //        startService(Intent(this,DemoService::class.java))
-
 //        hardKeyManager?.processHardKeyNoPolicy(event,HardKeyPolicyManager.SCENE_JOOX,false)
-
 //        TestUtil.readBytes()
-
+//        TestDialog.showDialogFragment(this)
+//        TestDialog.showMyDialog(this, "55555", WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG)
 //        powerUtil.setDynamicPowerSaveHint()
 //        startActivity(TestActivity::class.java)
 //        TestDialog.showDialog(this)
 //        startService(Intent(this,DemoService::class.java))
 //        val fm = TunerTestFragment()
-//        supportFragmentManager.beginTransaction()
-//            .replace(R.id.fl, fm)
-//            .commit()
 //        startActivity(WifiActivity::class.java)
-//        bind.imageView.setCurrentAngle(index*30);
 //        startActivity(Intent(this,WebActivity::class.java))
 //        testSensorData(this, bind.tvAcc, bind.tvGy)
 //        startActivity(MDialogActivity::class.java)
-//        TestUtil.testDialog(this,"ssssss",-1)
 //        BuildTestDialog.getInstance().addView(this)
 //        BaseConstants.getHandler().postDelayed({
 //            TestDialog.showLayout(this)
@@ -152,7 +150,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
 //        }, 3000)
 //        Tools.showKeyboard(bind.edit)
 //        TestDialog.showDialog(this)
-            TestDialog.showDialogFragment(this)
 //        TestDialog.showAlertDialog(this)
 //        TestDialog.showMyDialog(this,"121212",-1)
 //        TestDialog.showLayout(this)
@@ -177,8 +174,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         L.dd()
         val intent = Intent()
         intent.component = ComponentName(
-            "com.exa.companyclient",
-            "com.exa.companyclient.service.MService"
+            "com.exa.companyclient", "com.exa.companyclient.service.MService"
         )
         val isBind = bindService(intent, object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
@@ -244,7 +240,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     @SuppressLint("NonConstantResourceId")
     override fun onClick(v: View) {
         L.d("点击按钮:" + v.id)
-//        setText(L.msg)
+        setText(L.msg)
         when (v.id) {
             R.id.btnSystemUI -> {
                 isFullScreen = !isFullScreen

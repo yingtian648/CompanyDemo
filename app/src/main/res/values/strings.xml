@@ -15,6 +15,7 @@
     <string name="gac_font" translatable="false">GacFont</string>
     <string name="gac_font_medium" translatable="false">GacFont-Medium</string>
     <string name="gac_font_bold" translatable="false">GacFont-Bold</string>
+    <string name="gac_font_light" translatable="false">GacFont-Light</string>
     <string name="gac_font_regular" translatable="false">GacFont-Regular</string>
     <string name="AIONType" translatable="false">AIONType</string>
     <string name="roboto" translatable="false">Roboto</string>
@@ -43,6 +44,7 @@
     <string name="font_words_SourceHanSansCN_style_Bold" translatable="false">Innovation in China fiti 中国制造，惠及全球 0123456789 SourceHanSansCN-style-Bold</string>
     <string name="font_words_GacFont_Bold" translatable="false">Innovation in China fiti 中国制造，惠及全球 0123456789 GacFont-Bold</string>
     <string name="font_words_GacFont_Medium" translatable="false">Innovation in China fiti 中国制造，惠及全球 0123456789 GacFont-Medium</string>
+    <string name="font_words_GacFont_Light" translatable="false">Innovation in China fiti 中国制造，惠及全球 0123456789 GacFont-Light</string>
     <string name="font_words_GacFont_Regular" translatable="false">Innovation in China fiti 中国制造，惠及全球 0123456789 GacFont-Regular</string>
     <string name="font_words_SourceHanSansCN_Bold" translatable="false">Innovation in China fiti 中国制造，惠及全球 0123456789 SourceHanSansCN-Bold</string>
     <string name="font_words_SourceHanSansCN_Normal" translatable="false">Innovation in China fiti 中国制造，惠及全球 0123456789 SourceHanSansCN-Normal</string>

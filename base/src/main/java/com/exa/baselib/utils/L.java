@@ -180,6 +180,15 @@ public class L {
     /**
      * 获取调用方法名
      */
+    public static void dm(String msg) {
+        StackTraceElement[] s = Thread.currentThread().getStackTrace();
+        String methodName = s[3].getMethodName();
+        d(msg + SPACE + methodName);
+    }
+
+    /**
+     * 获取调用方法名
+     */
     public static void de(String msg) {
         StackTraceElement[] s = Thread.currentThread().getStackTrace();
         String methodName = s[3].getMethodName();
@@ -192,7 +201,7 @@ public class L {
     public static void de(Throwable e) {
         StackTraceElement[] s = Thread.currentThread().getStackTrace();
         String methodName = s[3].getMethodName();
-        e(methodName,e);
+        e(methodName, e);
     }
 
     /**

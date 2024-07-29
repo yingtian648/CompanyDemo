@@ -1,350 +1,184 @@
 package com.exa.companyclient;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.hardware.display.DisplayManager;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
-import com.exa.baselib.bean.EventBean;
-import com.exa.baselib.bean.Files;
-import com.exa.baselib.utils.AudioPlayerUtil;
-import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.OnClickViewListener;
-import com.exa.baselib.utils.Utils;
-import com.exa.baselib.utils.VideoPlayer;
-import com.exa.companyclient.common.MAidlClient;
+import com.exa.baselib.utils.SystemBarUtil;
 import com.exa.companyclient.databinding.ActivityMainBinding;
-import com.exa.companyclient.provider.ExeHelper;
-import com.exa.companyclient.provider.SystemMediaProviderUtil;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.PermissionChecker;
+import static android.content.Intent.ACTION_MEDIA_EJECT;
+import static android.content.Intent.ACTION_MEDIA_MOUNTED;
 
-public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
-
-    private static final int REQUEST_PERMISSION_STORAGE = 100;
-
-    private List<Files> audios = new ArrayList<>();
-    private List<Files> audioThumbs = new ArrayList<>();
-    private int audioThumbsIndex = 0;
-    private int textClickIndex = 0;
+public class MainActivity extends BaseBindActivity<ActivityMainBinding> implements View.OnClickListener {
+    private int index = 0;
+    private boolean mShowSystemUI = true;
 
     @Override
     protected int setContentViewLayoutId() {
-        EventBus.getDefault().register(this);
-
         return R.layout.activity_main;
     }
 
     @Override
     protected void initView() {
-        // checkPermissions();
-        registerBroadcast();
-        bind.text.setMovementMethod(ScrollingMovementMethod.getInstance());
-//        SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
-        bind.btn1.setOnClickListener(view -> {
-//            MyProviderUtil.registerObserver(this, MyProviderUtil.getObserver());
-//            SystemMediaProviderUtil.registerObserver(this, SystemMediaProviderUtil.getObserver());
-            MAidlClient client = new MAidlClient(this);
-            client.bindService();
-//            playVideoFile();
-        });
-        bind.btn2.setOnClickListener(view -> {
-//            MyProviderUtil.unregisterObserver(this, MyProviderUtil.getObserver());
-             ExeHelper.getInstance().exeGetSystemMediaProviderData();
-//            if (checkStoragePermission(true)) {
-//                testCreateFile();
-//            }
-        });
-        bind.aImage.setOnClickListener(new OnClickViewListener() {
-            @Override
-            public void onClickView(View v) {
-                audioThumbsIndex++;
-                if (audioThumbsIndex > audioThumbs.size() - 1) {
-                    audioThumbsIndex = 0;
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    getAudioThumbToShow();
-                } else {
-                    showAudioThumb();
-                }
-            }
-        });
-        bind.backBtn.setOnClickListener(v -> finish());
-        bind.text.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_UP:
-                        textClickIndex++;
-                        Log.d("InputEventReceiver", "Text被触摸了:" + textClickIndex + " 次");
-                        bind.text.setText("Text被触摸了 " + textClickIndex + " 次");
-                        break;
-                }
-                return true;
-            }
-        });
+        logScreenInfo();
+        L.dd(getClass().getSimpleName() + "注册广播MEDIA_MOUNTED,MEDIA_EJECT");
+        IntentFilter filter = new IntentFilter();
+        filter.addDataScheme("file");
+        filter.addAction(ACTION_MEDIA_MOUNTED);
+        filter.addAction(ACTION_MEDIA_EJECT);
+        registerReceiver(new TestReceiver(), filter);
     }
 
-    private void log2Text(Object message) {
-        bind.text.append("" + message + "\n");
-    }
-
-    public void playVideoFile() {
-        String path = App.getContext().getFilesDir().getPath();
-
-        //手机调试
-        path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/download/Weixin";
-
-        File file = new File(path);
-
-        L.d("playVideoFile:" + path + "," + file.exists());
-        if (file.exists()) {
-            L.d("playVideoFile list:" + Arrays.toString(file.list()));
-        }
-        if (file.exists() && file.list() != null) {
-            List<String> playList = new ArrayList<>();
-            for (File child : Objects.requireNonNull(file.listFiles())) {
-                if (!child.isDirectory() && (child.getName().toLowerCase().contains(".mp4")
-                        || child.getName().toLowerCase().contains(".wmv")
-                        || child.getName().toLowerCase().contains(".armvb")
-                        || child.getName().toLowerCase().contains(".avi")
-                        || child.getName().toLowerCase().contains(".asf"))) {
-                    playList.add(child.getAbsolutePath());
-                }
+    class TestReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                L.d("MainActivity2 onReceive:" + intent.getAction() + ", displayid=" + context.getDisplay().getDisplayId());
+                setText("MainActivity2 onReceive:" + intent.getAction() + ", displayid=" + context.getDisplay().getDisplayId());
             }
-            playVideo(playList);
         }
     }
 
     @Override
     protected void initData() {
-        L.d("Android OS:" + Build.VERSION.RELEASE);
+        bind.display1.setOnClickListener(this);
+        bind.display2.setOnClickListener(this);
+        bind.display3.setOnClickListener(this);
+        bind.display5.setOnClickListener(this);
+        bind.startOnMainScreen.setOnClickListener(this);
+        bind.switchSystemUI.setOnClickListener(this);
+        bind.testBtn.setOnClickListener(this);
+        bind.backBtn.setOnClickListener(this);
 
+//        bind.backBtn.postDelayed(() -> {
+//            startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 3);
+//        },5000);
     }
 
-    private static final String[] STORAGE_PERMISSION = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-    };
-
-    private static String permissionResultToString(int permissionResult) {
-        switch (permissionResult) {
-            case PermissionChecker.PERMISSION_DENIED:
-                return "PERMISSION_DENIED";
-            case PermissionChecker.PERMISSION_GRANTED:
-                return "PERMISSION_GRANTED";
-            case PermissionChecker.PERMISSION_DENIED_APP_OP:
-                return "PERMISSION_DENIED_APP_OP";
-            default:
-                return "unknown:" + permissionResult;
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(EventBean bean) {
-        if (bean.hasData()) {
-            setText(bean.message + (bean.datas.size() + "  " + bean.datas.get(0).toString()));
-            switch (bean.type) {
-                case 1://图片
-                    BaseConstants.getHandler().postDelayed(() -> {
-                        for (int i = 0; i < bean.datas.size(); i++) {
-                            if (Utils.isImagePath(bean.datas.get(i).path)) {
-                                Glide.with(this).load(bean.datas.get(i).path).into(bind.iamge);
-                                L.d("加载图片：" + bean.datas.get(i).path);
-                                return;
-                            }
-                        }
-                    }, 1000);
-                    break;
-                case 2://音频
-                    audios.clear();
-                    audioThumbs.clear();
-                    BaseConstants.getHandler().postDelayed(() -> {
-//                        audios.addAll(bean.datas);
-//                        for (int i = 0; i < bean.datas.size(); i++) {
-//                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith(".mp3")) {
-//                                playAudio(bean.datas.get(i).path);
-//                                return;
-//                            }
-//                        }
-//                        checkSdkToLoadThumb();
-                    }, 3000);
-                    break;
-                case 3://视频
-                    BaseConstants.getHandler().postDelayed(() -> {
-                        List<String> list = new ArrayList<>();
-                        for (int i = 0; i < bean.datas.size(); i++) {
-                            if (bean.datas.get(i).path != null && bean.datas.get(i).path.endsWith("068.avi")) {
-                                list.add(bean.datas.get(i).path);
-                            }
-                        }
-                        playVideo(list);
-                    }, 1000);
-                    break;
-                case 4://歌曲封面
-                    BaseConstants.getHandler().postDelayed(() -> {
-                        if (!audios.isEmpty() && !bean.datas.isEmpty()) {
-                            for (int j = 0; j < bean.datas.size(); j++) {
-                                for (int i = 0; i < audios.size(); i++) {
-                                    if (audios.get(i).album_id.equals(bean.datas.get(j).album_id)) {
-                                        audios.get(i).album_path = bean.datas.get(j).album_path;
-                                        audioThumbs.add(audios.get(i));
-                                    }
-                                }
-                            }
-                            updateAudioThumbs();
-                        }
-                    }, 1000);
-                    break;
-            }
-        } else {
-            setText(bean.message);
-        }
-    }
-
-    private void checkSdkToLoadThumb() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !audios.isEmpty()) {
-            BaseConstants.getFixPool().execute(() -> {
-                List<String> aids = new ArrayList<>();
-                for (int i = 0; i < audios.size(); i++) {
-                    if (audios.get(i).album_id != null && !aids.contains(audios.get(i).album_id)) {
-                        aids.add(audios.get(i).album_id);
-                        audioThumbs.add(audios.get(i));
-                    }
-                }
-                updateAudioThumbs();
-            });
-        }
-    }
-
-    private void updateAudioThumbs() {
-        audioThumbsIndex = 0;
-        if (audioThumbs.isEmpty()) {
-            bind.aImage.setImageBitmap(null);
-            bind.aImageName.setText("");
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                getAudioThumbToShow();
-            } else {
-                showAudioThumb();
-            }
-        }
-    }
-
-    private void showAudioThumb() {
-        Glide.with(this).load(audioThumbs.get(audioThumbsIndex).album_path).into(bind.aImage);
-        bind.aImageName.setText(audioThumbs.get(audioThumbsIndex).path);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    private void getAudioThumbToShow() {
-        BaseConstants.getFixPool().execute(() -> {
-            Bitmap bitmap = SystemMediaProviderUtil.loadAudioAlbumThumbnail(audioThumbs.get(audioThumbsIndex).album_id, audioThumbs.get(audioThumbsIndex).path);
-            if (bitmap == null) {
-                audioThumbsIndex++;
-                if (audioThumbsIndex > audioThumbs.size() - 1) {
-                    audioThumbsIndex = 0;
+    /**
+     * adb shell am start com.exa.companyclient/com.exa.companyclient.MainActivity3 --display 3
+     *
+     * @param v The view that was clicked.
+     */
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.startOnMainScreen://启动在主屏上
+                startActivityByDisplayId(MainActivity.this, MainActivity.class, 0);
+                break;
+            case R.id.display1://启动在副屏上
+                startActivityByDisplayId(MainActivity.this, SubDisplayActivity.class, 1);
+                break;
+            case R.id.display2://启动在副屏上
+                startActivityByDisplayId(MainActivity.this, SubDisplayActivity.class, 2);
+                break;
+            case R.id.display3:
+                startActivityByDisplayId(MainActivity.this, SubDisplayActivity.class, 3);
+                break;
+            case R.id.display5:
+                startActivityByDisplayId(MainActivity.this, SubDisplayActivity.class, 5);
+                break;
+            case R.id.switchSystemUI:
+                mShowSystemUI = !mShowSystemUI;
+                if (mShowSystemUI) {
+                    SystemBarUtil.showStatusBars(this);
                 } else {
-                    getAudioThumbToShow();
+                    SystemBarUtil.hideStatusBars(this);
                 }
-            } else {
-                runOnUiThread(() -> {
-                    bind.aImage.setImageBitmap(bitmap);
-                    bind.aImageName.setText(audioThumbs.get(audioThumbsIndex).path);
-                });
-            }
-        });
+                break;
+            case R.id.testBtn:
+                test();
+                break;
+            case R.id.backBtn:
+                finish();
+                break;
+            default:
+                break;
+        }
     }
 
-    private void playAudio(String path) {
-        L.dd(path);
-        setText("playAudio:" + path);
-//        path = path.replace("mnt/media_rw", "storage");
-        AudioPlayerUtil.getInstance().play(this, Uri.parse(path), new AudioPlayerUtil.AudioPlayerListener() {
-            @Override
-            public void onStarted() {
-                L.d("开始播放：歌曲");
-                setText("开始播放：歌曲");
-            }
+    private void test() {
+        L.dd();
+        index++;
+        Toast.makeText(App.getContext(),"主屏测试Toast " + index,Toast.LENGTH_SHORT).show();
+//        Dialog dialog = new Dialog(this);
+//        dialog.setOwnerActivity(this);
+//        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout, null);
+//        dialog.setContentView(view);
+//        dialog.show();
 
-            @Override
-            public void onErr(String msg) {
-                setText("播放歌曲失败：" + msg);
-            }
+//        Toast.makeText(App.getContext(), "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
+//
+//        DisplayManager dm = (DisplayManager) getSystemService(DISPLAY_SERVICE);
+//        Context d1Context = App.getContext().createDisplayContext(dm.getDisplay(1));
+//        Toast.makeText(d1Context, "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
 
-            @Override
-            public void onComplete() {
-                L.d("歌曲 播放结束");
-            }
-        });
     }
 
-    private void playVideo(List<String> paths) {
-//        path = path.replace("mnt/media_rw", "storage");
-        VideoPlayer.getInstance().setCallback(new VideoPlayer.Callback() {
-            @Override
-            public void onError(String msg) {
-                L.e("playVideo onError:" + msg);
+    private void logScreenInfo() {
+        //多屏显示时使用
+        Display mDisplay = getWindowManager().getDefaultDisplay();
+        setText("默认显示器：" + mDisplay.getDisplayId() + ", " + mDisplay.getName() + ", " + mDisplay.isValid());
+        DisplayManager displayManager = (DisplayManager) getSystemService(Context.DISPLAY_SERVICE);
+        Display[] displays = displayManager.getDisplays(null);
+        if (displays != null) {
+            for (Display display : displays) {
+                setText("更多显示器：" + display.getDisplayId() + ", " + display.getName() + ", " + display.isValid());
             }
+        }
+    }
 
+    /**
+     * 在指定屏幕上启动Activity
+     *
+     * @param context
+     * @param clazz
+     * @param displayId
+     */
+    public static void startActivityByDisplayId(Activity context, Class clazz, int displayId) {
+        L.dd(displayId);
+        Display mDisplay = context.getWindowManager().getDefaultDisplay();//默认显示器id 0
+        DisplayManager displayManager = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+        Display[] displays = displayManager.getDisplays(null);
+        if (displays != null) {
+            for (int i = 0; i < displays.length; i++) {
+                L.d("更多显示器：" + displays[i].getDisplayId() + ", " + displays[i].getName() + ", " + displays[i].isValid());
+            }
+        }
+        //FLAG_ACTIVITY_LAUNCH_ADJACENT 多屏使用
+        Intent intent = new Intent(context, clazz);
+        intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT | Intent.FLAG_ACTIVITY_NEW_TASK);
+        ActivityOptions options = ActivityOptions.makeBasic().setLaunchDisplayId(displayId);
+        context.startActivity(intent, options.toBundle());
+    }
+
+    public void registerShareReceiver(android.content.Context context) {
+        android.content.IntentFilter filter = new android.content.IntentFilter();
+        filter.addAction("com.raite.test_move_task");
+        context.registerReceiver(new android.content.BroadcastReceiver() {
             @Override
-            public void onStarted(int duration) {
+            public void onReceive(android.content.Context context, android.content.Intent intent) {
+                int fromDisplayId = intent.getIntExtra("from", 0);
+                int toDisplayId = intent.getIntExtra("to", 1);
 
             }
-
-            @Override
-            public void onComplete() {
-
-            }
-
-            @Override
-            public void onPlayTime(int timeMillis) {
-
-            }
-
-            @Override
-            public void onScreenClick() {
-
-            }
-        });
-        VideoPlayer.getInstance().play(this, bind.frame, paths);
+        }, filter);
     }
 
     private void setText(String msg) {
@@ -354,92 +188,5 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> {
             String n = msg + "\n" + bind.text.getText().toString();
             bind.text.setText(n);
         });
-    }
-
-    private boolean checkStoragePermission(boolean requestPermissionIfRequired) {
-        if (requestPermissionIfRequired) {
-            requestPermissions(STORAGE_PERMISSION, REQUEST_PERMISSION_STORAGE);
-            return false;
-        }
-        int result = PermissionChecker.checkSelfPermission(this, STORAGE_PERMISSION[0]);
-        if (result != PermissionChecker.PERMISSION_GRANTED) {
-            Toast.makeText(this, "缺少权限：" + STORAGE_PERMISSION[0], Toast.LENGTH_SHORT).show();
-            requestPermissions(STORAGE_PERMISSION, REQUEST_PERMISSION_STORAGE);
-            return false;
-        }
-
-        result = PermissionChecker.checkSelfPermission(this, STORAGE_PERMISSION[1]);
-        if (result != PermissionChecker.PERMISSION_GRANTED) {
-            Toast.makeText(this, "缺少权限：" + STORAGE_PERMISSION[1], Toast.LENGTH_SHORT).show();
-            requestPermissions(STORAGE_PERMISSION, REQUEST_PERMISSION_STORAGE);
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_PERMISSION_STORAGE) {
-            log2Text("grantResults:" + Arrays.stream(grantResults).mapToObj(MainActivity::permissionResultToString).collect(Collectors.joining()));
-        }
-    }
-
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            L.d("client onReceived:" + action);
-            setText("client onReceived:" + action + " " + ((intent.getExtras() == null) ? "" : intent.getExtras().keySet()));
-            switch (action) {
-                case BaseConstants.ACTION_MY_PROVIDER_SCAN_FINISH://自定义媒体扫描完成
-                    ExeHelper.getInstance().exeGetMyMediaProviderData();
-                    break;
-                case Intent.ACTION_MEDIA_MOUNTED://挂载
-                    break;
-                case Intent.ACTION_MEDIA_UNMOUNTED://卸载
-                    break;
-                case Intent.ACTION_MEDIA_SCANNER_STARTED://扫描开始
-                    break;
-                case Intent.ACTION_MEDIA_SCANNER_FINISHED://扫描结束
-                    ExeHelper.getInstance().exeGetSystemMediaProviderData();
-                    break;
-                case Intent.ACTION_MEDIA_EJECT://拔出
-                    VideoPlayer.getInstance().stop();
-                    bind.iamge.setImageBitmap(null);
-                    break;
-            }
-        }
-    };
-
-    private void registerBroadcast() {
-        L.d("registerBroadcast");
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.hardware.usb.action.USB_DEVICE_ATTACHED");
-        filter.addAction("android.hardware.usb.action.USB_DEVICE_DETACHED");
-        filter.addAction(Intent.ACTION_MEDIA_MOUNTED);
-        filter.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
-        filter.addAction(Intent.ACTION_MEDIA_EJECT);
-        filter.addAction(Intent.ACTION_MEDIA_SCANNER_STARTED);
-        filter.addAction(Intent.ACTION_MEDIA_SCANNER_FINISHED);
-        filter.addAction(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        filter.addAction(Intent.ACTION_PACKAGE_DATA_CLEARED);
-        filter.addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED);
-        filter.addAction(Intent.ACTION_LOCALE_CHANGED);
-        filter.addDataScheme("file");
-        registerReceiver(mReceiver, filter);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(mReceiver);
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLocation(Location location) {
-        setText("onLocation:" + location);
     }
 }

@@ -1,11 +1,15 @@
 package com.exa.companydemo.test;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
 import android.view.GestureDetector;
@@ -23,13 +27,13 @@ import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.internal.policy.PhoneWindow;
 import com.exa.baselib.utils.L;
-import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.R;
 
 import androidx.annotation.NonNull;
@@ -49,6 +53,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
     private static boolean mShowing;
     private static WindowManager mWindowManager;
     private static boolean showSystemBars = true;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     @SuppressLint("StaticFieldLeak")
     private static final BuildTestDialog testDialog = new BuildTestDialog();
 
@@ -61,12 +66,12 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
     public void makeMyToast(Activity activity) {
         mContext = activity;
         mWindowManager = activity.getWindowManager();
-        dialogView = LayoutInflater.from(activity).inflate(R.layout.transient_notification_customer, null, false);
+        LayoutInflater inflate = (LayoutInflater)
+                activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        dialogView = inflate.inflate(R.layout.transient_notification_customer, null, false);
         tv = dialogView.findViewById(R.id.message);
         tv.setBackgroundResource(R.drawable.toast_customer_normal);
-        tv.setText("111111111111111111111111111111111111");
-        initGestureDetector(activity);
-        tv.setOnTouchListener((v, event) -> mGestureDetector.onTouchEvent(event));
+        tv.setText("一二三四五六七八九一二三四五六七八九");
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -74,7 +79,39 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         params.gravity = Gravity.TOP;
         params.windowAnimations = 0;
         mWindowManager.addView(dialogView, params);
-        mWindowManager.removeViewImmediate(dialogView);
+        startAnim();
+
+        // 自动隐藏
+        mHandler.postDelayed(() -> {
+            mWindowManager.removeViewImmediate(dialogView);
+        }, 5000);
+
+    }
+
+    private void startAnim() {
+        // 设置渐变动画的起始和结束颜色
+        int start = Color.blue(0);
+        int end = mContext.getColor(R.color.black);
+        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), start, end);
+        anim.setDuration(3000);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.addUpdateListener(animator -> {
+//            tv.setTextColor((int) animator.getAnimatedValue());
+            tv.setTextColor(0);
+        });
+        anim.start();
+    }
+
+    private void startAnim1() {
+        // 设置渐变动画的起始和结束颜色
+        int start = Color.blue(0);
+        int end = mContext.getColor(R.color.black);
+        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), start, end);
+        anim.setDuration(3000);
+        anim.setStartDelay(200);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.addUpdateListener(animator -> tv.setTextColor((int) animator.getAnimatedValue()));
+        anim.start();
     }
 
     public void addNoteView(Context context) {
