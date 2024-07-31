@@ -55,18 +55,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     private lateinit var bitmap: Bitmap
     private val renderNode = RenderNode("MainActivity_Render")
     private var hardKeyManager: HardKeyPolicyManager? = null
-    private val btnList = mutableListOf(
-        "SystemUI测试",
-        "工程模式",
-        "原生设置",
-        "白天黑夜",
-        "Location测试",
-        "Toast测试",
-        "App列表",
-        "视频播放",
-        "TestActivity",
-        "测试按钮"
-    )
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
@@ -309,8 +297,21 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         if (isRegisterBroadCast) {
             unregisterReceiver(mReceiver)
         }
-//        App.exit()
+        App.exit()
     }
+
+    private val btnList = mutableListOf(
+        "SystemUI测试",
+        "工程模式",
+        "原生设置",
+        "白天黑夜",
+        "Location测试",
+        "Toast测试",
+        "App列表",
+        "视频播放",
+        "TestActivity",
+        "测试按钮"
+    )
 
     override fun onClickItem(position: Int) {
         L.d("点击按钮:" + btnList[position])
@@ -327,6 +328,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
                     SystemBarUtil.showStatusBars(window)
                 }
             }
+
             1 -> {
                 val apps = resources.getStringArray(com.exa.baselib.R.array.engine_mode_pkgs)
                 for (item in apps) {
@@ -335,6 +337,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
                     }
                 }
             }
+
             2 -> {
                 val apps = resources.getStringArray(com.exa.baselib.R.array.setting_pkgs)
                 for (item in apps) {
@@ -343,6 +346,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
                     }
                 }
             }
+
             3 -> {
                 if (modeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES) {
                     modeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
@@ -353,6 +357,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
                     L.w("白天黑夜模式:" + TestUtil.getUiModeStr(modeManager))
                 }, 2000)
             }
+
             4 -> startActivity(LocationActivity::class.java)
             5 -> startActivity(ToastTestActivity::class.java)
             6 -> startActivity(AppInfoActivity::class.java)
@@ -369,7 +374,5 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         }
     }
 
-    override fun onLongClickItem(position: Int) {
-
-    }
+    override fun onLongClickItem(position: Int) = Unit
 }
