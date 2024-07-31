@@ -8,7 +8,7 @@
         <item>com.android.car.settings</item>
     </string-array>
     <string-array name="setting_pkgs">
-        <item>com.android.settings</item>
         <item>com.android.car.settings</item>
+        <item>com.android.settings</item>
     </string-array>
 </resources>

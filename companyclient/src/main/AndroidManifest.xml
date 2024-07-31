@@ -18,9 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CompanyDemo">
         <activity
-            android:name=".SubScreenActivity"
-            android:exported="false" />
-        <activity
             android:name=".SubDisplayActivity"
             android:theme="@style/Activiy3Style"
             android:exported="true" />

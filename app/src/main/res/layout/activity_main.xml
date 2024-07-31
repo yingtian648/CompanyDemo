@@ -79,75 +79,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             />
 
-        <ScrollView
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_marginEnd="@dimen/pro_test_dp_10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <LinearLayout
-                android:id="@+id/btnBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:layout_marginEnd="10dp"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/btnSystemUI"
-                    android:text="SystemUi测试"
-                    style="@style/main_btn"
-                    />
-
-                <Button
-                    android:id="@+id/btnEngineMode"
-                    android:text="工程模式"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnNightMode"
-                    android:text="白天黑夜"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnLocation"
-                    android:text="Location测试"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnToast"
-                    android:text="Toast测试"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnAppList"
-                    android:text="App列表"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnPlay"
-                    android:text="视频播放"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnTcpip"
-                    android:text="tcpip5555"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnTestActivity"
-                    android:text="TestActivity"
-                    style="@style/main_btn" />
-
-                <Button
-                    android:id="@+id/btnTest"
-                    android:text="测试按钮"
-                    style="@style/main_btn" />
-
-            </LinearLayout>
-
-        </ScrollView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
         <ImageView
             android:id="@+id/image"

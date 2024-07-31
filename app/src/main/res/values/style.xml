@@ -11,6 +11,11 @@
         <item name="android:layout_width">0dp</item>
     </style>
 
+    <style name="MyToast">
+        <item name="android:windowEnterAnimation">@anim/toast_enter</item>
+        <item name="android:windowExitAnimation">@anim/toast_exit</item>
+    </style>
+
     <style name="DialogTheme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -159,7 +164,7 @@
     <style name="ProTestBtn_Main">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/pro_test_style_btn</item>
+        <item name="android:background">@drawable/style_btn_press</item>
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/pro_test_sp_nor</item>
         <item name="android:paddingTop">@dimen/pro_test_dp_15</item>

@@ -15,24 +15,35 @@
             android:layout_height="match_parent">
 
             <Button
+                android:id="@+id/btn"
+                android:text="退出"
+                android:layout_width="match_parent"
+                android:textSize="32sp"
+                android:layout_height="100px"/>
+
+            <Button
                 android:id="@+id/btn1"
                 android:text="第1个Fm"
+                android:textSize="32sp"
                 android:layout_width="match_parent"
                 android:layout_height="100px"/>
             <Button
                 android:id="@+id/btn2"
                 android:text="第2个Fm"
+                android:textSize="32sp"
                 android:layout_marginTop="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="100px"/>
             <Button
                 android:id="@+id/btn3"
                 android:text="第3个Fm"
+                android:textSize="32sp"
                 android:layout_width="match_parent"
                 android:layout_marginTop="15dp"
                 android:layout_height="100px"/>
             <Button
                 android:id="@+id/btn4"
+                android:textSize="32sp"
                 android:text="第4个Fm-SurfaceView"
                 android:layout_width="match_parent"
                 android:layout_marginTop="15dp"

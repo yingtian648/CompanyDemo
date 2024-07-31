@@ -11,6 +11,7 @@
     <!-- Toast dimen config -->
     <dimen name="toast_max_width">720px</dimen>
     <dimen name="toast_min_width">656dp</dimen>
+    <dimen name="toast_min_height">60dp</dimen>
     <dimen name="toast_text_size">36sp</dimen>
     <dimen name="toast_line_height">56dp</dimen>
     <dimen name="toast_line_min_height">112dp</dimen>

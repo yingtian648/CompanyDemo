@@ -23,12 +23,12 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
     @Override
     protected int setContentViewLayoutId() {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-        return R.layout.debug_fragment;
+        return R.layout.activity_test;
     }
 
     @Override
     protected void initView() {
-
+        bind.btn.setOnClickListener(v -> finish());
     }
 
     @Override
@@ -37,20 +37,20 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
         fragmentList.add(new TabFm("我是第2个Fm"));
         fragmentList.add(new TabFm("我是第3个Fm"));
         fragmentList.add(new TabSurfaceViewFm());
-//        bind.vp.setAdapter(new MAdapter(getSupportFragmentManager()));
-//        bind.vp.setOffscreenPageLimit(4);
-//        bind.btn1.setOnClickListener(v -> {
-//            bind.vp.setCurrentItem(0);
-//        });
-//        bind.btn2.setOnClickListener(v -> {
-//            bind.vp.setCurrentItem(1);
-//        });
-//        bind.btn3.setOnClickListener(v -> {
-//            bind.vp.setCurrentItem(2);
-//        });
-//        bind.btn4.setOnClickListener(v -> {
-//            bind.vp.setCurrentItem(3);
-//        });
+        bind.vp.setAdapter(new MAdapter(getSupportFragmentManager()));
+        bind.vp.setOffscreenPageLimit(4);
+        bind.btn1.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(0);
+        });
+        bind.btn2.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(1);
+        });
+        bind.btn3.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(2);
+        });
+        bind.btn4.setOnClickListener(v -> {
+            bind.vp.setCurrentItem(3);
+        });
     }
 
     class MAdapter extends FragmentPagerAdapter {

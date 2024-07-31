@@ -64,11 +64,11 @@ class ToastTestActivity : BaseBindActivity<ActivityToastTestBinding>(), View.OnC
             when (it) {
                 R.id.btnTNormal -> {
                     L.d("Toast.show:time=$time words=$words")
-                    Toast.makeText(this, "Toast $words", time).show()
+                    Toast.makeText(this, "$words", time).show()
                 }
                 R.id.btnCTNormal -> {
                     L.d("CarToast.show:time=$time words=$words")
-                    CarToast.makeText(this, "CarToast $words", time).show()
+                    CarToast.makeText(this, "$words", time).show()
                 }
                 R.id.btnTDIY -> {
                     L.d("Toast自定义View:time=$time words=$words")

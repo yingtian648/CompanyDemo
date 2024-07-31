@@ -24,25 +24,10 @@ class TabFm(var title:String) : BaseFragment() {
 
     override fun initView(view: View) {
         view.findViewById<TextView>(R.id.tv).text = title
-        webView = view.findViewById(R.id.webView)
         rootView= view.findViewById(R.id.rootView)
     }
 
     override fun initData() {
-        var url = "https://m.baidu.com/"
-        url = "https://www.baidu.com/"
 
-        val webConfig = WebViewConfig(activity,webView,rootView,object :WebViewConfig.WCallBack{
-            override fun onProgress(progress: Int) {
-            }
-
-            override fun onDownload(url: String?) {
-            }
-
-            override fun onReceivedTitle(title: String, url: String) {
-            }
-        })
-        lifecycle.addObserver(webConfig)
-        webView.loadUrl(url)
     }
 }

@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.view.Display;
@@ -107,6 +108,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
                 break;
             case R.id.backBtn:
                 finish();
+                System.exit(0);
                 break;
             default:
                 break;
@@ -116,7 +118,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
     private void test() {
         L.dd();
         index++;
-        Toast.makeText(App.getContext(),"主屏测试Toast " + index,Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getContext(),"主屏测试Toast:一二三四五六七一二三四五六七八 一二三四五六七一二三四五六七八 一二三四五六七一二三四五六七八 " + index,Toast.LENGTH_SHORT).show();
 //        Dialog dialog = new Dialog(this);
 //        dialog.setOwnerActivity(this);
 //        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout, null);

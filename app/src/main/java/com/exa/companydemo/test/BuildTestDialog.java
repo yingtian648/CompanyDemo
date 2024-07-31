@@ -1,6 +1,8 @@
 package com.exa.companydemo.test;
 
+import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,8 +30,10 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.PathInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.internal.policy.PhoneWindow;
@@ -47,6 +51,7 @@ import androidx.annotation.Nullable;
 public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
     private View dialogView;
     private TextView tv;
+    private FrameLayout container;
     private Context mContext;
     private static Window mWindow;
     private View mDecor;
@@ -66,40 +71,74 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
     public void makeMyToast(Activity activity) {
         mContext = activity;
         mWindowManager = activity.getWindowManager();
-        LayoutInflater inflate = (LayoutInflater)
-                activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        dialogView = inflate.inflate(R.layout.transient_notification_customer, null, false);
+        LayoutInflater inflate = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        dialogView = inflate.inflate(R.layout.transient_notification_new, null, false);
+        container = dialogView.findViewById(R.id.container);
+        container.setBackgroundResource(R.drawable.toast_customer_normal);
         tv = dialogView.findViewById(R.id.message);
-        tv.setBackgroundResource(R.drawable.toast_customer_normal);
-        tv.setText("一二三四五六七八九一二三四五六七八九");
+        tv.setTextColor(0);
+        tv.setText("一二三四五六七八九十一二三四五六七八九十");
         WindowManager.LayoutParams params = new WindowManager.LayoutParams();
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.setTitle("makeToast");
+        params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.format = PixelFormat.TRANSLUCENT;
-        params.gravity = Gravity.TOP;
+        params.windowAnimations = R.style.MyToast;
         params.windowAnimations = 0;
+        params.gravity = Gravity.TOP | Gravity.CENTER;
         mWindowManager.addView(dialogView, params);
         startAnim();
 
+        L.d("---params.gravity=" + params.gravity);
+
         // 自动隐藏
         mHandler.postDelayed(() -> {
-            mWindowManager.removeViewImmediate(dialogView);
+            startTxtHideAnim();
+//            mWindowManager.removeViewImmediate(dialogView);
         }, 5000);
 
     }
 
     private void startAnim() {
-        // 设置渐变动画的起始和结束颜色
-        int start = Color.blue(0);
-        int end = mContext.getColor(R.color.black);
-        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), start, end);
-        anim.setDuration(3000);
-        anim.setInterpolator(new LinearInterpolator());
-        anim.addUpdateListener(animator -> {
-//            tv.setTextColor((int) animator.getAnimatedValue());
-            tv.setTextColor(0);
+        int end = mContext.getColor(R.color.black33);
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(container, "scaleX", 0.5f, 1.05f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(container, "scaleY", 0.5f, 1.05f);
+        ObjectAnimator scaleX1 = ObjectAnimator.ofFloat(container, "scaleX", 1.05f, 1f);
+        ObjectAnimator scaleY1 = ObjectAnimator.ofFloat(container, "scaleY", 1.05f, 1f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(container, "alpha", 0f, 1f);
+
+        PathInterpolator easeOut = new PathInterpolator(0f, 0f, 0.2f, 1f);
+        PathInterpolator easeInOut = new PathInterpolator(0.4f, 0f, 0.2f, 1f);
+
+        ValueAnimator colorAnim = ValueAnimator.ofObject(new ArgbEvaluator(), Color.TRANSPARENT, end);
+        colorAnim.setDuration(200);
+        colorAnim.setStartDelay(200);
+        colorAnim.setInterpolator(new LinearInterpolator());
+        colorAnim.addUpdateListener(animator -> {
+            tv.setTextColor((int) animator.getAnimatedValue());
         });
-        anim.start();
+        scaleX.setDuration(100);
+        scaleX.setInterpolator(easeOut);
+        scaleY.setDuration(100);
+        scaleY.setInterpolator(easeOut);
+        alpha.setDuration(100);
+        alpha.setInterpolator(new LinearInterpolator());
+        scaleX1.setDuration(300);
+        scaleX1.setStartDelay(100);
+        scaleX1.setInterpolator(easeInOut);
+        scaleY1.setStartDelay(100);
+        scaleY1.setDuration(300);
+        scaleY1.setInterpolator(easeInOut);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(scaleX, scaleY, scaleX1, scaleY1, alpha, colorAnim);
+        animatorSet.start();
+
+        // 设置渐变动画的起始和结束颜色
+
+
+//        anim.start();
+        L.i("anim.start");
     }
 
     private void startAnim1() {
@@ -107,11 +146,43 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         int start = Color.blue(0);
         int end = mContext.getColor(R.color.black);
         ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), start, end);
-        anim.setDuration(3000);
+        anim.setDuration(2000);
         anim.setStartDelay(200);
         anim.setInterpolator(new LinearInterpolator());
         anim.addUpdateListener(animator -> tv.setTextColor((int) animator.getAnimatedValue()));
         anim.start();
+    }
+
+    /**
+     * add by lsh, 20240729
+     * use for hmi v6.0 Animation
+     */
+    private void startTxtHideAnim() {
+        ValueAnimator alpha = ObjectAnimator.ofFloat(container, "alpha", 1f, 0f);
+        ValueAnimator scaleX = ObjectAnimator.ofFloat(container, "scaleX", 1f, 0.5f);
+        ValueAnimator scaleY = ObjectAnimator.ofFloat(container, "scaleY", 1f, 0.5f);
+        ValueAnimator colorAnim = ValueAnimator.ofObject(new ArgbEvaluator(), tv.getCurrentTextColor(), Color.TRANSPARENT);
+        PathInterpolator easeIn = new PathInterpolator(0.4f, 0f, 1f, 1f);
+        alpha.setDuration(150);
+        alpha.setInterpolator(easeIn);
+        scaleX.setDuration(150);
+        scaleY.setDuration(150);
+        scaleX.setInterpolator(easeIn);
+        scaleY.setInterpolator(easeIn);
+        colorAnim.setDuration(50);
+        colorAnim.setInterpolator(new LinearInterpolator());
+        colorAnim.addUpdateListener(animator -> {
+            tv.setTextColor((int) animator.getAnimatedValue());
+        });
+        alpha.addUpdateListener(animator -> {
+            if ((float) animator.getAnimatedValue() == 0) {
+                L.d("mWindowManager.removeViewImmediate(dialogView)");
+                mWindowManager.removeViewImmediate(dialogView);
+            }
+        });
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(alpha, scaleX, scaleY, colorAnim);
+        animatorSet.start();
     }
 
     public void addNoteView(Context context) {
@@ -149,11 +220,8 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
 //            lp.setFitInsetsSides(WindowInsets.Side.all());
             mWindow.setDecorFitsSystemWindows(false);
         }
-        final int windowFlags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
-        final int windowFlagsMask = windowFlags
-                | WindowManager.LayoutParams.FLAG_DIM_BEHIND;  // to be unset
+        final int windowFlags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS;
+        final int windowFlagsMask = windowFlags | WindowManager.LayoutParams.FLAG_DIM_BEHIND;  // to be unset
         mWindow.setFlags(windowFlags, windowFlagsMask);
 
         lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
@@ -246,8 +314,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
             }
 
             @Override
-            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-                                    float distanceY) {
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                 return true;
             }
 
@@ -256,8 +323,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
             }
 
             @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-                                   float velocityY) {
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 if (velocityY < SCROLL_UP_HEIGHT) {
                     cancel();
                 }
@@ -301,8 +367,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         if (mWindow.superDispatchKeyEvent(event)) {
             return true;
         }
-        return event.dispatch(this, mDecor != null
-                ? mDecor.getKeyDispatcherState() : null, this);
+        return event.dispatch(this, mDecor != null ? mDecor.getKeyDispatcherState() : null, this);
     }
 
     @Override

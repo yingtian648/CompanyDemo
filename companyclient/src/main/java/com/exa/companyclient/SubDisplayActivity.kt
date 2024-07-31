@@ -68,7 +68,7 @@ class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
     private fun test() {
         index++
         L.dd("$index")
-        Toast.makeText(this, "副屏测试Toast $index", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "副屏asdasdasdasd dasdasdasadasdasdasdasdadasdasdasdasdasdasdsadas测试Toast $index", Toast.LENGTH_SHORT).show()
 //        showDialog()
     }
 

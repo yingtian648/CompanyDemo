@@ -14,15 +14,21 @@ import android.net.*
 import android.os.*
 import android.util.Log
 import android.view.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
+import com.exa.baselib.base.adapter.BaseRecyclerAdapter
+import com.exa.baselib.base.adapter.OnClickItemListener
+import com.exa.baselib.bean.AppInfo
 import com.exa.baselib.utils.*
 import com.exa.baselib.utils.Tools
 import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
-import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import gxa.car.hardkey.HardKeyPolicyManager
@@ -38,7 +44,7 @@ import java.util.*
  * @Date 2023/10/23 15:35
  * @Description
  */
-class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListener {
+class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListener {
     private var isFullScreen = false
 
     private var modeManager: UiModeManager? = null
@@ -49,41 +55,36 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
     private lateinit var bitmap: Bitmap
     private val renderNode = RenderNode("MainActivity_Render")
     private var hardKeyManager: HardKeyPolicyManager? = null
+    private val btnList = mutableListOf(
+        "SystemUI测试",
+        "工程模式",
+        "原生设置",
+        "白天黑夜",
+        "Location测试",
+        "Toast测试",
+        "App列表",
+        "视频播放",
+        "TestActivity",
+        "测试按钮"
+    )
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
     }
 
     override fun initData() {
-        val clickIds = intArrayOf(
-            R.id.btnLocation,
-            R.id.btnSystemUI,
-            R.id.btnPlay,
-            R.id.btnAppList,
-            R.id.btnTestActivity,
-            R.id.btnToast,
-            R.id.btnNightMode,
-            R.id.btnEngineMode,
-            R.id.btnTest,
-            R.id.btnTcpip
-        )
-        for (clickId in clickIds) {
-            findViewById<View>(clickId).setOnClickListener(this)
-        }
-        bind.btnEngineMode.setOnLongClickListener {
-            val apps = resources.getStringArray(com.exa.baselib.R.array.setting_pkgs)
-            for (item in apps) {
-                if (Utils.openApp(this, item)) {
-                    break
-                }
-            }
-            return@setOnLongClickListener false
-        }
+
     }
 
     @SuppressLint("ResourceType", "SetTextI18n")
     override fun initView() {
-//        powerUtil = PowerUtil(this)
+        bind.rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        bind.rv.adapter =
+            object : BaseRecyclerAdapter<String>(this, R.layout.item_main, btnList, this) {
+                override fun onViewHolder(view: View, data: String, position: Int) {
+                    view.findViewById<Button>(R.id.btn).text = data
+                }
+            }
         modeManager = getSystemService(UiModeManager::class.java)
         L.d("黑夜模式：" + getUiModeStr(modeManager))
 
@@ -123,8 +124,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         App.index++
         L.dd("${App.index} start------------")
 
-//        showToast(this)
-        BuildTestDialog.getInstance().makeMyToast(this)
+        showToast(this)
+//        BuildTestDialog.getInstance().makeMyToast(this)
 
 //        startShowAnim(bind.image)
 //        doSurfaceViewAnimation(this, bind.frame)
@@ -237,63 +238,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
         PermissionUtil.requestPermission(this, { L.d("已授权") }, ps)
     }
 
-    @SuppressLint("NonConstantResourceId")
-    override fun onClick(v: View) {
-        L.d("点击按钮:" + v.id)
-        setText(L.msg)
-        when (v.id) {
-            R.id.btnSystemUI -> {
-                isFullScreen = !isFullScreen
-                if (isFullScreen) {
-                    SystemBarUtil.hideStatusBars(this)
-//                    SystemBarUtil.hideStatusBar(this)
-//                    SystemBarUtil.setInvasionStatusBar(this)
-                } else {
-//                    SystemBarUtil.setInvasionNone(window)
-                    SystemBarUtil.showStatusBars(window)
-                }
-            }
-
-            R.id.btnLocation -> startActivity(LocationActivity::class.java)
-            R.id.btnPlay -> startActivity(VideoPlayerActivity::class.java)
-            R.id.btnAppList -> startActivity(AppInfoActivity::class.java)
-            R.id.btnTestActivity -> startActivity(TestActivity::class.java)
-            R.id.btnToast -> startActivity(ToastTestActivity::class.java)
-            R.id.btnTcpip -> {
-                CmdUtil.exeCommand(CmdUtil.SET_TCP_IP_PORT_5555, true, null)
-            }
-
-            R.id.btnNightMode -> {
-                if (modeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES) {
-                    modeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
-                } else {
-                    modeManager!!.nightMode = UiModeManager.MODE_NIGHT_YES
-                }
-                BaseConstants.getHandler().postDelayed({
-                    L.w("白天黑夜模式:" + TestUtil.getUiModeStr(modeManager))
-                }, 2000)
-            }
-
-            R.id.btnEngineMode -> {
-                val apps = resources.getStringArray(com.exa.baselib.R.array.engine_mode_pkgs)
-                for (item in apps) {
-                    if (Utils.openApp(this, item)) {
-                        return
-                    }
-                }
-            }
-
-            R.id.btnTest -> try {
-                test()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e(L.TAG, "执行测试异常：" + e.message, e)
-            }
-
-            else -> {}
-        }
-    }
-
     @SuppressLint("SimpleDateFormat")
     private fun setText(msg: String) {
         val format = SimpleDateFormat(DateUtil.PATTERN_FULL_MS)
@@ -366,5 +310,66 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), View.OnClickListen
             unregisterReceiver(mReceiver)
         }
 //        App.exit()
+    }
+
+    override fun onClickItem(position: Int) {
+        L.d("点击按钮:" + btnList[position])
+        setText(L.msg)
+        when (position) {
+            0 -> {
+                isFullScreen = !isFullScreen
+                if (isFullScreen) {
+                    SystemBarUtil.hideStatusBars(this)
+//                    SystemBarUtil.hideStatusBar(this)
+//                    SystemBarUtil.setInvasionStatusBar(this)
+                } else {
+//                    SystemBarUtil.setInvasionNone(window)
+                    SystemBarUtil.showStatusBars(window)
+                }
+            }
+            1 -> {
+                val apps = resources.getStringArray(com.exa.baselib.R.array.engine_mode_pkgs)
+                for (item in apps) {
+                    if (Utils.openApp(this, item)) {
+                        return
+                    }
+                }
+            }
+            2 -> {
+                val apps = resources.getStringArray(com.exa.baselib.R.array.setting_pkgs)
+                for (item in apps) {
+                    if (Utils.openApp(this, item)) {
+                        return
+                    }
+                }
+            }
+            3 -> {
+                if (modeManager!!.nightMode == UiModeManager.MODE_NIGHT_YES) {
+                    modeManager!!.nightMode = UiModeManager.MODE_NIGHT_NO
+                } else {
+                    modeManager!!.nightMode = UiModeManager.MODE_NIGHT_YES
+                }
+                BaseConstants.getHandler().postDelayed({
+                    L.w("白天黑夜模式:" + TestUtil.getUiModeStr(modeManager))
+                }, 2000)
+            }
+            4 -> startActivity(LocationActivity::class.java)
+            5 -> startActivity(ToastTestActivity::class.java)
+            6 -> startActivity(AppInfoActivity::class.java)
+            7 -> startActivity(VideoPlayerActivity::class.java)
+            8 -> startActivity(TestActivity::class.java)
+            9 -> try {
+                test()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e(L.TAG, "执行测试异常：" + e.message, e)
+            }
+
+            else -> {}
+        }
+    }
+
+    override fun onLongClickItem(position: Int) {
+
     }
 }
