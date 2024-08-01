@@ -6,6 +6,7 @@
     <dimen name="toast_max_width">816dp</dimen>
     <dimen name="toast_min_width">492dp</dimen>
     <dimen name="toast_line_min_height">84dp</dimen>
+    <dimen name="toast_min_height">88dp</dimen>
     <dimen name="toast_text_size">27sp</dimen>
     <dimen name="toast_line_height">42dp</dimen>
     <dimen name="toast_text_marginHorizontal">84dp</dimen>

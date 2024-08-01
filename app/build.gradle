@@ -46,10 +46,9 @@ android {
     }
 
     buildFeatures {
+        //noinspection DataBindingWithoutKapt
         dataBinding = true
-        // for view binding
-        // 根View tools:viewBindingIgnore="true" 禁用viewBinding
-        viewBinding = true  //for id 'kotlin-parcelize'
+        viewBinding = true
     }
     sourceSets {
         main {
@@ -105,4 +104,10 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation("space.syncore.commonui:commonui:0.0.52-SNAPSHOT")
 }
+
+//处理本地缓存没法拉最新的依赖包
+//configurations.configureEach {
+//    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}

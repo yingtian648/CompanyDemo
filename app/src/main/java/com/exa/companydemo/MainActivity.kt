@@ -29,6 +29,8 @@ import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.test.BuildTestDialog
+import com.exa.companydemo.test.DemoDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import gxa.car.hardkey.HardKeyPolicyManager
@@ -53,7 +55,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
     private lateinit var powerUtil: PowerUtil
     private lateinit var bitmap: Bitmap
-    private val renderNode = RenderNode("MainActivity_Render")
     private var hardKeyManager: HardKeyPolicyManager? = null
 
     override fun setContentViewLayoutId(): Int {
@@ -114,6 +115,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 
         showToast(this)
 //        BuildTestDialog.getInstance().makeMyToast(this)
+
+//        DemoDialog(this).show(supportFragmentManager)
 
 //        startShowAnim(bind.image)
 //        doSurfaceViewAnimation(this, bind.frame)

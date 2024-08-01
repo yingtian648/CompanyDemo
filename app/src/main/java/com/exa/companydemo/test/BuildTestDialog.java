@@ -9,11 +9,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -69,12 +71,21 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
 
     @SuppressLint("ClickableViewAccessibility")
     public void makeMyToast(Activity activity) {
+        L.dd();
         mContext = activity;
-        mWindowManager = activity.getWindowManager();
+
+        DisplayManager displayManager = activity.getSystemService(DisplayManager.class);
+        Context display1Context = activity.getApplicationContext()
+                .createDisplayContext(displayManager.getDisplay(1));
+        L.dd("display1Context: " + display1Context.getDisplay().getDisplayId()
+                + ", toast_max_width=" + display1Context.getResources().getDimensionPixelSize(R.dimen.toast_max_width));
+
+        mWindowManager = display1Context.getSystemService(WindowManager.class);
+
         LayoutInflater inflate = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         dialogView = inflate.inflate(R.layout.transient_notification_new, null, false);
         container = dialogView.findViewById(R.id.container);
-        container.setBackgroundResource(R.drawable.toast_customer_normal);
+        container.setBackgroundResource(R.drawable.toast_night_1600);
         tv = dialogView.findViewById(R.id.message);
         tv.setTextColor(0);
         tv.setText("一二三四五六七八九十一二三四五六七八九十");
@@ -82,6 +93,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         params.setTitle("makeToast");
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        params.type = 2503;//TYPE_CAR_TOAST
         params.format = PixelFormat.TRANSLUCENT;
         params.windowAnimations = R.style.MyToast;
         params.windowAnimations = 0;
@@ -100,7 +112,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
     }
 
     private void startAnim() {
-        int end = mContext.getColor(R.color.black33);
+        int end = mContext.getColor(R.color.white);
 
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(container, "scaleX", 0.5f, 1.05f);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(container, "scaleY", 0.5f, 1.05f);

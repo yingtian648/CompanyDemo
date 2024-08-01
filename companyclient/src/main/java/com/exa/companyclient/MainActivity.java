@@ -116,9 +116,11 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
     }
 
     private void test() {
-        L.dd();
         index++;
-        Toast.makeText(App.getContext(),"主屏测试Toast:一二三四五六七一二三四五六七八 一二三四五六七一二三四五六七八 一二三四五六七一二三四五六七八 " + index,Toast.LENGTH_SHORT).show();
+        Toast.makeText(App.getContext(),"一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十" + index,Toast.LENGTH_SHORT).show();
+        bind.backBtn.postDelayed(() -> {
+            Toast.makeText(App.getContext(), "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
+        },7000);
 //        Dialog dialog = new Dialog(this);
 //        dialog.setOwnerActivity(this);
 //        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout, null);

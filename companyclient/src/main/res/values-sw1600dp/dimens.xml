@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright (C) 2022 SYNCORE AUTOTECH
+
+  All Rights Reserved by SYNCORE AUTOTECH Co., Ltd and its affiliates.
+  You may not use, copy, distribute, modify, transmit in any form this file
+  except in compliance with SYNCORE AUTOTECH in writing by applicable law.
+-->
+<resources>
+
+    <dimen name="test_width">1600</dimen>
+</resources>

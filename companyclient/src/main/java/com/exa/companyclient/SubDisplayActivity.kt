@@ -68,7 +68,17 @@ class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
     private fun test() {
         index++
         L.dd("$index")
-        Toast.makeText(this, "副屏asdasdasdasd dasdasdasadasdasdasdasdadasdasdasdasdasdasdsadas测试Toast $index", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            this,
+            "一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十$index",
+            Toast.LENGTH_SHORT
+        ).show()
+        bind.testBtn.postDelayed({
+            Toast.makeText(
+                this,
+                "副屏测试Toast $index", Toast.LENGTH_SHORT
+            ).show()
+        }, 7000)
 //        showDialog()
     }
 
