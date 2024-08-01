@@ -117,10 +117,8 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
 
     private void test() {
         index++;
-        Toast.makeText(App.getContext(),"一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十" + index,Toast.LENGTH_SHORT).show();
-        bind.backBtn.postDelayed(() -> {
-            Toast.makeText(App.getContext(), "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
-        },7000);
+        L.dd(index);
+        testToast();
 //        Dialog dialog = new Dialog(this);
 //        dialog.setOwnerActivity(this);
 //        View view = LayoutInflater.from(this).inflate(R.layout.dialog_layout, null);
@@ -134,6 +132,16 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
 //        Toast.makeText(d1Context, "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
 
     }
+
+    private void testToast() {
+        Toast.makeText(App.getContext(), "一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十" + index, Toast.LENGTH_SHORT).show();
+        bind.backBtn.removeCallbacks(runnable);
+        bind.backBtn.postDelayed(runnable, 7000);
+    }
+
+    private Runnable runnable = () -> {
+        Toast.makeText(App.getContext(), "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
+    };
 
     private void logScreenInfo() {
         //多屏显示时使用

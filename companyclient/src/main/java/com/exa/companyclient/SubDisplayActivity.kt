@@ -68,19 +68,22 @@ class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
     private fun test() {
         index++
         L.dd("$index")
+        testToast()
+//        showDialog()
+    }
+
+    private fun testToast(){
         Toast.makeText(
             this,
             "一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十一二三四五六七七八九十$index",
             Toast.LENGTH_SHORT
         ).show()
-        bind.testBtn.postDelayed({
-            Toast.makeText(
-                this,
-                "副屏测试Toast $index", Toast.LENGTH_SHORT
-            ).show()
-        }, 7000)
-//        showDialog()
+        bind.testBtn.removeCallbacks(runnable)
+        bind.testBtn.postDelayed(runnable, 7000)
     }
+
+    private val runnable =
+        Runnable { Toast.makeText(activity, "副屏测试Toast $index", Toast.LENGTH_SHORT).show() }
 
     override fun initData() {
         SystemBarUtil.hideStatusBars(this)
