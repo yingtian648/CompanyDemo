@@ -15,7 +15,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/btn"
+                android:id="@+id/backBtn"
                 android:text="退出"
                 android:layout_width="match_parent"
                 android:textSize="32sp"

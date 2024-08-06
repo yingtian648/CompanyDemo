@@ -1,8 +1,5 @@
 package com.exa.companydemo;
 
-import android.view.Window;
-import android.view.WindowManager;
-
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.companydemo.databinding.ActivityTestBinding;
 import com.exa.companydemo.test.TabFm;
@@ -18,17 +15,16 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
-    private ArrayList<Fragment> fragmentList = new ArrayList<>();
+    private final ArrayList<Fragment> fragmentList = new ArrayList<>();
 
     @Override
     protected int setContentViewLayoutId() {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         return R.layout.activity_test;
     }
 
     @Override
     protected void initView() {
-        bind.btn.setOnClickListener(v -> finish());
+        bind.backBtn.setOnClickListener(v -> finish());
     }
 
     @Override
