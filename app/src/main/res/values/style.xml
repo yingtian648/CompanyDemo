@@ -176,4 +176,16 @@
         <item name="android:gravity">center</item>
         <item name="android:layout_marginStart">@dimen/pro_test_dp_15</item>
     </style>
+
+    <style name="Carsettings2DialogHelper" parent="dialog_fragment_style_titled_default">
+        <item name="dialog_type">untitled</item>
+        <item name="core_background_attr">@style/dialog_background_style_default</item>
+    </style>
+
+    <style name="dialog_background_style_default">
+        <item name="core_background_type">solidType</item>
+        <item name="core_background_color">@android:color/transparent</item>
+        <item name="core_background_radius">normalCircle</item>
+        <item name="core_background_shape">rectangle</item>
+    </style>
 </resources>
