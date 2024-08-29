@@ -380,9 +380,8 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 lp.gravity = Gravity.CENTER;
                 textureView.setLayoutParams(lp);
             }
-            startPlay(new Surface(surface));
         } catch (Exception e) {
-            L.e("onSurfaceTextureAvailable err:" + e.getMessage(), e);
+            L.w("startPlayInternal err:" + e.getMessage(), e);
             if (callback != null) {
                 callback.onError("获取视频属性异常: " + e.getMessage());
             }
@@ -396,6 +395,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 L.e("getVideoFirstFrame-err", e);
             }
         }
+        startPlay(new Surface(surface));
     }
 
     /**
