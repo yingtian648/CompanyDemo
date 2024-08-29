@@ -4,9 +4,12 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.IInterceptor;
 import android.app.PendingIntent;
+import android.app.StartupInterceptor;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -26,16 +29,25 @@ import android.hardware.SensorManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbInterface;
 import android.hardware.usb.UsbManager;
+import android.media.MediaSession2;
+import android.media.session.MediaController;
+import android.media.session.MediaSession;
+import android.media.session.MediaSessionManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RemoteException;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.InputDevice;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -85,6 +97,8 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.PermissionChecker;
+import gxa.car.hardkey.HardKeyPolicyManager;
+import gxa.car.hardkey.KeyEventCallback;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.SENSOR_SERVICE;
@@ -205,6 +219,98 @@ public class TestUtil {
         view.startAnimation(animatorSet);
     }
 
+    public static class MKeyEventCallback implements KeyEventCallback {
+        private String tag;
+
+        public MKeyEventCallback(String tag) {
+            this.tag = tag;
+        }
+
+        @Override
+        public void onKeyEvent(KeyEvent keyEvent, int sceneType, int targetDisplay) {
+            String msg = tag + ", " + keyEvent.toString();
+            L.dd(msg);
+            Toast.makeText(App.getContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onKeyLongPress(KeyEvent keyEvent, int sceneType, int targetDisplay) {
+            String msg = tag + ", " + keyEvent.toString();
+            L.dd(msg);
+            Toast.makeText(App.getContext(), msg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static void hardKeyTest(Context context) {
+        L.dd();
+        HardKeyPolicyManager hardKeyPolicyManager = HardKeyPolicyManager.getInstance(context);
+//        hardKeyPolicyManager.addKeyEventCallBack(
+//           new MKeyEventCallback("SCENE_AUTO_PARK"),
+//            HardKeyPolicyManager.SCENE_AUTO_PARK
+//        )
+//        hardKeyPolicyManager.addKeyEventCallBack(
+//           new MKeyEventCallback("SCENE_AUTO_PARK"),
+//            HardKeyPolicyManager.SCENE_AUTO_PARK
+//        )
+        hardKeyPolicyManager.addKeyEventCallBack(
+                new MKeyEventCallback("SCENE_CARPLAY_MEDIA_CTRL"),
+                HardKeyPolicyManager.SCENE_CARPLAY_MEDIA_CTRL
+        );
+    }
+
+    public static void mockHardKeyEvent(Context context) {
+        KeyEvent keyEvent = new KeyEvent(
+                System.currentTimeMillis(),
+                SystemClock.uptimeMillis(),
+                KeyEvent.ACTION_DOWN,
+                521,
+                0,
+                0,
+                KeyCharacterMap.VIRTUAL_KEYBOARD,
+                0,
+                KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
+                InputDevice.SOURCE_KEYBOARD
+        );
+//        keyEvent.displayId = 0
+//        InputManager.getInstance().injectInputEvent(keyEvent, InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+        HardKeyPolicyManager.getInstance(context).processHardKeyNoPolicy(keyEvent, HardKeyPolicyManager.SCENE_AVM, false);
+    }
+
+
+//    private static IInterceptor.Stub mInterceptor = new IInterceptor.Stub() {
+//
+//        @Override
+//        public void onIntercepted(Intent intent, Bundle bundle) throws RemoteException {
+//            L.dd();
+//        }
+//
+//        @Override
+//        public void onInterceptedForResult(Intent intent, Bundle bundle, int i) throws RemoteException {
+//            L.dd();
+//        }
+//
+//        @Override
+//        public void onInterceptedFromRecents(int i, Bundle bundle) throws RemoteException {
+//            L.dd();
+//        }
+//
+//        @Override
+//        public void onHomeKeyEvent(KeyEvent keyEvent) throws RemoteException {
+//            L.dd();
+//        }
+//    };
+
+    public static void testHomeKeyInterceptor(Context context) {
+        // 获取StartupInterceptor
+        StartupInterceptor mStartupInterceptor = context.getSystemService(StartupInterceptor.class);
+        // 通过StartupInterceptor的实例注册home键事件拦截器
+        // 注：注册此拦截器后，触发home键事件时，会通过此拦截器的onHomeKeyEvent返回事件
+//        mStartupInterceptor.registerHomeKeyInterceptor(mInterceptor);
+
+        // 通过StartupInterceptor的实例注销home键事件拦截器
+        // 注：拦截器注销后，触发home键事件时，系统不再拦截home键事件
+//        mStartupInterceptor.unregisterHomeKeyInterceptor(mInterceptor)
+    }
 
     /**
      * 测试 Toast

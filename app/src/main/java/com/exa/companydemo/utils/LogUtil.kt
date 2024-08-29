@@ -1,6 +1,7 @@
 package com.exa.companydemo.utils
 
 import android.util.Log
+import com.exa.baselib.utils.L
 
 /**
  * @Author lsh
@@ -8,7 +9,7 @@ import android.util.Log
  * @Description
  */
 object LogUtil {
-    private var TAG = "ZMSystemUI"
+    private var TAG = L.TAG
 
     private val DEBUG = Log.isLoggable(TAG, Log.DEBUG) or true
 

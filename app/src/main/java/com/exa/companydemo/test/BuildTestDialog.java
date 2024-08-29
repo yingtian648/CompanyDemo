@@ -7,6 +7,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
@@ -73,7 +74,6 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
     public void makeMyToast(Activity activity) {
         L.dd();
         mContext = activity;
-
         DisplayManager displayManager = activity.getSystemService(DisplayManager.class);
         Context display1Context = activity.getApplicationContext()
                 .createDisplayContext(displayManager.getDisplay(1));

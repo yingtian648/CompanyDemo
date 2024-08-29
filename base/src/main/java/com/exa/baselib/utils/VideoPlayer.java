@@ -58,6 +58,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     private AssetFileDescriptor assetFileDescriptor;
     private Uri resourceUri;
     private final int HANDLE_REPEAT_TIME = 1;
+    private MediaMetadataRetriever mmr;
 
     public interface Callback {
         void onError(String msg);
@@ -345,19 +346,8 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         }
     }
 
-    /**
-     * 初始化完成
-     *
-     * @param surface The surface returned by
-     *                {@link android.view.TextureView#getSurfaceTexture()}
-     * @param width   The width of the surface
-     * @param height  The height of the surface
-     */
-    @Override
-    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-        L.dd();
+    private void startPlayInternal(SurfaceTexture surface) {
         //按比例缩放视频
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         Uri uri = null;
         if (playPath != null)
             if (playPath.startsWith("http://") || playPath.startsWith("https://")) {
@@ -370,6 +360,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 uri = Uri.fromFile(new File(playPath));
             }
         try {
+            mmr = new MediaMetadataRetriever();
             if (assetFileDescriptor != null) {
                 mmr.setDataSource(assetFileDescriptor.getFileDescriptor());
             } else {
@@ -400,12 +391,8 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 lp.gravity = Gravity.CENTER;
                 textureView.setLayoutParams(lp);
             }
-            startPlay(new Surface(surface));
         } catch (Exception e) {
-            L.e("onSurfaceTextureAvailable err:" + e.getMessage(), e);
-            if (callback != null) {
-                callback.onError("获取视频属性异常: " + e.getMessage());
-            }
+            L.w("startPlayInternal err:" + e.getMessage(), e);
         } finally {
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -415,7 +402,22 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
             } catch (IOException e) {
                 L.e("getVideoFirstFrame-err", e);
             }
+            startPlay(new Surface(surface));
         }
+    }
+
+    /**
+     * 初始化完成
+     *
+     * @param surface The surface returned by
+     *                {@link android.view.TextureView#getSurfaceTexture()}
+     * @param width   The width of the surface
+     * @param height  The height of the surface
+     */
+    @Override
+    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+        L.dd();
+        startPlayInternal(surface);
     }
 
 
@@ -439,14 +441,13 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
     /**
      * 获取视频第一帧
      */
-    public void setVideoFirstFrame(@NonNull Context context, View view, @NonNull String path) {
+    public void getVideoFirstFrame(@NonNull Context context, View view, @NonNull String path) {
         isRunning = true;
         if (service == null) {
             service = Executors.newSingleThreadExecutor();
         }
         final Context app = context.getApplicationContext();
         service.execute(() -> {
-            final MediaMetadataRetriever mmr = new MediaMetadataRetriever();
             try {
                 if (path.startsWith("http:") || path.startsWith("https:")) {
                     mmr.setDataSource(path, new HashMap<>());

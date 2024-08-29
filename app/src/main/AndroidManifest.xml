@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
-    android:sharedUserId="@string/sharedUserId"
+
     tools:ignore="ManifestResource">
     <!--    android:sharedUserId="@string/sharedUserId"-->
 
@@ -31,7 +31,7 @@
             android:exported="true"
             android:label="LshMain"
             android:theme="@style/MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,10 +56,10 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".carotatest.CarOtaTestActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".toasttest.ToastTestActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".wifi.WifiActivity"
             android:theme="@style/WifiActivity" />
@@ -75,34 +75,31 @@
             android:theme="@style/PermissionDialog" />
         <activity
             android:name=".DemoActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".image.ImageUtilActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".locationtest.LocationActivity"
             android:label="LocationTest"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
             android:exported="true">
-<!--            <intent-filter android:priority="1000">-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".TestActivity"
             android:exported="true"
-            android:theme="@style/TestActivity"></activity> <!-- android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" -->
+            android:label="LshTestActivity"
+            android:theme="@style/TestActivity">
+        </activity> <!-- android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" -->
         <activity
             android:name=".inputmethod.InputMethodSettingActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".pms.PmsActivity"
             android:exported="false" />
         <activity
             android:name=".SystemUITestActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".common.AppInfoActivity"
             android:exported="true"
@@ -111,6 +108,7 @@
             android:name=".VideoPlayerActivity"
             android:exported="true"
             android:screenOrientation="landscape"
+            android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".musicload.MediaLoadActivity"

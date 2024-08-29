@@ -86,32 +86,27 @@ public class DialogFragmentTest extends DialogFragment {
         L.dd();
     }
 
-    private void setWindowAttrs(){
+    private void setWindowAttrs() {
         window = getDialog().getWindow();
         window.setBackgroundDrawableResource(R.drawable.dialog_sound_bg);
         window.getAttributes().width = Tools.getScreenW(getContext());
         window.getAttributes().height = Tools.getScreenH(getContext());
         window.setType(WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG);
         window.setGravity(Gravity.CENTER);
-//        window.addFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         window.setDimAmount(AMBIGUITY_LEVEL);
-//        window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        transparentNavBar(window);
+        hideSystemBar(window);
     }
 
 
-    public static void transparentNavBar(@NonNull final Window window) {
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-//            L.dd("目前只针对AH8,版本");
-//            WindowInsetsController controller = window.getInsetsController();
-//            controller.show(WindowInsets.Type.statusBars());
-//        } else {
-            View decorView = window.getDecorView();
-            int vis = decorView.getSystemUiVisibility();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(vis | option);
-//        }
+    public static void hideSystemBar(final Window window) {
+        View decorView = window.getDecorView();
+        int vis = decorView.getSystemUiVisibility();
+        int option = (View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_IMMERSIVE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+        decorView.setSystemUiVisibility(vis | option);
     }
 
     @Override

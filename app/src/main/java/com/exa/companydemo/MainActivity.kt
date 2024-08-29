@@ -3,37 +3,35 @@ package com.exa.companydemo
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.StartupInterceptor
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.RenderNode
+import android.media.browse.MediaBrowser
 import android.net.*
 import android.os.*
 import android.util.Log
 import android.view.*
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
 import com.exa.baselib.base.adapter.BaseRecyclerAdapter
 import com.exa.baselib.base.adapter.OnClickItemListener
-import com.exa.baselib.bean.AppInfo
 import com.exa.baselib.utils.*
 import com.exa.baselib.utils.Tools
 import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
-import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.test.DemoDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import gxa.car.hardkey.HardKeyPolicyManager
+import gxa.car.hardkey.KeyEventCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -55,14 +53,16 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
     private lateinit var powerUtil: PowerUtil
     private lateinit var bitmap: Bitmap
-    private var hardKeyManager: HardKeyPolicyManager? = null
+    private var mShow = false
+    private val handler = Handler(Looper.getMainLooper())
+    private var dialog: DemoDialog? = null
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
     }
 
     override fun initData() {
-
+//        SystemBarUtil.setInvasionSystemBars(this)
     }
 
     @SuppressLint("ResourceType", "SetTextI18n")
@@ -86,16 +86,15 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
             false
         }
         doAfterInitView()
-        bind.edit.visibility
+        bind.surfaceView.visibility = View.GONE
+        bind.surfaceView.setZOrderOnTop(false)
+//        hardKeyTest(this)
     }
 
     private fun doAfterInitView() {
-//        bind.elv.disable()
         //设置屏幕亮度
 //        Tools.setScreenBrightness(this, 50)
 //        checkPermission()
-//        TestUtil.registerFullScreenListener(this);
-//        TestUtil.registerBroadcast(this);
 //        test()
         // 加载要显示的图片资源
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.win_bg)
@@ -113,42 +112,21 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         App.index++
         L.dd("${App.index} start------------")
 
-        showToast(this)
+//        showToast(this)
 //        BuildTestDialog.getInstance().makeMyToast(this)
 
-//        DemoDialog(this).show(supportFragmentManager)
+//        dialog ?: run { dialog = DemoDialog(this) }
+//        dialog?.show(supportFragmentManager)
+//        mShow = true
+//        val isAlive = mInterceptor.asBinder().isBinderAlive
+//        L.dd(isAlive)
 
+//        mStartupInterceptor.unregisterHomeKeyInterceptor(mInterceptor)
+
+
+//        DialogFragmentTest().show(supportFragmentManager, javaClass.name)
 //        startShowAnim(bind.image)
 //        doSurfaceViewAnimation(this, bind.frame)
-//        powerUtil.goToSleep()
-//        startService(Intent(this,DemoService::class.java))
-//        hardKeyManager?.processHardKeyNoPolicy(event,HardKeyPolicyManager.SCENE_JOOX,false)
-//        TestUtil.readBytes()
-//        TestDialog.showDialogFragment(this)
-//        TestDialog.showMyDialog(this, "55555", WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG)
-//        powerUtil.setDynamicPowerSaveHint()
-//        startActivity(TestActivity::class.java)
-//        TestDialog.showDialog(this)
-//        startService(Intent(this,DemoService::class.java))
-//        val fm = TunerTestFragment()
-//        startActivity(WifiActivity::class.java)
-//        startActivity(Intent(this,WebActivity::class.java))
-//        testSensorData(this, bind.tvAcc, bind.tvGy)
-//        startActivity(MDialogActivity::class.java)
-//        BuildTestDialog.getInstance().addView(this)
-//        BaseConstants.getHandler().postDelayed({
-//            TestDialog.showLayout(this)
-//            window.navigationBarColor  = 0
-//        }, 3000)
-//        Tools.showKeyboard(bind.edit)
-//        TestDialog.showDialog(this)
-//        TestDialog.showAlertDialog(this)
-//        TestDialog.showMyDialog(this,"121212",-1)
-//        TestDialog.showLayout(this)
-//        TestUtil.testSensorData(mContext);
-//        L.dd("isTelephonyNetEnable:" + networkManager.isTelephonyDataEnable());WifiActivity
-//        networkManager.switchTelephonyDataEnable();
-//        Toast.makeText(this, "测试Toast $index", Toast.LENGTH_SHORT).show()
 
 //        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         L.dd("${App.index} end------------")
@@ -270,7 +248,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 
     override fun onPause() {
         super.onPause()
-        L.dd()
+        L.dd(javaClass.simpleName)
     }
 
     override fun onStop() {
@@ -312,7 +290,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         "Toast测试",
         "App列表",
         "视频播放",
-        "TestActivity",
+        "WebActivity",
         "测试按钮"
     )
 
@@ -334,6 +312,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 
             1 -> {
                 val apps = resources.getStringArray(com.exa.baselib.R.array.engine_mode_pkgs)
+                L.dd(Arrays.toString(apps))
                 for (item in apps) {
                     if (Utils.openApp(this, item)) {
                         return
@@ -365,7 +344,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
             5 -> startActivity(ToastTestActivity::class.java)
             6 -> startActivity(AppInfoActivity::class.java)
             7 -> startActivity(VideoPlayerActivity::class.java)
-            8 -> startActivity(TestActivity::class.java)
+            8 -> startActivity(WebActivity::class.java)
             9 -> try {
                 test()
             } catch (e: Exception) {

@@ -94,6 +94,13 @@ public class L {
         }
     }
 
+    public static void w(String msg, Throwable throwable) {
+        L.msg = msg;
+        if (isLog) {
+            Log.w(L.TAG, "" + msg, throwable);
+        }
+    }
+
 
     public static void e(String TAG, String msg) {
         L.msg = msg;

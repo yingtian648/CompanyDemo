@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -180,7 +181,7 @@ public class TestDialog {
             setWindowAttrs();
             setCanceledOnTouchOutside(true);
             initView();
-//            ScreenUtils.hideStatusBars(getWindow());
+//            SystemBarUtil.hideStatusBars(getWindow());
         }
 
         private void initView() {
@@ -236,16 +237,18 @@ public class TestDialog {
             attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
             attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;
-            attributes.dimAmount = 0f;
+//            attributes.dimAmount = 0f;
             attributes.flags = attributes.flags
                     | WindowManager.LayoutParams.FLAG_DIM_BEHIND
                     // 弹出后不会抢window焦点 有此Flag的dialog在AH8上会显示在shortcut上面
-                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+//                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                     | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
                     | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                     | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
                     | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
+                    | WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION
             ;
             // 未设置FLAG_NOT_FOCUSABLE时，次标志可防止此窗口成为输入法的目标
             // 设置了FLAG_NOT_FOCUSABLE时，即使窗口不可聚焦，设置此标志也会请求将窗口作为输入法目标
@@ -272,7 +275,7 @@ public class TestDialog {
     private static DialogFragment df;
 
     public static void showDialogFragment(FragmentActivity activity) {
-        if (df == null) {
+        if (df == null || df.getDialog() == null) {
             L.dd("getDialog().init()");
             df = new MyDialogFragment(R.layout.dialog_layout);
             df.show(activity.getSupportFragmentManager(), "showDialogFragment");
@@ -280,10 +283,13 @@ public class TestDialog {
             L.dd("getDialog().show()");
             Objects.requireNonNull(df.getDialog()).show();
         }
+        String aa = "11";
+        int s = Integer.parseInt(aa);
     }
 
     public static class MyDialogFragment extends DialogFragment {
         private TextView tvContent;
+        private boolean mShowing = false;
 
         public MyDialogFragment() {
         }
@@ -301,25 +307,25 @@ public class TestDialog {
             Dialog dialog = super.onCreateDialog(savedInstanceState);
 
             // 设置点击外部对话框不会关闭
-//            dialog.setCanceledOnTouchOutside(false);
+            dialog.setCanceledOnTouchOutside(false);
 
             // 获取布局视图
             View view = getLayoutInflater().inflate(R.layout.dialog_layout, null);
             dialog.setContentView(view);
-            dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                    WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-            dialog.getWindow().getDecorView().setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                        L.dd("处理界面外点击事件");
-                        // 处理外部点击事件
-                        // 例如，可以关闭对话框
+            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+            );
+            dialog.getWindow().getDecorView().setOnTouchListener((v, event) -> {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Rect bounds = new Rect();
+                    view.getHitRect(bounds);
+                    if (bounds.contains((int) event.getX(), (int) event.getY())) {
+                        L.d("点击界面外hide()");
                         dialog.hide();
                         return true;
                     }
-                    return false;
                 }
+                return false;
             });
             return dialog;
         }
@@ -343,22 +349,63 @@ public class TestDialog {
         }
 
         @Override
+        public void onAttach(@NonNull Context context) {
+            super.onAttach(context);
+            L.dd();
+            mShowing = true;
+        }
+
+        @Override
         public void onDismiss(@NonNull DialogInterface dialog) {
             L.dd();
         }
 
         private void initView(View view) {
+            view.getRootView().setOnClickListener(v -> {
+                L.dd("getDialog().hide getRootView.setOnClickListener");
+                getDialog().hide();
+            });
             tvContent = view.findViewById(R.id.edt);
             tvContent.setText(content);
 
             view.findViewById(R.id.cancel_button).setOnClickListener(v -> {
                 Objects.requireNonNull(getDialog()).hide();
+                mShowing = false;
             });
             view.findViewById(R.id.sure_button).setOnClickListener(v -> {
                 Objects.requireNonNull(getDialog()).hide();
+                mShowing = false;
             });
             Objects.requireNonNull(getDialog()).setOnCancelListener(dialog -> L.dd("OnCancel"));
             Objects.requireNonNull(getDialog()).setOnDismissListener(dialog -> L.dd("OnDismiss"));
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            L.dd("MyDialogFragment");
+
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            if (!mShowing) {
+                L.dd("MyDialogFragment dismissAllowingStateLoss");
+                dismissAllowingStateLoss();
+            }
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            L.dd("MyDialogFragment");
+        }
+
+        @Override
+        public void onDetach() {
+            super.onDetach();
+            L.dd("MyDialogFragment");
         }
     }
 }

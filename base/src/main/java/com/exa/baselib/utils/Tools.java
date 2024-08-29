@@ -137,16 +137,14 @@ public class Tools {
 
     public static int getScreenW(Context context) {
         Point point = new Point();
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = context.getSystemService(WindowManager.class);
         wm.getDefaultDisplay().getRealSize(point);
         return point.x;
     }
 
     public static int getScreenH(Context context) {
         Point point = new Point();
-        WindowManager wm = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = context.getSystemService(WindowManager.class);
         wm.getDefaultDisplay().getRealSize(point);
         return point.y;
     }

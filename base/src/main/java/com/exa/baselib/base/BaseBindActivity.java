@@ -23,6 +23,7 @@ public abstract class BaseBindActivity<T extends ViewDataBinding> extends AppCom
     protected T bind;
     protected AppCompatActivity activity;
     private ActivityResultLauncher<Intent> launcher;
+    protected String TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

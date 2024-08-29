@@ -335,16 +335,7 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         }
     }
 
-    /**
-     * 初始化完成
-     * @param surface The surface returned by
-     *                {@link TextureView#getSurfaceTexture()}
-     * @param width The width of the surface
-     * @param height The height of the surface
-     */
-    @Override
-    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-        L.dd();
+    private void startPlayInternal(SurfaceTexture surface){
         //按比例缩放视频
         MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         Uri uri = null;
@@ -405,6 +396,19 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
                 L.e("getVideoFirstFrame-err", e);
             }
         }
+    }
+
+    /**
+     * 初始化完成
+     * @param surface The surface returned by
+     *                {@link TextureView#getSurfaceTexture()}
+     * @param width The width of the surface
+     * @param height The height of the surface
+     */
+    @Override
+    public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+        L.dd();
+        startPlayInternal(surface);
     }
 
 

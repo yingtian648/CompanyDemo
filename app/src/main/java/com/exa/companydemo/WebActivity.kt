@@ -10,25 +10,46 @@ import com.exa.baselib.utils.L
 import com.exa.companydemo.databinding.ActivityWebBinding
 
 class WebActivity : BaseViewBindingActivity<ActivityWebBinding>() {
+    private val baiduUrl = "https://www.baidu.com/"
+    private val googleUrl = "https://www.google.com.hk/webhp?hl=zh-CN&sourceid=cnhp&gws_rd=ssl"
 
     override fun getViewBinding(): ActivityWebBinding = ActivityWebBinding.inflate(layoutInflater)
     override fun initView() {
-        bind.titleBar.setBackgroundColor(getColor(R.color.black_alpha))
+        bind.titleBar.setBackgroundColor(getColor(R.color.white))
         bind.titleBar.setNavigationOnClickListener { finish() }
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun initData() {
+        initWebViewConfig()
+        bind.root.setBackgroundColor(Color.BLACK)
+        bind.webView.loadUrl(baiduUrl)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initWebViewConfig(){
+        bind.webView.clearHistory()
+        bind.webView.clearCache(true)
+        bind.webView.settings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36"
+        //允许js
+        bind.webView.settings.javaScriptEnabled = true
+        //支持缩放，默认为true。是下面那个的前提。
+        bind.webView.settings.setSupportZoom(true)
+        //缩小内容以适应屏幕宽度
+        bind.webView.settings.loadWithOverviewMode = true
+        // 设置WebView可触摸放大缩小
+        bind.webView.settings.builtInZoomControls = true
+        bind.webView.settings.useWideViewPort = true
+        //设置解码html页时要使用的默认文本编码名称
+        bind.webView.settings.defaultTextEncodingName = Charsets.UTF_8.name()
+        //设置WebView是否应加载图像资源
+        bind.webView.settings.loadsImagesAutomatically = true
+        bind.webView.settings.domStorageEnabled = true
+        bind.webView.settings.databaseEnabled = true
+        //允许加载混合网络协议内容即可
+        bind.webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+        bind.webView.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
         bind.webView.webChromeClient = MWebChromeClient()
         bind.webView.webViewClient = MWebClient()
-        bind.webView.settings.javaScriptEnabled = true
-        bind.root.setBackgroundColor(Color.BLACK)
-
-        var assetsFile = "guangcheng_privacy_default_day.html"
-        assetsFile = "guangcheng_privacy_default_night.html"
-        val url = "file:///android_asset/$assetsFile"
-
-        bind.webView.loadUrl(url)
     }
 
     class MWebChromeClient : WebChromeClient() {
@@ -42,7 +63,7 @@ class WebActivity : BaseViewBindingActivity<ActivityWebBinding>() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
-            return false
+            return true
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -55,19 +76,10 @@ class WebActivity : BaseViewBindingActivity<ActivityWebBinding>() {
 
         override fun onReceivedError(
             view: WebView?,
-            errorCode: Int,
-            description: String?,
-            failingUrl: String?
-        ) {
-            L.de("failingUrl=$failingUrl errorCode=$errorCode description=$description")
-        }
-
-        override fun onReceivedError(
-            view: WebView?,
             request: WebResourceRequest?,
             error: WebResourceError?
         ) {
-            L.de("request=${request?.url} error=${error?.errorCode},${error?.description}")
+            L.de("${request?.url} error=${error?.errorCode},${error?.description}")
         }
 
         override fun onReceivedHttpError(

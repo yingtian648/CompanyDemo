@@ -5,16 +5,27 @@ fid none
 span none
 level none
 
-feat[location]:Add use CarLocationService config.
-rootcause:Add use CarLocationService config.
-solution:Add use CarLocationService config.
+feat[CarExternalKeyService]:调整自定义功能键中的BTCall和EBCall的拦截配置.
+rootcause:需求变更.
+solution:调整自定义功能键中的BTCall和EBCall的拦截配置.
+product:A19
+span:none
+build:mpass
+test:upass
+influence:AVM
+fid:ID1352019
+level:C
+
+feat[CarHardKeyService]:Add scene_carplay_media_ctrl scene for Carplay.
+rootcause:需求变更.
+solution:添加CarPlay的媒体控制事件场景
 product:A19G
 span:none
 build:mpass
 test:upass
-influence:none
-fid:none
-level:none
+influence:Carplay
+fid:ID1348101
+level:C
 
 feat[CoreSystemServer]:Setup DEVICE_PROVISIONED and USER_SETUP_COMPLETE value.
 rootcause:设置DEVICE_PROVISIONED和USER_SETUP_COMPLETE为1.
@@ -47,6 +58,18 @@ Module:AOSP
 Bug or feature:feature
 Team:FW
 Test:pass
+
+fix[aosp-splitscreen] Add HomeKey interceptor in StartupInterceptor.
+rootcause: Add HomeKey interceptor in StartupInterceptor.
+solution: Add HomeKey interceptor in StartupInterceptor.
+product: AH8
+span: AH8
+build: pass
+test: pass
+fid: ID1349920
+level: A
+influence: HomeKeyEvent
+
 
 
 feat[CarLocationService]:Remove the unsubscribe feature.
@@ -86,9 +109,9 @@ influence:location-user
 fid:none
 level:none
 
-fix[Toast]:Modify Toast animation.
-rootcause:实现Adigo 6.0的Toast动效.
-solution:Modify Toast animation.
+fix[Toast]:Modify Toast UI.
+rootcause:调整Adigo6.0的Toast-UI.
+solution:Modify Toast UI.
 product:AH8
 span:none
 build:mpass
