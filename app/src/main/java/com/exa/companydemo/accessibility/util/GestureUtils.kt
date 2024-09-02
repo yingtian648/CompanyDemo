@@ -22,7 +22,7 @@ import com.exa.companydemo.App
 object GestureUtils {
 
     /**
-     * 上下滑动
+     * 上下滑动节点控件
      */
     fun scrollUpDown(
         service: AccessibilityService,
@@ -60,7 +60,7 @@ object GestureUtils {
     }
 
     /**
-     * 左右滑动
+     * 左右滑动节点控件
      * @param toLeft 是否从右往左滑动
      */
     fun scrollHorizontal(

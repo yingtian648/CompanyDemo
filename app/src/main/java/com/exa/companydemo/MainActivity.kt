@@ -3,14 +3,12 @@ package com.exa.companydemo
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.StartupInterceptor
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.browse.MediaBrowser
 import android.net.*
 import android.os.*
 import android.util.Log
@@ -25,13 +23,14 @@ import com.exa.baselib.utils.*
 import com.exa.baselib.utils.Tools
 import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
+import com.exa.companydemo.common.VideoPlayerActivity
+import com.exa.companydemo.common.WebActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.test.DemoDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
-import gxa.car.hardkey.HardKeyPolicyManager
-import gxa.car.hardkey.KeyEventCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -113,10 +112,11 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         L.dd("${App.index} start------------")
 
 //        showToast(this)
-//        BuildTestDialog.getInstance().makeMyToast(this)
+        TestDialog.showMyDialog(this,"1212",0)
 
 //        dialog ?: run { dialog = DemoDialog(this) }
 //        dialog?.show(supportFragmentManager)
+
 //        mShow = true
 //        val isAlive = mInterceptor.asBinder().isBinderAlive
 //        L.dd(isAlive)
@@ -217,7 +217,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         var msg = javaClass.simpleName
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

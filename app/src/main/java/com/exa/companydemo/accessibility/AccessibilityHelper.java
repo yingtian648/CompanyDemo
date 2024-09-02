@@ -32,7 +32,7 @@ public class AccessibilityHelper {
     public static void setMyAccessibilityEnable(Context context){
         android.provider.Settings.Secure.putString(context.getContentResolver(),
                 android.provider.Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-                context.getPackageName() + "/" + MAccessibility.class.getName());
+                context.getPackageName() + "/" + MyAccessibilityService.class.getName());
         android.provider.Settings.Secure.putInt(context.getContentResolver(),
                 android.provider.Settings.Secure.ACCESSIBILITY_ENABLED, 1);
     }
@@ -42,7 +42,7 @@ public class AccessibilityHelper {
      * 如果未打开 —— 则打开【打不开则打开设置界面】
      */
     public static void startAccessibilitySettingPage(Activity activity) {
-        if (!MAccessibility.isStart()) {
+        if (!MyAccessibilityService.isStart()) {
             try {
                 activity.startActivity(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS));
             } catch (Exception e) {
@@ -67,20 +67,20 @@ public class AccessibilityHelper {
         public void onReceive(Context context, Intent intent) {
             String opr = intent.getStringExtra("operation");
             L.w("onReceive: " + intent.getAction() + " operation=" + opr);
-            assert MAccessibility.isStart() && opr != null;
+            assert MyAccessibilityService.isStart() && opr != null;
             switch (opr) {
                 case "bigger":
-                    GestureUtils.INSTANCE.scaleInCenter(MAccessibility.service, true);
+                    GestureUtils.INSTANCE.scaleInCenter(MyAccessibilityService.service, true);
                     break;
                 case "smaller":
-                    GestureUtils.INSTANCE.scaleInCenter(MAccessibility.service, false);
+                    GestureUtils.INSTANCE.scaleInCenter(MyAccessibilityService.service, false);
                     break;
                 case "left3":
-                    GestureUtils.INSTANCE.swipeWith3Points(MAccessibility.service,
+                    GestureUtils.INSTANCE.swipeWith3Points(MyAccessibilityService.service,
                             getDisplay(context, false), true);
                     break;
                 case "right3":
-                    GestureUtils.INSTANCE.swipeWith3Points(MAccessibility.service,
+                    GestureUtils.INSTANCE.swipeWith3Points(MyAccessibilityService.service,
                             getDisplay(context, true), false);
                     break;
             }

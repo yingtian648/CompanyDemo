@@ -27,7 +27,7 @@ class DemoDialog(context: Context) : IOSDialogHelper {
     private lateinit var binding: DialogLayoutBinding
     private var mHelper: OSDialogHelper = OSDialogHelper(
         context, this,
-        R.layout.dialog_layout, true, isFullScreen = true
+        R.layout.dialog_layout, true, isFullScreen = false
     )
     private lateinit var mDialog: OSDialog
     private val viewModel by mDialog.activityViewModels<DemoViewModel>()

@@ -1,12 +1,15 @@
 package com.exa.companydemo.accessibility.ext
 
+import android.accessibilityservice.AccessibilityService
 import android.view.accessibility.AccessibilityNodeInfo
 
-/**
- * @作者 Liushihua
- * @创建日志 2021-9-13 15:34
- * @描述
- */
+fun AccessibilityService.back(){
+    this.performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK)
+}
+
+fun AccessibilityService.home(){
+    this.performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME)
+}
 
 fun AccessibilityNodeInfo.click() {
     this.performAction(AccessibilityNodeInfo.ACTION_CLICK)

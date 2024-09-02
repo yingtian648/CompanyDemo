@@ -12,7 +12,6 @@ import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.Tools;
 import com.exa.companydemo.accessibility.AccessibilityHelper;
-import com.exa.companydemo.accessibility.MAccessibility;
 import com.exa.companydemo.utils.PathUtil;
 import com.exa.lsh.library.CrashHandle;
 
@@ -38,7 +37,7 @@ public class App extends Application {
         Tools.logScreenWH(this);
 
         //启动无障碍服务
-//        AccessibilityHelper.setMyAccessibilityEnable(this);
+        AccessibilityHelper.setMyAccessibilityEnable(this);
         listenActivityLife();
     }
 

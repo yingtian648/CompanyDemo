@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.exa.companydemo"
-
+    android:sharedUserId="@string/sharedUserId"
     tools:ignore="ManifestResource">
     <!--    android:sharedUserId="@string/sharedUserId"-->
 
@@ -23,7 +23,7 @@
         tools:ignore="HardcodedDebugMode"
         tools:targetApi="31">
 
-<!--        <uses-library android:name="car.framework" />-->
+        <uses-library android:name="car.framework" />
 
         <activity
             android:name=".MainActivity"
@@ -51,7 +51,7 @@
         </activity>
 
         <activity
-            android:name=".WebActivity"
+            android:name=".common.WebActivity"
             android:exported="false"
             android:launchMode="singleTask" />
         <activity
@@ -105,7 +105,7 @@
             android:exported="true"
             android:theme="@style/AppInfoActivity" />
         <activity
-            android:name=".VideoPlayerActivity"
+            android:name=".common.VideoPlayerActivity"
             android:exported="true"
             android:screenOrientation="landscape"
             android:hardwareAccelerated="true"
@@ -179,7 +179,7 @@
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".accessibility.MAccessibility"
+            android:name=".accessibility.MyAccessibilityService"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

@@ -16,16 +16,16 @@ influence:AVM
 fid:ID1352019
 level:C
 
-feat[CarHardKeyService]:Add scene_carplay_media_ctrl scene for Carplay.
-rootcause:需求变更.
-solution:添加CarPlay的媒体控制事件场景
-product:A19G
+feat[CarCorSystem]:添加智驾APP的保活配置.
+rootcause:添加智驾APP的保活配置.
+solution:添加智驾APP的保活配置.
+product:AY5G
 span:none
 build:mpass
 test:upass
-influence:Carplay
-fid:ID1348101
-level:C
+influence:智驾APP
+fid:none
+level:none
 
 feat[CoreSystemServer]:Setup DEVICE_PROVISIONED and USER_SETUP_COMPLETE value.
 rootcause:设置DEVICE_PROVISIONED和USER_SETUP_COMPLETE为1.
