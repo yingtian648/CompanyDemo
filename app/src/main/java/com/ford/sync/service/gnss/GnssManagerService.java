@@ -6,7 +6,6 @@
  */
 package com.ford.sync.service.gnss;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.IHwBinder;
 import android.os.RemoteCallbackList;
@@ -23,9 +22,9 @@ import com.ford.sync.fnvservice.gnss.GgaNmeaData;
 import com.ford.sync.fnvservice.gnss.RmcNmeaData;
 import com.ford.sync.service.FordFnvServiceBase;
 
-//import vendor.zlsmart.gnssext.V1_0.IGnssExt;
-//import vendor.zlsmart.gnssext.V1_0.INmeaDataCallback;
-//import vendor.zlsmart.gnssext.V1_0.LocationShiftedData;
+import vendor.zlsmart.gnssext.V1_0.IGnssExt;
+import vendor.zlsmart.gnssext.V1_0.INmeaDataCallback;
+import vendor.zlsmart.gnssext.V1_0.LocationShiftedData;
 
 import java.util.Objects;
 import java.util.Timer;
@@ -49,7 +48,7 @@ public class GnssManagerService extends IGnss.Stub implements FordFnvServiceBase
     private static final int MSG_START_PUBLISH = 2;
     private final NmeaRemoteCallbackList mNmeaCallbackList = new NmeaRemoteCallbackList();
     private final boolean mIsFNV2 = true; // fixme use prop
-//    private IGnssExt mGnssExtService;
+    private IGnssExt mGnssExtService;
 
     private HandlerThread mThread;
     private Handler mHandler;
@@ -109,29 +108,29 @@ public class GnssManagerService extends IGnss.Stub implements FordFnvServiceBase
         void accept(T listener) throws RemoteException;
     }
 
-//    private INmeaDataCallback.Stub mNmeaDataCallback = new INmeaDataCallback.Stub() {
-//        @Override
-//        public void gnssNmeaCb(long systemTime, String nmea) {
-//            Log.i(TAG, "gnssNmeaCb : " + nmea);
-//            synchronized (mNmeaDataLock) {
-//                if (nmea.startsWith("$GPGGA")) {
-//                    mCurrGga = nmea;
-//                } else if (nmea.startsWith("$GPRMC")) {
-//                    mCurrRmc = nmea;
-//                }
-//            }
-//        }
-//    };
+    private INmeaDataCallback.Stub mNmeaDataCallback = new INmeaDataCallback.Stub() {
+        @Override
+        public void gnssNmeaCb(long systemTime, String nmea) {
+            Log.i(TAG, "gnssNmeaCb : " + nmea);
+            synchronized (mNmeaDataLock) {
+                if (nmea.startsWith("$GPGGA")) {
+                    mCurrGga = nmea;
+                } else if (nmea.startsWith("$GPRMC")) {
+                    mCurrRmc = nmea;
+                }
+            }
+        }
+    };
 
     private final Handler.Callback mCallback = msg -> {
         switch (msg.what) {
             case MSG_RETRY_INIT_HAL:
-//                mGnssExtService = getGnssExtService();
-//                if (mGnssExtService == null) {
-//                    mHandler.removeMessages(MSG_RETRY_INIT_HAL);
-//
-//                    mHandler.sendEmptyMessageDelayed(MSG_RETRY_INIT_HAL, RETRY_DELAY_MILLIS);
-//                }
+                mGnssExtService = getGnssExtService();
+                if (mGnssExtService == null) {
+                    mHandler.removeMessages(MSG_RETRY_INIT_HAL);
+
+                    mHandler.sendEmptyMessageDelayed(MSG_RETRY_INIT_HAL, RETRY_DELAY_MILLIS);
+                }
                 break;
             case MSG_START_PUBLISH:
                 startPublishTimer();
@@ -168,7 +167,6 @@ public class GnssManagerService extends IGnss.Stub implements FordFnvServiceBase
         }
     }
 
-    @SuppressLint("DiscouragedApi")
     private void startPublishTimer() {
         if (mTimer == null) {
             mTimer = new Timer();
@@ -224,18 +222,18 @@ public class GnssManagerService extends IGnss.Stub implements FordFnvServiceBase
 
     @Override
     public void pushLocationShiftedData(Bundle bundle) {
-//        if (mGnssExtService != null) {
-//            LocationShiftedData shiftedData = new LocationShiftedData();
-//            shiftedData.pairingKey = bundle.getLong(PAIRING_KEY);
-//            shiftedData.coordShifted.latitude = bundle.getDouble(CHINA_LATITUDE);
-//            shiftedData.coordShifted.longitude = bundle.getDouble(CHINA_LONGITUDE);
-//
-//            try {
-//                mGnssExtService.sendLocationShifted(shiftedData);
-//            } catch (RemoteException err) {
-//                Log.e(TAG, "Failed to sendLocationShifted" + err.getMessage());
-//            }
-//        }
+        if (mGnssExtService != null) {
+            LocationShiftedData shiftedData = new LocationShiftedData();
+            shiftedData.pairingKey = bundle.getLong(PAIRING_KEY);
+            shiftedData.coordShifted.latitude = bundle.getDouble(CHINA_LATITUDE);
+            shiftedData.coordShifted.longitude = bundle.getDouble(CHINA_LONGITUDE);
+
+            try {
+                mGnssExtService.sendLocationShifted(shiftedData);
+            } catch (RemoteException err) {
+                Log.e(TAG, "Failed to sendLocationShifted" + err.getMessage());
+            }
+        }
     }
 
     @Override
@@ -257,33 +255,33 @@ public class GnssManagerService extends IGnss.Stub implements FordFnvServiceBase
         mNmeaCallbackList.unregister(listener);
     }
 
-//    private IGnssExt getGnssExtService() {
-//        try {
-//            IGnssExt gnssExt = IGnssExt.getService(mIsFNV2 ? "default" : "fnv3");
-//            if (gnssExt != null) {
-//
-//                gnssExt.linkToDeath(this, 0L);
-//                gnssExt.registerNmeaDataCallback(mNmeaDataCallback);
-//            }
-//            return gnssExt;
-//        } catch (Exception err) {
-//            Log.w(TAG, "getGnssExtService fail: " + err.getMessage());
-//        }
-//
-//        return null;
-//    }
+    private IGnssExt getGnssExtService() {
+        try {
+            IGnssExt gnssExt = IGnssExt.getService(mIsFNV2 ? "default" : "fnv3");
+            if (gnssExt != null) {
+
+                gnssExt.linkToDeath(this, 0L);
+                gnssExt.registerNmeaDataCallback(mNmeaDataCallback);
+            }
+            return gnssExt;
+        } catch (Exception err) {
+            Log.w(TAG, "getGnssExtService fail: " + err.getMessage());
+        }
+
+        return null;
+    }
 
     @Override
     public void serviceDied(long cookie) {
         Log.w(TAG, "GnssExt HAL Service died.");
-//        try {
-//            mGnssExtService.unlinkToDeath(this);
-//        } catch (RemoteException err) {
-//            Log.e(TAG, "Failed to unlinkToDeath", err);
-//        }
-//
-//        Log.d(TAG, "reconnect to GnssExt HAL Service");
-//        mGnssExtService = getGnssExtService();
+        try {
+            mGnssExtService.unlinkToDeath(this);
+        } catch (RemoteException err) {
+            Log.e(TAG, "Failed to unlinkToDeath", err);
+        }
+
+        Log.d(TAG, "reconnect to GnssExt HAL Service");
+        mGnssExtService = getGnssExtService();
     }
 
     private GgaNmeaData parseGgaNmeaData(String nmea) {

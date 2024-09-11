@@ -32,90 +32,47 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <Button
                 android:id="@+id/btn"
                 android:layout_width="300px"
-                android:layout_height="wrap_content"
+                android:layout_height="75px"
                 android:gravity="center"
                 android:text="获取定位信息"
                 android:textSize="30px" />
 
             <Switch
                 android:id="@+id/swGPS"
-                android:layout_width="wrap_content"
-                android:layout_height="100px"
-                android:paddingStart="20px"
-                android:paddingEnd="20px"
-                android:layout_marginTop="10px"
-                android:button="@null"
-                android:showText="true"
-                android:textAllCaps="false"
-                android:background="@color/gray"
-                android:textOff="GPS"
-                android:textOn="SUB-GPS"
-                android:textSize="30px"
-                android:gravity="center"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                style="@style/MSwitch"
+                android:textOff="GPS" />
 
             <Switch
                 android:id="@+id/swNet"
-                android:layout_width="wrap_content"
-                android:layout_height="100px"
-                android:paddingStart="20px"
-                android:paddingEnd="20px"
-                android:layout_marginTop="10px"
-                android:button="@null"
-                android:showText="true"
-                android:textAllCaps="false"
-                android:background="@color/gray"
-                android:textOff="NET"
-                android:textOn="SUB-NET"
-                android:textSize="30px"
-                android:gravity="center"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <Switch
-                android:id="@+id/swLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="100px"
-                android:paddingStart="20px"
-                android:paddingEnd="20px"
-                android:layout_marginTop="10px"
-                android:button="@null"
-                android:showText="true"
-                android:visibility="gone"
-                android:enabled="false"
-                android:textAllCaps="false"
-                android:background="@color/gray"
-                android:textOff="OFF"
-                android:textOn="GPS-ON"
-                android:textSize="30px"
-                android:gravity="center"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                style="@style/MSwitch"
+                android:textOff="NET" />
 
             <Switch
                 android:id="@+id/swNmea"
-                android:layout_width="wrap_content"
-                android:layout_height="100px"
-                android:paddingStart="20px"
-                android:paddingEnd="20px"
-                android:layout_marginTop="10px"
-                android:button="@null"
-                android:showText="true"
-                android:textAllCaps="false"
-                android:background="@color/gray"
-                android:textOff="NMEA"
-                android:textOn="SUB-NMEA"
-                android:textSize="30px"
-                android:gravity="center"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                style="@style/MSwitch"
+                android:textOff="NMEA" />
+
+            <Switch
+                android:id="@+id/swCarPlay"
+                style="@style/MSwitch"
+                android:textOff="CarPlay" />
+
+            <Switch
+                android:id="@+id/swLocation"
+                style="@style/MSwitch"
+                android:enabled="false"
+                android:textOff="定位" />
 
             <Button
                 android:id="@+id/testBtn"
                 android:layout_width="300px"
-                android:layout_height="wrap_content"
+                android:layout_height="75px"
                 android:layout_marginTop="10px"
                 android:gravity="center"
                 android:text="测试按钮"

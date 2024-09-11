@@ -6,4 +6,21 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+    <style name="MSwitch">
+        <item name="android:layout_width">300px</item>
+        <item name="android:layout_height">75px</item>
+        <item name="android:paddingStart">75px</item>
+        <item name="android:paddingEnd">75px</item>
+        <item name="android:layout_marginTop">12px</item>
+        <item name="android:showText">true</item>
+        <item name="android:background">@color/gray</item>
+        <item name="android:textSize">35px</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textOn">ON</item>
+        <item name="android:switchMinWidth">150px</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:thumb">@drawable/style_switch_thumb</item>
+        <item name="android:track">@drawable/style_switch_track</item>
+        <item name="android:button">@null</item>
+    </style>
 </resources>

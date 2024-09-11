@@ -93,6 +93,7 @@ dependencies {
     implementation files('libs\\android_car.jar')
     implementation files('libs\\framework-wifi.jar')
     implementation files('libs\\vendor.gxa.tbox-V1.0-java.jar')
+    implementation files('libs\\vendor.zlsmart.gnssext-V1.0-java.jar')
     compileOnly files('libs\\startupinterceptorlib.jar')
     compileOnly files('libs\\Car-Framework.jar')
     compileOnly files('libs\\SettingsLib.jar')

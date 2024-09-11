@@ -26,6 +26,8 @@ import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.PermissionUtil;
+import com.ford.sync.fnvservice.FordFnv;
+import com.ford.sync.fnvservice.gnss.GnssManager;
 import com.zlingsmart.demo.mtestapp.R;
 import com.zlingsmart.demo.mtestapp.databinding.ActivityLocationBinding;
 
@@ -109,6 +111,15 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             } else {
                 L.d("取消订阅NMEA");
                 unSubNmea();
+            }
+        });
+        bind.swCarPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                L.d("订阅CarPlay数据");
+
+            } else {
+                L.d("取消订阅CarPlay数据");
+
             }
         });
         bind.testBtn.setOnClickListener(v -> {
