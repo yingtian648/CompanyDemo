@@ -110,9 +110,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation("androidx.activity:activity-ktx:1.5.1")
     implementation("androidx.fragment:fragment-ktx:1.5.4")
-    // 星河commonui
-    implementation("space.syncore.commonui:commonui:0.0.88-SNAPSHOT")
-    implementation("com.gxatek.cockpit:common-ui:0.1.20-SNAPSHOT")
 }
 
 //处理本地缓存没法拉最新的依赖包

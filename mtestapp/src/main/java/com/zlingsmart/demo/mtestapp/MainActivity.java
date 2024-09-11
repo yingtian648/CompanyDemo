@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.exa.baselib.utils.L;
+import com.zlingsmart.demo.mtestapp.location.LocationActivity;
 import com.zlingsmart.demo.mtestapp.util.OnClickItemListener;
 
 import java.util.ArrayList;
@@ -61,7 +62,9 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     private void initData() {
         dataList = new ArrayList<>();
         dataList.add(new Pair<>("广播测试", new Pair<>(OptionActivity.class.getName(), Constants.OptionType.BROADCAST)));
-        dataList.add(new Pair<>("输入法弹出", new Pair<>(TestActivity.class.getName(), Constants.OptionType.BROADCAST)));
+        dataList.add(new Pair<>("输入法弹出", new Pair<>(TestActivity.class.getName(), Constants.OptionType.NORMAL)));
+        dataList.add(new Pair<>("Location测试", new Pair<>(LocationActivity.class.getName(), Constants.OptionType.NORMAL)));
+        dataList.add(new Pair<>("CarPower测试", new Pair<>(TestActivity.class.getName(), Constants.OptionType.NORMAL)));
     }
 
     private void initListView() {

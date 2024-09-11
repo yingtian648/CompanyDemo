@@ -26,14 +26,14 @@ import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.common.VideoPlayerActivity
 import com.exa.companydemo.common.WebActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
+import com.exa.companydemo.ford.test.FordTest
 import com.exa.companydemo.locationtest.LocationActivity
-import com.exa.companydemo.test.BuildTestDialog
-import com.exa.companydemo.test.DemoDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,7 +54,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     private lateinit var bitmap: Bitmap
     private var mShow = false
     private val handler = Handler(Looper.getMainLooper())
-    private var dialog: DemoDialog? = null
 
     override fun setContentViewLayoutId(): Int {
         return R.layout.activity_main
@@ -97,6 +96,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //        test()
         // 加载要显示的图片资源
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.win_bg)
+        FordTest.get().test()
     }
 
     @SuppressLint(
@@ -109,13 +109,35 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     @Throws(Exception::class)
     private fun test() {
         App.index++
+        val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
+        FordTest.get().test()
+//        if (bool) {
+//            TestDialog.getInstance().releaseTimer()
+//        } else {
+//            TestDialog.getInstance().startPublishTimer()
+//        }
 
 //        showToast(this)
-        TestDialog.showMyDialog(this,"1212",0)
+//        TestDialog.showMyDialog(this,"1212",0)
+//        TestDialog.showDialogFragment(this)
 
-//        dialog ?: run { dialog = DemoDialog(this) }
-//        dialog?.show(supportFragmentManager)
+//        val packageName = "com.zlingsmart.demo.mtestapp"
+//        com.exa.companydemo.utils.Tools.uninstall(this, packageName)
+//
+//        val deleteObserver = PackageDeleteObserver()
+//        val unInstallMethod = packageManager.javaClass.getMethod("deletePackage", String.javaClass, deleteObserver.javaClass, Int.javaClass);
+//        unInstallMethod.invoke(packageManager, arrayOf(packageName, deleteObserver, 0))
+
+
+//        val intent = Intent(this, javaClass)
+//        val sender = PendingIntent.getActivity(this, 0, intent, 0)
+//        packageManager.packageInstaller.uninstall(packageName,sender)
+//            VersionedPackage(
+//                packageName,
+//                PackageManager.VERSION_CODE_HIGHEST
+//            ), sender
+//        )
 
 //        mShow = true
 //        val isAlive = mInterceptor.asBinder().isBinderAlive
@@ -301,6 +323,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
             0 -> {
                 isFullScreen = !isFullScreen
                 if (isFullScreen) {
+                    window.decorView.systemUiVisibility =
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                     SystemBarUtil.hideStatusBars(this)
 //                    SystemBarUtil.hideStatusBar(this)
 //                    SystemBarUtil.setInvasionStatusBar(this)

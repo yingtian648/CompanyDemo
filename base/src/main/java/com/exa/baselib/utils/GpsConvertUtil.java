@@ -79,7 +79,7 @@ public class GpsConvertUtil {
         long result = System.currentTimeMillis();
         if (utcDate > 0 && utcTime >= 0) {
             try {
-                 SimpleDateFormat format = new SimpleDateFormat("ddMMyyHHmmss");
+                SimpleDateFormat format = new SimpleDateFormat("ddMMyyHHmmss");
                 format.setTimeZone(TimeZone.getTimeZone("GMT"));
                 String date = String.format("%06d", utcDate);
                 String time = String.format("%06d", (int) utcTime);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.SparseArray;
 import android.util.Xml;
@@ -48,6 +49,17 @@ public class Tools {
         homeIntent.addFlags(FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(homeIntent);
     }
+
+    /**
+     * @param packageName 包名
+     */
+    public static void uninstall(Context context, String packageName) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:" + packageName));
+        context.startActivity(intent);
+    }
+
 
     // Window截屏
     public static void screenshotView(Window window, ImageView imageView) {

@@ -15,6 +15,7 @@ public class Constants {
     }
 
     public static final class OptionType {
+        public static final int NORMAL = 0;
         public static final int BROADCAST = 1;
     }
 }

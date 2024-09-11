@@ -26,7 +26,7 @@ object AccessibilityViewManager {
         mView = LayoutInflater.from(context)
             .inflate(R.layout.layout_myaccessibility_service, null, false)
         initView(mView!!)
-        mWindowManager?.addView(mView!!, getParams())
+//        mWindowManager?.addView(mView!!, getParams())
     }
 
     private fun initView(view: View) {

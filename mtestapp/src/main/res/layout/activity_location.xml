@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".location.LocationActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/arrow_back_black"
+            app:title="返回"
+            app:titleTextColor="@color/black" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_below="@id/toolbar"
+            android:gravity="center_vertical"
+            android:textSize="25px" />
+
+        <LinearLayout
+            android:id="@+id/bottomLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn"
+                android:layout_width="300px"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="获取定位信息"
+                android:textSize="30px" />
+
+            <Switch
+                android:id="@+id/swGPS"
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:paddingStart="20px"
+                android:paddingEnd="20px"
+                android:layout_marginTop="10px"
+                android:button="@null"
+                android:showText="true"
+                android:textAllCaps="false"
+                android:background="@color/gray"
+                android:textOff="GPS"
+                android:textOn="SUB-GPS"
+                android:textSize="30px"
+                android:gravity="center"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Switch
+                android:id="@+id/swNet"
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:paddingStart="20px"
+                android:paddingEnd="20px"
+                android:layout_marginTop="10px"
+                android:button="@null"
+                android:showText="true"
+                android:textAllCaps="false"
+                android:background="@color/gray"
+                android:textOff="NET"
+                android:textOn="SUB-NET"
+                android:textSize="30px"
+                android:gravity="center"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Switch
+                android:id="@+id/swLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:paddingStart="20px"
+                android:paddingEnd="20px"
+                android:layout_marginTop="10px"
+                android:button="@null"
+                android:showText="true"
+                android:visibility="gone"
+                android:enabled="false"
+                android:textAllCaps="false"
+                android:background="@color/gray"
+                android:textOff="OFF"
+                android:textOn="GPS-ON"
+                android:textSize="30px"
+                android:gravity="center"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Switch
+                android:id="@+id/swNmea"
+                android:layout_width="wrap_content"
+                android:layout_height="100px"
+                android:paddingStart="20px"
+                android:paddingEnd="20px"
+                android:layout_marginTop="10px"
+                android:button="@null"
+                android:showText="true"
+                android:textAllCaps="false"
+                android:background="@color/gray"
+                android:textOff="NMEA"
+                android:textOn="SUB-NMEA"
+                android:textSize="30px"
+                android:gravity="center"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Button
+                android:id="@+id/testBtn"
+                android:layout_width="300px"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10px"
+                android:gravity="center"
+                android:text="测试按钮"
+                android:textSize="30px" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

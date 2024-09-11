@@ -86,13 +86,17 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -105,11 +109,29 @@ import static android.content.Context.SENSOR_SERVICE;
 import static com.exa.baselib.utils.L.TAG;
 
 public class TestUtil {
-
+    private static final String TAG = "TestUtil";
     private static Toast toast;
     private static int index = 0;
     private static final String VR_RES_PATH = "/vendor/etc/data/version.txt";
     private static final String VR_RES_VERSION_NAME = "versionCode";
+
+    public static String timeUpdate(String time) {
+        L.dd("getUtcTime = " + getUtcTime());
+        L.dd("getUtcDate = " + getUtcDate());
+        return time;
+    }
+
+    public static String getUtcTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HHmmss.SSS", Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return format.format(new Date());
+    }
+
+    public static String getUtcDate() {
+        SimpleDateFormat format = new SimpleDateFormat("ddMMyy", Locale.ENGLISH);
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return format.format(new Date());
+    }
 
     public static void readBytes() {
         byte[] bytes = {32, 75, 48, 49, 53, 83, 71, 51, 52, 53, 49, 82, 55, 50, 54, 48, 50, 52, 54, 48, 70};
@@ -124,8 +146,7 @@ public class TestUtil {
             return null;
         }
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(fileInputStream));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
@@ -151,9 +172,7 @@ public class TestUtil {
 
     public static void doSurfaceViewAnimation(Context context, FrameLayout frame) {
         SurfaceView surfaceView = new SurfaceView(context);
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-        );
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         surfaceView.setLayoutParams(params);
         frame.addView(surfaceView);
         Method method = null;
@@ -252,25 +271,11 @@ public class TestUtil {
 //           new MKeyEventCallback("SCENE_AUTO_PARK"),
 //            HardKeyPolicyManager.SCENE_AUTO_PARK
 //        )
-        hardKeyPolicyManager.addKeyEventCallBack(
-                new MKeyEventCallback("SCENE_CARPLAY_MEDIA_CTRL"),
-                HardKeyPolicyManager.SCENE_CARPLAY_MEDIA_CTRL
-        );
+        hardKeyPolicyManager.addKeyEventCallBack(new MKeyEventCallback("SCENE_CARPLAY_MEDIA_CTRL"), HardKeyPolicyManager.SCENE_CARPLAY_MEDIA_CTRL);
     }
 
     public static void mockHardKeyEvent(Context context) {
-        KeyEvent keyEvent = new KeyEvent(
-                System.currentTimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                521,
-                0,
-                0,
-                KeyCharacterMap.VIRTUAL_KEYBOARD,
-                0,
-                KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
-                InputDevice.SOURCE_KEYBOARD
-        );
+        KeyEvent keyEvent = new KeyEvent(System.currentTimeMillis(), SystemClock.uptimeMillis(), KeyEvent.ACTION_DOWN, 521, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0, KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY, InputDevice.SOURCE_KEYBOARD);
 //        keyEvent.displayId = 0
 //        InputManager.getInstance().injectInputEvent(keyEvent, InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
         HardKeyPolicyManager.getInstance(context).processHardKeyNoPolicy(keyEvent, HardKeyPolicyManager.SCENE_AVM, false);
@@ -384,14 +389,11 @@ public class TestUtil {
 //        calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         Intent intent = new Intent(AlarmReceiver.ALARM_ACTION);
-        PendingIntent pIntent = PendingIntent.getBroadcast(context, 1, intent,
-                PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pIntent = PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_IMMUTABLE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pIntent);
         long ert = SystemClock.elapsedRealtime();
         long when = calendar.getTimeInMillis() - (System.currentTimeMillis() - ert);
-        L.d("alarm time: " + calendar.getTimeInMillis() + " -- "
-                + DateUtil.getFullTime(calendar.getTimeInMillis()) + ", " + pIntent
-                + ", when=" + when + " -- " + DateUtil.getFullTime(when));
+        L.d("alarm time: " + calendar.getTimeInMillis() + " -- " + DateUtil.getFullTime(calendar.getTimeInMillis()) + ", " + pIntent + ", when=" + when + " -- " + DateUtil.getFullTime(when));
     }
 
     private static class AlarmReceiver extends BroadcastReceiver {
@@ -610,8 +612,7 @@ public class TestUtil {
                 int count = device.getInterfaceCount();
                 for (int i = 0; i < count; i++) {
                     UsbInterface usbInterface = device.getInterface(i);
-                    L.d("DeviceName:" + device.getDeviceName() + ", DeviceId=" + device.getDeviceId() + ", ProductName=" +
-                            device.getProductName() + ", ProductId=" + device.getProductId() + " usbInterfaceName=" + usbInterface.getName());
+                    L.d("DeviceName:" + device.getDeviceName() + ", DeviceId=" + device.getDeviceId() + ", ProductName=" + device.getProductName() + ", ProductId=" + device.getProductId() + " usbInterfaceName=" + usbInterface.getName());
                     // 之后我们会根据 intf的 getInterfaceClass 判断是哪种类型的Usb设备，
                 }
                 // 没有权限,则申请
@@ -819,18 +820,13 @@ public class TestUtil {
         });
     }
 
-    private static final String[] STORAGE_PERMISSION = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.MANAGE_EXTERNAL_STORAGE,
-    };
+    private static final String[] STORAGE_PERMISSION = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE,};
 
     public static void testCreateFile(Context context) {
         final int permissionResult1 = PermissionChecker.checkCallingOrSelfPermission(context, STORAGE_PERMISSION[0]);
         final int permissionResult2 = PermissionChecker.checkCallingOrSelfPermission(context, STORAGE_PERMISSION[1]);
 //        final int permissionResult3 = PermissionChecker.checkCallingOrSelfPermission(this, STORAGE_PERMISSION[2]);
-        L.d("testCreateFile start permissionResult1:" + permissionResultToString(permissionResult1)
-                        + ", permissionResult2:" + permissionResultToString(permissionResult2)
+        L.d("testCreateFile start permissionResult1:" + permissionResultToString(permissionResult1) + ", permissionResult2:" + permissionResultToString(permissionResult2)
 //                + ", permissionResult3:" + permissionResultToString(permissionResult3)
         );
 
@@ -884,11 +880,7 @@ public class TestUtil {
         }
         try {
             Intent intent = new Intent("com.gxatek.cockpit.datacenter.action.UPLOAD");
-            intent.setData(new Uri.Builder()
-                    .authority("com.gxatek.cockpit.datacenter")
-                    .scheme("os")
-                    .path("/upload")
-                    .build());
+            intent.setData(new Uri.Builder().authority("com.gxatek.cockpit.datacenter").scheme("os").path("/upload").build());
             intent.addFlags(0x01000000);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("appId", appId);

@@ -5,16 +5,26 @@ fid none
 span none
 level none
 
-feat[CarExternalKeyService]:调整自定义功能键中的BTCall和EBCall的拦截配置.
-rootcause:需求变更.
-solution:调整自定义功能键中的BTCall和EBCall的拦截配置.
-product:A19
+feat[AOSP/SystemUi]:调整SystemUI在分屏时不允许被隐藏.
+rootcause:调整SystemUI在分屏时不允许被隐藏.
+solution:调整SystemUI在分屏时不允许被隐藏.
+product:AH8
 span:none
 build:mpass
 test:upass
-influence:AVM
-fid:ID1352019
-level:C
+influence:none
+fid:ID1370919
+level:A
+
+
+[ID]: FORDHALO-807
+[Submission Type]:Feature
+[Project]:Halo
+[Module]: FNVService
+[Countermeasure Issue]: parse nmea data and circular reporting
+[Modification Method]: parse nmea data and circular reporting
+[Modifier]: shihua.liu
+
 
 feat[CarCorSystem]:添加智驾APP的保活配置.
 rootcause:添加智驾APP的保活配置.

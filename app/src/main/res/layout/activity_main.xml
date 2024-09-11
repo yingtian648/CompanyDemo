@@ -138,6 +138,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="20dp"
             android:padding="20dp"
+            android:visibility="gone"
             android:format12Hour="aa hh:mm"
             android:format24Hour="HH:mm"
             android:textSize="25sp"

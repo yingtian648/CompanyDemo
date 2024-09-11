@@ -19,40 +19,6 @@ pluginManagement {
         maven {
             url 'https://maven.aliyun.com/repository/public'
         }
-        //星河相关maven配置 --开始
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-remote-jcenter.bintray.com/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-remote-maven.google.com/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/auto-mvn-release-private/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/auto-mvn-snapshot-private/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-repo/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-temp-iFlytekAuto-snapshot/'
-        }
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-        maven { url 'https://maven.aliyun.com/repository/google/' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://maven.aliyun.com/nexus/content/groups/public'
-        }
-        //星河相关maven配置 -- 结束
         mavenCentral()
         google()
     }
@@ -85,40 +51,6 @@ dependencyResolutionManagement {
             }
             url 'https://packages.aliyun.com/maven/repository/2467396-release-xFAxEr'
         }
-        //星河相关maven配置 --开始
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-remote-jcenter.bintray.com/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-remote-maven.google.com/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/auto-mvn-release-private/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/auto-mvn-snapshot-private/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-repo/'
-        }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://artifacts.gxatek.com/artifactory/mvn-temp-iFlytekAuto-snapshot/'
-        }
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-        maven { url 'https://maven.aliyun.com/repository/google/' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
-        maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' }
-        maven {
-            allowInsecureProtocol = true
-            url 'http://maven.aliyun.com/nexus/content/groups/public'
-        }
-        //星河相关maven配置 -- 结束
         google()
     }
 }

@@ -10,8 +10,8 @@ android {
 //    "com.gxatek.cockpit.car.settings"//我的车-设置
     defaultConfig {
         applicationId "com.zlingsmart.demo.mtestapp"
-        minSdk 26
-        targetSdk 31
+        minSdk 28
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 
@@ -41,9 +41,10 @@ android {
     }
 
     buildFeatures {
+        //noinspection DataBindingWithoutKapt
         dataBinding = true
         // for view binding
-        // viewBinding = true  //for id 'kotlin-parcelize'
+        viewBinding = true  //for id 'kotlin-parcelize'
     }
 
     sourceSets {

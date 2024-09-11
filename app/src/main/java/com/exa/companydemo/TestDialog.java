@@ -11,6 +11,9 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IInterface;
+import android.os.RemoteCallbackList;
+import android.print.PageRange;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,6 +29,8 @@ import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.SystemBarUtil;
 
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +46,39 @@ public class TestDialog {
     private static final String TAG = "TestDialog";
     private static boolean isHide = false;
     private static WindowManager.LayoutParams mParams, mCardListParams;
+    private static final TestDialog mInstance = new TestDialog();
+
+    public static TestDialog getInstance(){
+        return mInstance;
+    }
+    private Timer mTimer;
+
+    public void startPublishTimer(){
+        L.dd();
+        if (mTimer == null) {
+            mTimer = new Timer();
+            mTimer.scheduleAtFixedRate(
+                    new TimerTask() {
+                        @Override
+                        public void run() {
+                            L.dd("publish data");
+                        }
+                    },
+                    0 /*delay*/,
+                    1000);
+        }
+    }
+
+    public void releaseTimer(){
+        L.dd();
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
+    }
+
+
+
 
     public static void showDialog(Activity context) {
         View decor = context.getWindow().getDecorView();
@@ -315,6 +353,7 @@ public class TestDialog {
             dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
                     WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
             );
+            dialog.setTitle("MyDialogFragment");
             dialog.getWindow().getDecorView().setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Rect bounds = new Rect();

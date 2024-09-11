@@ -3,9 +3,7 @@ package com.exa.companydemo.test
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
 import android.widget.FrameLayout
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.exa.baselib.base.BaseFragment
 import com.exa.baselib.utils.L
@@ -18,7 +16,6 @@ import com.exa.companydemo.R
  */
 class TabFm(var title: String) : BaseFragment() {
     private lateinit var rootView: FrameLayout
-    private var dialog: DemoDialog? = null
     override fun setContentView(inflater: LayoutInflater, container: ViewGroup?): View {
         return inflater.inflate(R.layout.fragment_tab, container, false)
     }
@@ -28,8 +25,6 @@ class TabFm(var title: String) : BaseFragment() {
         rootView = view.findViewById(R.id.rootView)
         view.findViewById<TextView>(R.id.btn).setOnClickListener {
             L.d("$title dialog?.show()")
-            dialog ?: run { dialog = DemoDialog(requireContext()) }
-            dialog?.show(childFragmentManager)
         }
     }
 
@@ -40,6 +35,5 @@ class TabFm(var title: String) : BaseFragment() {
     override fun onStop() {
         super.onStop()
         L.dd()
-        dialog?.dismiss()
     }
 }

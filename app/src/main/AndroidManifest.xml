@@ -6,6 +6,8 @@
     tools:ignore="ManifestResource">
     <!--    android:sharedUserId="@string/sharedUserId"-->
 
+    <uses-permission android:name="android.permission.DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -23,7 +25,7 @@
         tools:ignore="HardcodedDebugMode"
         tools:targetApi="31">
 
-        <uses-library android:name="car.framework" />
+<!--        <uses-library android:name="car.framework" />-->
 
         <activity
             android:name=".MainActivity"
