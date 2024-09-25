@@ -10,6 +10,11 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import com.exa.baselib.utils.L;
+import com.ford.sync.fnvservice.FordFnv;
+import com.ford.sync.fnvservice.FordFnvServiceListener;
+import com.ford.sync.fnvservice.gnss.GgaNmeaData;
+import com.ford.sync.fnvservice.gnss.GnssManager;
+import com.ford.sync.fnvservice.gnss.RmcNmeaData;
 
 /**
  * @author lsh
@@ -18,20 +23,21 @@ import com.exa.baselib.utils.L;
  */
 public class FordLocationManagerUtil {
 
-    public static final String TAG = "FordLocationManagerUtil";
     private Handler handler = new Handler(Looper.myLooper());
     private Car car;
     private Context context;
     private FordCarLocationManager locationManager;
+    private FordFnv fordFnv;
+    private GnssManager gnssManager;
 
-    private Runnable delayCheckCar = new Runnable() {
+    private final Runnable delayCheckCar = new Runnable() {
         @Override
         public void run() {
             if (car != null && car.isConnected()) {
-                L.w(TAG, "Car初始化成功");
+                L.w("Car初始化成功");
                 getFordLocationManager();
             } else {
-                L.e(TAG, "Car初始化失败");
+                L.e("Car初始化失败");
                 Toast.makeText(context, "Car初始化失败", Toast.LENGTH_LONG).show();
             }
         }
@@ -42,18 +48,94 @@ public class FordLocationManagerUtil {
         this.context = context;
         car = Car.createCar(context);
         handler.postDelayed(delayCheckCar, 2000);
+        FordFnv.createFordFnv(context, new FnvServiceListener());
     }
+
+    private class FnvServiceListener implements FordFnvServiceListener {
+
+        @Override
+        public void onServiceConnect(FordFnv fordFnv) {
+            L.w("FordFnvService onServiceConnect");
+            getFnvLocationManager(fordFnv);
+        }
+
+        @Override
+        public void onServiceDisconnect() {
+            fordFnv = null;
+            gnssManager = null;
+            L.w("FordFnvService onServiceDisconnect");
+        }
+    }
+
+    private void getFnvLocationManager(FordFnv fordFnv) {
+        L.dd();
+        this.fordFnv = fordFnv;
+        if (fordFnv != null) {
+            gnssManager = (GnssManager) fordFnv.getFnvManager("gnss");
+            if (gnssManager == null) {
+                L.e("FNV-GnssManager is null");
+                Toast.makeText(context, "FNV-GnssManager获取失败", Toast.LENGTH_LONG).show();
+            } else {
+                gnssManager.init();
+                L.w("FNV-GnssManager is inited");
+            }
+        }
+    }
+
+    /**
+     * 模拟CarPlay订阅NMEA数据
+     */
+    public void subCarPlayData() {
+        try {
+            if (gnssManager != null) {
+                gnssManager.registerNmeaDataListener(nmeaDataListener);
+            } else {
+                L.e("FNV-GnssManager is null");
+            }
+        } catch (Exception e) {
+            L.de(e);
+        }
+    }
+
+    public void unSubCarPlayData() {
+        try {
+            if (gnssManager != null) {
+                gnssManager.unregisterNmeaDataListener(nmeaDataListener);
+            } else {
+                L.de("FNV-GnssManager is null");
+            }
+        } catch (Exception e) {
+            L.de(e);
+        }
+    }
+
+    private final GnssManager.GnssNmeaDataListener nmeaDataListener = new GnssManager.GnssNmeaDataListener() {
+        @Override
+        public void onGnssGgaDataChanged(GgaNmeaData ggaNmeaData) {
+            L.dd(ggaNmeaData.mSentence);
+        }
+
+        @Override
+        public void onGnssRmcDataChanged(RmcNmeaData rmcNmeaData) {
+            L.dd(rmcNmeaData.mSentence);
+        }
+    };
 
 
     private void getFordLocationManager() {
         L.dd();
         locationManager = (FordCarLocationManager) car.getCarManager(Car.FORD_LOCATION_SERVICE);
         if (locationManager == null) {
-            L.e(TAG, "FordCarLocationManager获取失败");
+            L.e("FordCarLocationManager获取失败");
             Toast.makeText(context, "FordCarLocationManager获取失败", Toast.LENGTH_LONG).show();
         }
     }
 
+    /**
+     * 模拟上报怕偏转数据
+     *
+     * @param location
+     */
     public void onLocationUpdate(Location location) {
         if (locationManager != null) {
             Bundle bundle = new Bundle();

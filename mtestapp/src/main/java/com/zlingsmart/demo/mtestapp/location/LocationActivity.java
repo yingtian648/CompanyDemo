@@ -149,11 +149,13 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void subscribeCarPlayUpdates() {
-
+        setText("订阅CarPlay数据");
+        mFordLocationManagerUtil.subCarPlayData();
     }
 
     private void unSubscribeCarPlayUpdates() {
-
+        setText("取消订阅CarPlay数据");
+        mFordLocationManagerUtil.unSubCarPlayData();
     }
 
     private void initLocationManager() {
