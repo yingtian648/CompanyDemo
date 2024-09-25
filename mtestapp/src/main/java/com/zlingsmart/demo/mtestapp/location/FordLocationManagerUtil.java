@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.widget.Toast;
 
 import com.exa.baselib.utils.L;
+import com.ford.sync.fnvservice.FnvConstants;
 import com.ford.sync.fnvservice.FordFnv;
 import com.ford.sync.fnvservice.FordFnvServiceListener;
 import com.ford.sync.fnvservice.gnss.GgaNmeaData;
@@ -71,7 +72,7 @@ public class FordLocationManagerUtil {
         L.dd();
         this.fordFnv = fordFnv;
         if (fordFnv != null) {
-            gnssManager = (GnssManager) fordFnv.getFnvManager("gnss");
+            gnssManager = (GnssManager) fordFnv.getFnvManager(FnvConstants.GNSS_SERVICE);
             if (gnssManager == null) {
                 L.e("FNV-GnssManager is null");
                 Toast.makeText(context, "FNV-GnssManager获取失败", Toast.LENGTH_LONG).show();
