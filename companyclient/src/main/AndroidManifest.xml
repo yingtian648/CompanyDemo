@@ -19,10 +19,26 @@
         android:theme="@style/Theme.CompanyDemo">
 
         <activity
+            android:name="com.gxatek.cockpit.shortcut.allMenu.AllMenuPanelActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="mcc|mnc|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleInstance"
+            android:resizeableActivity="false"
+            android:resumeWhilePausing="true"
+            android:screenOrientation="landscape"
+            android:stateNotNeeded="true"
+            android:theme="@style/AllMenu">
+
+        </activity>
+
+        <activity
             android:name=".ActivityViewActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
+            android:resizeableActivity="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,13 +49,7 @@
         <activity
             android:name=".SubDisplayActivity"
             android:exported="true"
-            android:theme="@style/Activiy3Style">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.SECONDARY_HOME" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:theme="@style/Activity3Style">
 
         </activity>
 
@@ -103,8 +113,11 @@
         <intent>
             <action android:name="space.syncore.cockpit.map" />
         </intent>
+
         <package android:name="space.syncore.cockpit.configcenter" />
     </queries>
+
+    <uses-permission android:name="android.permission.CONTROL_REMOTE_APP_TRANSITION_ANIMATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission

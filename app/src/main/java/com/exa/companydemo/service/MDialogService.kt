@@ -59,9 +59,9 @@ class MDialogService : Service(), Window.Callback {
             mWindowManager.removeViewImmediate(dialogView)
         }
 
-        mParams.type = 2512
+        mParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG
         mParams.screenOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        val flags = (WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING
+        val flags = (WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                 or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                 or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
@@ -109,8 +109,8 @@ class MDialogService : Service(), Window.Callback {
         mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         //        mWindow.setStatusBarColor(Color.TRANSPARENT);
 //        mWindow.setNavigationBarColor(Color.TRANSPARENT);
-        mWindow.statusBarColor = Color.parseColor("#E3E3E3")
-        mWindow.navigationBarColor = Color.parseColor("#E3E3E3")
+//        mWindow.statusBarColor = Color.parseColor("#E3E3E3")
+//        mWindow.navigationBarColor = Color.parseColor("#E3E3E3")
         mWindowManager.addView(dialogView, lp)
 
 //        mWindow.setStatusBarColor(Color.YELLOW);

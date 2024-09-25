@@ -5,24 +5,24 @@ fid none
 span none
 level none
 
-feat[AOSP/SystemUi]:调整SystemUI在分屏时不允许被隐藏.
-rootcause:调整SystemUI在分屏时不允许被隐藏.
-solution:调整SystemUI在分屏时不允许被隐藏.
+feat[AOSP/WMS]:使用WindowManager.LayoutParams.FLAG_DITHER来跳过分屏模式的判断.
+rootcause:分屏时ALLMENU没法隐藏状态栏.
+solution:添加FLAG_DITHER来判断是否跳过分屏判断.
 product:AH8
 span:none
 build:mpass
 test:upass
 influence:none
-fid:ID1370919
-level:A
+fid:ID1375365
+level:C
 
 
-[ID]: FORDHALO-807
+[ID]: FORDHALO-818
 [Submission Type]:Feature
 [Project]:Halo
 [Module]: FNVService
-[Countermeasure Issue]: parse nmea data and circular reporting
-[Modification Method]: parse nmea data and circular reporting
+[Countermeasure Issue]: save nmea last-known
+[Modification Method]: save nmea last-known
 [Modifier]: shihua.liu
 
 
@@ -37,16 +37,16 @@ influence:智驾APP
 fid:none
 level:none
 
-feat[CoreSystemServer]:Setup DEVICE_PROVISIONED and USER_SETUP_COMPLETE value.
-rootcause:设置DEVICE_PROVISIONED和USER_SETUP_COMPLETE为1.
-solution:设置DEVICE_PROVISIONED和USER_SETUP_COMPLETE为1.
-product:A02/A19
+feat[Toast]:Modify Toast text color.
+rootcause:Toast text display err.
+solution:Modify Toast text color.
+product:AH8
 span:none
 build:mpass
 test:upass
 influence:none
-fid:none
-level:none
+fid:ID1377992
+level:C
 
 feat[system-core]:Add public library libjni_gxa_tbox config.
 rootcause:Add public library libjni_gxa_tbox config.

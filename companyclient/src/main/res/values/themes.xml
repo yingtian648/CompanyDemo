@@ -20,8 +20,53 @@
         <!--        <item name="android:enforceNavigationBarContrast">false</item>-->
     </style>
 
-    <style name="Activiy3Style" parent="Theme.CompanyDemo">
+    <style name="Activity3Style" parent="Theme.CompanyDemo">
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="AllMenu" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item><!-- true 分屏时此应用下层的window -->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/animations</item>
+
+    </style>
+    <style name="animations">
+        <item name="android:activityOpenEnterAnimation">@anim/pop_in_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/pop_in_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/swipte_to_l</item>
+        <item name="android:activityCloseExitAnimation">@anim/swipe_to_r</item>
+<!--        <item name="android:activityOpenEnterAnimation">@anim/pop_in_enter</item>-->
+<!--        <item name="android:activityOpenExitAnimation">@anim/pop_in_exit</item>-->
+
+        <item name="android:windowEnterAnimation">@anim/pop_in_enter</item>
+        <item name="android:windowExitAnimation">@anim/pop_in_exit</item>
+<!--        <item name="android:windowShowAnimation">@anim/pop_in_enter</item>-->
+<!--        <item name="android:windowHideAnimation">@anim/pop_in_exit</item>-->
+
+        <item name="android:taskOpenEnterAnimation">@anim/swipte_to_l</item>
+        <item name="android:taskOpenExitAnimation">@anim/swipe_to_r</item>
+        <item name="android:taskCloseEnterAnimation">@anim/swipte_to_l</item>
+        <item name="android:taskCloseExitAnimation">@anim/swipe_to_r</item>
+        <item name="android:taskToFrontEnterAnimation">@anim/swipte_to_l</item>
+        <item name="android:taskToFrontExitAnimation">@anim/swipe_to_r</item>
+        <item name="android:taskToBackEnterAnimation">@anim/swipte_to_l</item>
+        <item name="android:taskToBackExitAnimation">@anim/swipe_to_r</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/pop_in_enter</item>
+        <item name="android:windowExitAnimation">@anim/pop_in_exit</item>
+        <item name="android:windowShowAnimation">@anim/pop_in_enter</item>
+        <item name="android:windowHideAnimation">@anim/pop_in_exit</item>
     </style>
 </resources>

@@ -28,12 +28,13 @@ import com.exa.companydemo.common.WebActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.ford.test.FordTest
 import com.exa.companydemo.locationtest.LocationActivity
+import com.exa.companydemo.service.MDialogService
+import com.exa.companydemo.test.BuildTestDialog
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,11 +57,21 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     private val handler = Handler(Looper.getMainLooper())
 
     override fun setContentViewLayoutId(): Int {
+//        window.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+//                or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
+//                or WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+//                or WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+//                or WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
+//                or WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS
+//        )
+//        window.attributes.fitInsetsTypes = WindowInsets.Type.systemBars()
         return R.layout.activity_main
     }
 
     override fun initData() {
 //        SystemBarUtil.setInvasionSystemBars(this)
+//        bind.rv.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//        window.insetsController?.hide(WindowInsets.Type.systemBars())
     }
 
     @SuppressLint("ResourceType", "SetTextI18n")
@@ -87,6 +98,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         bind.surfaceView.visibility = View.GONE
         bind.surfaceView.setZOrderOnTop(false)
 //        hardKeyTest(this)
+
+        test()
     }
 
     private fun doAfterInitView() {
@@ -96,7 +109,9 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //        test()
         // 加载要显示的图片资源
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.win_bg)
-        FordTest.get().test()
+//        FordTest.get().test()
+
+//        SystemBarUtil.hideStatusBars(this)
     }
 
     @SuppressLint(
@@ -111,14 +126,18 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         App.index++
         val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
-        FordTest.get().test()
+
+//        moveTaskToBack(true)
+//        startService(Intent(this, MDialogService::class.java))
+//        FordTest.get().test()
 //        if (bool) {
 //            TestDialog.getInstance().releaseTimer()
 //        } else {
 //            TestDialog.getInstance().startPublishTimer()
 //        }
-
+//            TestDialog.showMyDialog(this,"12121",2521)
 //        showToast(this)
+
 //        TestDialog.showMyDialog(this,"1212",0)
 //        TestDialog.showDialogFragment(this)
 

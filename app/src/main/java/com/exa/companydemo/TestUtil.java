@@ -307,7 +307,7 @@ public class TestUtil {
 
     public static void testHomeKeyInterceptor(Context context) {
         // 获取StartupInterceptor
-        StartupInterceptor mStartupInterceptor = context.getSystemService(StartupInterceptor.class);
+//        StartupInterceptor mStartupInterceptor = context.getSystemService(StartupInterceptor.class);
         // 通过StartupInterceptor的实例注册home键事件拦截器
         // 注：注册此拦截器后，触发home键事件时，会通过此拦截器的onHomeKeyEvent返回事件
 //        mStartupInterceptor.registerHomeKeyInterceptor(mInterceptor);
@@ -323,6 +323,7 @@ public class TestUtil {
      * @param context
      */
     public static void showToast(Activity context) {
+        BaseConstants.getHandler().removeCallbacksAndMessages(null);
         index++;
         L.d("showToast " + index);
 //        if (toast == null) {
@@ -332,26 +333,31 @@ public class TestUtil {
 //        toast.show();
         String msg = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
 //        msg = "一二三四五六七Toast " + index;
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
-        BaseConstants.getHandler().postDelayed(() -> {
-//            Toast.makeText(context, "延时Toast", Toast.LENGTH_LONG).show();
-        }, 7000);
-        toast = new Toast(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
-        TextView tv = view.findViewById(R.id.message);
-        tv.setText("一二三四五六七八一二三四五六:" + index);
-        toast.setView(view);
-//        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
-        /**
-         * app-build.grable中指定 targetSdk>=30
-         * 设置Toast显示位置 offset 为偏移量
-         * @param gravity Gravity.TOP,Gravity.CENTER,Gravity.BOTTOM
-         * 不设置gravity，Toast显示在屏幕顶部中间
-         */
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(Toast.LENGTH_LONG);
-//        toast.show();
+//        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 
+
+//        BaseConstants.getHandler().postDelayed(() -> {
+//            toast.setText("2222222222222222");
+//        }, 1000);
+//        BaseConstants.getHandler().postDelayed(() -> {
+//            toast.setText("333333333333333333");
+//        }, 2000);
+        BaseConstants.getHandler().postDelayed(() -> {
+            Toast.makeText(context,"短文字",Toast.LENGTH_SHORT).show();
+        }, 7000);
+
+
+        toast = Toast.makeText(context,msg,Toast.LENGTH_LONG);
+        toast.show();
+
+//        View view = LayoutInflater.from(context).inflate(R.layout.toast_test, null, false);
+//        TextView tv = view.findViewById(R.id.message);
+//        tv.setText("一二三四五六七八一二三四五六:" + index);
+//        toast.setView(view);
+//        toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
+//        toast.setGravity(Gravity.CENTER, 0, 0);
+//        toast.setDuration(Toast.LENGTH_LONG);
+//        toast.show();
     }
 
     public static void startShowAnim(View view) {

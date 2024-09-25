@@ -209,7 +209,7 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         mWindow.setCallback(this);
         mWindow.setWindowManager(mWindowManager, null, null);
         mWindow.setGravity(Gravity.CENTER);
-        dialogView = LayoutInflater.from(mContext).inflate(R.layout.dialog_layout, null, false);
+        dialogView = LayoutInflater.from(mContext).inflate(R.layout.test_full, null, false);
         Button cancelBtn = dialogView.findViewById(R.id.cancel_button);
         Button sureBtn = dialogView.findViewById(R.id.sure_button);
         cancelBtn.setOnClickListener(v -> {
@@ -224,8 +224,9 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         WindowManager.LayoutParams lp = mWindow.getAttributes();
         lp.setTitle("AddView");
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
         lp.gravity = Gravity.BOTTOM;
+        lp.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
 //            lp.setFitInsetsTypes(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
@@ -240,10 +241,10 @@ public class BuildTestDialog implements Window.Callback, KeyEvent.Callback {
         mDecor.setPadding(0, 0, 0, 0);
 
 //        mWindow.setLayout(Tools.getScreenW(context), Tools.getScreenH(context));
-//        mDecor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//        );
+        mDecor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        );
 
 //        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 //        mWindow.setStatusBarColor(Color.TRANSPARENT);

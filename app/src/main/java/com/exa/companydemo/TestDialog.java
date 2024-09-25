@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
@@ -48,12 +49,17 @@ public class TestDialog {
     private static WindowManager.LayoutParams mParams, mCardListParams;
     private static final TestDialog mInstance = new TestDialog();
 
-    public static TestDialog getInstance(){
+    public TestDialog() {
+        mSp = App.getContext().getSharedPreferences(SP_LOCAL_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static TestDialog getInstance() {
         return mInstance;
     }
+
     private Timer mTimer;
 
-    public void startPublishTimer(){
+    public void startPublishTimer() {
         L.dd();
         if (mTimer == null) {
             mTimer = new Timer();
@@ -69,15 +75,13 @@ public class TestDialog {
         }
     }
 
-    public void releaseTimer(){
+    public void releaseTimer() {
         L.dd();
         if (mTimer != null) {
             mTimer.cancel();
             mTimer = null;
         }
     }
-
-
 
 
     public static void showDialog(Activity context) {
@@ -172,8 +176,8 @@ public class TestDialog {
         mCardListParams.type = 2;
         mCardListParams.flags |= -2138832824;
         mCardListParams.setTitle("launcher_desktop_cardlist");
-        mCardListParams.height = 600;
-        mCardListParams.width = 400;
+        mCardListParams.height = 1440;
+        mCardListParams.width = 2560;
         mCardListParams.gravity = 51;
         mCardListParams.x = 200;
         mCardListParams.y = 400;
@@ -215,11 +219,17 @@ public class TestDialog {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             L.dd("MyDialog 22");
-            setContentView(R.layout.dialog_layout);
+//            setContentView(R.layout.dialog_layout);
+            setContentView(R.layout.test_full);
             setWindowAttrs();
-            setCanceledOnTouchOutside(true);
+//            setCanceledOnTouchOutside(true);
+            setCancelable(false);
             initView();
-//            SystemBarUtil.hideStatusBars(getWindow());
+            setOnShowListener(dialog -> {
+                        SystemBarUtil.setInvasionSystemBars(getWindow());
+                        SystemBarUtil.hideOnlyStatusBars(getWindow());
+                    }
+            );
         }
 
         private void initView() {
@@ -228,7 +238,7 @@ public class TestDialog {
             TextView titleT = findViewById(R.id.titleT);
             titleT.setText(title);
             sureBtn.setOnClickListener(v -> dismiss());
-            cancelBtn.setOnClickListener(v -> cancel());
+            cancelBtn.setOnClickListener(v -> dismiss());
             findViewById(R.id.switch_button).setOnClickListener(v -> {
                 L.d("点击开关按钮");
                 isHide = !isHide;
@@ -238,13 +248,6 @@ public class TestDialog {
                     SystemBarUtil.showStatusBars(getWindow());
                 }
             });
-        }
-
-        @Override
-        public void onAttachedToWindow() {
-            super.onAttachedToWindow();
-            L.dd("MyDialog");
-//            getWindow().getDecorView().setSystemUiVisibility(772);
         }
 
         @Override
@@ -260,33 +263,29 @@ public class TestDialog {
             L.dd("cancel111");
         }
 
-        /* access modifiers changed from: protected */
         @SuppressLint("WrongConstant")
         private Window setWindowAttrs() {
             Window window = getWindow();
-            window.setStatusBarColor(Color.BLUE);
-            window.setNavigationBarColor(Color.BLUE);
+//            window.setStatusBarColor(Color.BLUE);
+//            window.setNavigationBarColor(Color.BLUE);
             window.getDecorView().clearAnimation();
             WindowManager.LayoutParams attributes = window.getAttributes();
             if (attributes == null) {
                 return window;
             }
             attributes.width = WindowManager.LayoutParams.MATCH_PARENT;//WindowManager.LayoutParams.MATCH_PARENT;
-            attributes.height = WindowManager.LayoutParams.WRAP_CONTENT;// WindowManager.LayoutParams.WRAP_CONTENT;
-            attributes.gravity = Gravity.CENTER;
+            attributes.height = 1296;// WindowManager.LayoutParams.WRAP_CONTENT;
+            attributes.gravity = Gravity.TOP;
             attributes.format = PixelFormat.TRANSLUCENT;
-//            attributes.dimAmount = 0f;
             attributes.flags = attributes.flags
-                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
+//                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
                     // 弹出后不会抢window焦点 有此Flag的dialog在AH8上会显示在shortcut上面
-//                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                     | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
                     | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
-                    | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
                     | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                    | WindowManager.LayoutParams.FLAG_FULLSCREEN
-                    | WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION
+//                    | WindowManager.LayoutParams.SOFT_INPUT_IS_FORWARD_NAVIGATION
             ;
             // 未设置FLAG_NOT_FOCUSABLE时，次标志可防止此窗口成为输入法的目标
             // 设置了FLAG_NOT_FOCUSABLE时，即使窗口不可聚焦，设置此标志也会请求将窗口作为输入法目标
@@ -446,5 +445,18 @@ public class TestDialog {
             super.onDetach();
             L.dd("MyDialogFragment");
         }
+    }
+
+    private static final String SP_LOCAL_NAME = "ford_car_location";
+    public static final String SP_KEY_GGA = "nmea_gga";
+    public static final String SP_KEY_RMC = "nmea_rmc";
+    private SharedPreferences mSp;
+
+    public void saveNmea(String key, String nmea) {
+        mSp.edit().putString(key, nmea).apply();
+    }
+
+    public String getLocalNmea(String key) {
+        return mSp.getString(key, null);
     }
 }

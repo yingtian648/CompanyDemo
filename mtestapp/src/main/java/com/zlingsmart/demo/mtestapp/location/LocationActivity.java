@@ -45,7 +45,6 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     private final static String TAG = "LocationActivity";
     private LocationManager locationManager;
     private int index = 0;
-    private int locationIndex = 0;
     private List<String> eProviders;
     private Handler mHandler;
     private Timer mNmeaTimer;
@@ -95,13 +94,13 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 unSubscribeGpsUpdates();
             }
         });
-        bind.swNet.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        bind.swSv.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                L.d("订阅网络定位");
-                subscribeNetworkUpdates();
+                L.d("订阅星历更新");
+                subscribeSvUpdates();
             } else {
-                L.d("取消订阅网络定位");
-                unSubscribeNetworkUpdates();
+                L.d("取消订阅星历更新");
+                unSubscribeSvUpdates();
             }
         });
         bind.swNmea.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -116,17 +115,25 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         bind.swCarPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 L.d("订阅CarPlay数据");
-
+                subscribeCarPlayUpdates();
             } else {
                 L.d("取消订阅CarPlay数据");
-
+                unSubscribeCarPlayUpdates();
             }
         });
         bind.testBtn.setOnClickListener(v -> {
             L.d("click testBtn");
+//            testExtra();
         });
         initLocationManager();
-//        BaseConstants.getHandler().postDelayed(this::recyclerGetNetworkLastLocation, 3000);
+    }
+
+    private void subscribeCarPlayUpdates() {
+
+    }
+
+    private void unSubscribeCarPlayUpdates() {
+
     }
 
     private void initLocationManager() {
@@ -158,6 +165,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             return;
         }
         startNmeaTimer();
+        setText("订阅NMEA数据");
         locationManager.addNmeaListener(mNmeaListener, mHandler);
     }
 
@@ -166,6 +174,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             mNmeaTimer.cancel();
             mNmeaTimer = null;
         }
+        setText("取消订阅NMEA数据");
         locationManager.removeNmeaListener(mNmeaListener);
     }
 
@@ -210,7 +219,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         bundle.putString("sdas", "sdasad");
         bundle.putInt("rrrr", 2);
         location.setExtras(bundle);
-        printLocation(location);
+        setText(location + ", " + DateUtil.getNowTime());
     }
 
     private void subscribeGpsUpdates() {
@@ -272,8 +281,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         @Override
         public void onLocationChanged(@NonNull Location location) {
             L.d(location.getProvider() + "  onLocationChanged:" + location);
-            locationIndex++;
-            printLocation(location);
+            setText(location + ", " + DateUtil.getNowTime());
         }
 
         @Override
@@ -324,23 +332,9 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             }
             String msg = DateUtil.getNowTime() + "卫星列表 count=" + status.getSatelliteCount() + ", usedInFixNum=" + usedInFixNum + ", satIds=" + builder + ",snrs=" + snrSb;
             L.d(msg);
-//                setText(msg);
+            setText(msg);
         }
     };
-
-
-    private void printLocation(Location location) {
-        setText(location.toString() + ", " + DateUtil.getNowTime());
-        Bundle bundle = location.getExtras();
-        if (bundle != null && !bundle.isEmpty()) {
-            StringBuilder buffer = new StringBuilder();
-            for (String key : bundle.keySet()) {
-                buffer.append(key).append("=").append(bundle.get(key)).append(",");
-            }
-            setText(buffer.toString());
-            L.d("LocationBundle=" + bundle + " , " + buffer);
-        }
-    }
 
     private final LocationListener networkListener = new LocationListener() {
         @Override

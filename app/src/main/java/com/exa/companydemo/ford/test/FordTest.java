@@ -1,12 +1,27 @@
 package com.exa.companydemo.ford.test;
 
-import com.exa.baselib.utils.L;
+import android.annotation.TestApi;
 
+import com.exa.baselib.utils.L;
+import com.exa.companydemo.App;
+import com.exa.companydemo.ford.FordCarLocationService;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
+
+import vendor.zlsmart.gnssext.V1_0.CaliStatus;
+import vendor.zlsmart.gnssext.V1_0.CompassDir;
+import vendor.zlsmart.gnssext.V1_0.Coordinates;
+import vendor.zlsmart.gnssext.V1_0.FaultInfo;
+import vendor.zlsmart.gnssext.V1_0.FixDimension;
+import vendor.zlsmart.gnssext.V1_0.GnssExtData;
+import vendor.zlsmart.gnssext.V1_0.TechMaskBits;
 
 /**
  * @author lsh
@@ -62,7 +77,10 @@ public class FordTest {
     }
 
     public void test() {
-        L.dd("index=" + "sdasda".indexOf("*"));
+        testUpdate();
+    }
+
+    public void testParseMethod(){
         String gga = "$GPGGA,073644.00,3204.787249,N,11846.786558,E,6,00,38.8,0.8,M,5.2,M,,*6C";
         String rmc = "$GNRMC,070823.116,V,3032.5386,N,10403.6020,E,0.000,0.00,100924,,,N,V*2C";
         GgaNmeaData ggaNmeaData = parseGgaNmeaData(gga);
@@ -73,6 +91,56 @@ public class FordTest {
         L.dd("rmc.getCheckValue: " + getCheckValue(rmcNmeaData.mSentence));
         mLastGga = gga;
         mLastRmc = rmc;
+    }
+
+    public void testUpdate() {
+        L.dd();
+        FordCarLocationService mCarLocationService = new FordCarLocationService(App.getContext());
+        GnssExtData extData = new GnssExtData();
+        // 2024-01-01 00:00:00
+        extData.UTC = 1704038400000L;
+        Coordinates coordFinal = new Coordinates();
+        // beijing university point
+        coordFinal.latitude = 39.992100;
+        coordFinal.longitude = 116.313256900;
+        extData.coordFinal = coordFinal;
+        Coordinates coordRaw = new Coordinates();
+        // beijing university point
+        coordRaw.latitude = 39.992188;
+        coordRaw.longitude = 116.313256949;
+        extData.coordRaw = coordRaw;
+        extData.altitude = 1.0;
+        extData.dataGoodToUse = true;
+        FaultInfo faultInfo = new FaultInfo();
+        faultInfo.gyro = true;
+        extData.faultInfo = faultInfo;
+        extData.pDop = 1.0F;
+        extData.hDop = 2.0F;
+        extData.vDop = 3.0F;
+        extData.velocity = 10.0F;
+        extData.heading = 90.0F;
+        extData.compassDir = CompassDir.W;
+        extData.accelCaliStatus = CaliStatus.GOOD;
+        extData.gyroCaliStatus = CaliStatus.FAULT;
+        extData.fixDimension = FixDimension.DIMENSION_3D;
+        extData.techMask = TechMaskBits.DR_GNSS;
+        extData.numGpsSvUsed = 5;
+        extData.numGloSvUsed = 6;
+        extData.numGalSvUsed = 7;
+        extData.numBdsSvUsed = 8;
+        try {
+            Field field = FordCarLocationService.class.getDeclaredField("mLocationStorage");
+            field.setAccessible(true);
+            // 获取属性的类型
+            Class<?> type = field.getType();
+            // 获取方法名对应的Method对象
+            Method method = type.getMethod("update", GnssExtData.class, double.class, double.class);
+            // 调用方法
+            method.invoke(field.get(mCarLocationService), extData, 39.992188, 116.313256949);
+        } catch (NoSuchFieldException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException e) {
+            L.w("testUpdate error:" + e);
+        }
     }
 
     private GgaNmeaData parseGgaNmeaData(String nmea) {

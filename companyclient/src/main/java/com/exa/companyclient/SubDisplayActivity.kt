@@ -82,18 +82,18 @@ class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
     private fun test() {
         index++
         L.dd("$index")
-//        testToast()
+        testToast()
 //        showDialog()
 
-        val am = getSystemService(ActivityManager::class.java)
-        L.d("------------------------")
-        am.getRunningTasks(Int.MAX_VALUE)?.forEach { task ->
-            if (task.toString().contains("userId=10")) {
-                task.topActivity?.packageName?.let {
-                    getLabel(it)
-                }
-            }
-        }
+//        val am = getSystemService(ActivityManager::class.java)
+//        L.d("------------------------")
+//        am.getRunningTasks(Int.MAX_VALUE)?.forEach { task ->
+//            if (task.toString().contains("userId=10")) {
+//                task.topActivity?.packageName?.let {
+//                    getLabel(it)
+//                }
+//            }
+//        }
         L.d("------------------------")
     }
 
