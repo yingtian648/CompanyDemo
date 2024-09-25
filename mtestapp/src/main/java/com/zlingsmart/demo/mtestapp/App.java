@@ -16,7 +16,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        L.init("MCompanyTestApp-->", true);
+        L.init(getResources().getString(R.string.app_name), true);
         BaseConstants.init();
         instance = this;
     }

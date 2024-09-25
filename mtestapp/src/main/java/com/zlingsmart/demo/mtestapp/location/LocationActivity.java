@@ -1,6 +1,7 @@
 package com.zlingsmart.demo.mtestapp.location;
 
 import android.Manifest;
+import android.car.hardware.location.FordCarLocationManager;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -49,6 +50,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     private Handler mHandler;
     private Timer mNmeaTimer;
     private String mLastNmea;
+    private boolean mPushShiftData = false;
+    private FordLocationManagerUtil mFordLocationManagerUtil;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -121,6 +124,23 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 unSubscribeCarPlayUpdates();
             }
         });
+        bind.swPushShifted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                L.d("开始上报偏转数据");
+                setText(L.msg);
+                mPushShiftData = true;
+                if (!bind.swGPS.isChecked()) {
+                    bind.swGPS.setChecked(true);
+                }
+            } else {
+                L.d("取消上报偏转数据");
+                setText(L.msg);
+                mPushShiftData = false;
+                if (bind.swGPS.isChecked()) {
+                    bind.swGPS.setChecked(false);
+                }
+            }
+        });
         bind.testBtn.setOnClickListener(v -> {
             L.d("click testBtn");
 //            testExtra();
@@ -137,6 +157,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void initLocationManager() {
+        mFordLocationManagerUtil = new FordLocationManagerUtil(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 权限校验
             return;
@@ -280,8 +301,11 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
-            L.d(location.getProvider() + "  onLocationChanged:" + location);
+            L.d("onLocationChanged mPushShiftData=" + mPushShiftData + ", " + location);
             setText(location + ", " + DateUtil.getNowTime());
+            if (mPushShiftData) {
+                mFordLocationManagerUtil.onLocationUpdate(location);
+            }
         }
 
         @Override
