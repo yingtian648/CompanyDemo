@@ -35,9 +35,7 @@ public class SystemBarUtil {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = activity.getWindow().getInsetsController();
             if (controller != null) {
-                // 手机自动隐藏状态栏导航栏
-                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_BARS_BY_TOUCH);
-//                controller.hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+                controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                 controller.hide(WindowInsets.Type.systemBars());
             } else {
                 L.dd("controller is null");

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LocationTest</string>
+    <string name="sharedUserId" translatable="false">android.uid.system</string>
 </resources>

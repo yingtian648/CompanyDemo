@@ -279,6 +279,7 @@ public class TestDialog {
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.flags = attributes.flags
 //                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     // 弹出后不会抢window焦点 有此Flag的dialog在AH8上会显示在shortcut上面
                     | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
@@ -299,6 +300,12 @@ public class TestDialog {
             }
             window.setAttributes(attributes);
             return window;
+        }
+    }
+
+    public synchronized void getLoca(Object object){
+        synchronized (object){
+            L.dd();
         }
     }
 
@@ -349,9 +356,9 @@ public class TestDialog {
             // 获取布局视图
             View view = getLayoutInflater().inflate(R.layout.dialog_layout, null);
             dialog.setContentView(view);
-            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
-            );
+//            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
+//                    WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+//            );
             dialog.setTitle("MyDialogFragment");
             dialog.getWindow().getDecorView().setOnTouchListener((v, event) -> {
                 if (event.getAction() == MotionEvent.ACTION_UP) {

@@ -331,7 +331,7 @@ public class TestUtil {
 //            L.d("showToast makeText " + index);
 //        }
 //        toast.show();
-        String msg = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
+        String msg = "一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十";
 //        msg = "一二三四五六七Toast " + index;
 //        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
 

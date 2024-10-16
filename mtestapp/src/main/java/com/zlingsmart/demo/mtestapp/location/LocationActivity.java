@@ -303,8 +303,13 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     private final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(@NonNull Location location) {
-            L.d("onLocationChanged mPushShiftData=" + mPushShiftData + ", " + location);
-            setText(location + ", " + DateUtil.getNowTime());
+            Bundle bundle = location.getExtras();
+            StringBuilder builder = new StringBuilder();
+            for (String key : bundle.keySet()) {
+                builder.append(key).append("=").append(bundle.get(key)).append(",");
+            }
+            L.d("onLocationChanged mPushShiftData=" + mPushShiftData + ", " + location + ", extra:" + builder);
+            setText(location + ", " + builder + "," + DateUtil.getNowTime());
             if (mPushShiftData) {
                 mFordLocationManagerUtil.onLocationUpdate(location);
             }

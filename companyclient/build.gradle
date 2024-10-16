@@ -11,7 +11,7 @@ android {
 //    "com.gxatek.cockpit.shortcut"
 //    "com.gxatek.cockpit.car.settings"//我的车-设置
     defaultConfig {
-        applicationId "com.gxatek.cockpit.shortcut"
+        applicationId "com.exa.companyclient"
         minSdk 29
         targetSdk 31
         versionCode 1

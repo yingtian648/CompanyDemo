@@ -23,13 +23,15 @@ android {
             storePassword 'android'
             keyPassword 'android'
             keyAlias 'android'
-            storeFile file(rootProject.ext.android.path)
+//            storeFile file(rootProject.ext.android.path)
+            storeFile file('../signatures/platform_ford.keystore')
         }
         release {
             storePassword 'android'
             keyPassword 'android'
             keyAlias 'android'
-            storeFile file(rootProject.ext.android.path)
+//            storeFile file(rootProject.ext.android.path)
+            storeFile file('../signatures/platform_ford.keystore')
         }
     }
 

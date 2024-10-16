@@ -40,6 +40,7 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.window.SplashScreen;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -391,7 +392,11 @@ public class Tools {
         Intent it = packageManager.getLaunchIntentForPackage(packageName);
         if (it != null) {
             it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(it);
+            ActivityOptions options = ActivityOptions.makeBasic();
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                options.setSplashScreenStyle(SplashScreen.SPLASH_SCREEN_STYLE_ICON);
+//            }
+            context.startActivity(it, options.toBundle());
         }
     }
 

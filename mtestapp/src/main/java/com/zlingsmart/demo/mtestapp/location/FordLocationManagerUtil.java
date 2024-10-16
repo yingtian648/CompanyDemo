@@ -49,6 +49,7 @@ public class FordLocationManagerUtil {
         this.context = context;
         car = Car.createCar(context);
         handler.postDelayed(delayCheckCar, 2000);
+        // 获取FordFnv
         FordFnv.createFordFnv(context, new FnvServiceListener());
     }
 
@@ -68,6 +69,10 @@ public class FordLocationManagerUtil {
         }
     }
 
+    /**
+     * 通过 FordFnv 获取FnvSDK中的 GnssManager
+     * @param fordFnv
+     */
     private void getFnvLocationManager(FordFnv fordFnv) {
         L.dd();
         this.fordFnv = fordFnv;
@@ -84,7 +89,7 @@ public class FordLocationManagerUtil {
     }
 
     /**
-     * 模拟CarPlay订阅NMEA数据
+     * CarPlay订阅NMEA数据
      */
     public void subCarPlayData() {
         try {
@@ -98,6 +103,9 @@ public class FordLocationManagerUtil {
         }
     }
 
+    /**
+     * CarPlay取消订阅NMEA数据
+     */
     public void unSubCarPlayData() {
         try {
             if (gnssManager != null) {

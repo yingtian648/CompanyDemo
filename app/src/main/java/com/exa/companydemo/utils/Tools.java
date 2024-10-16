@@ -34,6 +34,16 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class Tools {
 
+    public static void setPrivateField(Object object, String fieldName, Object fieldValue) {
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(object, fieldValue);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * @param res
      * @return 双精度的double字符串

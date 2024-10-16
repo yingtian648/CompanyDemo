@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:sharedUserId="@string/sharedUserId"
     package="com.zlingsmart.demo.mtestapp">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -12,13 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DemoApp1">
         <activity
-            android:name=".OptionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TestActivity"
-            android:exported="false" />
-        <activity
-            android:name=".location.LocationActivity"
+            android:name=".carpower.CarPowerActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +21,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".OptionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".location.LocationActivity"
             android:exported="true">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
@@ -36,15 +36,32 @@
 <!--            </intent-filter>-->
         </activity>
         <activity
-            android:name=".PersonCheckActivity"
-            android:label="参与人员"
+            android:name=".MainActivity"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".PersonCheckActivity"
+            android:exported="true"
+            android:label="参与人员">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
     </application>
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.BIND_CAR_SERVICE" />
+    <uses-permission android:name="android.car.permission.CAR_POWER" />
 
 </manifest>

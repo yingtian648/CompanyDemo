@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".carpower.CarPowerActivity">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="10dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="getPowerState"
+                android:text="获取电源状态" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="registerFordCarPowerStateChangeListener"
+                android:text="registerFordCarPowerListener" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="registerCarPowerStateListener"
+                android:text="registerCarPowerStateListener" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="setListenerWithCompletion"
+                android:text="setListenerWithCompletion" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="scheduleNextWakeupTime"
+                android:text="scheduleNextWakeupTime180s" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="setPowerOffIndicator"
+                android:text="setPowerOffIndicator" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="requestLoadShedShutDownNow"
+                android:text="requestLoadShedShutDown" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="requestReset"
+                android:text="requestReset" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="syncPhoneModeStart"
+                android:text="同步通话状态-Start" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="syncPhoneModeEnd"
+                android:text="同步通话状态-End" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:onClick="clearListener"
+                android:text="clearListener" />
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/tvState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:hint="等待电源状态..."
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+</FrameLayout>

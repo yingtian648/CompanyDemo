@@ -32,7 +32,6 @@ public abstract class BaseBindActivity<T extends ViewDataBinding> extends AppCom
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             L.d(getClass().getSimpleName() + " show on display=" + getDisplay().getDisplayId());
         }
-        getWindow().addFlags(FLAG_KEEP_SCREEN_ON);
         activity = this;
         bind = DataBindingUtil.setContentView(this, setContentViewLayoutId());
         //onActivityResult新用法

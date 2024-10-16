@@ -17,23 +17,25 @@ fid:ID1375365
 level:C
 
 
-[ID]: FORDHALO-818
+[ID]:FCIHALO-791
 [Submission Type]:Feature
-[Project]:Halo
-[Module]: FNVService
-[Countermeasure Issue]: save nmea last-known
-[Modification Method]: save nmea last-known
+[Project]:HALO
+[Module]: CarService
+[Countermeasure Issue]: Modify the order of adding FCPMS
+[Cause]:Property HalService covers FCPMS
+[Modification Method]: Modify the order of adding FCPMS
 [Modifier]: shihua.liu
+[ExtendID]:FORDHALO-841
 
 
-feat[CarCorSystem]:添加智驾APP的保活配置.
-rootcause:添加智驾APP的保活配置.
-solution:添加智驾APP的保活配置.
-product:AY5G
-span:none
+feat[AOSP/Toast]:修改Toast最大显示宽度.
+rootcause:Toast内容显示不全.
+solution:修改Toast最大显示宽度.
+product:A19G
+span:AY5G
 build:mpass
 test:upass
-influence:智驾APP
+influence:Toast
 fid:none
 level:none
 

@@ -3,20 +3,20 @@ package com.exa.companydemo
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.Service
+import android.app.ActivityOptions
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.*
 import android.os.*
-import android.text.TextUtils
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.window.SplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
@@ -24,6 +24,7 @@ import com.exa.baselib.base.adapter.BaseRecyclerAdapter
 import com.exa.baselib.base.adapter.OnClickItemListener
 import com.exa.baselib.utils.*
 import com.exa.baselib.utils.Tools
+import com.exa.companydemo.TestDialog.showDialogFragment
 import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.common.VideoPlayerActivity
@@ -35,6 +36,7 @@ import com.exa.companydemo.utils.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -69,7 +71,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     }
 
     override fun initData() {
-//        SystemBarUtil.setInvasionSystemBars(this)
+//        SystemBarUtil.setInvasionStatusBar(this)
 //        bind.rv.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 //        window.insetsController?.hide(WindowInsets.Type.systemBars())
     }
@@ -99,7 +101,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         bind.surfaceView.setZOrderOnTop(false)
 //        hardKeyTest(this)
 
-        test()
+//        test()
     }
 
     private fun doAfterInitView() {
@@ -127,6 +129,9 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
 
+//        showDialogFragment(this)
+//        startActivity(TestActivity::class.java)
+
 //        moveTaskToBack(true)
 //        startService(Intent(this, MDialogService::class.java))
 //        FordTest.get().test()
@@ -136,10 +141,11 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //            TestDialog.getInstance().startPublishTimer()
 //        }
 //            TestDialog.showMyDialog(this,"12121",2521)
-//        showToast(this)
+        showToast(this)
 
 //        TestDialog.showMyDialog(this,"1212",0)
 //        TestDialog.showDialogFragment(this)
+//        showDialogFragment(this)
 
 //        val packageName = "com.zlingsmart.demo.mtestapp"
 //        com.exa.companydemo.utils.Tools.uninstall(this, packageName)

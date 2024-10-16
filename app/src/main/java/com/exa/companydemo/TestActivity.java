@@ -1,5 +1,7 @@
 package com.exa.companydemo;
 
+import android.view.WindowManager;
+
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.companydemo.databinding.ActivityTestBinding;
 import com.exa.companydemo.test.TabFm;
@@ -19,6 +21,8 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
 
     @Override
     protected int setContentViewLayoutId() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         return R.layout.activity_test;
     }
 
@@ -33,7 +37,7 @@ public class TestActivity extends BaseBindActivity<ActivityTestBinding> {
         fragmentList.add(new TabFm("我是第2个Fm"));
         fragmentList.add(new TabFm("我是第3个Fm"));
         fragmentList.add(new TabSurfaceViewFm());
-        bind.vp.setAdapter(new MAdapter(getSupportFragmentManager()));
+//        bind.vp.setAdapter(new MAdapter(getSupportFragmentManager()));
         bind.vp.setOffscreenPageLimit(4);
         bind.btn1.setOnClickListener(v -> {
             bind.vp.setCurrentItem(0);

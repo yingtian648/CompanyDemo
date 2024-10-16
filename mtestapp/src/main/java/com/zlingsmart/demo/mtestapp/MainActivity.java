@@ -1,5 +1,7 @@
 package com.zlingsmart.demo.mtestapp;
 
+import android.car.Car;
+import android.car.hardware.power.FordCarPowerManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     private void registerWindowChangedListener() {
         L.dd();
 
+        Car car = Car.createCar(this);
+        FordCarPowerManager fordCarPowerManager = (FordCarPowerManager) car.getCarManager(Car.FORD_POWER_SERVICE);
     }
 
     private void listenWindowChangeStatus(){

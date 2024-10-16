@@ -19,15 +19,16 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
 <!--        <item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/blue</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
 <!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-        <item name="android:windowIsTranslucent">true</item>
+<!--        <item name="android:windowIsTranslucent">true</item>-->
         <item name="android:windowAnimationStyle">@style/animations</item>
     </style>
     <style name="TestActivity" parent="Theme.CompanyDemo">
-        <item name="android:focusable">false</item>
-        <item name="android:focusedByDefault">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+<!--        <item name="android:windowIsFloating">true</item>-->
+        <item name="android:windowBackground">#66FFFFFF</item>
     </style>
     <style name="WifiActivity" parent="Theme.CompanyDemo">
 <!--        <item name="android:windowBackground">@android:color/transparent</item>-->
