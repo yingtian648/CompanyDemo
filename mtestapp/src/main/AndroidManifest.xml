@@ -13,6 +13,7 @@
         android:theme="@style/Theme.DemoApp1">
         <activity
             android:name=".carpower.CarPowerActivity"
+            android:label="CarPowerTest"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,6 +29,7 @@
             android:exported="false" />
         <activity
             android:name=".location.LocationActivity"
+            android:label="LocationTest"
             android:exported="true">
 <!--            <intent-filter>-->
 <!--                <action android:name="android.intent.action.MAIN" />-->
