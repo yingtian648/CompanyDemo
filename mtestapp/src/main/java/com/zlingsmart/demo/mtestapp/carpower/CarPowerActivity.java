@@ -167,6 +167,18 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         }
     }
 
+    public void clearPowerOffIndicator(View v) {
+        L.dd();
+        if (fordCarPowerManager != null) {
+            fordCarPowerManager.clearPowerOffIndicator();
+            mSetPowerOffIndicator = false;
+            setText("setPowerOffIndicator");
+        } else {
+            L.d("fordCarPowerManager is null");
+            setText(L.msg);
+        }
+    }
+
     public void syncPhoneModeStart(View v) {
         L.dd();
         if (fordCarPowerManager != null) {

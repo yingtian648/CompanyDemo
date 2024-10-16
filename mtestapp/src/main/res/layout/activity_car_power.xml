@@ -57,6 +57,12 @@
             <Button
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:onClick="clearPowerOffIndicator"
+                android:text="clearPowerOffIndicator" />
+
+            <Button
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
                 android:onClick="requestLoadShedShutDownNow"
                 android:text="requestLoadShedShutDown" />
 
