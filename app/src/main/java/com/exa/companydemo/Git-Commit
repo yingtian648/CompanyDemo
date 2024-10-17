@@ -36,8 +36,8 @@ span:AY5G
 build:mpass
 test:upass
 influence:Toast
-fid:none
-level:none
+fid:ID1394204
+level:C
 
 feat[Toast]:Modify Toast text color.
 rootcause:Toast text display err.

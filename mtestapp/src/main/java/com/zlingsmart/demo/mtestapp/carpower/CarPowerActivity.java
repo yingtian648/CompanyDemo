@@ -59,14 +59,14 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
     }
 
     private final FordCarPowerManager.CarPowerStateListener carPowerStateListener = state -> {
-        L.d("CarPowerStateListener onStateChanged:" + state);
-        setText("CarPowerStateListener onStateChanged:" + state);
+        L.d("CarPowerStateListener onStateChanged:" + CarPowerUtil.getCarPowerState(state));
+        setText(L.msg);
     };
 
     private final FordCarPowerManager.FordCarPowerStateListener fordListener = new FordCarPowerManager.FordCarPowerStateListener() {
         @Override
         public void onStateChanged(int state) {
-            L.d("FordCarPowerStateListener onStateChanged:" + state);
+            L.d("FordCarPowerStateListener onStateChanged:" + CarPowerUtil.getFordPowerState(state));
             setText(L.msg);
             if (state == FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_LOADSHED) {
                 L.d("POWER_STATE_LOADSHED, 60后 发送 loadshedShutdowm");
@@ -245,9 +245,9 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
     private void getCurrentPowerState() {
         String msg = "获取失败, fordCarPowerManager or carPowerManager is null";
         if (fordCarPowerManager != null && carPowerManager != null) {
-            msg = "getFordPowerState:" + fordCarPowerManager.getFordPowerState()
+            msg = "getFordPowerState:" + CarPowerUtil.getFordPowerState(fordCarPowerManager.getFordPowerState())
                     + ", getBootReason:" + fordCarPowerManager.getBootReason()
-                    + ", carPowerManager.getPowerState:" + carPowerManager.getPowerState();
+                    + ", carPowerManager.getPowerState:" + CarPowerUtil.getCarPowerState(carPowerManager.getPowerState());
         }
         L.dd(msg);
         setText(msg);

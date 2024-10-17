@@ -3,6 +3,7 @@ package com.exa.companydemo;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -30,7 +31,7 @@ public class App extends Application {
         Constants.init();
         CrashHandle.getInstance().init(this, isDebug);
         BaseConstants.init();
-        L.init("MCompanyDemo", true);
+        L.init(getAppLabel(), true);
         L.w("开机时长：" + DateUtil.getTimeStr(SystemClock.elapsedRealtime()));
         PathUtil.INSTANCE.init(this);
         app = this;
@@ -103,5 +104,10 @@ public class App extends Application {
     public static void exit() {
         L.d("App exit");
         System.exit(0);
+    }
+
+    private String getAppLabel() {
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        return applicationInfo.loadLabel(getPackageManager()).toString();
     }
 }

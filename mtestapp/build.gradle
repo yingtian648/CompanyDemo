@@ -64,7 +64,8 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            output.outputFileName = "LshTestApp.apk"
+            output.outputFileName = "CarPowerTest.apk"
+//            output.outputFileName = "LocationTest.apk"
         }
     }
 }

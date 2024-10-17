@@ -1,6 +1,7 @@
 package com.zlingsmart.demo.mtestapp;
 
 import android.app.Application;
+import android.content.pm.ApplicationInfo;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
@@ -16,12 +17,17 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        L.init(getResources().getString(R.string.app_name), true);
+        L.init(getAppLabel(), true);
         BaseConstants.init();
         instance = this;
     }
 
     public static App getContext() {
         return instance;
+    }
+
+    private String getAppLabel() {
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        return applicationInfo.loadLabel(getPackageManager()).toString();
     }
 }
