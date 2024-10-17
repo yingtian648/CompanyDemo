@@ -4,6 +4,7 @@ import android.car.Car;
 import android.car.hardware.location.FordCarLocationManager;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,12 +18,15 @@ import com.ford.sync.fnvservice.gnss.GgaNmeaData;
 import com.ford.sync.fnvservice.gnss.GnssManager;
 import com.ford.sync.fnvservice.gnss.RmcNmeaData;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * @author lsh
  * @date 2024/9/25 14:44
  * @description
  */
-public class FordLocationManagerUtil {
+public class FordLocationUtil {
 
     private Handler handler = new Handler(Looper.myLooper());
     private Car car;
@@ -30,6 +34,7 @@ public class FordLocationManagerUtil {
     private FordCarLocationManager locationManager;
     private FordFnv fordFnv;
     private GnssManager gnssManager;
+    private Timer pushShiftedDataTimer;
 
     private final Runnable delayCheckCar = new Runnable() {
         @Override
@@ -44,7 +49,7 @@ public class FordLocationManagerUtil {
         }
     };
 
-    public FordLocationManagerUtil(Context context) {
+    public FordLocationUtil(Context context) {
         L.dd();
         this.context = context;
         car = Car.createCar(context);
@@ -71,6 +76,7 @@ public class FordLocationManagerUtil {
 
     /**
      * 通过 FordFnv 获取FnvSDK中的 GnssManager
+     *
      * @param fordFnv
      */
     private void getFnvLocationManager(FordFnv fordFnv) {
@@ -140,18 +146,38 @@ public class FordLocationManagerUtil {
         }
     }
 
+    public void startPushMockShiftedData() {
+        pushShiftedDataTimer = new Timer();
+        pushShiftedDataTimer.schedule(new TimerTask() {
+            private double lat = 34.5624251;
+            private double lon = 104.03663435;
+
+            @Override
+            public void run() {
+                Location location = new Location(LocationManager.GPS_PROVIDER);
+                lat += Math.random() / 3000;
+                lon -= Math.random() / 3000;
+                location.setLatitude(lat);
+                location.setLongitude(lon);
+                pushShiftedData(location);
+            }
+        }, 1000, 1000);
+    }
+
     /**
      * 模拟上报怕偏转数据
      *
      * @param location
      */
-    public void onLocationUpdate(Location location) {
+    public void pushShiftedData(Location location) {
         if (locationManager != null) {
             Bundle bundle = new Bundle();
             bundle.putDouble("ChinaShiftedLatitude", location.getLatitude());
             bundle.putDouble("ChinaShiftedLongitude", location.getLongitude());
-            L.dd("sendLocationShiftedData");
+            L.dd("sendLocationShiftedData " + bundle);
             locationManager.sendLocationShiftedData(bundle);
+        }else {
+            L.w("locationManager is null");
         }
     }
 }

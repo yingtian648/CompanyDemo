@@ -1,7 +1,6 @@
 package com.zlingsmart.demo.mtestapp.location;
 
 import android.Manifest;
-import android.car.hardware.location.FordCarLocationManager;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -27,8 +26,6 @@ import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.OnClickViewListener;
 import com.exa.baselib.utils.PermissionUtil;
-import com.ford.sync.fnvservice.FordFnv;
-import com.ford.sync.fnvservice.gnss.GnssManager;
 import com.zlingsmart.demo.mtestapp.R;
 import com.zlingsmart.demo.mtestapp.databinding.ActivityLocationBinding;
 
@@ -51,7 +48,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     private Timer mNmeaTimer;
     private String mLastNmea;
     private boolean mPushShiftData = false;
-    private FordLocationManagerUtil mFordLocationManagerUtil;
+    private FordLocationUtil mFordLocationUtil;
 
     @Override
     protected int setContentViewLayoutId() {
@@ -132,6 +129,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 if (!bind.swGPS.isChecked()) {
                     bind.swGPS.setChecked(true);
                 }
+                mFordLocationUtil.startPushMockShiftedData();
             } else {
                 L.d("取消上报偏转数据");
                 setText(L.msg);
@@ -150,16 +148,16 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     private void subscribeCarPlayUpdates() {
         setText("订阅CarPlay数据");
-        mFordLocationManagerUtil.subCarPlayData();
+        mFordLocationUtil.subCarPlayData();
     }
 
     private void unSubscribeCarPlayUpdates() {
         setText("取消订阅CarPlay数据");
-        mFordLocationManagerUtil.unSubCarPlayData();
+        mFordLocationUtil.unSubCarPlayData();
     }
 
     private void initLocationManager() {
-        mFordLocationManagerUtil = new FordLocationManagerUtil(this);
+        mFordLocationUtil = new FordLocationUtil(this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 权限校验
             return;
@@ -311,7 +309,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             L.d("onLocationChanged mPushShiftData=" + mPushShiftData + ", " + location + ", extra:" + builder);
             setText(location + ", " + builder + "," + DateUtil.getNowTime());
             if (mPushShiftData) {
-                mFordLocationManagerUtil.onLocationUpdate(location);
+                mFordLocationUtil.pushShiftedData(location);
             }
         }
 
@@ -344,8 +342,6 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             setText("GnssStatusCallback:onFirstFix:" + ttffMillis);
             L.d("GnssStatusCallback:onFirstFix:" + ttffMillis);
         }
-
-        int index = 0;
 
         @RequiresApi(api = Build.VERSION_CODES.R)
         @Override
@@ -509,7 +505,14 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         return gps || network;
     }
 
+    private int indexSetText = 0;
+
     private void setText(final String msg) {
+        indexSetText++;
+        if (indexSetText > 20) {
+            indexSetText = 0;
+            bind.text.setText("");
+        }
         runOnUiThread(() -> {
             String n = msg + "\n" + bind.text.getText().toString();
             bind.text.setText(n);
