@@ -40,7 +40,6 @@ import androidx.core.app.ActivityCompat;
 
 public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> {
 
-    private final static String TAG = "LocationActivity";
     private LocationManager locationManager;
     private int index = 0;
     private List<String> eProviders;

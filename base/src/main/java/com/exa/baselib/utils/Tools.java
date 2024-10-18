@@ -850,14 +850,13 @@ public class Tools {
                 apkSourceDir = pm.getApplicationInfo(packageName, 0).sourceDir;//APK源文件路径
                 icon = pm.getApplicationIcon(packageName);
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                L.de(e);
             }
             CharSequence name = info.activityInfo.loadLabel(context.getPackageManager());//app名称
             if (isLog) {
-                L.e(name + "    " + packageName);
+                L.e(i + " " + name + "    " + packageName);
             }
-            if (name != null && packageName != null)
-                infos.add(new AppInfo(name.toString(), packageName, versionCode, versionName, apkSourceDir, icon));
+            infos.add(new AppInfo(name.toString(), packageName, versionCode, versionName, apkSourceDir, icon));
         }
         return infos;
     }

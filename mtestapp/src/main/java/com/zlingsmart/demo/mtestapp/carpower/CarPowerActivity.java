@@ -235,7 +235,7 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
             index = 0;
             content = msg;
         } else {
-            content = msg + "\n" + bind.tvState.getText().toString();
+            content = bind.tvState.getText().toString() + "\n" + msg;
         }
         runOnUiThread(() -> {
             bind.tvState.setText(content);

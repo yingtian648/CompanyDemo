@@ -115,6 +115,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //        FordTest.get().test()
 
 //        SystemBarUtil.hideStatusBars(this)
+        AppListUtil.init(this)
     }
 
     @SuppressLint(
@@ -131,7 +132,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         L.dd("${App.index} start------------")
 
 //        showDialogFragment(this)
-        startActivity(WifiActivity::class.java)
+//        startActivity(WifiActivity::class.java)
 
 //        moveTaskToBack(true)
 //        startService(Intent(this, MDialogService::class.java))
