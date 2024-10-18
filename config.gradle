@@ -8,9 +8,9 @@ ext {
 //            path: '../signatures/platformAS9.keystore',
 //            path: '../signatures/platform3568.keystore',
 //            path: '../signatures/platform3588.keystore',
-            path: '../signatures/platformAH8.keystore',
+//            path: '../signatures/platformAH8.keystore',
 //            path: '../signatures/platformA8E.keystore',
 //            path: '../signatures/platform8155A9E.keystore',
-//            path: '../signatures/platform_ford.keystore',
+            path: '../signatures/platform_ford.keystore',
     ]
 }

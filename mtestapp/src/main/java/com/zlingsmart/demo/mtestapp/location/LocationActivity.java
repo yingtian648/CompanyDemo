@@ -137,6 +137,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 if (bind.swGPS.isChecked()) {
                     bind.swGPS.setChecked(false);
                 }
+                mFordLocationUtil.stopPushMockShiftedData();
             }
         });
         bind.testBtn.setOnClickListener(v -> {
@@ -157,7 +158,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     }
 
     private void initLocationManager() {
-        mFordLocationUtil = new FordLocationUtil(this);
+        mFordLocationUtil = new FordLocationUtil(this, this);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 权限校验
             return;
@@ -507,7 +508,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     private int indexSetText = 0;
 
-    private void setText(final String msg) {
+    public void setText(final String msg) {
         indexSetText++;
         final String content;
         if (indexSetText >= 30) {

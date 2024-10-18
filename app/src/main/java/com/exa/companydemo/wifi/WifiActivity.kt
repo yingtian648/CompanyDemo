@@ -32,6 +32,7 @@ import com.exa.baselib.utils.Tools
 import com.exa.companydemo.R
 import com.exa.companydemo.databinding.ActivityWifiBinding
 import com.exa.companydemo.utils.CmdUtil
+import com.exa.companydemo.widget.Titlebar
 
 class WifiActivity : BaseBindActivity<ActivityWifiBinding>() {
     private var isScanning = false
@@ -295,6 +296,8 @@ class WifiActivity : BaseBindActivity<ActivityWifiBinding>() {
     }
 
     override fun initView() {
+        bind.titleBar.setTitle("WIFI管理")
+        bind.titleBar.setNavigationOnClickListener { finish() }
         SystemBarUtil.setInvasionStatusBar(this)
         checkPermission()
         bind.openBtn.setOnClickListener {

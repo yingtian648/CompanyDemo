@@ -33,6 +33,7 @@ import com.exa.companydemo.databinding.ActivityMainBinding
 import com.exa.companydemo.locationtest.LocationActivity
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
+import com.exa.companydemo.wifi.WifiActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -129,8 +130,8 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
 
-        showDialogFragment(this)
-//        startActivity(TestActivity::class.java)
+//        showDialogFragment(this)
+        startActivity(WifiActivity::class.java)
 
 //        moveTaskToBack(true)
 //        startService(Intent(this, MDialogService::class.java))

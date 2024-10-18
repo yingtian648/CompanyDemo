@@ -35,6 +35,7 @@ public class FordLocationUtil {
     private FordFnv fordFnv;
     private GnssManager gnssManager;
     private Timer pushShiftedDataTimer;
+    private LocationActivity locationActivity;
 
     private final Runnable delayCheckCar = new Runnable() {
         @Override
@@ -44,14 +45,15 @@ public class FordLocationUtil {
                 getFordLocationManager();
             } else {
                 L.e("Car初始化失败");
-                Toast.makeText(context, "Car初始化失败", Toast.LENGTH_LONG).show();
+                locationActivity.setText(L.msg);
             }
         }
     };
 
-    public FordLocationUtil(Context context) {
+    public FordLocationUtil(Context context, LocationActivity locationActivity) {
         L.dd();
         this.context = context;
+        this.locationActivity = locationActivity;
         car = Car.createCar(context);
         handler.postDelayed(delayCheckCar, 2000);
         // 获取FordFnv
@@ -86,7 +88,7 @@ public class FordLocationUtil {
             gnssManager = (GnssManager) fordFnv.getFnvManager(FnvConstants.GNSS_SERVICE);
             if (gnssManager == null) {
                 L.e("FNV-GnssManager is null");
-                Toast.makeText(context, "FNV-GnssManager获取失败", Toast.LENGTH_LONG).show();
+                locationActivity.setText(L.msg);
             } else {
                 gnssManager.init();
                 L.w("FNV-GnssManager is inited");
@@ -142,26 +144,35 @@ public class FordLocationUtil {
         locationManager = (FordCarLocationManager) car.getCarManager(Car.FORD_LOCATION_SERVICE);
         if (locationManager == null) {
             L.e("FordCarLocationManager获取失败");
-            Toast.makeText(context, "FordCarLocationManager获取失败", Toast.LENGTH_LONG).show();
+            locationActivity.setText(L.msg);
         }
     }
 
     public void startPushMockShiftedData() {
-        pushShiftedDataTimer = new Timer();
-        pushShiftedDataTimer.schedule(new TimerTask() {
-            private double lat = 34.5624251;
-            private double lon = 104.03663435;
+        if(pushShiftedDataTimer==null){
+            pushShiftedDataTimer = new Timer();
+            pushShiftedDataTimer.schedule(new TimerTask() {
+                private double lat = 34.5624251;
+                private double lon = 104.03663435;
 
-            @Override
-            public void run() {
-                Location location = new Location(LocationManager.GPS_PROVIDER);
-                lat += Math.random() / 3000;
-                lon -= Math.random() / 3000;
-                location.setLatitude(lat);
-                location.setLongitude(lon);
-                pushShiftedData(location);
-            }
-        }, 1000, 1000);
+                @Override
+                public void run() {
+                    Location location = new Location(LocationManager.GPS_PROVIDER);
+                    lat += Math.random() / 3000;
+                    lon -= Math.random() / 3000;
+                    location.setLatitude(lat);
+                    location.setLongitude(lon);
+                    pushShiftedData(location);
+                }
+            }, 1000, 1000);
+        }
+    }
+
+    public void stopPushMockShiftedData(){
+        if (pushShiftedDataTimer!=null){
+            pushShiftedDataTimer.cancel();
+            pushShiftedDataTimer = null;
+        }
     }
 
     /**
