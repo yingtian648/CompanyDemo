@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.L;
 import com.exa.baselib.utils.SystemBarUtil;
 
@@ -35,6 +36,7 @@ import java.util.TimerTask;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -303,8 +305,8 @@ public class TestDialog {
         }
     }
 
-    public synchronized void getLoca(Object object){
-        synchronized (object){
+    public synchronized void getLoca(Object object) {
+        synchronized (object) {
             L.dd();
         }
     }
@@ -411,10 +413,16 @@ public class TestDialog {
                 getDialog().hide();
             });
             tvContent = view.findViewById(R.id.edt);
+            AppCompatButton btnAppleConn = view.findViewById(R.id.btnAppleConn);
+            L.dd("thread：" + Thread.currentThread().getName());
+            BaseConstants.getFixPool().execute(() -> {
+                btnAppleConn.setText("initView-settext");
+                L.dd("thread 1：" + Thread.currentThread().getName());
+            });
             tvContent.setText(content);
 
             view.findViewById(R.id.cancel_button).setOnClickListener(v -> {
-                Objects.requireNonNull(getDialog()).hide();
+                dismissAllowingStateLoss();
                 mShowing = false;
             });
             view.findViewById(R.id.sure_button).setOnClickListener(v -> {

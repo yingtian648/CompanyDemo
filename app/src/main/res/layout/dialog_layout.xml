@@ -25,6 +25,14 @@
             android:text="MyDialogTitle"
             android:textSize="30dp" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnAppleConn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="AppCompatButton"
+            />
+
         <TextView
             android:id="@+id/edt"
             android:layout_width="match_parent"

@@ -121,7 +121,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         "WrongConstant",
         "Range",
         "UnspecifiedImmutableFlag",
-        "ClickableViewAccessibility"
+        "ClickableViewAccessibility", "SetTextI18n"
     )
     @Throws(Exception::class)
     private fun test() {
@@ -129,7 +129,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
 
-//        showDialogFragment(this)
+        showDialogFragment(this)
 //        startActivity(TestActivity::class.java)
 
 //        moveTaskToBack(true)
@@ -141,7 +141,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //            TestDialog.getInstance().startPublishTimer()
 //        }
 //            TestDialog.showMyDialog(this,"12121",2521)
-        showToast(this)
+//        showToast(this)
 
 //        TestDialog.showMyDialog(this,"1212",0)
 //        TestDialog.showDialogFragment(this)

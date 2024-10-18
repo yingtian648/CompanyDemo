@@ -509,13 +509,15 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 
     private void setText(final String msg) {
         indexSetText++;
-        if (indexSetText > 20) {
+        final String content;
+        if (indexSetText >= 30) {
             indexSetText = 0;
-            bind.text.setText("");
+            content = msg;
+        } else {
+            content = bind.text.getText().toString() + "\n" + msg;
         }
         runOnUiThread(() -> {
-            String n = msg + "\n" + bind.text.getText().toString();
-            bind.text.setText(n);
+            bind.text.setText(content);
         });
     }
 

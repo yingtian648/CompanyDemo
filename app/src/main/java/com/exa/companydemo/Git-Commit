@@ -17,15 +17,15 @@ fid:ID1375365
 level:C
 
 
-[ID]:FCIHALO-791
+[ID]:FCIHALO-783
 [Submission Type]:Feature
 [Project]:HALO
 [Module]: CarService
-[Countermeasure Issue]: Modify the order of adding FCPMS
-[Cause]:Property HalService covers FCPMS
-[Modification Method]: Modify the order of adding FCPMS
+[Countermeasure Issue]: FCPMS add support property
+[Cause]: Joint debugging failed
+[Modification Method]: FCPMS add support property
 [Modifier]: shihua.liu
-[ExtendID]:FORDHALO-841
+[ExtendID]:FORDHALO-845
 
 
 feat[AOSP/Toast]:修改Toast最大显示宽度.
