@@ -229,9 +229,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         @Override
         public void onNmeaMessage(String message, long timestamp) {
 //            L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
-            if (message.contains("GGA") || message.contains("RMC")) {
-                mLastNmea = message;
-            }
+            mLastNmea = message;
         }
     };
 
@@ -515,7 +513,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             indexSetText = 0;
             content = msg;
         } else {
-            content = bind.text.getText().toString() + "\n" + msg;
+            content = msg + "\n" + bind.text.getText().toString();
         }
         runOnUiThread(() -> {
             bind.text.setText(content);

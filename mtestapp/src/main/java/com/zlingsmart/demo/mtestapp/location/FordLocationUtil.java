@@ -149,7 +149,7 @@ public class FordLocationUtil {
     }
 
     public void startPushMockShiftedData() {
-        if(pushShiftedDataTimer==null){
+        if (pushShiftedDataTimer == null) {
             pushShiftedDataTimer = new Timer();
             pushShiftedDataTimer.schedule(new TimerTask() {
                 private double lat = 34.5624251;
@@ -168,8 +168,8 @@ public class FordLocationUtil {
         }
     }
 
-    public void stopPushMockShiftedData(){
-        if (pushShiftedDataTimer!=null){
+    public void stopPushMockShiftedData() {
+        if (pushShiftedDataTimer != null) {
             pushShiftedDataTimer.cancel();
             pushShiftedDataTimer = null;
         }
@@ -187,8 +187,11 @@ public class FordLocationUtil {
             bundle.putDouble("ChinaShiftedLongitude", location.getLongitude());
             L.dd("sendLocationShiftedData " + bundle);
             locationManager.sendLocationShiftedData(bundle);
-        }else {
-            L.w("locationManager is null");
+        } else {
+            if (car != null){
+                locationManager = (FordCarLocationManager) car.getCarManager(Car.FORD_LOCATION_SERVICE);
+            }
+            L.w("FordCarLocationManager is null");
         }
     }
 }
