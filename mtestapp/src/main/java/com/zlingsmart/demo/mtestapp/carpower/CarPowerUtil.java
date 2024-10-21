@@ -13,6 +13,9 @@ public class CarPowerUtil {
     private CarPowerUtil() {
     }
 
+    /**
+     * 获取福特电源状态名称
+     */
     public static String getFordPowerState(int fordPowerState) {
         switch (fordPowerState) {
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_INVALID:
@@ -39,6 +42,9 @@ public class CarPowerUtil {
         return "UNKNOWN";
     }
 
+    /**
+     * 获取原生CarPower电源状态名称
+     */
     public static String getCarPowerState(int carPowerState) {
         switch (carPowerState) {
             case FordCarPowerManager.CarPowerStateListener.INVALID:

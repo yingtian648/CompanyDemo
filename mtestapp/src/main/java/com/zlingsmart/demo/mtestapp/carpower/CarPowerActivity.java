@@ -54,7 +54,9 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         L.dd();
         setText(L.msg);
         getCurrentPowerState();
+        //监听福特电源状态
         fordCarPowerManager.setFordListener(fordListener);
+        //监听原生CarPower电源状态
         fordCarPowerManager.setListener(carPowerStateListener);
     }
 
