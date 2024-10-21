@@ -60,7 +60,7 @@ public class AppInfoActivity extends BaseBindActivity<ActivityAppInfoBinding> {
                 TextView tvPkg = view.findViewById(R.id.tvPkg);
                 Button btn = view.findViewById(R.id.btn);
                 btn.setOnClickListener(v -> {
-                    Tools.startApp(AppInfoActivity.this, data.packageName);
+                    Tools.startApp(AppInfoActivity.this, data.packageName,data.activityName);
                 });
                 try {
                     iv.setImageDrawable(data.iconDrawable);

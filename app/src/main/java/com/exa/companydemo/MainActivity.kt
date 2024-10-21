@@ -131,6 +131,15 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
 
+        AppListUtil.getAppNameList().let { maps->
+            maps.keys.forEach {
+                if(it == "LshSocket"){
+                    L.d("找到LshSocket，do accept")
+                    maps[it]?.accept("LshSocket11")
+                }
+            }
+        }
+
 //        showDialogFragment(this)
 //        startActivity(WifiActivity::class.java)
 

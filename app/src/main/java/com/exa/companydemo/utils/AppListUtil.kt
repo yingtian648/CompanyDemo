@@ -2,16 +2,19 @@ package com.exa.companydemo.utils
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import com.exa.baselib.utils.L
+import android.util.Log
+import androidx.core.util.Consumer
 
 @SuppressLint("StaticFieldLeak")
 object AppListUtil {
     const val TAG = "AppListUtil"
     private var mContext: Context? = null
     private var mListener: IPadAppNamesChangedListener? = null
+    private val mAppMaps = mutableMapOf<String, Pair<String, String>>()
 
     fun init(context: Context) {
         this.mContext = context.applicationContext
@@ -28,13 +31,14 @@ object AppListUtil {
         this.mListener = listener
     }
 
-    fun unRegisterAppChangeListener(){
+    fun unRegisterAppChangeListener() {
         this.mListener = null
     }
 
     private val mReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            mListener?.onPadAppNamedChanged(getAppNameList())
+            Log.d(TAG, "onReceive ${intent?.action}")
+//            mListener?.onPadAppNamedChanged(getAppNameList())
         }
     }
 
@@ -46,14 +50,38 @@ object AppListUtil {
         mContext?.registerReceiver(mReceiver, filter)
     }
 
-    fun getAppNameList(): Array<String> {
-        val names: MutableList<String> = ArrayList()
+    fun getAppNameList(): Map<String, Consumer<String>> {
+        mAppMaps.clear()
+        val map = mutableMapOf<String, Consumer<String>>()
         val intent = Intent(Intent.ACTION_MAIN, null)
         intent.addCategory(Intent.CATEGORY_LAUNCHER)
         mContext?.packageManager?.queryIntentActivities(intent, 0)?.forEach {
-            names.add(it.activityInfo.loadLabel(mContext!!.packageManager).toString())
+            val name = it.activityInfo.loadLabel(mContext!!.packageManager).toString()
+            mAppMaps[name] = Pair(it.activityInfo.packageName, it.activityInfo.name)
+            map[name] = getConsumer()
         }
-        L.dd(names.toTypedArray().toString())
-        return names.toTypedArray()
+        return map
+    }
+
+    private fun getConsumer(): Consumer<String> {
+        return Consumer { content ->
+            var find = false
+            mAppMaps.keys.forEach {
+                if (content == it && mAppMaps.containsKey(it)) {
+                    find = true
+                    kotlin.runCatching {
+                        Intent().addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).apply {
+                            component = ComponentName(mAppMaps[it]!!.first, mAppMaps[it]!!.second)
+                            mContext?.startActivity(this)
+                        }
+                    }.onFailure { e ->
+                        Log.w(TAG, "open $content fail!!", e)
+                    }
+                }
+            }
+            if (!find) {
+                Log.w(TAG, "Not find $content")
+            }
+        }
     }
 }

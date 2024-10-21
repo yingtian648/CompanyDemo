@@ -400,6 +400,15 @@ public class Tools {
         }
     }
 
+    // 启动三方app
+    public static void startApp(Context context, String packageName,String className) {
+        PackageManager packageManager = context.getPackageManager();
+        Intent it = new Intent();
+        it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        it.setComponent(new ComponentName(packageName,className));
+        context.startActivity(it);
+    }
+
     // 启动App
     public static void startAppByClassName(Context context, String className) {
         Intent intent = new Intent();
@@ -843,6 +852,7 @@ public class Tools {
             String versionName = "";
             String apkSourceDir = null;
             String packageName = info.activityInfo.packageName;//包名
+            String activityName = info.activityInfo.name;//类名
             Drawable icon = null;
             try {
                 versionCode = pm.getPackageInfo(packageName, 0).versionCode;//版本号
@@ -854,35 +864,11 @@ public class Tools {
             }
             CharSequence name = info.activityInfo.loadLabel(context.getPackageManager());//app名称
             if (isLog) {
-                L.e(i + " " + name + "    " + packageName);
+                L.e(i + " " + name + "    " + packageName + ", " + activityName);
             }
-            infos.add(new AppInfo(name.toString(), packageName, versionCode, versionName, apkSourceDir, icon));
+            infos.add(new AppInfo(name.toString(), packageName, activityName, versionCode, versionName, apkSourceDir, icon));
         }
         return infos;
-    }
-
-    public static List<AppInfo> getAppInfo(Context context) {
-        final List<AppInfo> list = new ArrayList<>();
-        final PackageManager pm = context.getPackageManager();
-        List<PackageInfo> packages = pm.getInstalledPackages(0);
-        int versionCode = 0;
-        String versionName = "";
-        String apkSourceDir = null;
-        String packageName = "";//包名
-        String name = "";//App名称
-        Drawable icon = null;
-        for (int i = 0; i < packages.size(); i++) {
-            icon = packages.get(i).applicationInfo.loadIcon(pm);
-            packageName = packages.get(i).packageName;
-            versionCode = packages.get(i).versionCode;
-            versionName = packages.get(i).versionName;
-            apkSourceDir = packages.get(i).applicationInfo.sourceDir;
-            name = packages.get(i).applicationInfo.name;
-            if (packageName != null) {
-                list.add(new AppInfo(name, packageName, versionCode, versionName, apkSourceDir, icon));
-            }
-        }
-        return list;
     }
 
     public static String encryptToSHA(String info) {
