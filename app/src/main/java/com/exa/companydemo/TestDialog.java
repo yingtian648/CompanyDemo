@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IInterface;
@@ -91,7 +93,7 @@ public class TestDialog {
         // 设置Activity的DecorView模糊效果
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // radiusX,radiusY模糊半径，值越大越模糊
-//            decor.setRenderEffect(RenderEffect.createBlurEffect(5F, 5F, Shader.TileMode.CLAMP));
+            decor.setRenderEffect(RenderEffect.createBlurEffect(5F, 5F, Shader.TileMode.CLAMP));
         }
         /**
          * 未加载style的时候——没有半透明背景
@@ -226,12 +228,8 @@ public class TestDialog {
             setWindowAttrs();
 //            setCanceledOnTouchOutside(true);
             setCancelable(false);
+
             initView();
-            setOnShowListener(dialog -> {
-                        SystemBarUtil.setInvasionSystemBars(getWindow());
-                        SystemBarUtil.hideOnlyStatusBars(getWindow());
-                    }
-            );
         }
 
         private void initView() {
@@ -275,9 +273,9 @@ public class TestDialog {
             if (attributes == null) {
                 return window;
             }
-            attributes.width = WindowManager.LayoutParams.MATCH_PARENT;//WindowManager.LayoutParams.MATCH_PARENT;
-            attributes.height = 1296;// WindowManager.LayoutParams.WRAP_CONTENT;
-            attributes.gravity = Gravity.TOP;
+            attributes.width = 600;//WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.height = 500;// WindowManager.LayoutParams.WRAP_CONTENT;
+            attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;
             attributes.flags = attributes.flags
 //                    | WindowManager.LayoutParams.FLAG_DIM_BEHIND
@@ -295,10 +293,11 @@ public class TestDialog {
             attributes.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
                     | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
             attributes.setTitle("MainActivity_Dialog");
-//            attributes.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
 //            attributes.type = 2;
             if (windowType > 2500) {
-                attributes.type = windowType;//对应windowType
+                attributes.type = windowType;
+            }else {
+                attributes.type = WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
             }
             window.setAttributes(attributes);
             return window;

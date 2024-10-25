@@ -318,19 +318,26 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         @Override
         public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
             super.onSatelliteStatusChanged(status);
-            int usedInFixNum = 0;
-            StringBuilder builder = new StringBuilder();
-            StringBuilder snrSb = new StringBuilder();
-            for (int i = 0; i < status.getSatelliteCount(); i++) {
-                if (status.usedInFix(i)) {
-                    usedInFixNum++;
-                }
-                builder.append(status.getSvid(i)).append(" ");
-                snrSb.append((int) status.getCn0DbHz(i)).append(" ");
-            }
-            String msg = DateUtil.getNowTime() + " svlist count=" + status.getSatelliteCount() + ", usedInFixNum=" + usedInFixNum + ", satIds=" + builder + ",snrs=" + snrSb;
+            L.d("---------------------sv start-------------------");
+            String msg = "SV count=" + status.getSatelliteCount();
             L.d(msg);
             setText(msg);
+            for (int i = 0; i < status.getSatelliteCount(); i++) {
+                String builder = "{svid=" + status.getSvid(i) +
+                        ", Cn0=" + status.getCn0DbHz(i) +
+                        ", basebandCn0=" + status.getBasebandCn0DbHz(i) +
+                        ", elevation=" + status.getElevationDegrees(i) +
+                        ", azimuth=" + status.getAzimuthDegrees(i) +
+                        ", carrierFrequency=" + status.getCarrierFrequencyHz(i) +
+                        ", usedInFix=" + status.usedInFix(i) +
+                        "} ";
+                L.d(builder);
+                setText(L.msg);
+                if (i == 2) {//只打印三条卫星详细信息
+                    break;
+                }
+            }
+            L.d("---------------------sv end-------------------");
         }
     };
 

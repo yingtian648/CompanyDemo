@@ -25,7 +25,9 @@ import com.exa.baselib.base.adapter.BaseRecyclerAdapter
 import com.exa.baselib.base.adapter.OnClickItemListener
 import com.exa.baselib.utils.*
 import com.exa.baselib.utils.Tools
+import com.exa.companydemo.TestDialog.showDialog
 import com.exa.companydemo.TestDialog.showDialogFragment
+import com.exa.companydemo.TestDialog.showMyDialog
 import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.common.VideoPlayerActivity
@@ -131,13 +133,15 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
 
-        val mm = MediaMetadataRetriever()
-        val uri = Uri.parse("android.resource://" + packageName + "/" + R.raw.test)
-        mm.setDataSource(this, uri)
-        val duration = mm.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toInt() ?: 0
-        val name = mm.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)?.toString()
-        L.dd("test.mp4 name=$name, duration=$duration")
+//        val mm = MediaMetadataRetriever()
+//        val uri = Uri.parse("android.resource://" + packageName + "/" + R.raw.test)
+//        mm.setDataSource(this, uri)
+//        val duration = mm.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toInt() ?: 0
+//        val name = mm.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)?.toString()
+//        L.dd("test.mp4 name=$name, duration=$duration")
 
+        showMyDialog(this,"123",0)
+//        showDialog(this)
 //        showDialogFragment(this)
 //        startActivity(WifiActivity::class.java)
 
