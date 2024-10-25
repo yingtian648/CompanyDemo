@@ -238,7 +238,10 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 return;
             }
             setText("subscribeGpsUpdates");
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000 /* 时间隔时间 毫秒 */, 0F /* 位置更新的最小距离(单位：米) */, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    0 /* 时间隔时间 毫秒 */,
+                    0F /* 位置更新的最小距离(单位：米) */,
+                    locationListener);
         }
     }
 
