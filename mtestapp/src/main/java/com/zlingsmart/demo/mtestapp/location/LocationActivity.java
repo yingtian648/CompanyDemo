@@ -332,7 +332,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                         ", usedInFix=" + status.usedInFix(i) +
                         "} ";
                 L.d(builder);
-                setText(L.msg);
+                setText(builder);
                 if (i == 2) {//只打印三条卫星详细信息
                     break;
                 }
