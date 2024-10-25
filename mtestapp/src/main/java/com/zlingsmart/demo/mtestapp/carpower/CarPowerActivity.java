@@ -38,9 +38,7 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         bind.getRoot().postDelayed(() -> {
             if (car != null) {
                 fordCarPowerManager = (FordCarPowerManager) car.getCarManager(Car.FORD_POWER_SERVICE);
-                carPowerManager = (CarPowerManager) car.getCarManager(Car.POWER_SERVICE);
                 initListener();
-//                listenVhalProp();
             } else {
                 L.de("car is null, delay to check!");
                 setText(L.msg);
@@ -56,11 +54,11 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         getCurrentPowerState();
         //监听福特电源状态
         fordCarPowerManager.setFordListener(fordListener);
-        //监听原生CarPower电源状态
-        fordCarPowerManager.setListener(carPowerStateListener);
+        //监听原生CarPower电源状态(STR)
+        fordCarPowerManager.setListener(mCarPowerStateListener);
     }
 
-    private final FordCarPowerManager.CarPowerStateListener carPowerStateListener = state -> {
+    private final FordCarPowerManager.CarPowerStateListener mCarPowerStateListener = state -> {
         L.d("CarPowerStateListener onStateChanged:" + CarPowerUtil.getCarPowerState(state));
         setText(L.msg);
     };
@@ -121,7 +119,7 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         L.dd();
         setText(L.msg);
         fordCarPowerManager.clearListener();
-        fordCarPowerManager.setListener(carPowerStateListener);
+        fordCarPowerManager.setListener(mCarPowerStateListener);
     }
 
     public void requestLoadShedShutDownNow(View v) {
@@ -258,22 +256,5 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
     @Override
     protected void initData() {
 
-    }
-
-    private void listenVhalProp() {
-        carPropertyManager = (CarPropertyManager) car.getCarManager(Car.PROPERTY_SERVICE);
-        carPropertyManager.registerCallback(new CarPropertyManager.CarPropertyEventCallback() {
-            @Override
-            public void onChangeEvent(CarPropertyValue propertyValue) {
-                int prop = propertyValue.getPropertyId();
-                Object value = propertyValue.getValue();
-                setText("CarPropertyManager.onChangeEvent:" + prop + ", value:" + value);
-            }
-
-            @Override
-            public void onErrorEvent(int i, int i1) {
-                L.de("");
-            }
-        }, 557917440, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL);
     }
 }

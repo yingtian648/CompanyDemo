@@ -20,7 +20,6 @@ import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
-import com.exa.baselib.BaseConstants;
 import com.exa.baselib.base.BaseBindActivity;
 import com.exa.baselib.utils.DateUtil;
 import com.exa.baselib.utils.L;
@@ -86,43 +85,43 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         });
         bind.swGPS.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                L.d("订阅Gps定位");
+                L.d("subscribeGpsUpdates");
                 subscribeGpsUpdates();
             } else {
-                L.d("取消订阅Gps定位");
+                L.d("unSubscribeGpsUpdates");
                 unSubscribeGpsUpdates();
             }
         });
         bind.swSv.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                L.d("订阅星历更新");
+                L.d("subscribeSvUpdates");
                 subscribeSvUpdates();
             } else {
-                L.d("取消订阅星历更新");
+                L.d("unSubscribeSvUpdates");
                 unSubscribeSvUpdates();
             }
         });
         bind.swNmea.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                L.d("订阅NMEA");
+                L.d("subNmea");
                 subNmea();
             } else {
-                L.d("取消订阅NMEA");
+                L.d("unSubNmea");
                 unSubNmea();
             }
         });
         bind.swCarPlay.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                L.d("订阅CarPlay数据");
+                L.d("subscribeCarPlayUpdates");
                 subscribeCarPlayUpdates();
             } else {
-                L.d("取消订阅CarPlay数据");
+                L.d("unSubscribeCarPlayUpdates");
                 unSubscribeCarPlayUpdates();
             }
         });
         bind.swPushShifted.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                L.d("开始上报偏转数据");
+                L.d("startPushMockShiftedData");
                 setText(L.msg);
                 mPushShiftData = true;
                 if (!bind.swGPS.isChecked()) {
@@ -130,7 +129,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 }
                 mFordLocationUtil.startPushMockShiftedData();
             } else {
-                L.d("取消上报偏转数据");
+                L.d("stopPushMockShiftedData");
                 setText(L.msg);
                 mPushShiftData = false;
                 if (bind.swGPS.isChecked()) {
@@ -144,15 +143,16 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
 //            testExtra();
         });
         initLocationManager();
+        subscribeCarPlayUpdates();
     }
 
     private void subscribeCarPlayUpdates() {
-        setText("订阅CarPlay数据");
+        setText("subscribeCarPlayUpdates");
         mFordLocationUtil.subCarPlayData();
     }
 
     private void unSubscribeCarPlayUpdates() {
-        setText("取消订阅CarPlay数据");
+        setText("unSubscribeCarPlayUpdates");
         mFordLocationUtil.unSubCarPlayData();
     }
 
@@ -195,7 +195,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             mNmeaTimer.cancel();
             mNmeaTimer = null;
         }
-        setText("取消订阅NMEA数据");
+        setText("unSubNmea");
         locationManager.removeNmeaListener(mNmeaListener);
     }
 
@@ -232,28 +232,19 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         }
     };
 
-    private void testExtra() {
-        Location location = new Location(LocationManager.GPS_PROVIDER);
-        Bundle bundle = new Bundle();
-        bundle.putString("sdas", "sdasad");
-        bundle.putInt("rrrr", 2);
-        location.setExtras(bundle);
-        setText(location + ", " + DateUtil.getNowTime());
-    }
-
     private void subscribeGpsUpdates() {
         if (locationManager != null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            setText("订阅Gps定位");
+            setText("subscribeGpsUpdates");
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000 /* 时间隔时间 毫秒 */, 0F /* 位置更新的最小距离(单位：米) */, locationListener);
         }
     }
 
     private void unSubscribeGpsUpdates() {
         if (locationManager != null) {
-            setText("取消订阅Gps定位");
+            setText("unSubscribeGpsUpdates");
             locationManager.removeUpdates(locationListener);
         }
     }
@@ -263,36 +254,15 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            setText("订阅卫星数据更新");
+            setText("subscribeSvUpdates");
             locationManager.registerGnssStatusCallback(svCallback, mHandler);
         }
     }
 
     private void unSubscribeSvUpdates() {
         if (locationManager != null) {
-            setText("取消订阅卫星数据更新");
+            setText("unSubscribeSvUpdates");
             locationManager.unregisterGnssStatusCallback(svCallback);
-        }
-    }
-
-    private void subscribeNetworkUpdates() {
-        if (!eProviders.contains(LocationManager.NETWORK_PROVIDER)) {
-            setText("订阅Network定位失败：未提供网络定位能力");
-            return;
-        }
-        if (locationManager != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            setText("订阅Network定位");
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0 /* 时间隔时间 */, 0.0F /* 位置更新的最小距离(单位：米) */, networkListener);
-        }
-    }
-
-    private void unSubscribeNetworkUpdates() {
-        if (eProviders.contains(LocationManager.NETWORK_PROVIDER) && locationManager != null) {
-            setText("取消订阅Network定位");
-            locationManager.removeUpdates(networkListener);
         }
     }
 
@@ -304,8 +274,8 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             for (String key : bundle.keySet()) {
                 builder.append(key).append("=").append(bundle.get(key)).append(",");
             }
-            L.d("onLocationChanged mPushShiftData=" + mPushShiftData + ", " + location + ", extra:" + builder);
-            setText(location + ", " + builder + "," + DateUtil.getNowTime());
+            L.d("onLocationChanged " + ", time=" + location.getTime() + ", " + location);
+            setText(L.msg + ", systemTime:" + DateUtil.getNowTime());
             if (mPushShiftData) {
                 mFordLocationUtil.pushShiftedData(location);
             }
@@ -355,40 +325,11 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 builder.append(status.getSvid(i)).append(" ");
                 snrSb.append((int) status.getCn0DbHz(i)).append(" ");
             }
-            String msg = DateUtil.getNowTime() + "卫星列表 count=" + status.getSatelliteCount() + ", usedInFixNum=" + usedInFixNum + ", satIds=" + builder + ",snrs=" + snrSb;
+            String msg = DateUtil.getNowTime() + " svlist count=" + status.getSatelliteCount() + ", usedInFixNum=" + usedInFixNum + ", satIds=" + builder + ",snrs=" + snrSb;
             L.d(msg);
             setText(msg);
         }
     };
-
-    private final LocationListener networkListener = new LocationListener() {
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-            L.d(location.getProvider() + "  onLocationChanged:" + location);
-            setText(location + DateUtil.getNowTime());
-        }
-
-        @Override
-        public void onProviderDisabled(@NonNull String provider) {
-            L.d("onProviderDisabled:" + provider);
-        }
-    };
-
-    private void recyclerGetNetworkLastLocation() {
-        BaseConstants.getHandler().postDelayed(() -> {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location != null) {
-                setText("getLastKnownLocation gps:" + location.getTime() + "，" + location.getLatitude());
-                L.d("getLastKnownLocation gps:" + location.getTime() + "，" + location.getLatitude());
-            }
-            if (activity != null) {
-                recyclerGetNetworkLastLocation();
-            }
-        }, 1000);
-    }
 
     /**
      * 获取最佳的provider

@@ -21,6 +21,7 @@ public class CarPowerUtil {
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_INVALID:
                 return "POWER_STATE_INVALID";
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_SHUTDOWN:
+                //关机
                 return "POWER_STATE_SHUTDOWN";
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_FUNCTIONAL:
                 return "POWER_STATE_FUNCTIONAL";
@@ -33,6 +34,7 @@ public class CarPowerUtil {
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_KOL:
                 return "POWER_STATE_KOL";
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_STR:
+                //不应监听此STRz状态
                 return "POWER_STATE_STR";
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_ABNORMAL:
                 return "POWER_STATE_ABNORMAL";
@@ -44,6 +46,7 @@ public class CarPowerUtil {
 
     /**
      * 获取原生CarPower电源状态名称
+     * STR
      */
     public static String getCarPowerState(int carPowerState) {
         switch (carPowerState) {
@@ -54,12 +57,15 @@ public class CarPowerUtil {
             case FordCarPowerManager.CarPowerStateListener.SUSPEND_ENTER:
                 return "SUSPEND_ENTER";
             case FordCarPowerManager.CarPowerStateListener.SUSPEND_EXIT:
+                //退出STR
                 return "SUSPEND_EXIT";
             case FordCarPowerManager.CarPowerStateListener.SHUTDOWN_ENTER:
                 return "SHUTDOWN_ENTER";
             case FordCarPowerManager.CarPowerStateListener.ON:
+                //全功能
                 return "ON";
             case FordCarPowerManager.CarPowerStateListener.SHUTDOWN_PREPARE:
+                //进入STR
                 return "SHUTDOWN_PREPARE";
             case FordCarPowerManager.CarPowerStateListener.SHUTDOWN_CANCELLED:
                 return "SHUTDOWN_CANCELLED";

@@ -2,6 +2,7 @@ package com.zlingsmart.demo.mtestapp;
 
 import android.car.Car;
 import android.car.hardware.power.FordCarPowerManager;
+import android.car.hardware.power.FordCarPowerManager.FordCarPowerStateListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.exa.baselib.utils.L;
+import com.zlingsmart.demo.mtestapp.carpower.CarPowerUtil;
 import com.zlingsmart.demo.mtestapp.location.LocationActivity;
 import com.zlingsmart.demo.mtestapp.util.OnClickItemListener;
 
@@ -47,17 +49,6 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
 
         byte[] bytes = new byte[]{53, 46, 48, 46, 49};
         L.dd("1111111111: " + new String(bytes));
-    }
-
-    private void registerWindowChangedListener() {
-        L.dd();
-
-        Car car = Car.createCar(this);
-        FordCarPowerManager fordCarPowerManager = (FordCarPowerManager) car.getCarManager(Car.FORD_POWER_SERVICE);
-    }
-
-    private void listenWindowChangeStatus(){
-
     }
 
     /**

@@ -2,6 +2,7 @@ package com.exa.companydemo.common;
 
 import android.annotation.SuppressLint;
 import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.net.Uri;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -14,6 +15,8 @@ import com.exa.baselib.utils.VideoPlayer;
 import com.exa.companydemo.R;
 import com.exa.companydemo.databinding.ActivityVideoPlayerBinding;
 import com.exa.companydemo.utils.Ces2715Util;
+
+import java.io.IOException;
 
 public class VideoPlayerActivity extends BaseBindActivity<ActivityVideoPlayerBinding> {
 
@@ -63,7 +66,12 @@ public class VideoPlayerActivity extends BaseBindActivity<ActivityVideoPlayerBin
         });
         AssetFileDescriptor afd = getResources().openRawResourceFd(R.raw.test);
         Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.test);
-        player.play(this, bind.frame, uri);
+        try {
+            afd = getAssets().openFd("test.mp4");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        player.play(this, bind.frame, afd);
     }
 
     private void switchFullScreen() {

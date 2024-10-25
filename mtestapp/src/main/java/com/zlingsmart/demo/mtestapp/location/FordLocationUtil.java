@@ -41,10 +41,10 @@ public class FordLocationUtil {
         @Override
         public void run() {
             if (car != null && car.isConnected()) {
-                L.w("Car初始化成功");
+                L.w("Car is created");
                 getFordLocationManager();
             } else {
-                L.e("Car初始化失败");
+                L.e("Car init fail!");
                 locationActivity.setText(L.msg);
             }
         }
@@ -87,11 +87,11 @@ public class FordLocationUtil {
         if (fordFnv != null) {
             gnssManager = (GnssManager) fordFnv.getFnvManager(FnvConstants.GNSS_SERVICE);
             if (gnssManager == null) {
-                L.e("FNV-GnssManager is null");
+                L.e("FNV GnssManager init ");
                 locationActivity.setText(L.msg);
             } else {
                 gnssManager.init();
-                L.w("FNV-GnssManager is inited");
+                L.w("FNV GnssManager init success!");
             }
         }
     }
@@ -104,7 +104,7 @@ public class FordLocationUtil {
             if (gnssManager != null) {
                 gnssManager.registerNmeaDataListener(nmeaDataListener);
             } else {
-                L.e("FNV-GnssManager is null");
+                L.e("FNV GnssManager is null");
             }
         } catch (Exception e) {
             L.de(e);
@@ -119,7 +119,7 @@ public class FordLocationUtil {
             if (gnssManager != null) {
                 gnssManager.unregisterNmeaDataListener(nmeaDataListener);
             } else {
-                L.de("FNV-GnssManager is null");
+                L.de("FNV GnssManager is null");
             }
         } catch (Exception e) {
             L.de(e);
@@ -143,7 +143,7 @@ public class FordLocationUtil {
         L.dd();
         locationManager = (FordCarLocationManager) car.getCarManager(Car.FORD_LOCATION_SERVICE);
         if (locationManager == null) {
-            L.e("FordCarLocationManager获取失败");
+            L.e("FordCarLocationManager get fail");
             locationActivity.setText(L.msg);
         }
     }

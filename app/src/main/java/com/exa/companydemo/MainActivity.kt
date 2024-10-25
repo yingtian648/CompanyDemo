@@ -11,6 +11,7 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.media.MediaMetadataRetriever
 import android.net.*
 import android.os.*
 import android.util.Log
@@ -129,6 +130,13 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         App.index++
         val bool = App.index % 2 == 0
         L.dd("${App.index} start------------")
+
+        val mm = MediaMetadataRetriever()
+        val uri = Uri.parse("android.resource://" + packageName + "/" + R.raw.test)
+        mm.setDataSource(this, uri)
+        val duration = mm.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toInt() ?: 0
+        val name = mm.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)?.toString()
+        L.dd("test.mp4 name=$name, duration=$duration")
 
 //        showDialogFragment(this)
 //        startActivity(WifiActivity::class.java)

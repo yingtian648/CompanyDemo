@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -362,7 +363,8 @@ public class VideoPlayer implements TextureView.SurfaceTextureListener {
         try {
             mmr = new MediaMetadataRetriever();
             if (assetFileDescriptor != null) {
-                mmr.setDataSource(assetFileDescriptor.getFileDescriptor());
+                FileDescriptor descriptor= assetFileDescriptor.getFileDescriptor();
+                mmr.setDataSource(descriptor);
             } else {
                 mmr.setDataSource(context, uri);
             }
