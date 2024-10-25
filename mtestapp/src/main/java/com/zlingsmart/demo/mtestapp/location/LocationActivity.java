@@ -227,7 +227,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
     private final OnNmeaMessageListener mNmeaListener = new OnNmeaMessageListener() {
         @Override
         public void onNmeaMessage(String message, long timestamp) {
-//            L.d("locationManager.onNmeaMessage:" + message + "," + timestamp);
+            L.d("onNmeaMessage: " + message + ", timestamp: " + timestamp);
             mLastNmea = message;
         }
     };
@@ -277,7 +277,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
             for (String key : bundle.keySet()) {
                 builder.append(key).append("=").append(bundle.get(key)).append(",");
             }
-            L.d("onLocationChanged " + ", time=" + location.getTime() + ", " + location);
+            L.d("onLocationChanged: " + ", time=" + location.getTime() + ", " + location);
             setText(L.msg + ", systemTime:" + DateUtil.getNowTime());
             if (mPushShiftData) {
                 mFordLocationUtil.pushShiftedData(location);
@@ -318,26 +318,24 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
         @Override
         public void onSatelliteStatusChanged(@NonNull GnssStatus status) {
             super.onSatelliteStatusChanged(status);
-            L.d("---------------------sv start-------------------");
-            String msg = "SV count=" + status.getSatelliteCount();
-            L.d(msg);
-            setText(msg);
+            StringBuilder builder = new StringBuilder();
+            builder.append("sv count=").append(status.getSatelliteCount());
             for (int i = 0; i < status.getSatelliteCount(); i++) {
-                String builder = "{svid=" + status.getSvid(i) +
+                String str = " {svid=" + status.getSvid(i) +
                         ", Cn0=" + status.getCn0DbHz(i) +
                         ", basebandCn0=" + status.getBasebandCn0DbHz(i) +
                         ", elevation=" + status.getElevationDegrees(i) +
                         ", azimuth=" + status.getAzimuthDegrees(i) +
                         ", carrierFrequency=" + status.getCarrierFrequencyHz(i) +
                         ", usedInFix=" + status.usedInFix(i) +
-                        "} ";
-                L.d(builder);
-                setText(builder);
+                        "}...";
+                builder.append(str);
                 if (i == 2) {//只打印三条卫星详细信息
                     break;
                 }
             }
-            L.d("---------------------sv end-------------------");
+            L.d("onSatelliteStatusChanged: " + builder);
+            setText(builder.toString());
         }
     };
 
