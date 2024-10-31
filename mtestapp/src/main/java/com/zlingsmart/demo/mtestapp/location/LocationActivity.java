@@ -127,7 +127,7 @@ public class LocationActivity extends BaseBindActivity<ActivityLocationBinding> 
                 if (!bind.swGPS.isChecked()) {
                     bind.swGPS.setChecked(true);
                 }
-                mFordLocationUtil.startPushMockShiftedData();
+//                mFordLocationUtil.startPushMockShiftedData();
             } else {
                 L.d("stopPushMockShiftedData");
                 setText(L.msg);

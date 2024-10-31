@@ -273,7 +273,7 @@ public class TestDialog {
             if (attributes == null) {
                 return window;
             }
-            attributes.width = 600;//WindowManager.LayoutParams.MATCH_PARENT;
+            attributes.width = WindowManager.LayoutParams.MATCH_PARENT;//WindowManager.LayoutParams.MATCH_PARENT;
             attributes.height = 500;// WindowManager.LayoutParams.WRAP_CONTENT;
             attributes.gravity = Gravity.CENTER;
             attributes.format = PixelFormat.TRANSLUCENT;

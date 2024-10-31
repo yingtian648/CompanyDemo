@@ -264,6 +264,7 @@ public class SystemUiMain implements MCommandQueue.Callback, IConfigChangedListe
         mNavigationBarParams.height = NAVIGATION_BAR_HEIGHT;
         mNavigationBarParams.gravity = Gravity.BOTTOM;
 
+
         mNavibar = new NavigationBarView(mContext, mUiModeManager, mCommandQueue, mDisplayId);
         mWindowManager.addView(mNavibar.getRootView(), mNavigationBarParams);
 

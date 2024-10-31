@@ -185,10 +185,11 @@ public class FordLocationUtil {
             Bundle bundle = new Bundle();
             bundle.putDouble("ChinaShiftedLatitude", location.getLatitude());
             bundle.putDouble("ChinaShiftedLongitude", location.getLongitude());
+            bundle.putLong("pairingKey", 123456 + (int) (Math.random() * 1000));
             L.dd("sendLocationShiftedData " + bundle);
             locationManager.sendLocationShiftedData(bundle);
         } else {
-            if (car != null){
+            if (car != null) {
                 locationManager = (FordCarLocationManager) car.getCarManager(Car.FORD_LOCATION_SERVICE);
             }
             L.w("FordCarLocationManager is null");

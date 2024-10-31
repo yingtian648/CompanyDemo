@@ -7,7 +7,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusableInTouchMode="true"
-        android:background="@color/window_bg"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/win_bg_f"
         tools:context=".MainActivity">
 
         <com.exa.companydemo.widget.EndLineView

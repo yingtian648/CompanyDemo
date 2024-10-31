@@ -17,15 +17,15 @@ fid:ID1375365
 level:C
 
 
-[ID]:FCIHALO-783
-[Submission Type]:Feature
-[Project]:HALO
+[ID]:FCIHALO-737
+[Submission Type]: Feature
+[Project]: HALO
 [Module]: CarService
-[Countermeasure Issue]: FCPMS add support property
-[Cause]: Joint debugging failed
-[Modification Method]: FCPMS add support property
+[Countermeasure Issue]: App get FordCarLocationManager failed
+[Cause]: CarService can't get FordCarLocationManager
+[Modification Method]: App get FordCarLocationManager failed
 [Modifier]: shihua.liu
-[ExtendID]:FORDHALO-845
+[ExtendID]:FORDHALO-820
 
 
 feat[AOSP/Toast]:修改Toast最大显示宽度.

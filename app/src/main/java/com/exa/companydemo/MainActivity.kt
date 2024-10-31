@@ -117,7 +117,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.win_bg)
 //        FordTest.get().test()
 
-//        SystemBarUtil.hideStatusBars(this)
+        SystemBarUtil.setInvasionSystemBars(this)
     }
 
     @SuppressLint(
@@ -363,7 +363,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
                 if (isFullScreen) {
                     window.decorView.systemUiVisibility =
                         View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    SystemBarUtil.hideStatusBars(this)
+                    SystemBarUtil.hideStatusBars(window)
 //                    SystemBarUtil.hideStatusBar(this)
 //                    SystemBarUtil.setInvasionStatusBar(this)
                 } else {

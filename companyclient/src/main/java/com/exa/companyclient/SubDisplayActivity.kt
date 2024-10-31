@@ -125,7 +125,7 @@ class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
         Runnable { Toast.makeText(activity, "副屏测试Toast $index", Toast.LENGTH_SHORT).show() }
 
     override fun initData() {
-        SystemBarUtil.hideStatusBars(this)
+
     }
 
     private fun showDialog() {

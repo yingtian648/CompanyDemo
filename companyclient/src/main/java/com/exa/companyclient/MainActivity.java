@@ -43,7 +43,6 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
         filter.addAction(ACTION_MEDIA_MOUNTED);
         filter.addAction(ACTION_MEDIA_EJECT);
         registerReceiver(new TestReceiver(), filter);
-        SystemBarUtil.setInvasionStatusBar(this);
     }
 
     class TestReceiver extends BroadcastReceiver {

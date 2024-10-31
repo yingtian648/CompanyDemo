@@ -14,6 +14,8 @@ import com.exa.baselib.base.BaseViewBindingActivity;
 import com.exa.baselib.utils.L;
 import com.zlingsmart.demo.mtestapp.databinding.ActivityCarPowerBinding;
 
+import java.util.concurrent.CompletableFuture;
+
 public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBinding> {
     private FordCarPowerManager fordCarPowerManager;
     private CarPowerManager carPowerManager;
@@ -21,6 +23,7 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
     private int index = 0;
     private boolean mSetPowerOffIndicator = false;
     private Car car;
+    private int carPowerState = CarPowerManager.CarPowerStateListener.INVALID;
 
     @Override
     protected ActivityCarPowerBinding getViewBinding() {
@@ -38,6 +41,7 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         bind.getRoot().postDelayed(() -> {
             if (car != null) {
                 fordCarPowerManager = (FordCarPowerManager) car.getCarManager(Car.FORD_POWER_SERVICE);
+                carPowerManager = (CarPowerManager) car.getCarManager(Car.POWER_SERVICE);
                 initListener();
             } else {
                 L.de("car is null, delay to check!");
@@ -60,6 +64,7 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
 
     private final FordCarPowerManager.CarPowerStateListener mCarPowerStateListener = state -> {
         L.d("CarPowerStateListener onStateChanged:" + CarPowerUtil.getCarPowerState(state));
+        carPowerState = state;
         setText(L.msg);
     };
 
@@ -206,9 +211,13 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         if (fordCarPowerManager != null) {
             //如果之前有注册监听需要先清除监听
             fordCarPowerManager.clearListener();
-            fordCarPowerManager.setListenerWithCompletion((i, completableFuture) -> {
-                completableFuture.isDone();
-                setText("onStateChanged:" + i);
+            fordCarPowerManager.setListenerWithCompletion(new FordCarPowerManager.CarPowerStateListenerWithCompletion() {
+                @Override
+                public void onStateChanged(int state, CompletableFuture<Void> completableFuture) {
+                    L.d("CarPowerStateListenerWithCompletion onStateChanged:" + CarPowerUtil.getFordPowerState(state));
+                    setText(L.msg);
+                    completableFuture.complete(null);
+                }
             });
             setText("setListenerWithCompletion");
         } else {
@@ -244,10 +253,11 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
 
     private void getCurrentPowerState() {
         String msg = "获取失败, fordCarPowerManager or carPowerManager is null";
-        if (fordCarPowerManager != null && carPowerManager != null) {
+        if (fordCarPowerManager != null) {
             msg = "getFordPowerState:" + CarPowerUtil.getFordPowerState(fordCarPowerManager.getFordPowerState())
                     + ", getBootReason:" + fordCarPowerManager.getBootReason()
-                    + ", carPowerManager.getPowerState:" + CarPowerUtil.getCarPowerState(carPowerManager.getPowerState());
+                    + ", carPowerManager is null?: " + (carPowerManager == null)
+                    + ", getCarPowerState:" + CarPowerUtil.getCarPowerState(carPowerManager == null ? carPowerState : carPowerManager.getPowerState());
         }
         L.dd(msg);
         setText(msg);
