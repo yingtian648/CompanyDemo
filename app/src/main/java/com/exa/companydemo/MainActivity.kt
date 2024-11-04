@@ -3,21 +3,17 @@ package com.exa.companydemo
 import android.Manifest
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.app.UiModeManager
 import android.content.*
 import android.content.Intent.*
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.media.MediaMetadataRetriever
 import android.net.*
 import android.os.*
 import android.util.Log
 import android.view.*
 import android.widget.Button
-import android.window.SplashScreen
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.exa.baselib.BaseConstants
 import com.exa.baselib.base.BaseBindActivity
@@ -25,22 +21,19 @@ import com.exa.baselib.base.adapter.BaseRecyclerAdapter
 import com.exa.baselib.base.adapter.OnClickItemListener
 import com.exa.baselib.utils.*
 import com.exa.baselib.utils.Tools
-import com.exa.companydemo.TestDialog.showDialog
-import com.exa.companydemo.TestDialog.showDialogFragment
 import com.exa.companydemo.TestDialog.showMyDialog
 import com.exa.companydemo.TestUtil.*
 import com.exa.companydemo.common.AppInfoActivity
 import com.exa.companydemo.common.VideoPlayerActivity
 import com.exa.companydemo.common.WebActivity
 import com.exa.companydemo.databinding.ActivityMainBinding
+import com.exa.companydemo.ford.FordCarPowerStrPolicy
 import com.exa.companydemo.locationtest.LocationActivity
 import com.exa.companydemo.toasttest.ToastTestActivity
 import com.exa.companydemo.utils.*
-import com.exa.companydemo.wifi.WifiActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,6 +52,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
     private val scope = CoroutineScope(Job() + Dispatchers.IO)
     private lateinit var powerUtil: PowerUtil
     private lateinit var bitmap: Bitmap
+    private lateinit var strPolicy: FordCarPowerStrPolicy
     private var mShow = false
     private val handler = Handler(Looper.getMainLooper())
 
@@ -118,6 +112,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //        FordTest.get().test()
 
         SystemBarUtil.setInvasionSystemBars(this)
+        strPolicy = FordCarPowerStrPolicy(this)
     }
 
     @SuppressLint(
@@ -140,7 +135,9 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //        val name = mm.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)?.toString()
 //        L.dd("test.mp4 name=$name, duration=$duration")
 
-        showMyDialog(this,"123",0)
+        strPolicy.doStrPolicy()
+
+//        showMyDialog(this,"123",0)
 //        showDialog(this)
 //        showDialogFragment(this)
 //        startActivity(WifiActivity::class.java)
@@ -338,7 +335,7 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
         if (isRegisterBroadCast) {
             unregisterReceiver(mReceiver)
         }
-        App.exit()
+//        App.exit()
     }
 
     private val btnList = mutableListOf(

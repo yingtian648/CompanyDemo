@@ -2,11 +2,14 @@ package com.exa.companydemo;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityTaskManager;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.exa.baselib.BaseConstants;
 import com.exa.baselib.utils.DateUtil;

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.exa.baselib.utils.L;
 import com.zlingsmart.demo.mtestapp.carpower.CarPowerActivity;
 import com.zlingsmart.demo.mtestapp.carpower.CarPowerUtil;
+import com.zlingsmart.demo.mtestapp.carpower.FordCarPowerStrPolicy;
 import com.zlingsmart.demo.mtestapp.location.LocationActivity;
 import com.zlingsmart.demo.mtestapp.util.OnClickItemListener;
 
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     private RecyclerView listView;
     private Context mContext;
     private List<Pair<String, Pair<String, Integer>>> dataList;
+    private FordCarPowerStrPolicy mPolicy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +44,11 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
         setContentView(R.layout.activity_main);
         initData();
         initListView();
-        test();
+        mPolicy = new FordCarPowerStrPolicy(this);
     }
 
-    private void test() {
-        getWindow().setSoftInputMode(3);
-
-        byte[] bytes = new byte[]{53, 46, 48, 46, 49};
-        L.dd("1111111111: " + new String(bytes));
+    public void test(View view) {
+        mPolicy.doStrPolicy();
     }
 
     /**

@@ -28,6 +28,21 @@ level:C
 [ExtendID]:FORDHALO-820
 
 
+[ID]:FCIHALO-789
+[Submission Type]: Feature
+[Project]: HALO
+[Module]: CarService
+[Countermeasure Issue]: Add CarPower AudioSwitch feature
+[Cause]: Add CarPower AudioSwitch feature
+[Modification Method]: Add CarPower AudioSwitch feature
+[Modifier]: shihua.liu
+[ExtendID]:FORDHALO-839
+
+提交到远程，并创建远程分支FCIHALO-783_FCPMS_FIX_DCV0
+git push -u github FCIHALO-789-FCPMS
+ -f 强制提交到远程github的FCIHALO-783_FCPMS_FIX分支
+git push -f  github FCIHALO-789-FCPMS
+
 feat[AOSP/Toast]:修改Toast最大显示宽度.
 rootcause:Toast内容显示不全.
 solution:修改Toast最大显示宽度.
