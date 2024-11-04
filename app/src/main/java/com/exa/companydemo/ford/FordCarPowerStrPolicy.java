@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 
@@ -59,7 +60,7 @@ public class FordCarPowerStrPolicy {
     /**
      * use by FordCarPowerManagementService
      * 1.we will not care white list.
-     * 2.If the app is in removeUiList and the recent task list, we will delete the app's UI.
+     * 2.If the app is in removeUiList and the running task list, we will delete the app's UI.
      * 3.If the app is in killList, it will be killed.
      */
     public void doStrPolicy() {
@@ -87,16 +88,16 @@ public class FordCarPowerStrPolicy {
     }
 
     private void doStrPolicyInternal() {
-        // get recent task
-        List<ActivityManager.RecentTaskInfo> tasks = mAm.getRecentTasks(Integer.MAX_VALUE, 0);
+        // get running task
+        List<ActivityManager.RunningTaskInfo> tasks = mAm.getRunningTasks(Integer.MAX_VALUE);
         if (tasks != null) {
-            for (ActivityManager.RecentTaskInfo task : tasks) {
+            for (ActivityManager.RunningTaskInfo task : tasks) {
                 if (task.baseIntent.getComponent() == null) {
                     continue;
                 }
                 String pkgName = task.baseIntent.getComponent().getPackageName();
                 for (PackageInfo packageInfo : mRemoveUiList) {
-                    if (pkgName.equals(packageInfo.pkgName)) {
+                    if (Objects.equals(pkgName, packageInfo.pkgName)) {
                         Log.i(TAG, "removeUi " + pkgName + ", taskId=" + task.taskId);
                         removeTask(task.taskId);
                     }
@@ -112,11 +113,15 @@ public class FordCarPowerStrPolicy {
                 }
                 String pkgName = process.pkgList[0];
                 for (PackageInfo packageInfo : mKillList) {
-                    if (pkgName.equals(packageInfo.pkgName)) {
+                    if (Objects.equals(pkgName, packageInfo.pkgName)) {
                         Log.i(TAG, "forceStopPackage " + pkgName
                                 + ", PID=" + process.pid
                                 + ", processName=" + process.processName);
-//                        mAm.forceStopPackage(process.processName);
+//                        try {
+//                            mAm.forceStopPackage(pkgName);
+//                        } catch (Exception e) {
+//                            Log.w(TAG, "forceStopPackage err", e);
+//                        }
                     }
                 }
             }
@@ -139,8 +144,9 @@ public class FordCarPowerStrPolicy {
             Log.e(TAG, "readConfig err: file not exist!! " + CONFIG_FILE);
             return;
         }
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream(file);
+            fis = new FileInputStream(file);
 
             XmlPullParser parser = Xml.newPullParser();
             parser.setInput(fis, StandardCharsets.UTF_8.name());
@@ -179,12 +185,19 @@ public class FordCarPowerStrPolicy {
                 }
                 eventType = parser.next();
             }
-            fis.close();
             Log.i(TAG, "whiteList: " + mWhiteList.size() + ", " + mWhiteList);
             Log.i(TAG, "removeUiList: " + mRemoveUiList.size() + ", " + mRemoveUiList);
             Log.i(TAG, "killProcessList: " + mKillList.size() + ", " + mKillList);
         } catch (IOException | XmlPullParserException e) {
             Log.w(TAG, "readConfig err", e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    Log.w(TAG, "readConfig close fis err", e);
+                }
+            }
         }
     }
 
@@ -197,6 +210,4 @@ public class FordCarPowerStrPolicy {
             return "PackageInfo{" + "pkgName=" + pkgName + ", appName=" + appName + '}';
         }
     }
-
-
 }
