@@ -1,6 +1,5 @@
 package com.zlingsmart.demo.mtestapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Pair;
@@ -29,19 +28,17 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class MainActivity extends AppCompatActivity implements OnClickItemListener {
     private RecyclerView listView;
-    private Context mContext;
     private List<Pair<String, Pair<String, Integer>>> dataList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         L.dd();
-        mContext = this;
         setContentView(R.layout.activity_main);
         initData();
         initListView();
 
-        String title = "测试按钮" + " (wifi:" + Tools.INSTANCE.getWifiIp(this);
+        String title = "测试按钮" + " (wifi:" + Tools.INSTANCE.getWifiIp(this) + ")";
         Button testBtn = findViewById(R.id.button);
         testBtn.setText(title);
     }

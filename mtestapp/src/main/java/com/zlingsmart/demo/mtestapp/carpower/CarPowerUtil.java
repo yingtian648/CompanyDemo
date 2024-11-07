@@ -20,6 +20,8 @@ public class CarPowerUtil {
         switch (fordPowerState) {
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_INVALID:
                 return "POWER_STATE_INVALID";
+            case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_STANDBY:
+                return "POWER_STATE_STANDBY";
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_SHUTDOWN:
                 //关机
                 return "POWER_STATE_SHUTDOWN";
@@ -34,7 +36,7 @@ public class CarPowerUtil {
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_KOL:
                 return "POWER_STATE_KOL";
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_STR:
-                //不应监听此STRz状态
+                //不应监听此状态
                 return "POWER_STATE_STR";
             case FordCarPowerManager.FordCarPowerStateListener.POWER_STATE_ABNORMAL:
                 return "POWER_STATE_ABNORMAL";

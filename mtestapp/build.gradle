@@ -76,5 +76,4 @@ dependencies {
     implementation files('libs\\fnvsdk.jar')
     implementation files('libs\\android.car.jar')
     testImplementation 'junit:junit:4.13.2'
-    implementation project(path: ':base')
 }
