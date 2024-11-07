@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.view.Display;
@@ -65,6 +64,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
         bind.switchSystemUI.setOnClickListener(this);
         bind.testBtn.setOnClickListener(this);
         bind.backBtn.setOnClickListener(this);
+        updateFooter();
 
 //        bind.backBtn.postDelayed(() -> {
 //            startActivityByDisplayId(MainActivity2.this, MainActivity3.class, 3);
@@ -102,6 +102,7 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
                 } else {
                     SystemBarUtil.hideStatusBars(this);
                 }
+                updateFooter();
                 break;
             case R.id.testBtn:
                 test();
@@ -131,6 +132,14 @@ public class MainActivity extends BaseBindActivity<ActivityMainBinding> implemen
 //        Context d1Context = App.getContext().createDisplayContext(dm.getDisplay(1));
 //        Toast.makeText(d1Context, "主屏测试Toast " + index, Toast.LENGTH_SHORT).show();
 
+    }
+
+    private void updateFooter() {
+        bind.tvb.postDelayed(() -> {
+            int[] location = new int[2];
+            bind.tvb.getLocationOnScreen(location);
+            bind.tvb.setText("bottom:" + (location[1] + bind.tvb.getHeight()));
+        }, 1000);
     }
 
     private void testToast() {

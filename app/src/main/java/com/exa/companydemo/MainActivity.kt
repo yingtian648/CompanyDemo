@@ -142,50 +142,6 @@ class MainActivity : BaseBindActivity<ActivityMainBinding>(), OnClickItemListene
 //        showDialogFragment(this)
 //        startActivity(WifiActivity::class.java)
 
-//        moveTaskToBack(true)
-//        startService(Intent(this, MDialogService::class.java))
-//        FordTest.get().test()
-//        if (bool) {
-//            TestDialog.getInstance().releaseTimer()
-//        } else {
-//            TestDialog.getInstance().startPublishTimer()
-//        }
-//            TestDialog.showMyDialog(this,"12121",2521)
-//        showToast(this)
-
-//        TestDialog.showMyDialog(this,"1212",0)
-//        TestDialog.showDialogFragment(this)
-//        showDialogFragment(this)
-
-//        val packageName = "com.zlingsmart.demo.mtestapp"
-//        com.exa.companydemo.utils.Tools.uninstall(this, packageName)
-//
-//        val deleteObserver = PackageDeleteObserver()
-//        val unInstallMethod = packageManager.javaClass.getMethod("deletePackage", String.javaClass, deleteObserver.javaClass, Int.javaClass);
-//        unInstallMethod.invoke(packageManager, arrayOf(packageName, deleteObserver, 0))
-
-
-//        val intent = Intent(this, javaClass)
-//        val sender = PendingIntent.getActivity(this, 0, intent, 0)
-//        packageManager.packageInstaller.uninstall(packageName,sender)
-//            VersionedPackage(
-//                packageName,
-//                PackageManager.VERSION_CODE_HIGHEST
-//            ), sender
-//        )
-
-//        mShow = true
-//        val isAlive = mInterceptor.asBinder().isBinderAlive
-//        L.dd(isAlive)
-
-//        mStartupInterceptor.unregisterHomeKeyInterceptor(mInterceptor)
-
-
-//        DialogFragmentTest().show(supportFragmentManager, javaClass.name)
-//        startShowAnim(bind.image)
-//        doSurfaceViewAnimation(this, bind.frame)
-
-//        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         L.dd("${App.index} end------------")
     }
 

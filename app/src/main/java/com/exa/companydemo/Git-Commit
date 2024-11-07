@@ -28,15 +28,15 @@ level:C
 [ExtendID]:FORDHALO-820
 
 
-[ID]:FCIHALO-805
+[ID]:FCIHALO-802
 [Submission Type]: Feature
 [Project]: HALO
 [Module]: CarService
-[Countermeasure Issue]: Add FordCarPowerStrPolicy
-[Cause]: Add FordCarPowerStrPolicy
-[Modification Method]: Add FordCarPowerStrPolicy
+[Countermeasure Issue]: fix switch parameter error when exiting str.
+[Cause]: fix switch parameter error when exiting str.
+[Modification Method]: fix switch parameter error when exiting str.
 [Modifier]: shihua.liu
-[ExtendID]:FORDHALO-836
+[ExtendID]:FORDHALO-822
 
 提交到远程，并创建远程分支FCIHALO-783_FCPMS_FIX_DCV0
 git push -u github FCIHALO-805-FCPMS
@@ -54,16 +54,16 @@ influence:Toast
 fid:ID1394204
 level:C
 
-feat[Toast]:Modify Toast text color.
-rootcause:Toast text display err.
-solution:Modify Toast text color.
-product:AH8
+fix[AOSP/WMS]:Modify NavigationBar display height.
+rootcause:Modify NavigationBar display height.
+solution:Modify NavigationBar display height.
+product:T68
 span:none
 build:mpass
 test:upass
 influence:none
-fid:ID1377992
-level:C
+fid:ID1404852
+level:A
 
 feat[system-core]:Add public library libjni_gxa_tbox config.
 rootcause:Add public library libjni_gxa_tbox config.

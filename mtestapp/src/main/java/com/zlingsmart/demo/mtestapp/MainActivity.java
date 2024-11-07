@@ -1,8 +1,5 @@
 package com.zlingsmart.demo.mtestapp;
 
-import android.car.Car;
-import android.car.hardware.power.FordCarPowerManager;
-import android.car.hardware.power.FordCarPowerManager.FordCarPowerStateListener;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,14 +7,14 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.exa.baselib.utils.L;
 import com.zlingsmart.demo.mtestapp.carpower.CarPowerActivity;
-import com.zlingsmart.demo.mtestapp.carpower.CarPowerUtil;
-import com.zlingsmart.demo.mtestapp.carpower.FordCarPowerStrPolicy;
 import com.zlingsmart.demo.mtestapp.location.LocationActivity;
 import com.zlingsmart.demo.mtestapp.util.OnClickItemListener;
+import com.zlingsmart.demo.mtestapp.util.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
     private RecyclerView listView;
     private Context mContext;
     private List<Pair<String, Pair<String, Integer>>> dataList;
-    private FordCarPowerStrPolicy mPolicy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +40,14 @@ public class MainActivity extends AppCompatActivity implements OnClickItemListen
         setContentView(R.layout.activity_main);
         initData();
         initListView();
-        mPolicy = new FordCarPowerStrPolicy(this);
+
+        String title = "测试按钮" + " (wifi:" + Tools.INSTANCE.getWifiIp(this);
+        Button testBtn = findViewById(R.id.button);
+        testBtn.setText(title);
     }
 
     public void test(View view) {
-        mPolicy.doStrPolicy();
+
     }
 
     /**

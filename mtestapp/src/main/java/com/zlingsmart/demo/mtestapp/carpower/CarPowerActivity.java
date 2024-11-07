@@ -8,6 +8,7 @@ import android.car.hardware.CarPropertyValue;
 import android.car.hardware.power.CarPowerManager;
 import android.car.hardware.power.FordCarPowerManager;
 import android.car.hardware.property.CarPropertyManager;
+import android.car.hardware.setting.FordCarSettingManager;
 import android.view.View;
 
 import com.exa.baselib.base.BaseViewBindingActivity;
@@ -19,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBinding> {
     private FordCarPowerManager fordCarPowerManager;
     private CarPowerManager carPowerManager;
+    private FordCarSettingManager carSettingManager;
     private CarPropertyManager carPropertyManager;
     private int index = 0;
     private boolean mSetPowerOffIndicator = false;
@@ -42,7 +44,9 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
             if (car != null) {
                 fordCarPowerManager = (FordCarPowerManager) car.getCarManager(Car.FORD_POWER_SERVICE);
                 carPowerManager = (CarPowerManager) car.getCarManager(Car.POWER_SERVICE);
+                carSettingManager = (FordCarSettingManager) car.getCarManager(Car.FORD_SETTING_SERVICE);
                 initListener();
+                listenVhalProp();
             } else {
                 L.de("car is null, delay to check!");
                 setText(L.msg);
@@ -226,15 +230,27 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
         }
     }
 
+    private boolean enableHotSpot = false;
+
     public void clearListener(View v) {
         L.dd();
-        if (fordCarPowerManager != null) {
-            fordCarPowerManager.clearListener();
-            setText("clearListener");
+//        if (fordCarPowerManager != null) {
+//            fordCarPowerManager.clearListener();
+//            setText("clearListener");
+//        } else {
+//            L.d("fordCarPowerManager is null");
+//            setText(L.msg);
+//        }
+        if (!enableHotSpot) {
+            carSettingManager.setIntProperty(FordCarSettingManager.ID_WIFI_HOT_SPOT_ENBL_D_RQ, 0, 2);
         } else {
-            L.d("fordCarPowerManager is null");
-            setText(L.msg);
+            carSettingManager.setIntProperty(FordCarSettingManager.ID_WIFI_HOT_SPOT_ENBL_D_RQ, 0, 1);
         }
+        enableHotSpot = !enableHotSpot;
+        int result = carSettingManager.getIntProperty(FordCarSettingManager.ID_WIFI_HOT_SPOT_ENBL_D_RQ, 0);
+        int result1 = carSettingManager.getIntProperty(FordCarSettingManager.ID_HOTSPOT_ENABLE_ST, 0);
+        L.d("ID_WIFI_HOT_SPOT_ENBL_D_RQ: " + result + ", ID_HOTSPOT_ENABLE_ST=" + result1);
+        setText(L.msg);
     }
 
     private void setText(String msg) {
@@ -254,10 +270,7 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
     private void getCurrentPowerState() {
         String msg = "获取失败, fordCarPowerManager or carPowerManager is null";
         if (fordCarPowerManager != null) {
-            msg = "getFordPowerState:" + CarPowerUtil.getFordPowerState(fordCarPowerManager.getFordPowerState())
-                    + ", getBootReason:" + fordCarPowerManager.getBootReason()
-                    + ", carPowerManager is null?: " + (carPowerManager == null)
-                    + ", getCarPowerState:" + CarPowerUtil.getCarPowerState(carPowerManager == null ? carPowerState : carPowerManager.getPowerState());
+            msg = "getFordPowerState:" + CarPowerUtil.getFordPowerState(fordCarPowerManager.getFordPowerState()) + ", getBootReason:" + fordCarPowerManager.getBootReason() + ", carPowerManager is null?: " + (carPowerManager == null) + ", getCarPowerState:" + CarPowerUtil.getCarPowerState(carPowerManager == null ? carPowerState : carPowerManager.getPowerState());
         }
         L.dd(msg);
         setText(msg);
@@ -266,5 +279,24 @@ public class CarPowerActivity extends BaseViewBindingActivity<ActivityCarPowerBi
     @Override
     protected void initData() {
 
+    }
+
+
+    private void listenVhalProp() {
+        carPropertyManager = (CarPropertyManager) car.getCarManager(Car.PROPERTY_SERVICE);
+        carPropertyManager.registerCallback(new CarPropertyManager.CarPropertyEventCallback() {
+            @Override
+            public void onChangeEvent(CarPropertyValue propertyValue) {
+                int prop = propertyValue.getPropertyId();
+                Object value = propertyValue.getValue();
+                setText("CarPropertyManager.onChangeEvent:" + prop + ", value:" + value);
+            }
+
+            @Override
+            public void onErrorEvent(int i, int i1) {
+                L.de("");
+            }
+        }, FordCarSettingManager.ID_HOTSPOT_ENABLE_ST, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL);
+//            }, FordCarSettingManager.ID_WIFI_HOT_SPOT_ENBL_D_RQ, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL);
     }
 }

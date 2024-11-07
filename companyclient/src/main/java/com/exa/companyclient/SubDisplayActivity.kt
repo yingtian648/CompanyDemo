@@ -1,17 +1,13 @@
 package com.exa.companyclient
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
 import android.app.Dialog
 import android.content.BroadcastReceiver
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_MEDIA_EJECT
 import android.content.Intent.ACTION_MEDIA_MOUNTED
 import android.content.IntentFilter
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Bundle
@@ -24,13 +20,13 @@ import com.exa.baselib.utils.L
 import com.exa.baselib.utils.SystemBarUtil
 import com.exa.companyclient.databinding.ActivityMain3Binding
 import com.exa.companyclient.utils.PackageManagerHelper
-import kotlin.jvm.internal.Intrinsics
 
 
 class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
 
     private var display2Context: Context? = null
     private var index = 0
+    private var systemUiShow = false
     override fun setContentViewLayoutId(): Int = R.layout.activity_main3
 
     override fun initView() {
@@ -41,13 +37,15 @@ class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
                 display2Context = createDisplayContext(it)
             }
         }
-        bind.showSystemUi.setOnClickListener {
+        bind.btnSystemUi.setOnClickListener {
             L.d("showSystemUi")
-            SystemBarUtil.showStatusBars(this)
-        }
-        bind.hideSystemUi.setOnClickListener {
-            SystemBarUtil.hideStatusBars(this)
-            L.d("hideSystemUi")
+            if (systemUiShow) {
+                SystemBarUtil.hideStatusBars(this)
+            } else {
+                SystemBarUtil.showStatusBars(this)
+            }
+            updateFooter()
+            systemUiShow = !systemUiShow
         }
         bind.testBtn.setOnClickListener {
             L.d("测试按钮")
@@ -61,12 +59,21 @@ class SubDisplayActivity : BaseBindActivity<ActivityMain3Binding>() {
             L.d("关闭按钮")
             finish()
         }
+        updateFooter()
         L.dd(javaClass.simpleName + "注册广播MEDIA_MOUNTED,MEDIA_EJECT")
         val filter = IntentFilter()
         filter.addDataScheme("file")
         filter.addAction(ACTION_MEDIA_MOUNTED)
         filter.addAction(ACTION_MEDIA_EJECT)
         registerReceiver(TestReceiver(), filter)
+    }
+
+    private fun updateFooter() {
+        bind.tvb.postDelayed({
+            val location = IntArray(2)
+            bind.tvb.getLocationOnScreen(location)
+            bind.tvb.text = "bottom:" + (location[1] + bind.tvb.height)
+        }, 1000)
     }
 
     inner class TestReceiver : BroadcastReceiver() {
